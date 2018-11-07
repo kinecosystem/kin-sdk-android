@@ -1,5 +1,6 @@
 ![Kin Token](kin_android.png)
-# Kin core SDK for Android
+# Kin SDK for Android - Working in progress.
+# for stable version please refer to kin-core-android: https://github.com/kinecosystem/kin-core-android
 [![Build Status](https://travis-ci.org/kinecosystem/kin-core-android.svg?branch=dev)](https://travis-ci.org/kinecosystem/kin-core-android)
 [![codecov](https://codecov.io/gh/kinecosystem/kin-core-android/branch/dev/graph/badge.svg)](https://codecov.io/gh/kinecosystem/kin-core-android)
 
