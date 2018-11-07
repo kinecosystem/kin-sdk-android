@@ -1,5 +1,2 @@
-include ':sample', ':kin-sdk'
-if (!System.env.JITPACK) {
-    include ':kin-base'
-    project(":kin-base").projectDir = file("kin-base")
-}
+include ':sample', ':kin-sdk', 'kin-base'
+project(":kin-base").projectDir = file("kin-base")
