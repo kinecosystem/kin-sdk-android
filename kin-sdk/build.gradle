@@ -40,12 +40,8 @@ android {
 }
 
 dependencies {
-    //in jitpack build without submodules
-    if (System.env.JITPACK) {
-        implementation stellarSDK
-    } else {
-        implementation project(':kin-base')
-    }
+    implementation project(':kin-base')
+
     implementation supportDependencies.supportAnnotations
     implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
 

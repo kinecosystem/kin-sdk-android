@@ -25,18 +25,6 @@ ext {
     kinecosystem = 'com.github.kinecosystem'
     kotlinPackage = 'org.jetbrains.kotlin'
 
-    //when building in jitpack, extract android-stellar-sdk commit we work on
-    if (System.env.JITPACK) {
-        //get current commit of kin-core
-        GIT_COMMIT = 'git rev-parse HEAD'.execute().text.trim()
-        currentGitHash = GIT_COMMIT
-        //extract current commit of android-stellar-sdk using current commit of kin-core
-        getSubModuleHash = 'git ls-tree ' + currentGitHash + ' android-stellar-sdk'
-        getSubModuleResult = getSubModuleHash.execute().text.trim()
-        stellarSDKVersion = getSubModuleResult.split()[2]
-        stellarSDK = buildDependency(kinecosystem, 'android-stellar-sdk', stellarSDKVersion)
-    }
-
     supportDependencies = [
             supportAnnotations: buildDependency(supportPackage, 'support-annotations', supportVersion)
     ]
