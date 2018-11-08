@@ -1,5 +1,7 @@
 package kin.base;
 
+import android.util.Log;
+
 import static kin.base.Util.checkNotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -17,11 +19,12 @@ public abstract class Operation {
 
   private KeyPair mSourceAccount;
 
-  private static final BigDecimal ONE = new BigDecimal(10).pow(7);
+  private static final BigDecimal ONE = new BigDecimal(10).pow(4);
 
   protected static long toXdrAmount(String value) {
     value = checkNotNull(value, "value cannot be null");
     BigDecimal amount = new BigDecimal(value).multiply(Operation.ONE);
+    System.out.println("toXdrAmount: value = " + value + ", new amount = " + amount + ", old amount = " + new BigDecimal(value).multiply(new BigDecimal(10).pow(7)));
     return amount.longValueExact();
   }
 
