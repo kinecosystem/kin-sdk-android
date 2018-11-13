@@ -49,7 +49,7 @@
   "balances": [
     {
       "balance": "9999.9999800",
-      "limit": "922337203685.4775",
+      "limit": "92233720368547.75807",
       "asset_type": "credit_alphanum4",
       "asset_code": "KIN",
       "asset_issuer": "GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM"

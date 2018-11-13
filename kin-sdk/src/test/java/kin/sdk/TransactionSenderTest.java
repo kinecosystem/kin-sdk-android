@@ -52,8 +52,8 @@ public class TransactionSenderTest {
     private static final String SECRET_SEED_FROM = "SB6PCLT2WUQF44HVOTEGCXIDYNX2U4BJUPWUX453ODRGD4CXGPJP3HUX";
     private static final String ACCOUNT_ID_TO = "GDJOJJVIWI6YVPUI3PX4BQCC4SQUZTRYIAMV2YBT6QVL54QGQUQSFKGM";
     private static final String SECRET_SEED_TO = "SCJFLXKUY6VQT2LYSP6XDP23WNEP5OITSC3LZEJUJO7GFZM7QLDF2BCN";
-    private static final String TX_BODY = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAHMS0xYTJjLQAAAAABAAAAAAAAAAEAAAAA0uSmqLI9ir6I2%2B%2FAwELkoUzOOEAZXWAz9Cq%2B8gaFISIAAAABS0lOAAAAAABBq58xoA5F8Hm%2F7tPH51hBTD4tUsenooq1dLrUnnJnxgAAAAAAADqYAAAAAAAAAAFtBVodAAAAQMKMdmG2ppOlNW0jkih7IA7CcTahBNSd0GJyRNYVqE1mqoAe4VjnGWEOis5Vv8DFkHs5KDaBcal1El9sS9Ozkg8%3D";
-    private static final String TX_BODY_WITH_MEMO = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAQMS0xYTJjLWZha2UgbWVtbwAAAAEAAAAAAAAAAQAAAADS5Kaosj2Kvojb78DAQuShTM44QBldYDP0Kr7yBoUhIgAAAAFLSU4AAAAAAEGrnzGgDkXweb%2Fu08fnWEFMPi1Sx6eiirV0utSecmfGAAAAAAAehIAAAAAAAAAAAW0FWh0AAABAygvr%2BiUNBRbklHMwr%2BVilFEvZWQ5LvBo8n2oP5ISFlZ8ihg15vPEP3ObrpnD7216sMaEZRI06UNwK33iPcQ8DA%3D%3D";
+    private static final String TX_BODY = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAHMS0xYTJjLQAAAAABAAAAAAAAAAEAAAAA0uSmqLI9ir6I2%2B%2FAwELkoUzOOEAZXWAz9Cq%2B8gaFISIAAAABS0lOAAAAAABBq58xoA5F8Hm%2F7tPH51hBTD4tUsenooq1dLrUnnJnxgAAAAAAAknwAAAAAAAAAAFtBVodAAAAQC8ySK3IhJt7ymhmXpJ8BD%2Bx3DqzkUeMHD26BQjNljnJ3dZJVP5Za441RiOdQVHZ50wKB4hoQm%2BdLuN%2Fc1x17Q8%3D";
+    private static final String TX_BODY_WITH_MEMO = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAQMS0xYTJjLWZha2UgbWVtbwAAAAEAAAAAAAAAAQAAAADS5Kaosj2Kvojb78DAQuShTM44QBldYDP0Kr7yBoUhIgAAAAFLSU4AAAAAAEGrnzGgDkXweb%2Fu08fnWEFMPi1Sx6eiirV0utSecmfGAAAAAAExLQAAAAAAAAAAAW0FWh0AAABAbiQ5V6hamCRQ2RPclAH5PumsHI2n1eeqSLlmYlzuxURYYn5iQ75ifq%2BASTX4pDHeTmLcQ8zXu6NYcUrjnFlTAg%3D%3D";
     private static final String APP_ID = "1a2c";
 
     @Rule
@@ -366,8 +366,8 @@ public class TransactionSenderTest {
     @Test
     public void sendTransaction_AmountExceedNumOfDecimalPlaces() throws Exception {
         expectedEx.expect(IllegalAmountException.class);
-        expectedEx.expectMessage("amount can't have more then 4 digits after the decimal point");
-        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200.12345"));
+        expectedEx.expectMessage("amount can't have more then 5 digits after the decimal point");
+        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("20.012345"));
         transactionSender.sendTransaction(transaction);
     }
 
