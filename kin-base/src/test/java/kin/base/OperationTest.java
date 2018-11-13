@@ -378,7 +378,7 @@ public class OperationTest {
     assertEquals(opSource.getAccountId(), parsedOperation.getSourceAccount().getAccountId());
 
     assertEquals(
-            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAB1vRBIRC3w7ZH5rQa17hIBKUwZTvBP4kNmSP7jVyw1fQAAAAK",
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABA/nCzen/Xqw9GYttKTXRKeXPpJg3vtjz/rbJEp9+vGQAAAAK",
             operation.toXdrBase64());
   }
 

@@ -57,7 +57,7 @@ public class KinAccountImplTest {
 
         when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
-        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount);
+        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -75,7 +75,7 @@ public class KinAccountImplTest {
 
         when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
-        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, memo);
+        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100, memo);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -121,7 +121,7 @@ public class KinAccountImplTest {
         initWithRandomAccount();
         kinAccount.markAsDeleted();
 
-        Transaction transaction = kinAccount.buildTransactionSync("GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"));
+        Transaction transaction = kinAccount.buildTransactionSync("GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"), 100);
         kinAccount.sendTransactionSync(transaction);
     }
 

@@ -28,7 +28,7 @@ public class LedgerResponse extends Response {
   private final String totalCoins;
   @SerializedName("fee_pool")
   private final String feePool;
-  @SerializedName("base_fee")
+  @SerializedName("base_fee_in_stroops")
   private final Long baseFee;
   @SerializedName("base_reserve")
   private final String baseReserve;

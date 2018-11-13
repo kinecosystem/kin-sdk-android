@@ -2,7 +2,7 @@
 apply from: './dependencies.gradle'
 
 ext {
-    projectName = ':kin-sdk-core'
+    projectName = ':kin-sdk-android'
 }
 
 buildscript {

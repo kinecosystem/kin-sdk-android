@@ -50,7 +50,7 @@ script:
   - cd ../..
   - ./gradlew :sample:assembleDebug
   - ./gradlew :kin-sdk:testDebugUnitTest
-#  - ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.core.KinAccountIntegrationTest --info
+#  - ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.sdk.KinAccountIntegrationTest --info
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

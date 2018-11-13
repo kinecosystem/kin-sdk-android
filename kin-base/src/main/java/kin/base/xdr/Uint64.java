@@ -24,7 +24,7 @@ public class Uint64  {
   }
   public static Uint64 decode(XdrDataInputStream stream) throws IOException {
     Uint64 decodedUint64 = new Uint64();
-  decodedUint64.uint64 = stream.readLong();
+    decodedUint64.uint64 = stream.readLong();
     return decodedUint64;
   }
 }

@@ -63,7 +63,7 @@ class AccountActivator {
 
     private SubmitTransactionResponse sendAllowKinTrustOperation(KeyPair account, AccountResponse accountResponse)
         throws IOException {
-        Transaction allowKinTrustTransaction = new Transaction.Builder(accountResponse).addOperation(
+        Transaction allowKinTrustTransaction = new Transaction.Builder(accountResponse).addFee(100).addOperation(
             new ChangeTrustOperation.Builder(kinAsset.getStellarAsset(), TRUST_NO_LIMIT_VALUE)
                 .build()
         )

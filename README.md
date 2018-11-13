@@ -379,7 +379,7 @@ $ ./run_integ_test.sh
 Running tests without integration tests
 
 ```bash
-$ ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.core.KinAccountIntegrationTest
+$ ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.sdk.KinAccountIntegrationTest
 ```
 
 Generated report can be found at:  

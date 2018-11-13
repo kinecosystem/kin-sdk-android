@@ -37,4 +37,19 @@ public class MemoText extends Memo {
     memo.setText(text);
     return memo;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MemoText memoText = (MemoText) o;
+    if (text == null && memoText.text == null) {
+      return true;
+    }
+    if (text != null && memoText!= null) {
+      return text.equals(memoText.text);
+    }
+    return false;
+  }
+
 }

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CreateAccountException;
@@ -16,6 +17,7 @@ import kin.sdk.exception.DeleteAccountException;
 import kin.base.KeyPair;
 import kin.base.Network;
 import kin.base.Server;
+import kin.sdk.exception.OperationFailedException;
 
 /**
  * An account manager for a {@link KinAccount}.
@@ -29,6 +31,7 @@ public class KinClient {
     private final TransactionSender transactionSender;
     private final AccountActivator accountActivator;
     private final AccountInfoRetriever accountInfoRetriever;
+    private final GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever;
     private final BlockchainEventsCreator blockchainEventsCreator;
     private final BackupRestore backupRestore;
     @NonNull
@@ -62,19 +65,21 @@ public class KinClient {
         transactionSender = new TransactionSender(server, environment.getKinAsset(), appId);
         accountActivator = new AccountActivator(server, environment.getKinAsset());
         accountInfoRetriever = new AccountInfoRetriever(server, environment.getKinAsset());
+        generalBlockchainInfoRetriever = new GeneralBlockchainInfoRetrieverImpl(server);
         blockchainEventsCreator = new BlockchainEventsCreator(server, environment.getKinAsset());
         loadAccounts();
     }
 
     @VisibleForTesting
     KinClient(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
-        AccountActivator accountActivator, AccountInfoRetriever accountInfoRetriever,
+        AccountActivator accountActivator, AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
         BlockchainEventsCreator blockchainEventsCreator,  BackupRestore backupRestore) {
         this.environment = environment;
         this.keyStore = keyStore;
         this.transactionSender = transactionSender;
         this.accountActivator = accountActivator;
         this.accountInfoRetriever = accountInfoRetriever;
+        this.generalBlockchainInfoRetriever = generalBlockchainInfoRetriever;
         this.blockchainEventsCreator = blockchainEventsCreator;
         this.backupRestore = backupRestore;
         loadAccounts();
@@ -203,8 +208,34 @@ public class KinClient {
 
     @NonNull
     private KinAccountImpl createNewKinAccount(KeyPair account) {
-        return new KinAccountImpl(account, backupRestore, transactionSender, accountActivator, accountInfoRetriever,
-            blockchainEventsCreator);
+        return new KinAccountImpl(account, backupRestore, transactionSender, accountActivator,
+                accountInfoRetriever, blockchainEventsCreator);
+    }
+
+    /**
+     * Get the current minimum fee that the network charges per operation.
+     * This value is expressed in stroops.
+     *
+     * @return {@code Request<Integer>} - the minimum fee.
+     */
+    public Request<Long> getMinimumFee() {
+        return new Request<>(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                return generalBlockchainInfoRetriever.getMinimumFeeSync();
+            }
+        });
+    }
+
+    /**
+     * Get the current minimum fee that the network charges per operation.
+     * This value is expressed in stroops.
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return the minimum fee.
+     */
+    public long getMinimumFeeSync() throws OperationFailedException {
+        return generalBlockchainInfoRetriever.getMinimumFeeSync();
     }
 
 }

@@ -9,21 +9,22 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount) {
+    public Request<Transaction> buildTransaction(@NonNull final String publicAddress,
+                                                 @NonNull final BigDecimal amount, final int fee) {
         return new Request<>(new Callable<Transaction>() {
             @Override
             public Transaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount);
+                return buildTransactionSync(publicAddress, amount, fee);
             }
         });
     }@NonNull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress,
-                                                 @NonNull final BigDecimal amount, @Nullable final String memo) {
+    public Request<Transaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
+                                                 final int fee, @Nullable final String memo) {
         return new Request<>(new Callable<Transaction>() {
             @Override
             public Transaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount, memo);
+                return buildTransactionSync(publicAddress, amount, fee, memo);
             }
         });
     }
@@ -35,6 +36,17 @@ abstract class AbstractKinAccount implements KinAccount {
             @Override
             public TransactionId call() throws Exception {
                 return sendTransactionSync(transaction);
+            }
+        });
+    }
+
+    @NonNull
+    @Override
+    public Request<TransactionId> sendWhitelistTransaction(final String whitelist) {
+        return new Request<>(new Callable<TransactionId>() {
+            @Override
+            public TransactionId call() throws Exception {
+                return sendWhitelistTransactionSync(whitelist);
             }
         });
     }

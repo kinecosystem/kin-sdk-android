@@ -45,6 +45,37 @@
         style="@style/KinText.Title.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/fee"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/fee_input"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal"
+            tools:text="100"/>
+
+        <Button
+            android:id="@+id/retrieve_minimum_fee_btn"
+            style="@style/KinButtonStyle.TestNet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:text="@string/retrieve_minimum_fee"/>
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/KinText.Title.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/memo"/>
 
     <EditText

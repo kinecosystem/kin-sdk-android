@@ -1,21 +1,18 @@
 package kin.base.responses;
 
-import static kin.base.Util.CHARSET_UTF8;
 import static kin.base.Util.checkNotNull;
 
 import com.google.gson.annotations.SerializedName;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import kin.base.Server;
-import org.apache.commons.android.codec.binary.Base64;
 import kin.base.KeyPair;
 import kin.base.LedgerEntryChanges;
 import kin.base.Memo;
 import kin.base.Operation;
+import kin.base.Util;
 import kin.base.xdr.OperationMeta;
 import kin.base.xdr.Transaction;
 import kin.base.xdr.TransactionMeta;
@@ -141,7 +138,7 @@ public class TransactionResponse extends Response {
   }
 
   private Transaction extractTransaction(String envelopeXdr) throws IOException {
-    XdrDataInputStream xdrDataInputStream = createXdrDataInputStream(envelopeXdr);
+    XdrDataInputStream xdrDataInputStream = Util.createXdrDataInputStream(envelopeXdr);
     return Transaction.decode(xdrDataInputStream);
   }
 
@@ -164,15 +161,8 @@ public class TransactionResponse extends Response {
   }
 
   private TransactionMeta extractTransactionMeta(String envelopeXdr) throws IOException {
-    XdrDataInputStream xdrDataInputStream = createXdrDataInputStream(envelopeXdr);
+    XdrDataInputStream xdrDataInputStream = Util.createXdrDataInputStream(envelopeXdr);
     return TransactionMeta.decode(xdrDataInputStream);
-  }
-
-  private XdrDataInputStream createXdrDataInputStream(String envelopeXdr) throws UnsupportedEncodingException {
-    Base64 base64 = new Base64();
-    byte[] decoded = base64.decode(envelopeXdr.getBytes(CHARSET_UTF8));
-    InputStream is = new ByteArrayInputStream(decoded);
-    return new XdrDataInputStream(is);
   }
 
   public void setMemo(Memo memo) {

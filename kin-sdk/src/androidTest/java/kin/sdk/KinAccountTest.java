@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 public class KinAccountTest {
 
     private static final String APP_ID = "1a2c";
+    private static final int FEE = 100;
 
     private KinClient kinClient;
 
@@ -59,7 +60,7 @@ public class KinAccountTest {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);
         Transaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
-                new BigDecimal(10));
+                new BigDecimal(10), FEE);
         kinAccount.sendTransactionSync(transaction);
     }
 

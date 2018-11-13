@@ -31,6 +31,7 @@ public class TransactionTest {
         Account account = new Account(source, sequenceNumber);
         Transaction transaction = new Transaction.Builder(account)
                 .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+                .addFee(100)
                 .build();
 
         transaction.sign(source);
@@ -42,6 +43,18 @@ public class TransactionTest {
         assertEquals(transaction.getSourceAccount(), source);
         assertEquals(transaction.getSequenceNumber(), sequenceNumber + 1);
         assertEquals(transaction.getFee(), 100);
+
+        Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+        assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+        assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+        assertEquals(transaction.getFee(), transaction2.getFee());
+        assertEquals(
+                ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+                ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+        );
+
+        assertEquals(transaction.getSignatures(), transaction2.getSignatures());
     }
 
     @Test
@@ -59,8 +72,19 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAxzofBhoayuUnz8t0T1UNWrTgmJ+lCh9KaeOGu2ppNOz9UGw0abGLhv+9oWQsstaHx6YjwWxL+8GBvwBUVWRlBQ==",
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAAAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAcgIGCYiaQLBCwA8lIx3u6zfthUYJ5MZ1cWfyF9H3pNJD1/B54uc5zhWXTbZHXxX8IKSLgEuCsGtLtjQq/jqMAw==",
                 transaction.toEnvelopeXdrBase64());
+
+        Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+        assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+        assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+        assertEquals(transaction.getMemo(), transaction2.getMemo());
+        assertEquals(transaction.getFee(), transaction2.getFee());
+        assertEquals(
+                ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+                ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+        );
     }
 
     @Test
@@ -86,6 +110,17 @@ public class TransactionTest {
 
         assertEquals(decodedTransaction.getTimeBounds().getMinTime().getUint64().longValue(), 42);
         assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getUint64().longValue(), 1337);
+
+        Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+        assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+        assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+        assertEquals(transaction.getTimeBounds(), transaction2.getTimeBounds());
+        assertEquals(transaction.getFee(), transaction2.getFee());
+        assertEquals(
+                ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+                ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+        );
     }
 
     @Test
@@ -104,7 +139,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE",
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAAAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDZOFsSKra4BzSyeGsRaCnySwb/LiJo5FEE6cqXBkq8uAmY1X5jSANmQ2dqgn+6MebvOJV5GjHguJ3T8gj5k4gF",
                 transaction.toEnvelopeXdrBase64());
     }
 

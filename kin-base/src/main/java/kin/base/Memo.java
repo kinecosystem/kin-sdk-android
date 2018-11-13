@@ -72,5 +72,23 @@ public abstract class Memo {
         return new MemoReturnHash(hexString);
     }
 
+    public static Memo fromXdr(kin.base.xdr.Memo memo) {
+        switch (memo.getDiscriminant()) {
+            case MEMO_NONE:
+                return none();
+            case MEMO_ID:
+                return id(memo.getId().getUint64());
+            case MEMO_TEXT:
+                return text(memo.getText());
+            case MEMO_HASH:
+                return hash(memo.getHash().getHash());
+            case MEMO_RETURN:
+                return returnHash(memo.getRetHash().getHash());
+            default:
+                throw new RuntimeException("Unknown memo type");
+        }
+    }
+
     abstract kin.base.xdr.Memo toXdr();
+    abstract public boolean equals(Object o);
 }

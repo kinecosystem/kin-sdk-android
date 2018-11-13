@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,6 +35,8 @@ public class KinClientTest {
     private TransactionSender mockTransactionSender;
     @Mock
     private AccountActivator mockAccountActivator;
+    @Mock
+    private GeneralBlockchainInfoRetrieverImpl mockGeneralBlockchainInfoRetriever;
     @Mock
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
@@ -329,7 +332,7 @@ public class KinClientTest {
         String url = "My awesome Horizon server";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId());
         kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender, mockAccountActivator,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator, new FakeBackupRestore());
+            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator, new FakeBackupRestore());
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);
@@ -401,10 +404,19 @@ public class KinClientTest {
 
         new Environment(Environment.TEST.getNetworkUrl(), Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId(), "");
     }
+    
+    @Test
+    public void getMinimumFee() throws Exception {
+        long expectedMinFee = 100;
+        when(mockGeneralBlockchainInfoRetriever.getMinimumFeeSync()).thenReturn(expectedMinFee);
+        
+        long minFee = kinClient.getMinimumFeeSync();
+        assertEquals(expectedMinFee, minFee);
+    }
 
     @NonNull
     private KinClient createNewKinClient() {
         return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender, mockAccountActivator,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator,  new FakeBackupRestore());
+            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,  new FakeBackupRestore());
     }
 }

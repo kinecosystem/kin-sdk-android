@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import kin.sdk.KinClient;
-import kin.sdk.core.sample.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
