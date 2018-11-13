@@ -243,7 +243,7 @@ public class TransactionActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy() { 
         super.onDestroy();
         if (gertMinimumFeeRequest != null) {
             gertMinimumFeeRequest.cancel(false);

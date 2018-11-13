@@ -17,6 +17,7 @@ import kin.sdk.exception.AccountNotActivatedException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.InsufficientBalanceException;
 import kin.sdk.exception.InsufficientFeeException;
+import kin.sdk.exception.IllegalAmountException;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
@@ -32,6 +33,7 @@ import kin.base.responses.SubmitTransactionResponse;
 class TransactionSender {
 
     private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
+    private static final int MAX_NUM_OF_DECIMAL_PLACES = 4 ;
     private static String APP_ID_VERSION_PREFIX = "1";
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
@@ -96,13 +98,23 @@ class TransactionSender {
     }
 
     private void checkParams(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
-                             int fee, @Nullable String memo) {
+                             int fee, @Nullable String memo) throws OperationFailedException {
         Utils.checkNotNull(from, "account");
         Utils.checkNotNull(amount, "amount");
+        validateAmountDecimalPoint(amount);
         checkForNegativeFee(fee);
         checkAddressNotEmpty(publicAddress);
         checkForNegativeAmount(amount);
         checkMemo(memo);
+    }
+
+
+    private void validateAmountDecimalPoint(BigDecimal amount) throws OperationFailedException {
+        BigDecimal amountWithoutTrailingZeros = amount.stripTrailingZeros();
+        int numOfDecimalPlaces = amountWithoutTrailingZeros.scale();
+        if (numOfDecimalPlaces > MAX_NUM_OF_DECIMAL_PLACES) {
+            throw new IllegalAmountException("amount can't have more then 4 digits after the decimal point");
+        }
     }
 
     @SuppressWarnings("ConstantConditions")

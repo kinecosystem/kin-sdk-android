@@ -21,6 +21,7 @@ import kin.sdk.exception.AccountNotActivatedException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.InsufficientBalanceException;
 import kin.sdk.exception.InsufficientFeeException;
+import kin.sdk.exception.IllegalAmountException;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
@@ -53,8 +54,8 @@ public class TransactionSenderTest {
     private static final String SECRET_SEED_FROM = "SB6PCLT2WUQF44HVOTEGCXIDYNX2U4BJUPWUX453ODRGD4CXGPJP3HUX";
     private static final String ACCOUNT_ID_TO = "GDJOJJVIWI6YVPUI3PX4BQCC4SQUZTRYIAMV2YBT6QVL54QGQUQSFKGM";
     private static final String SECRET_SEED_TO = "SCJFLXKUY6VQT2LYSP6XDP23WNEP5OITSC3LZEJUJO7GFZM7QLDF2BCN";
-    private static final String TX_BODY = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAHMS0xYTJjLQAAAAABAAAAAAAAAAEAAAAA0uSmqLI9ir6I2%2B%2FAwELkoUzOOEAZXWAz9Cq%2B8gaFISIAAAAAAAAAAADk4cAAAAAAAAAAAW0FWh0AAABAvAXUepIVqzfqZ9tyXHlPOkdIpYFFDm3ka5uGK0RQXvvWz0AS7JbtH0xX2kz0GjzQbOt00pyRp2seuAdsJQARAg%3D%3D";
-    private static final String TX_BODY_WITH_MEMO = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAQMS0xYTJjLWZha2UgbWVtbwAAAAEAAAAAAAAAAQAAAADS5Kaosj2Kvojb78DAQuShTM44QBldYDP0Kr7yBoUhIgAAAAAAAAAAdzWUAAAAAAAAAAABbQVaHQAAAECPkrX73%2BLoWluQlgtK2r0K23WCiLONzcO94OjUKOTHhl5XZ7IhMxTTdA79RnXbrGqIxaNpQM%2BzMRAjD8J%2Bcg4A";
+    private static final String TX_BODY = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAHMS0xYTJjLQAAAAABAAAAAAAAAAEAAAAA0uSmqLI9ir6I2%2B%2FAwELkoUzOOEAZXWAz9Cq%2B8gaFISIAAAAAAAAAAAAAOpgAAAAAAAAAAW0FWh0AAABAAvK5JKLZ6yBk0tpQpHqYsbJXQVXrdSnuVrV2Pi3Ne87Lm2mAF%2B4Vz8pGORToQqMRWZk4v58LfkB4BpjWV%2FVMDw%3D%3D";
+    private static final String TX_BODY_WITH_MEMO = "tx=AAAAANSQMFM2TD8pn4hIhHoUwA8IUMSN1M2SRw31SjZtBVodAAAAZABpZ8AAAAAEAAAAAAAAAAEAAAAQMS0xYTJjLWZha2UgbWVtbwAAAAEAAAAAAAAAAQAAAADS5Kaosj2Kvojb78DAQuShTM44QBldYDP0Kr7yBoUhIgAAAAAAAAAAAB6EgAAAAAAAAAABbQVaHQAAAED5bmiLDoXpdG2bwkCkQQVva%2BPSbAs4bRKDDqRCesYBnPVKNhRqMSKLmplWhhBJ%2Bh5I1k7Y1RdqENlN1gX8vfAO";
     private static final String APP_ID = "1a2c";
     private static final int FEE = 100;
 
@@ -86,7 +87,6 @@ public class TransactionSenderTest {
         String url = mockWebServer.url("").toString();
         server = new Server(url);
     }
-
 
     @Test
     public void sendTransaction_success() throws Exception {
@@ -401,6 +401,14 @@ public class TransactionSenderTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Fee");
         Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("-200"), -FEE);
+        transactionSender.sendTransaction(transaction);
+    }
+
+    @Test
+    public void sendTransaction_AmountExceedNumOfDecimalPlaces() throws Exception {
+        expectedEx.expect(IllegalAmountException.class);
+        expectedEx.expectMessage("amount can't have more then 4 digits after the decimal point");
+        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200.12345"), FEE);
         transactionSender.sendTransaction(transaction);
     }
 

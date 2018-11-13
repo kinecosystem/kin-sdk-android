@@ -37,7 +37,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDLki9Oi700N60Lo8gUmEFHbKvYG4QSqXiLIt9T0ru2O5BphVl/jR9tYtHAD+UeDYhgXNgwUxqTEu1WukvEyYcD",
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAATEtAAAAAAAAAAABtoeVYgAAAEAN9W/cXa97ujfhzsP+1ywgrg4evJQjgiJQ5ovqe69lJ6a7cPLIyailiRYByy6JRWoxSN1skDH0sMDfla8jXFQC",
                 transaction.toEnvelopeXdrBase64());
 
         assertEquals(transaction.getSourceAccount(), source);
@@ -72,7 +72,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAAAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAcgIGCYiaQLBCwA8lIx3u6zfthUYJ5MZ1cWfyF9H3pNJD1/B54uc5zhWXTbZHXxX8IKSLgEuCsGtLtjQq/jqMAw==",
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAAAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAAAAExLQAAAAAAAAAAAbaHlWIAAABAKwql1FxyvAMJSIVdXVa4A5ppB+2zuRn2olsIc14PZe94sNDgQboHWxz0D6aQJ8l1in/GrDThxQytYsU6UKo4AQ==",
                 transaction.toEnvelopeXdrBase64());
 
         Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
@@ -139,7 +139,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAAAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDZOFsSKra4BzSyeGsRaCnySwb/LiJo5FEE6cqXBkq8uAmY1X5jSANmQ2dqgn+6MebvOJV5GjHguJ3T8gj5k4gF",
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAAAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAATEtAAAAAAAAAAABtoeVYgAAAEDwFSxJ/UCTtp+5UMK4gPmOyTQqbCxMgrOpLXOMJSk9C4hNVtAwYSDi23hAxY2/LzichIB4HICxoHq58QPaAVQE",
                 transaction.toEnvelopeXdrBase64());
     }
 

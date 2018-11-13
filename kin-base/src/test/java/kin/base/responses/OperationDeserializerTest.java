@@ -220,7 +220,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"asset_type\": \"credit_alphanum4\",\n" +
             "        \"asset_code\": \"EUR\",\n" +
             "        \"asset_issuer\": \"GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM\",\n" +
-            "        \"limit\": \"922337203685.4775807\",\n" +
+            "        \"limit\": \"922337203685477.5807\",\n" +
             "        \"trustee\": \"GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM\",\n" +
             "        \"trustor\": \"GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F\"\n" +
             "      }";
@@ -229,7 +229,7 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getTrustee().getAccountId(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(operation.getTrustor().getAccountId(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
-    assertEquals(operation.getLimit(), "922337203685.4775807");
+    assertEquals(operation.getLimit(), "922337203685477.5807");
     assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
   }
 

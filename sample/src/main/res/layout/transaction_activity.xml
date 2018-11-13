@@ -58,7 +58,7 @@
             android:id="@+id/fee_input"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:inputType="numberSigned|numberDecimal"
             tools:text="100"/>
 
@@ -107,6 +107,5 @@
         android:layout_height="wrap_content"
         android:enabled="false"
         android:text="sendTransaction"/>
-
 
 </LinearLayout>
