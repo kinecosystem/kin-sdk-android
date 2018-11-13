@@ -24,7 +24,6 @@ public abstract class Operation {
   protected static long toXdrAmount(String value) {
     value = checkNotNull(value, "value cannot be null");
     BigDecimal amount = new BigDecimal(value).multiply(Operation.ONE);
-    System.out.println("toXdrAmount: value = " + value + ", new amount = " + amount + ", old amount = " + new BigDecimal(value).multiply(new BigDecimal(10).pow(7)));
     return amount.longValueExact();
   }
 
