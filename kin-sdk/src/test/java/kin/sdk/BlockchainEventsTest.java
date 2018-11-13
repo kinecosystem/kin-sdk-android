@@ -152,7 +152,7 @@ public class BlockchainEventsTest {
         assertThat(payment1.sourcePublicKey(), equalTo("GBRXY5BAZAAB7M2PI3KG5WLIRARJAGUPV2IPC4AGIPTTZRM7UY2VVKN3"));
         assertThat(payment1.destinationPublicKey(),
             equalTo("GD4YOKVYR6KPPXA7HXG2SQOTWGZ6FO6BNCDJ5IGIGWRLL3Z5ABPEEYD3"));
-        assertThat(payment1.amount(), equalTo(new BigDecimal("612.784")));
+        assertThat(payment1.amount(), equalTo(new BigDecimal("612784")));
         assertThat(payment1.createdAt(), equalTo("2018-02-21T06:51:00Z"));
         assertThat(payment1.memo(), equalTo("Test Transaction"));
 
@@ -161,7 +161,7 @@ public class BlockchainEventsTest {
         assertThat(payment2.sourcePublicKey(), equalTo("GBRXY5BAZAAB7M2PI3KG5WLIRARJAGUPV2IPC4AGIPTTZRM7UY2VVKN3"));
         assertThat(payment2.destinationPublicKey(),
             equalTo("GD4YOKVYR6KPPXA7HXG2SQOTWGZ6FO6BNCDJ5IGIGWRLL3Z5ABPEEYD3"));
-        assertThat(payment2.amount(), equalTo(new BigDecimal("147.32564")));
+        assertThat(payment2.amount(), equalTo(new BigDecimal("147325.64")));
         assertThat(payment2.createdAt(), equalTo("2018-02-21T06:51:24Z"));
         assertThat(payment2.memo(), equalTo("Test Transaction2"));
     }
@@ -262,8 +262,8 @@ public class BlockchainEventsTest {
         assertThat(balance1, notNullValue());
         assertThat(balance2, notNullValue());
         //expected balances values are the ones encoded at transactions responses jsons (see enqueueTransactionsResponses)
-        assertThat(balance1.value(), equalTo(new BigDecimal("5387.216")));
-        assertThat(balance2.value(), equalTo(new BigDecimal("5239.89036")));
+        assertThat(balance1.value(), equalTo(new BigDecimal("5387216")));
+        assertThat(balance2.value(), equalTo(new BigDecimal("5239890.36")));
     }
 
     @Test

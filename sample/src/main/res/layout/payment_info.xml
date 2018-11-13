@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
-            tools:text="922337203685.4775807"/>
+            tools:text="922337203685.4775"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

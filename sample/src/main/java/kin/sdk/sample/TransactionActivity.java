@@ -169,7 +169,7 @@ public class TransactionActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy() { 
         super.onDestroy();
         if (buildTransactionRequest != null) {
             buildTransactionRequest.cancel(false);
