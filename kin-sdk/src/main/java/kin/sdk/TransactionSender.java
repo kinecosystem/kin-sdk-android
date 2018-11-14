@@ -113,7 +113,7 @@ class TransactionSender {
         BigDecimal amountWithoutTrailingZeros = amount.stripTrailingZeros();
         int numOfDecimalPlaces = amountWithoutTrailingZeros.scale();
         if (numOfDecimalPlaces > MAX_NUM_OF_DECIMAL_PLACES) {
-            throw new IllegalAmountException("amount can't have more then 4 digits after the decimal point");
+            throw new IllegalAmountException("amount can't have more then 5 digits after the decimal point");
         }
     }
 

@@ -17,7 +17,7 @@ class AccountActivator {
 
     //unlimited trust, The largest amount unit possible in Stellar
     //see https://www.stellar.org/developers/guides/concepts/assets.html
-    private static final String TRUST_NO_LIMIT_VALUE = "922337203685477.5807";
+    private static final String TRUST_NO_LIMIT_VALUE = "92233720368547.75807";
     private final Server server; //horizon server
     private final KinAsset kinAsset;
 

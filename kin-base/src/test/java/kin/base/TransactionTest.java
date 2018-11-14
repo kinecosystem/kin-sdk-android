@@ -37,7 +37,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAATEtAAAAAAAAAAABtoeVYgAAAEAN9W/cXa97ujfhzsP+1ywgrg4evJQjgiJQ5ovqe69lJ6a7cPLIyailiRYByy6JRWoxSN1skDH0sMDfla8jXFQC",
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAC+vCAAAAAAAAAAABtoeVYgAAAEAB8zwQnX0d+a5B4rKUtV1IQI7SgDDoGLXtwrlXefsH+rFouKuz2otCQN/out9Szo7KT3QvWZgg26aARFsRYJkL",
                 transaction.toEnvelopeXdrBase64());
 
         assertEquals(transaction.getSourceAccount(), source);
@@ -139,7 +139,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAAAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAATEtAAAAAAAAAAABtoeVYgAAAEDwFSxJ/UCTtp+5UMK4gPmOyTQqbCxMgrOpLXOMJSk9C4hNVtAwYSDi23hAxY2/LzichIB4HICxoHq58QPaAVQE",
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAC+vCAAAAAAAAAAABtoeVYgAAAEDbkPr5X3xNz3JGl5DqeqLAe4s00w0YQ7ToXLs01wsu/3XbS/gfJvamYoaEYQlMnLUCly/CBCbBINaa/u4x+CQI",
                 transaction.toEnvelopeXdrBase64());
     }
 

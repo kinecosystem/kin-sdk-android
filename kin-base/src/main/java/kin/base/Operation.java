@@ -19,7 +19,7 @@ public abstract class Operation {
 
   private KeyPair mSourceAccount;
 
-  private static final BigDecimal ONE = new BigDecimal(10).pow(4);
+  private static final BigDecimal ONE = new BigDecimal(10).pow(5);
 
   protected static long toXdrAmount(String value) {
     value = checkNotNull(value, "value cannot be null");

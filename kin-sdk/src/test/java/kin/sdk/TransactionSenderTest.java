@@ -407,8 +407,8 @@ public class TransactionSenderTest {
     @Test
     public void sendTransaction_AmountExceedNumOfDecimalPlaces() throws Exception {
         expectedEx.expect(IllegalAmountException.class);
-        expectedEx.expectMessage("amount can't have more then 4 digits after the decimal point");
-        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200.12345"), FEE);
+        expectedEx.expectMessage("amount can't have more then 5 digits after the decimal point");
+        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("20.012345"), FEE);
         transactionSender.sendTransaction(transaction);
     }
 
