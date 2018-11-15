@@ -2,19 +2,20 @@ package kin.sdk;
 
 public class WhitelistableTransaction {
 
-    private final String transactionEnvalopXdrBase64;
-    private final byte[] networkId;
+    private final String transactionEnvelopXdrBase64;
+    private final String networkPassphrase;
 
-    public WhitelistableTransaction(String transactionEnvalopXdrBase64, byte[] networkId) {
-        this.transactionEnvalopXdrBase64 = transactionEnvalopXdrBase64;
-        this.networkId = networkId;
+    public WhitelistableTransaction(String transactionEnvelopXdrBase64, String networkPassphrase) {
+        this.transactionEnvelopXdrBase64 = transactionEnvelopXdrBase64;
+        this.networkPassphrase = networkPassphrase;
     }
 
-    public String getTransactionEnvalopXdrBase64() {
-        return transactionEnvalopXdrBase64;
+    public String getTransactionEnvelopXdrBase64() {
+        return transactionEnvelopXdrBase64;
     }
 
-    public byte[] getNetworkId() {
-        return networkId;
+    public String getNetworkPassphrase() {
+        return networkPassphrase;
     }
+
 }

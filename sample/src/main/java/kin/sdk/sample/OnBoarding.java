@@ -19,7 +19,7 @@ import okhttp3.Response;
 
 class OnBoarding {
 
-    private static final String URL_CREATE_ACCOUNT = "http://friendbot-playground.kininfrastructure.com/?addr=";
+    private static final String URL_CREATE_ACCOUNT = "http://18.206.35.110:8001?addr=";
     private static final int FUND_KIN_AMOUNT = 6000;
     private static final String URL_FUND =
         "http://faucet-playground.kininfrastructure.com/fund?account=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
@@ -30,8 +30,8 @@ class OnBoarding {
     public interface Callbacks {
 
         void onSuccess();
-
         void onFailure(Exception e);
+
     }
 
     OnBoarding() {
@@ -51,9 +51,9 @@ class OnBoarding {
         listenerRegistration = account.addAccountCreationListener(data -> {
             listenerRegistration.remove();
             handler.removeCallbacks(accountCreationListeningTimeout);
-            activateAccount(account, callbacks);
+            fundAccountWithKin(account, callbacks);
         });
-        handler.postDelayed(accountCreationListeningTimeout, 10 * DateUtils.SECOND_IN_MILLIS);
+//        handler.postDelayed(accountCreationListeningTimeout, 20 * DateUtils.SECOND_IN_MILLIS);
         createAccount(account, callbacks);
     }
 

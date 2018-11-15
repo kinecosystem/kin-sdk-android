@@ -24,8 +24,8 @@ public class Environment {
             KIN_ASSET_CODE);
 
     public static final Environment TEST =
-        new Environment("https://horizon-playground.kininfrastructure.com",
-            "Kin Playground Network ; June 2018",
+        new Environment("http://18.206.35.110:8008",
+            "Integration Test Network ; zulucrypto",
             "GBC3SG6NGTSZ2OMH3FFGB7UVRQWILW367U4GSOOF4TFSZONV42UJXUH7",
             KIN_ASSET_CODE);
 

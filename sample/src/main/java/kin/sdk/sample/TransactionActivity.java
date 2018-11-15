@@ -9,6 +9,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import org.json.JSONException;
+
 import java.math.BigDecimal;
 import kin.sdk.KinAccount;
 import kin.sdk.Request;
@@ -35,12 +38,34 @@ public class TransactionActivity extends BaseActivity {
     private Request<Long> gertMinimumFeeRequest;
     private Request<Transaction> buildTransactionRequest;
     private Request<TransactionId> sendTransactionRequest;
+    private WhitelistService whitelistService;
+
+    public interface WhitelistServiceCallbacks {
+        void onSuccess(String whitelistTransaction);
+        void onFailure(Exception e);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_activity);
+        whitelistService = new WhitelistService();
         initWidgets();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (gertMinimumFeeRequest != null) {
+            gertMinimumFeeRequest.cancel(false);
+        }
+        if (buildTransactionRequest != null) {
+            buildTransactionRequest.cancel(false);
+        }
+        if (sendTransactionRequest != null) {
+            sendTransactionRequest.cancel(false);
+        }
+        progressBar = null;
     }
 
     private void initWidgets() {
@@ -205,55 +230,92 @@ public class TransactionActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
         KinAccount account = getKinClient().getAccount(0);
         if (account != null) {
-            DisplayCallback<TransactionId> callback = new DisplayCallback<TransactionId>(progressBar) {
-                @Override
-                public void displayResult(Context context, View view, TransactionId transactionId) {
-                    KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
-                }
-            };
-
-            buildAndSendTransaction(toAddress, amount, fee, memo, account, callback);
-
+            buildTransaction(toAddress, amount, fee, memo, account);
         } else {
             progressBar.setVisibility(View.GONE);
             throw new AccountDeletedException();
         }
     }
 
-    private void buildAndSendTransaction(String toAddress, BigDecimal amount, int fee, String memo, KinAccount account, DisplayCallback<TransactionId> callback) {
+    private void buildTransaction(String toAddress, BigDecimal amount, int fee, String memo, KinAccount account) {
         if (memo == null) {
             buildTransactionRequest = account.buildTransaction(toAddress, amount, fee);
         } else {
             buildTransactionRequest = account.buildTransaction(toAddress, amount, fee, memo);
         }
-        buildTransactionRequest.run(new ResultCallback<Transaction>() {
-            @Override
-            public void onResult(Transaction transaction) {
-                Log.d(TAG, "handleSendTransaction: build transaction " + transaction.getId().id() + " succeeded");
-                sendTransactionRequest = account.sendTransaction(transaction);
-                sendTransactionRequest.run(callback);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Utils.logError(e, "handleSendTransaction");
-                KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
-            }
-        });
+        buildTransactionRequest.run(new BuildTransactionCallback());
     }
 
-    @Override
-    protected void onDestroy() { 
-        super.onDestroy();
-        if (gertMinimumFeeRequest != null) {
-            gertMinimumFeeRequest.cancel(false);
+    private void handleWhitelistTransaction(Transaction transaction) {
+        try {
+            whitelistService.whitelistTransaction(transaction.getWhitelistableTransaction(), new WhitelistServiceListener());
+        } catch (JSONException e) {
+            Utils.logError(e, "handleWhitelistTransaction");
+            KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
         }
-        if (buildTransactionRequest != null) {
-            buildTransactionRequest.cancel(false);
-        }
-        if (sendTransactionRequest != null) {
-            sendTransactionRequest.cancel(false);
-        }
-        progressBar = null;
     }
+
+    private void sendTransaction(Transaction transaction, KinAccount account, DisplayCallback<TransactionId> callback) {
+        sendTransactionRequest = account.sendTransaction(transaction);
+        sendTransactionRequest.run(callback);
+    }
+
+
+    class WhitelistServiceListener implements WhitelistServiceCallbacks {
+
+        @Override
+        public void onSuccess(String whitelistTransaction) {
+            Log.d(TAG, "WhitelistServiceListener: onSuccess");
+            KinAccount account = getKinClient().getAccount(0);
+            if (account!= null) {
+                sendTransactionRequest = account.sendWhitelistTransaction(whitelistTransaction);
+                sendTransactionRequest.run(new SendTransactionCallback());
+            }
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            Utils.logError(e, "whitelistTransaction");
+            KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
+        }
+    }
+
+    private class SendTransactionCallback extends DisplayCallback<TransactionId> {
+
+        SendTransactionCallback() {
+            super(progressBar);
+        }
+
+        @Override
+        public void displayResult(Context context, View view, TransactionId transactionId) {
+            KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
+        }
+    }
+
+    private class BuildTransactionCallback implements ResultCallback<Transaction> {
+
+        @Override
+        public void onResult(Transaction transaction) {
+            Log.d(TAG, "buildTransaction: build transaction " + transaction.getId().id() + " succeeded");
+
+            // This is just to show whitelist transaction and regular transaction
+            boolean isWhitelistApp = true;
+
+            if (isWhitelistApp) {
+                handleWhitelistTransaction(transaction);
+            } else {
+                KinAccount account = getKinClient().getAccount(0);
+                if (account!= null) {
+                    sendTransaction(transaction, account, new SendTransactionCallback());
+                }
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+            Utils.logError(e, "buildTransaction");
+            KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
+        }
+    }
+
 }
