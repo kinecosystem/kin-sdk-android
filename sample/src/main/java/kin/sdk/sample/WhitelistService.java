@@ -42,7 +42,7 @@ public class WhitelistService {
                 .url(URL_WHITELISTING_SERVICE)
                 .post(requestBody)
                 .build();
-        okHttpClient.newCall(request)
+        okHttpClient.newCall(request) // TODO: 15/11/2018 We could do it also synchronously using 'execute' and maybe it is the correct way in this case
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {

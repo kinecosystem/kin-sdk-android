@@ -1,6 +1,5 @@
 package kin.sdk;
 
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -13,7 +12,6 @@ import java.util.List;
 import kin.base.AssetTypeNative;
 import kin.base.Network;
 import kin.sdk.Environment.KinAsset;
-import kin.sdk.exception.AccountNotActivatedException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.InsufficientBalanceException;
 import kin.sdk.exception.InsufficientFeeException;
@@ -39,12 +37,10 @@ class TransactionSender {
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
     private static final String INSUFFICIENT_BALANCE_RESULT_CODE = "tx_insufficient_balance";
     private final Server server; //horizon server
-    private final KinAsset kinAsset;
     private final String appId;
 
     TransactionSender(Server server, KinAsset kinAsset, String appId) {
         this.server = server;
-        this.kinAsset = kinAsset;
         this.appId = appId;
     }
 
@@ -77,7 +73,7 @@ class TransactionSender {
             kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(whitelist);
             return sendTransaction(transaction);
         } catch (IOException e) {
-            throw new OperationFailedException("whitelist data invalid", e);
+            throw new OperationFailedException("whitelist transaction data invalid", e);
         }
     }
 
@@ -171,9 +167,7 @@ class TransactionSender {
     }
 
     private void verifyAddresseeAccount(KeyPair addressee) throws OperationFailedException {
-        AccountResponse addresseeAccount;
-        addresseeAccount = loadAccount(addressee);
-        checkKinTrust(addresseeAccount);
+        loadAccount(addressee);
     }
 
     private AccountResponse loadAccount(@NonNull KeyPair from) throws OperationFailedException {
@@ -195,16 +189,9 @@ class TransactionSender {
         return sourceAccount;
     }
 
-    private void checkKinTrust(AccountResponse accountResponse) throws AccountNotActivatedException {
-//        if (!kinAsset.hasKinTrust(accountResponse)) {
-//            throw new AccountNotActivatedException(accountResponse.getKeypair().getAccountId());
-//        }
-    }
-
     private AccountResponse loadSourceAccount(@NonNull KeyPair from) throws OperationFailedException {
         AccountResponse sourceAccount;
         sourceAccount = loadAccount(from);
-        checkKinTrust(sourceAccount);
         return sourceAccount;
     }
 

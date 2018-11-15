@@ -22,7 +22,7 @@ class OnBoarding {
     private static final String URL_CREATE_ACCOUNT = "http://18.206.35.110:8001?addr=";
     private static final int FUND_KIN_AMOUNT = 6000;
     private static final String URL_FUND =
-        "http://faucet-playground.kininfrastructure.com/fund?account=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+        "http://18.206.35.110:3000/fund?account=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
