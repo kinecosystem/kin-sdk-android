@@ -1,8 +1,8 @@
 ![Kin Token](kin_android.png)
 # Kin SDK for Android - Working in progress.
 # for stable version please refer to kin-core-android: https://github.com/kinecosystem/kin-core-android
-[![Build Status](https://travis-ci.org/kinecosystem/kin-core-android.svg?branch=dev)](https://travis-ci.org/kinecosystem/kin-core-android)
-[![codecov](https://codecov.io/gh/kinecosystem/kin-core-android/branch/dev/graph/badge.svg)](https://codecov.io/gh/kinecosystem/kin-core-android)
+[![Build Status](https://travis-ci.org/kinecosystem/kin-sdk-android.svg?branch=dev)](https://travis-ci.org/kinecosystem/kin-sdk-android)
+[![codecov](https://codecov.io/gh/kinecosystem/kin-sdk-android/branch/dev/graph/badge.svg)](https://codecov.io/gh/kinecosystem/kin-sdk-android)
 
 Android library responsible for creating and managing KIN accounts.
 
@@ -105,7 +105,7 @@ Current account status on the blockchain can be queried using `getStatus` method
 status will be one of the following 2 options:
 
 * `AccountStatus.NOT_CREATED` - Account is not created (funded with native asset) on the network.
-* `AccountStatus.ACTIVATED` - Account was created and activated, account can send and receive KIN.
+* `AccountStatus.ACTIVATED` - Account was created, account can send and receive KIN.
 
 ```java
 Request<Integer> statusRequest = account.getStatus();
