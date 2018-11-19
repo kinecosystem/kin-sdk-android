@@ -87,7 +87,7 @@ kinClient.deleteAccount(int index);
 Before an account can be used on the configured network, it must be funded with the native network asset,
 This step must be performed by a service, see [Fee token faucet service](fee-faucet.md).
 
-For more details see [Onboarding](onboarding.md), also take a look at Sample App [OnBoarding](https://github.com/kinecosystem/kin-sdk-android/blob/dev/sample/src/main/java/kin/sdk/sample/OnBoarding.java) class for a complete example.
+For more details see [Onboarding](onboarding.md), also take a look at Sample App [OnBoarding](https://github.com/kinecosystem/kin-sdk-android/blob/master/sample/src/main/java/kin/sdk/sample/OnBoarding.java) class for a complete example.
 
 ## Account Information
 
@@ -102,7 +102,7 @@ account.getPublicAddress();
 ### Query Account Status
 
 Current account status on the blockchain can be queried using `getStatus` method,
-status will be one of the following 3 options:
+status will be one of the following 2 options:
 
 * `AccountStatus.NOT_CREATED` - Account is not created (funded with native asset) on the network.
 * `AccountStatus.ACTIVATED` - Account was created and activated, account can send and receive KIN.
@@ -117,7 +117,7 @@ statusRequest.run(new ResultCallback<Integer>() {
                 //you're good to go!!!
                 break;
             case AccountStatus.NOT_CREATED:
-                //first create an account on the blockchain, second activate the account using account.activate()
+                //first create an account on the blockchain.
                 break;
         }
     }
@@ -160,7 +160,10 @@ The following code will transfer 20 KIN to the recipient account "GDIRGGTBE3H4CU
 ```java
 String toAddress = "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO";
 BigDecimal amountInKin = new BigDecimal("20");
-int fee = 100 // we could write some custom fee or we can can call the blockchain in order to retreive the current minimum                 // fee by calling kinClient.getMinimumFee() or kinClient.getMinimumFeeSync(). Then when you get the minimum                 // fee returned you can start the 'send transaction flow' with this fee.(see the sample app).
+int fee = 100 // we could write some custom fee or we can can call the blockchain in order to retreive
+              // the current minimum fee by calling kinClient.getMinimumFee() or kinClient.getMinimumFeeSync().
+              // Then when you get the minimum fee returned you can start the 'send transaction flow' 
+              // with this fee.(see the sample app).
 
 // Build the transaction and get a Request<Transaction> object.
 buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
@@ -202,8 +205,8 @@ buildTransactionRequest.run(new ResultCallback<TransactionId>() {
 
 ```
 ### Transferring KIN to another account using whitelist service
-the flow is very similar to the above code but here there is a middle stage in which you get hte 'WhitelistableTransaction' object from the 'Transaction' object just after you build the transaction and you send it to the whitelist service.
-Then you just use the method 'sendWhitelistTransaction' and the parameter for that method is what you got you got from that service.
+The flow is very similar to the above code but here there is a middle stage in which you get the 'WhitelistableTransaction' object from the 'Transaction' object just after you build the transaction and you send it to the whitelist service.
+Then you just use the method 'sendWhitelistTransaction(String whitelist)' and the parameter for that method is what you got from that service.
 
 ```java
 String toAddress = "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO";
@@ -217,8 +220,9 @@ buildTransactionRequest.run(new ResultCallback<TransactionId>() {
     public void onResult(Transaction transaction) {
         Log.d("example", "The transaction id before sending: " + transaction.getId().id());
 
-        // depends on your service but you could probably do it this way or give it some listener or some other way.
-        String whitelist = whitelistService.whitelistTransaction(transaction.getWhitelistableTransaction())
+        // depends on your service but you could probably do it this way
+        // or give it some listener or some other way.
+        String whitelistTransaction = whitelistService.whitelistTransaction(transaction.getWhitelistableTransaction())
 
         // Create the send the white list transaction request
         sendTransactionRequest = account.sendWhitelistTransaction(whitelistTransaction);
@@ -362,6 +366,7 @@ try {
 
 `AccountNotFoundException` - Account is not created (funded with native asset) on the network.  
 `InsufficientKinException` - Account has not enough kin funds to perform the transaction.
+`InsufficientFeeException` - Transaction has not enough fee to perform the transaction.
 
 ## Sample Application
 
