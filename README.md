@@ -364,7 +364,7 @@ try {
 
 ### Common Errors
 
-`AccountNotFoundException` - Account is not created (funded with native asset) on the network.  
+`AccountNotFoundException` - Account is not created (funded with native asset) on the network. 
 `InsufficientKinException` - Account has not enough kin funds to perform the transaction.
 `InsufficientFeeException` - Transaction has not enough fee to perform the transaction.
 for all the exception you can look [here](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/src/main/java/kin/sdk/exception/).
