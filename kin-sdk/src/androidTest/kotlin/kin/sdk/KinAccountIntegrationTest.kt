@@ -27,6 +27,7 @@ class KinAccountIntegrationTest {
     private val fee: Int = 100
     private val appIdVersionPrefix = "1"
     private val timeoutDurationSeconds : Long = 10
+    private val timeoutDurationSecondsLong : Long = 5
 
     private lateinit var kinClient: KinClient
 
@@ -140,7 +141,7 @@ class KinAccountIntegrationTest {
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700")))
         assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
 
-        latch.await(10, TimeUnit.SECONDS)
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
         listenerRegistration.remove()
 
         val server = Server(TEST_NETWORK_URL)
@@ -249,7 +250,7 @@ class KinAccountIntegrationTest {
         //verify data notified by listeners
         val transactionIndex = if (sender) 1 else 0 //in case of observing the sender we'll get 2 events (1 for funding 1 for the
         //transaction) in case of receiver - only 1 event
-        latch.await(10, TimeUnit.SECONDS)
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
         paymentListener.remove()
         balanceListener.remove()
         val paymentInfo = actualPaymentsResults[transactionIndex]
@@ -279,7 +280,7 @@ class KinAccountIntegrationTest {
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee,null)
         kinAccountSender.sendTransactionSync(transaction)
 
-        latch.await(15, TimeUnit.SECONDS)
+        assertTrue(latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS))
     }
 
     @Test

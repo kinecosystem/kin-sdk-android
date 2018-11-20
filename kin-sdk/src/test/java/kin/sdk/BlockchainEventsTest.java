@@ -4,6 +4,7 @@ import static kin.sdk.TestUtils.loadResource;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -138,7 +139,7 @@ public class BlockchainEventsTest {
                 }
             }
         });
-        latch.await(1, TimeUnit.SECONDS);
+        assertTrue(latch.await(1, TimeUnit.SECONDS));
 
         assertThat(actualResults.size(), equalTo(2));
         PaymentInfo payment1 = actualResults.get(0);
@@ -175,7 +176,7 @@ public class BlockchainEventsTest {
                 latch.countDown();
             }
         });
-        latch.await(1, TimeUnit.SECONDS);
+        assertTrue(latch.await(1, TimeUnit.SECONDS));
         assertThat(eventFired[0], equalTo(true));
     }
 
@@ -194,7 +195,7 @@ public class BlockchainEventsTest {
                     }
                 }
             });
-        latch.await(1, TimeUnit.SECONDS);
+        assertTrue(latch.await(1, TimeUnit.SECONDS));
         listenerRegistration.remove();
         enqueueTransactionsResponses();
         enqueueTransactionsResponses();
@@ -249,7 +250,7 @@ public class BlockchainEventsTest {
                 }
             }
         });
-        latch.await(1, TimeUnit.SECONDS);
+        assertTrue(latch.await(1, TimeUnit.SECONDS));
 
         assertThat(actualResults.size(), equalTo(2));
         Balance balance1 = actualResults.get(0);
