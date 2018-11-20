@@ -22,8 +22,6 @@ public class KinAccountImplTest {
     @Mock
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
-    private AccountActivator mockAccountActivator;
-    @Mock
     private BlockchainEventsCreator mockBlockchainEventsCreator;
     private KinAccountImpl kinAccount;
     private KeyPair expectedRandomAccount;
@@ -36,7 +34,6 @@ public class KinAccountImplTest {
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
         kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-            mockAccountActivator,
             mockAccountInfoRetriever, mockBlockchainEventsCreator);
     }
 
@@ -107,15 +104,6 @@ public class KinAccountImplTest {
         verify(mockAccountInfoRetriever).getStatus(expectedRandomAccount.getAccountId());
     }
 
-    @Test
-    public void activateSync() throws Exception {
-        initWithRandomAccount();
-
-        kinAccount.activateSync();
-
-        verify(mockAccountActivator).activate(expectedRandomAccount);
-    }
-
     @Test(expected = AccountDeletedException.class)
     public void sendTransactionSync_DeletedAccount_Exception() throws Exception {
         initWithRandomAccount();
@@ -139,14 +127,6 @@ public class KinAccountImplTest {
 
         kinAccount.markAsDeleted();
         kinAccount.getStatusSync();
-    }
-
-    @Test(expected = AccountDeletedException.class)
-    public void activateSync_DeletedAccount_Exception() throws Exception {
-        initWithRandomAccount();
-
-        kinAccount.markAsDeleted();
-        kinAccount.activateSync();
     }
 
     @Test

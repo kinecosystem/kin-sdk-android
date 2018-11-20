@@ -5,12 +5,12 @@ then
     exit 1
 fi
 
-git clone https://github.com/kinecosystem/blockchain-ops.git
-cd blockchain-ops
-git checkout c26afdc168ad378363c63fb44de5a93b3cf24ddf
-cd image
-./init.sh
-cd ../..
+#git clone https://github.com/kinecosystem/blockchain-ops.git
+#cd blockchain-ops
+#git checkout c26afdc168ad378363c63fb44de5a93b3cf24ddf
+#cd image
+#./init.sh
+#cd ../..
 ~/Library/Android/sdk/tools/emulator -avd $1 &
 
 #wait for emulator

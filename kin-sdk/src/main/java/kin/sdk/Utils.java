@@ -13,8 +13,7 @@ final class Utils {
         //no instances
     }
 
-    static TransactionFailedException createTransactionException(@NonNull SubmitTransactionResponse response)
-        throws TransactionFailedException {
+    static TransactionFailedException createTransactionException(@NonNull SubmitTransactionResponse response) {
         ArrayList<String> operationsResultCodes = null;
         String transactionResultCode = null;
         if (response.getExtras() != null && response.getExtras().getResultCodes() != null) {

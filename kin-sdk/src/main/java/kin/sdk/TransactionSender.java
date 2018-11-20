@@ -11,7 +11,6 @@ import java.util.List;
 
 import kin.base.AssetTypeNative;
 import kin.base.Network;
-import kin.sdk.Environment.KinAsset;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.InsufficientBalanceException;
 import kin.sdk.exception.InsufficientFeeException;
@@ -39,7 +38,7 @@ class TransactionSender {
     private final Server server; //horizon server
     private final String appId;
 
-    TransactionSender(Server server, KinAsset kinAsset, String appId) {
+    TransactionSender(Server server, String appId) {
         this.server = server;
         this.appId = appId;
     }

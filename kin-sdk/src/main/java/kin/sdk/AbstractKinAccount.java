@@ -64,18 +64,6 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<Void> activate() {
-        return new Request<>(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                activateSync();
-                return null;
-            }
-        });
-    }
-
-    @NonNull
-    @Override
     public Request<Integer> getStatus() {
         return new Request<>(new Callable<Integer>() {
             @Override

@@ -3,7 +3,6 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
-import kin.sdk.exception.AccountNotActivatedException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.InsufficientKinException;
@@ -69,7 +68,6 @@ public interface KinAccount {
      * @param fee the amount of fee(in stroops) for this transfer.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws AccountNotActivatedException if the sender or destination account is not activated.
      * @throws OperationFailedException other error occurred.
      */
     Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
@@ -84,7 +82,6 @@ public interface KinAccount {
      * @param memo An optional string, can contain a utf-8 string up to 28 bytes in length, included on the transaction record.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws AccountNotActivatedException if the sender or destination account is not activated.
      * @throws OperationFailedException other error occurred.
      */
     Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
@@ -96,7 +93,6 @@ public interface KinAccount {
      * @param transaction is the transaction object to send.
      * @return TransactionId the transaction identifier.
      * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws AccountNotActivatedException if the sender or destination account is not activated.
      * @throws InsufficientKinException if account balance has not enough kin.
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
      * @throws OperationFailedException other error occurred.
@@ -111,7 +107,6 @@ public interface KinAccount {
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
      * @return TransactionId the transaction identifier.
      * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws AccountNotActivatedException if the sender or destination account is not activated.
      * @throws InsufficientKinException if account balance has not enough kin.
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
      * @throws OperationFailedException other error occurred.
@@ -134,35 +129,15 @@ public interface KinAccount {
      *
      * @return the balance in kin
      * @throws AccountNotFoundException if account was not created
-     * @throws AccountNotActivatedException if account is not activated
      * @throws OperationFailedException any other error
      */
     @NonNull
     Balance getBalanceSync() throws OperationFailedException;
 
     /**
-     * Create {@link Request} for allowing an account to receive kin.
-     * <p> See {@link KinAccount#activateSync()} for possibles errors</p>
-     *
-     * @return {@code Request<Void>}
-     */
-    @NonNull
-    Request<Void> activate();
-
-    /**
-     * Allow an account to receive kin.
-     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
-     *
-     * @throws AccountNotFoundException if account is not created
-     * @throws TransactionFailedException if activation transaction failed, contains blockchain failure details
-     * @throws OperationFailedException any other error
-     */
-    void activateSync() throws OperationFailedException;
-
-    /**
      * Get current account status on blockchain network.
      *
-     * @return account status, either {@link AccountStatus#NOT_CREATED}, {@link AccountStatus#NOT_ACTIVATED} or {@link
+     * @return account status, either {@link AccountStatus#NOT_CREATED}, or {@link
      * AccountStatus#ACTIVATED}
      * @throws OperationFailedException any other error
      */
@@ -173,7 +148,7 @@ public interface KinAccount {
      * Create {@link Request} for getting current account status on blockchain network.
      * <p> See {@link KinAccount#getStatusSync()} for possibles errors</p>
      *
-     * @return account status, either {@link AccountStatus#NOT_CREATED}, {@link AccountStatus#NOT_ACTIVATED} or {@link
+     * @return account status, either {@link AccountStatus#NOT_CREATED}, or {@link
      * AccountStatus#ACTIVATED}
      */
     Request<Integer> getStatus();

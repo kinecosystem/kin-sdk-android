@@ -2,7 +2,6 @@ package kin.sdk;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
-import static kin.sdk.TestUtils.createKinAsset;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -16,8 +15,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
-import kin.sdk.Environment.KinAsset;
-import kin.sdk.exception.AccountNotActivatedException;
+
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.InsufficientBalanceException;
 import kin.sdk.exception.InsufficientFeeException;
@@ -49,7 +47,6 @@ import kin.base.responses.HttpResponseException;
 @Config(sdk = 23, manifest = Config.NONE)
 public class TransactionSenderTest {
 
-    private static final String ACCOUNT_ID_KIN_ISSUER = "GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM";
     private static final String ACCOUNT_ID_FROM = "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX";
     private static final String SECRET_SEED_FROM = "SB6PCLT2WUQF44HVOTEGCXIDYNX2U4BJUPWUX453ODRGD4CXGPJP3HUX";
     private static final String ACCOUNT_ID_TO = "GDJOJJVIWI6YVPUI3PX4BQCC4SQUZTRYIAMV2YBT6QVL54QGQUQSFKGM";
@@ -76,8 +73,7 @@ public class TransactionSenderTest {
         mockServer();
         Network.useTestNetwork();
 
-        KinAsset kinAsset = createKinAsset(ACCOUNT_ID_KIN_ISSUER);
-        transactionSender = new TransactionSender(server, kinAsset, APP_ID);
+        transactionSender = new TransactionSender(server, APP_ID);
         account = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
     }
 
@@ -140,34 +136,10 @@ public class TransactionSenderTest {
     }
 
     @Test
-    public void sendTransaction_NoKinTrustToAccount() throws Exception {
-        mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to_no_kin.json"));
-        mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
-
-        expectedEx.expect(AccountNotActivatedException.class);
-        expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID_TO)));
-
-        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
-        transactionSender.sendTransaction(transaction);
-    }
-
-    @Test
     public void sendTransaction_FromAccountNotExist() throws Exception {
         mockWebServer.enqueue(new MockResponse().setResponseCode(404));
 
         expectedEx.expect(AccountNotFoundException.class);
-        expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID_FROM)));
-
-        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
-        transactionSender.sendTransaction(transaction);
-    }
-
-    @Test
-    public void sendTransaction_NoKinTrustFromAccount() throws Exception {
-        mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
-        mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from_no_kin.json"));
-
-        expectedEx.expect(AccountNotActivatedException.class);
         expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID_FROM)));
 
         Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
@@ -293,8 +265,7 @@ public class TransactionSenderTest {
     public void sendTransaction_changeTimeOut() throws Exception {
         String url = mockWebServer.url("").toString();
         server = new Server(url, 100, TimeUnit.MILLISECONDS);
-        KinAsset kinAsset = createKinAsset(ACCOUNT_ID_KIN_ISSUER);
-        transactionSender = new TransactionSender(server, kinAsset, APP_ID);
+        transactionSender = new TransactionSender(server, APP_ID);
 
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));

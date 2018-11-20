@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import kin.sdk.Environment.KinAsset;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +35,7 @@ import kin.base.responses.TransactionResponse;
 
 public class BlockchainEventsTest {
 
-    private static final String ACCOUNT_ID = "GBRXY5BAZAAB7M2PI3KG5WLIRARJAGUPV2IPC4AGIPTTZRM7UY2VVKN3";
+    private static final String ACCOUNT_ID = "GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR";
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
     @Mock
@@ -56,10 +55,7 @@ public class BlockchainEventsTest {
         mockServer();
         Network.useTestNetwork();
 
-        //use custom issuer that fake responses are use, to prevent testnet issuer address changes affect the tests
-        KinAsset kinAsset = new Environment("empty", Environment.TEST.getNetworkPassphrase(),
-                "GCKG5WGBIJP74UDNRIRDFGENNIH5Y3KBI5IHREFAJKV4MQXLELT7EX6V").getKinAsset();
-        blockchainEvents = new BlockchainEvents(server, ACCOUNT_ID, kinAsset);
+        blockchainEvents = new BlockchainEvents(server, ACCOUNT_ID);
         createResponsesQueue();
     }
 
@@ -148,22 +144,22 @@ public class BlockchainEventsTest {
         PaymentInfo payment1 = actualResults.get(0);
         PaymentInfo payment2 = actualResults.get(1);
         assertThat(payment1.hash().id(),
-            equalTo("13a3eeceb2ef63223b89e179582b4f4a6ce3fdb310bdb19454847a14f9570be8"));
-        assertThat(payment1.sourcePublicKey(), equalTo("GBRXY5BAZAAB7M2PI3KG5WLIRARJAGUPV2IPC4AGIPTTZRM7UY2VVKN3"));
+            equalTo("3eb3024a9c03451e7c8b8d3ba525a3a241e286cb694a262444d46d92e7605f22"));
+        assertThat(payment1.sourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
         assertThat(payment1.destinationPublicKey(),
-            equalTo("GD4YOKVYR6KPPXA7HXG2SQOTWGZ6FO6BNCDJ5IGIGWRLL3Z5ABPEEYD3"));
-        assertThat(payment1.amount(), equalTo(new BigDecimal("61278.4")));
-        assertThat(payment1.createdAt(), equalTo("2018-02-21T06:51:00Z"));
-        assertThat(payment1.memo(), equalTo("Test Transaction"));
+            equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
+        assertThat(payment1.amount(), equalTo(new BigDecimal("250")));
+        assertThat(payment1.createdAt(), equalTo("2018-11-19T15:59:07Z"));
+        assertThat(payment1.memo(), equalTo("1-test-test1"));
 
         assertThat(payment2.hash().id(),
-            equalTo("899a639e280d91c917e82816c803e4ec68025a6352fd2b3769403012a4ee3cb4"));
-        assertThat(payment2.sourcePublicKey(), equalTo("GBRXY5BAZAAB7M2PI3KG5WLIRARJAGUPV2IPC4AGIPTTZRM7UY2VVKN3"));
+            equalTo("c4ad29472150a741c0924086a76fea1aac326261afacee05c0b36be7e8fb5727"));
+        assertThat(payment2.sourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
         assertThat(payment2.destinationPublicKey(),
-            equalTo("GD4YOKVYR6KPPXA7HXG2SQOTWGZ6FO6BNCDJ5IGIGWRLL3Z5ABPEEYD3"));
-        assertThat(payment2.amount(), equalTo(new BigDecimal("14732.564")));
-        assertThat(payment2.createdAt(), equalTo("2018-02-21T06:51:24Z"));
-        assertThat(payment2.memo(), equalTo("Test Transaction2"));
+            equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
+        assertThat(payment2.amount(), equalTo(new BigDecimal("250")));
+        assertThat(payment2.createdAt(), equalTo("2018-11-19T16:36:42Z"));
+        assertThat(payment2.memo(), equalTo("1-test-test1"));
     }
 
     @Test
@@ -262,8 +258,8 @@ public class BlockchainEventsTest {
         assertThat(balance1, notNullValue());
         assertThat(balance2, notNullValue());
         //expected balances values are the ones encoded at transactions responses jsons (see enqueueTransactionsResponses)
-        assertThat(balance1.value(), equalTo(new BigDecimal("538721.6")));
-        assertThat(balance2.value(), equalTo(new BigDecimal("523989.036")));
+        assertThat(balance1.value(), equalTo(new BigDecimal("11549.998")));
+        assertThat(balance2.value(), equalTo(new BigDecimal("11299.997")));
     }
 
     @Test

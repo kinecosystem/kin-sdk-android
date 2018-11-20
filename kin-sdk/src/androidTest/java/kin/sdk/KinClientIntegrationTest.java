@@ -38,7 +38,7 @@ public class KinClientIntegrationTest {
 
     @Before
     public void setup() {
-        environment = new Environment(TEST_NETWORK_URL, TEST_NETWORK_ID, Environment.TEST.getIssuerAccountId());
+        environment = new Environment(TEST_NETWORK_URL, TEST_NETWORK_ID);
         kinClient = createNewKinClient(STORE_KEY_TEST);
         kinClient2 = createNewKinClient(STORE_KEY_TEST2);
         kinClient.clearAllAccounts();
@@ -269,7 +269,7 @@ public class KinClientIntegrationTest {
     @Test
     public void getEnvironment() throws Exception {
         String url = "https://www.myawesomeserver.com";
-        Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId());
+        Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
         kinClient = new KinClient(InstrumentationRegistry.getTargetContext(), environment, APP_ID, STORE_KEY_TEST);
         Environment actualEnvironment = kinClient.getEnvironment();
 

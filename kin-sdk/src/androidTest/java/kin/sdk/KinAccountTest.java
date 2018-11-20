@@ -35,13 +35,6 @@ public class KinAccountTest {
     }
 
     @Test(expected = AccountDeletedException.class)
-    public void activateSync_DeletedAccount_AccountDeletedException() throws Exception {
-        KinAccount kinAccount = kinClient.addAccount();
-        kinClient.deleteAccount(0);
-        kinAccount.activateSync();
-    }
-
-    @Test(expected = AccountDeletedException.class)
     public void getBalanceSync_DeletedAccount_AccountDeletedException() throws Exception {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);

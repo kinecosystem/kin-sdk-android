@@ -14,18 +14,15 @@ final class KinAccountImpl extends AbstractKinAccount {
     private final KeyPair account;
     private final BackupRestore backupRestore;
     private final TransactionSender transactionSender;
-    private final AccountActivator accountActivator;
     private final AccountInfoRetriever accountInfoRetriever;
     private final BlockchainEvents blockchainEvents;
     private boolean isDeleted = false;
 
     KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
-        AccountActivator accountActivator,
         AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;
-        this.accountActivator = accountActivator;
         this.accountInfoRetriever = accountInfoRetriever;
         this.blockchainEvents = blockchainEventsCreator.create(account.getAccountId());
     }
@@ -71,12 +68,6 @@ final class KinAccountImpl extends AbstractKinAccount {
     public Balance getBalanceSync() throws OperationFailedException {
         checkValidAccount();
         return accountInfoRetriever.getBalance(account.getAccountId());
-    }
-
-    @Override
-    public void activateSync() throws OperationFailedException {
-        checkValidAccount();
-        accountActivator.activate(account);
     }
 
     @Override

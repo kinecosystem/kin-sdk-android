@@ -3,6 +3,7 @@ package kin.sdk.sample;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -35,6 +36,7 @@ public class TransactionActivity extends BaseActivity {
     private View sendTransaction, retrieveMinimumFee, progressBar;
 
     private EditText toAddressInput, amountInput, feeInput, memoInput;
+    private SwitchCompat switchButton;
     private Request<Long> gertMinimumFeeRequest;
     private Request<Transaction> buildTransactionRequest;
     private Request<TransactionId> sendTransactionRequest;
@@ -70,6 +72,7 @@ public class TransactionActivity extends BaseActivity {
 
     private void initWidgets() {
         sendTransaction = findViewById(R.id.send_transaction_btn);
+        switchButton = findViewById(R.id.switchButton);
         retrieveMinimumFee = findViewById(R.id.retrieve_minimum_fee_btn);
         progressBar = findViewById(R.id.transaction_progress);
         toAddressInput = findViewById(R.id.to_address_input);
@@ -261,25 +264,6 @@ public class TransactionActivity extends BaseActivity {
     }
 
 
-    class WhitelistServiceListener implements WhitelistServiceCallbacks {
-
-        @Override
-        public void onSuccess(String whitelistTransaction) {
-            Log.d(TAG, "WhitelistServiceListener: onSuccess");
-            KinAccount account = getKinClient().getAccount(0);
-            if (account!= null) {
-                sendTransactionRequest = account.sendWhitelistTransaction(whitelistTransaction);
-                sendTransactionRequest.run(new SendTransactionCallback());
-            }
-        }
-
-        @Override
-        public void onFailure(Exception e) {
-            Utils.logError(e, "whitelistTransaction");
-            KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
-        }
-    }
-
     private class SendTransactionCallback extends DisplayCallback<TransactionId> {
 
         SendTransactionCallback() {
@@ -298,10 +282,8 @@ public class TransactionActivity extends BaseActivity {
         public void onResult(Transaction transaction) {
             Log.d(TAG, "buildTransaction: build transaction " + transaction.getId().id() + " succeeded");
 
-            // This is just to show whitelist transaction and regular transaction
-            boolean isWhitelistApp = true;
-
-            if (isWhitelistApp) {
+            // This is just to differentiate between whitelist transaction and regular transaction
+            if (switchButton.isChecked()) {
                 handleWhitelistTransaction(transaction);
             } else {
                 KinAccount account = getKinClient().getAccount(0);
@@ -314,6 +296,25 @@ public class TransactionActivity extends BaseActivity {
         @Override
         public void onError(Exception e) {
             Utils.logError(e, "buildTransaction");
+            KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
+        }
+    }
+
+    class WhitelistServiceListener implements WhitelistServiceCallbacks {
+
+        @Override
+        public void onSuccess(String whitelistTransaction) {
+            Log.d(TAG, "WhitelistServiceListener: onSuccess");
+            KinAccount account = getKinClient().getAccount(0);
+            if (account!= null) {
+                sendTransactionRequest = account.sendWhitelistTransaction(whitelistTransaction);
+                sendTransactionRequest.run(new SendTransactionCallback());
+            }
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            Utils.logError(e, "whitelistTransaction");
             KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
         }
     }

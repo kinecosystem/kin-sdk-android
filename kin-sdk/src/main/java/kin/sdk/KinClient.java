@@ -29,7 +29,6 @@ public class KinClient {
     private final Environment environment;
     private final KeyStore keyStore;
     private final TransactionSender transactionSender;
-    private final AccountActivator accountActivator;
     private final AccountInfoRetriever accountInfoRetriever;
     private final GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever;
     private final BlockchainEventsCreator blockchainEventsCreator;
@@ -62,22 +61,20 @@ public class KinClient {
         this.backupRestore = new BackupRestoreImpl();
         Server server = initServer();
         keyStore = initKeyStore(context.getApplicationContext(), storeKey);
-        transactionSender = new TransactionSender(server, environment.getKinAsset(), appId);
-        accountActivator = new AccountActivator(server, environment.getKinAsset());
-        accountInfoRetriever = new AccountInfoRetriever(server, environment.getKinAsset());
+        transactionSender = new TransactionSender(server, appId);
+        accountInfoRetriever = new AccountInfoRetriever(server);
         generalBlockchainInfoRetriever = new GeneralBlockchainInfoRetrieverImpl(server);
-        blockchainEventsCreator = new BlockchainEventsCreator(server, environment.getKinAsset());
+        blockchainEventsCreator = new BlockchainEventsCreator(server);
         loadAccounts();
     }
 
     @VisibleForTesting
     KinClient(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
-        AccountActivator accountActivator, AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
+        AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
         BlockchainEventsCreator blockchainEventsCreator,  BackupRestore backupRestore) {
         this.environment = environment;
         this.keyStore = keyStore;
         this.transactionSender = transactionSender;
-        this.accountActivator = accountActivator;
         this.accountInfoRetriever = accountInfoRetriever;
         this.generalBlockchainInfoRetriever = generalBlockchainInfoRetriever;
         this.blockchainEventsCreator = blockchainEventsCreator;
@@ -208,7 +205,7 @@ public class KinClient {
 
     @NonNull
     private KinAccountImpl createNewKinAccount(KeyPair account) {
-        return new KinAccountImpl(account, backupRestore, transactionSender, accountActivator,
+        return new KinAccountImpl(account, backupRestore, transactionSender,
                 accountInfoRetriever, blockchainEventsCreator);
     }
 

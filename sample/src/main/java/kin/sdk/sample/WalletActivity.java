@@ -197,10 +197,6 @@ public class WalletActivity extends BaseActivity {
             case AccountStatus.NOT_CREATED:
                 value = "Not Created";
                 break;
-            case AccountStatus.NOT_ACTIVATED:
-                value = "Not Activated";
-                break;
-
         }
         return value;
     }
