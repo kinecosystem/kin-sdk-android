@@ -127,7 +127,7 @@
                 android:layout_marginTop="@dimen/sub_text_margin"
                 android:layout_below="@id/get_status_text"
                 android:gravity="left"
-                tools:text="ACTIVATED"/>
+                tools:text="CREATED"/>
         </RelativeLayout>
 
         <View

@@ -105,7 +105,7 @@ Current account status on the blockchain can be queried using `getStatus` method
 status will be one of the following 2 options:
 
 * `AccountStatus.NOT_CREATED` - Account is not created (funded with native asset) on the network.
-* `AccountStatus.ACTIVATED` - Account was created, account can send and receive KIN.
+* `AccountStatus.CREATED` - Account was created, account can send and receive KIN.
 
 ```java
 Request<Integer> statusRequest = account.getStatus();
@@ -113,7 +113,7 @@ statusRequest.run(new ResultCallback<Integer>() {
     @Override
     public void onResult(Integer result) {
         switch (result) {
-            case AccountStatus.ACTIVATED:
+            case AccountStatus.CREATED:
                 //you're good to go!!!
                 break;
             case AccountStatus.NOT_CREATED:
@@ -154,16 +154,22 @@ balanceRequest.run(new ResultCallback<Balance>() {
 ### Transferring KIN to another account
 
 To transfer KIN to another account, you need the public address of the account you want to transfer the KIN to.
+Also in case your app is not in the kin whitelist then you need to also use fee.
+Amount of 1 fee equals to 1/100000 KIN.
+If you are in the whitelist then look after the next example to see how you can send a whitelist transaction.
 
 The following code will transfer 20 KIN to the recipient account "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO".
 
 ```java
+
 String toAddress = "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO";
 BigDecimal amountInKin = new BigDecimal("20");
-int fee = 100 // we could write some custom fee or we can can call the blockchain in order to retreive
-              // the current minimum fee by calling kinClient.getMinimumFee() or kinClient.getMinimumFeeSync().
-              // Then when you get the minimum fee returned you can start the 'send transaction flow'
-              // with this fee.(see the sample app).
+
+// we could use here some custom fee or we can can call the blockchain in order to retrieve
+// the current minimum fee by calling kinClient.getMinimumFee() or kinClient.getMinimumFeeSync().
+// Then when you get the minimum fee returned and you can start the 'send transaction flow'
+// with this fee.(see the sample app).
+int fee = 100;
 
 // Build the transaction and get a Request<Transaction> object.
 buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
@@ -211,7 +217,9 @@ Then you just use the method 'sendWhitelistTransaction(String whitelist)' and th
 ```java
 String toAddress = "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO";
 BigDecimal amountInKin = new BigDecimal("20");
-int fee = 0 // because it is white list then no fee is needed.
+// because it is white list then no fee is needed.
+// even if the user will enter an amount bigger then zero it will not be deduced from his balance.
+int fee = 0
 
 buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
 buildTransactionRequest.run(new ResultCallback<TransactionId>() {

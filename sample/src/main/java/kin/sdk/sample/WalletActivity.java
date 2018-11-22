@@ -191,8 +191,8 @@ public class WalletActivity extends BaseActivity {
     private String accountStatusToString(Integer result) {
         String value = "";
         switch (result) {
-            case AccountStatus.ACTIVATED:
-                value = "Activated";
+            case AccountStatus.CREATED:
+                value = "Created";
                 break;
             case AccountStatus.NOT_CREATED:
                 value = "Not Created";

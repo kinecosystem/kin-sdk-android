@@ -56,12 +56,12 @@ public class AccountInfoRetrieverTest {
     }
 
     @Test
-    public void getStatus_Created_StatusActivated() throws Exception {
+    public void getStatus_Created_StatusCreated() throws Exception {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "balance_res_success.json"));
 
         int status = getStatus(ACCOUNT_ID);
 
-        assertThat(status, equalTo(AccountStatus.ACTIVATED));
+        assertThat(status, equalTo(AccountStatus.CREATED));
     }
 
     @Test

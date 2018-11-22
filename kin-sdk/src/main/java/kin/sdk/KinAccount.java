@@ -51,7 +51,8 @@ public interface KinAccount {
     Request<TransactionId> sendTransaction(Transaction transaction);
 
     /**
-     * Create {@link Request} for signing and sending a transaction from a whitelist
+     * Create {@link Request} for signing and sending a transaction from a whitelist.
+     * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
      * <p> See {@link KinAccount#sendWhitelistTransactionSync(String)} for possibles errors</p>
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
@@ -102,6 +103,7 @@ public interface KinAccount {
 
     /**
      * send a whitelist transaction.
+     * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
@@ -138,7 +140,7 @@ public interface KinAccount {
      * Get current account status on blockchain network.
      *
      * @return account status, either {@link AccountStatus#NOT_CREATED}, or {@link
-     * AccountStatus#ACTIVATED}
+     * AccountStatus#CREATED}
      * @throws OperationFailedException any other error
      */
     @AccountStatus
@@ -149,7 +151,7 @@ public interface KinAccount {
      * <p> See {@link KinAccount#getStatusSync()} for possibles errors</p>
      *
      * @return account status, either {@link AccountStatus#NOT_CREATED}, or {@link
-     * AccountStatus#ACTIVATED}
+     * AccountStatus#CREATED}
      */
     Request<Integer> getStatus();
 

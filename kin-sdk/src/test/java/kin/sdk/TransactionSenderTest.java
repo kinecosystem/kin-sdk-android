@@ -17,7 +17,6 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
 import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.InsufficientBalanceException;
 import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.IllegalAmountException;
 import kin.sdk.exception.InsufficientKinException;
@@ -204,7 +203,7 @@ public class TransactionSenderTest {
                 .setResponseCode(400)
         );
 
-        expectedEx.expect(InsufficientBalanceException.class);
+        expectedEx.expect(InsufficientKinException.class);
 
         Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
@@ -371,7 +370,7 @@ public class TransactionSenderTest {
     public void sendTransaction_NegativeFee() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Fee");
-        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("-200"), -FEE);
+        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), -FEE);
         transactionSender.sendTransaction(transaction);
     }
 

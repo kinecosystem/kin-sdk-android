@@ -7,9 +7,9 @@ import okhttp3.Request
 import java.io.IOException
 
 /**
- * Fake issuer for integration test, support creating and funding accounts on stellar test net
+ * Fake on board for integration test, support creating and funding accounts on stellar test net
  */
-internal class FakeKinIssuer @Throws(IOException::class)
+internal class FakeKinOnBoard @Throws(IOException::class)
 constructor() {
 
     @Throws(Exception::class)

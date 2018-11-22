@@ -10,7 +10,7 @@ import kin.base.responses.LedgerResponse;
 import kin.base.responses.Page;
 import kin.sdk.exception.OperationFailedException;
 
-public class GeneralBlockchainInfoRetrieverImpl implements GeneralBlockchainInfoRetriever {
+class GeneralBlockchainInfoRetrieverImpl implements GeneralBlockchainInfoRetriever {
 
     private final Server server;
 

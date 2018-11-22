@@ -12,7 +12,6 @@ import java.util.List;
 import kin.base.AssetTypeNative;
 import kin.base.Network;
 import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.InsufficientBalanceException;
 import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.IllegalAmountException;
 import kin.sdk.exception.InsufficientKinException;
@@ -85,10 +84,10 @@ class TransactionSender {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(APP_ID_VERSION_PREFIX)
-          .append("-")
-          .append(appId)
-          .append("-")
-          .append(memo);
+                .append("-")
+                .append(appId)
+                .append("-")
+                .append(memo);
         return sb.toString();
     }
 
@@ -212,14 +211,12 @@ class TransactionSender {
     }
 
     private TransactionId createFailureException(SubmitTransactionResponse response)
-            throws TransactionFailedException, InsufficientKinException, InsufficientFeeException, InsufficientBalanceException {
+            throws TransactionFailedException, InsufficientKinException, InsufficientFeeException {
         TransactionFailedException transactionException = Utils.createTransactionException(response);
         if (isInsufficientKinException(transactionException)) {
             throw new InsufficientKinException();
         } else if (isInsufficientFeeException(transactionException)) {
             throw new InsufficientFeeException();
-        }else if (isInsufficientBalanceException(transactionException)) {
-            throw new InsufficientBalanceException();
         } else {
             throw transactionException;
         }
@@ -227,7 +224,9 @@ class TransactionSender {
 
     private boolean isInsufficientKinException(TransactionFailedException transactionException) {
         List<String> resultCodes = transactionException.getOperationsResultCodes();
-        return resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0));
+        String transactionResultCode = transactionException.getTransactionResultCode();
+        return ((resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0))) ||
+                !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE.equals(transactionResultCode));
     }
 
     private boolean isInsufficientFeeException(TransactionFailedException transactionException) {
@@ -235,8 +234,4 @@ class TransactionSender {
         return !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_FEE_RESULT_CODE.equals(transactionResultCode);
     }
 
-    private boolean isInsufficientBalanceException(TransactionFailedException transactionException) {
-        String transactionResultCode = transactionException.getTransactionResultCode();
-        return !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE.equals(transactionResultCode);
-    }
 }

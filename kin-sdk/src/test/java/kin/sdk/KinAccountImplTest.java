@@ -96,11 +96,11 @@ public class KinAccountImplTest {
     public void getStatusSync() throws Exception {
         initWithRandomAccount();
 
-        when(mockAccountInfoRetriever.getStatus(anyString())).thenReturn(AccountStatus.ACTIVATED);
+        when(mockAccountInfoRetriever.getStatus(anyString())).thenReturn(AccountStatus.CREATED);
 
         int status = kinAccount.getStatusSync();
 
-        assertEquals(AccountStatus.ACTIVATED, status);
+        assertEquals(AccountStatus.CREATED, status);
         verify(mockAccountInfoRetriever).getStatus(expectedRandomAccount.getAccountId());
     }
 
@@ -111,6 +111,15 @@ public class KinAccountImplTest {
 
         Transaction transaction = kinAccount.buildTransactionSync("GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"), 100);
         kinAccount.sendTransactionSync(transaction);
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void sendWhitelistTransaction_DeletedAccount_Exception() throws Exception {
+        initWithRandomAccount();
+        kinAccount.markAsDeleted();
+
+        String whitelist = "whitelist test string";
+        kinAccount.sendWhitelistTransactionSync(whitelist);
     }
 
     @Test(expected = AccountDeletedException.class)

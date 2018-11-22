@@ -1,14 +1,14 @@
 package kin.sdk;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
-import static kin.sdk.AccountStatus.ACTIVATED;
+import static kin.sdk.AccountStatus.CREATED;
 import static kin.sdk.AccountStatus.NOT_CREATED;
 
 import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 @Retention(SOURCE)
-@IntDef({NOT_CREATED, ACTIVATED})
+@IntDef({NOT_CREATED, CREATED})
 public @interface AccountStatus {
 
     /**
@@ -19,5 +19,5 @@ public @interface AccountStatus {
     /**
      * Account was created, account is ready to use with kin.
      */
-    int ACTIVATED = 2;
+    int CREATED = 2;
 }

@@ -39,6 +39,7 @@ class AccountInfoRetriever {
             for (AccountResponse.Balance assetBalance : accountResponse.getBalances()) {
                 if (assetBalance.getAsset().getType().equalsIgnoreCase("native")) {
                     balance = new BalanceImpl(new BigDecimal(assetBalance.getBalance()));
+
                 }
             }
         } catch (HttpResponseException httpError) {
@@ -61,7 +62,7 @@ class AccountInfoRetriever {
     int getStatus(@NonNull String accountId) throws OperationFailedException {
         try {
             getBalance(accountId);
-            return AccountStatus.ACTIVATED;
+            return AccountStatus.CREATED;
         } catch (AccountNotFoundException e) {
             return AccountStatus.NOT_CREATED;
         }
