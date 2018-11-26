@@ -14,18 +14,15 @@ final class KinAccountImpl extends AbstractKinAccount {
     private final KeyPair account;
     private final BackupRestore backupRestore;
     private final TransactionSender transactionSender;
-    private final AccountActivator accountActivator;
     private final AccountInfoRetriever accountInfoRetriever;
     private final BlockchainEvents blockchainEvents;
     private boolean isDeleted = false;
 
     KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
-        AccountActivator accountActivator,
         AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;
-        this.accountActivator = accountActivator;
         this.accountInfoRetriever = accountInfoRetriever;
         this.blockchainEvents = blockchainEventsCreator.create(account.getAccountId());
     }
@@ -39,15 +36,17 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount) throws OperationFailedException {
+    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+                                            int fee) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildTransaction(account, publicAddress, amount);
+        return transactionSender.buildTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, @Nullable String memo) throws OperationFailedException {
+    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+                                            int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildTransaction(account, publicAddress, amount, memo);
+        return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
     }
 
     @NonNull
@@ -59,15 +58,16 @@ final class KinAccountImpl extends AbstractKinAccount {
 
     @NonNull
     @Override
+    public TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException {
+        checkValidAccount();
+        return transactionSender.sendWhitelistTransaction(whitelist);
+    }
+
+    @NonNull
+    @Override
     public Balance getBalanceSync() throws OperationFailedException {
         checkValidAccount();
         return accountInfoRetriever.getBalance(account.getAccountId());
-    }
-
-    @Override
-    public void activateSync() throws OperationFailedException {
-        checkValidAccount();
-        accountActivator.activate(account);
     }
 
     @Override

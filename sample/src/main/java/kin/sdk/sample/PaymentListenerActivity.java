@@ -12,7 +12,6 @@ import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 import kin.sdk.ListenerRegistration;
 import kin.sdk.PaymentInfo;
-import kin.sdk.core.sample.R;
 
 public class PaymentListenerActivity extends BaseActivity {
 

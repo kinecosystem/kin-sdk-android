@@ -14,7 +14,6 @@ import kin.sdk.Request;
 import kin.sdk.ResultCallback;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.sample.OnBoarding.Callbacks;
-import kin.sdk.core.sample.R;
 
 /**
  * Responsible for presenting details about the account
@@ -192,16 +191,12 @@ public class WalletActivity extends BaseActivity {
     private String accountStatusToString(Integer result) {
         String value = "";
         switch (result) {
-            case AccountStatus.ACTIVATED:
-                value = "Activated";
+            case AccountStatus.CREATED:
+                value = "Created";
                 break;
             case AccountStatus.NOT_CREATED:
                 value = "Not Created";
                 break;
-            case AccountStatus.NOT_ACTIVATED:
-                value = "Not Activated";
-                break;
-
         }
         return value;
     }

@@ -1,8 +1,15 @@
 package kin.base;
 
+import org.apache.commons.android.codec.binary.Base64;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+
+import kin.base.xdr.XdrDataInputStream;
 
 public class Util {
 
@@ -72,17 +79,24 @@ public class Util {
     return new String(bytes).split("\0")[0];
   }
 
-    public static <T> T checkNotNull(T obj, String msg) {
-        if (obj == null) {
-            throw new NullPointerException(msg);
-        } else {
-            return obj;
-        }
-    }
+  public static <T> T checkNotNull(T obj, String msg) {
+      if (obj == null) {
+          throw new NullPointerException(msg);
+      } else {
+          return obj;
+      }
+  }
 
-    public static void checkArgument(boolean expression, final Object errorMessage) {
-        if (!expression) {
-            throw new IllegalArgumentException(String.valueOf(errorMessage));
-        }
-    }
+  public static void checkArgument(boolean expression, final Object errorMessage) {
+      if (!expression) {
+          throw new IllegalArgumentException(String.valueOf(errorMessage));
+      }
+  }
+
+  public static XdrDataInputStream createXdrDataInputStream(String envelopeXdr) throws UnsupportedEncodingException {
+    Base64 base64 = new Base64();
+    byte[] decoded = base64.decode(envelopeXdr.getBytes(CHARSET_UTF8));
+    InputStream is = new ByteArrayInputStream(decoded);
+    return new XdrDataInputStream(is);
+  }
 }

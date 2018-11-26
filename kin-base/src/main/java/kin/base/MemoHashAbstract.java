@@ -4,6 +4,8 @@ package kin.base;
 import org.apache.commons.android.codec.DecoderException;
 import org.apache.commons.android.codec.binary.Hex;
 
+import java.util.Arrays;
+
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
 
@@ -58,4 +60,12 @@ abstract class MemoHashAbstract extends Memo {
 
   @Override
   abstract kin.base.xdr.Memo toXdr();
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MemoHashAbstract that = (MemoHashAbstract) o;
+    return Arrays.equals(bytes, that.bytes);
+  }
 }

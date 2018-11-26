@@ -1,15 +1,14 @@
 package kin.sdk;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
-import static kin.sdk.AccountStatus.ACTIVATED;
-import static kin.sdk.AccountStatus.NOT_ACTIVATED;
+import static kin.sdk.AccountStatus.CREATED;
 import static kin.sdk.AccountStatus.NOT_CREATED;
 
 import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 @Retention(SOURCE)
-@IntDef({NOT_CREATED, NOT_ACTIVATED, ACTIVATED})
+@IntDef({NOT_CREATED, CREATED})
 public @interface AccountStatus {
 
     /**
@@ -18,12 +17,7 @@ public @interface AccountStatus {
      */
     int NOT_CREATED = 0;
     /**
-     * Account was created, but not activated yet, thus cannot send or receive kin yet. call {@link
-     * KinAccount#activate()} for activating.
+     * Account was created, account is ready to use with kin.
      */
-    int NOT_ACTIVATED = 1;
-    /**
-     * Account was created and activated, account is ready to use with kin.
-     */
-    int ACTIVATED = 2;
+    int CREATED = 2;
 }

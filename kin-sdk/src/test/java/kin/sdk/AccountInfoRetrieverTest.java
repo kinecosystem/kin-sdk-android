@@ -1,14 +1,12 @@
 package kin.sdk;
 
-import static kin.sdk.TestUtils.createKinAsset;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
-import kin.sdk.Environment.KinAsset;
-import kin.sdk.exception.AccountNotActivatedException;
+
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.OperationFailedException;
 import okhttp3.mockwebserver.MockResponse;
@@ -31,7 +29,6 @@ import kin.base.responses.HttpResponseException;
 @Config(sdk = 23, manifest = Config.NONE)
 public class AccountInfoRetrieverTest {
 
-    private static final String ACCOUNT_ID_KIN_ISSUER = "GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM";
     private static final String ACCOUNT_ID = "GBQUCJ755LJBUFFKFZCTV7XFA6JUR5NAAEJF66SPCN3XROHVKSG3VVUY";
 
     @Rule
@@ -53,63 +50,27 @@ public class AccountInfoRetrieverTest {
     public void getBalance_Success() throws Exception {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "balance_res_success.json"));
 
-        Balance balance = getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        Balance balance = getBalance(ACCOUNT_ID);
 
         Assert.assertEquals("9999.9999800", balance.value().toPlainString());
     }
 
     @Test
-    public void getStatus_CreatedAndActivated_StatusActivated() throws Exception {
+    public void getStatus_Created_StatusCreated() throws Exception {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "balance_res_success.json"));
 
-        int status = getStatus(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        int status = getStatus(ACCOUNT_ID);
 
-        assertThat(status, equalTo(AccountStatus.ACTIVATED));
+        assertThat(status, equalTo(AccountStatus.CREATED));
     }
 
     @Test
     public void getBalance_VerifyQueryAccountID() throws Exception {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "balance_res_success.json"));
 
-        getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getBalance(ACCOUNT_ID);
 
         assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID));
-    }
-
-    @Test
-    public void getBalance_NoKinTrust_AccountNotActivatedException() throws Exception {
-        mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "balance_res_no_kin_trust.json"));
-        expectedEx.expect(AccountNotActivatedException.class);
-        expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID)));
-
-        getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
-    }
-
-    @Test
-    public void getStatus_NoKinTrust_StatusNotActivated() throws Exception {
-        mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "balance_res_no_kin_trust.json"));
-
-        int status = getStatus(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
-        assertThat(status, equalTo(AccountStatus.NOT_ACTIVATED));
-    }
-
-    @Test
-    public void getBalance_SameIssuerDifferentAsset_AccountNotActivatedException() throws Exception {
-        mockWebServer.enqueue(TestUtils
-            .generateSuccessMockResponse(this.getClass(), "balance_res_same_issuer_different_asset_code.json"));
-        expectedEx.expect(AccountNotActivatedException.class);
-        expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID)));
-
-        getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
-    }
-
-    @Test
-    public void getStatus_SameIssuerDifferentAsset_StatusNotActivated() throws Exception {
-        mockWebServer.enqueue(TestUtils
-            .generateSuccessMockResponse(this.getClass(), "balance_res_same_issuer_different_asset_code.json"));
-
-        int status = getStatus(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
-        assertThat(status, equalTo(AccountStatus.NOT_ACTIVATED));
     }
 
     @Test
@@ -119,7 +80,7 @@ public class AccountInfoRetrieverTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(isA(IOException.class));
 
-        getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getBalance(ACCOUNT_ID);
     }
 
     @Test
@@ -129,7 +90,7 @@ public class AccountInfoRetrieverTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(isA(IOException.class));
 
-        getStatus(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getStatus(ACCOUNT_ID);
     }
 
     @Test
@@ -139,7 +100,7 @@ public class AccountInfoRetrieverTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectMessage(ACCOUNT_ID);
 
-        getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getBalance(ACCOUNT_ID);
     }
 
     @Test
@@ -149,7 +110,7 @@ public class AccountInfoRetrieverTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectMessage(ACCOUNT_ID);
 
-        getStatus(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getStatus(ACCOUNT_ID);
     }
 
     @Test
@@ -160,7 +121,7 @@ public class AccountInfoRetrieverTest {
         expectedEx.expect(AccountNotFoundException.class);
         expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID)));
 
-        getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getBalance(ACCOUNT_ID);
     }
 
     @Test
@@ -169,7 +130,7 @@ public class AccountInfoRetrieverTest {
             .setResponseCode(404)
         );
 
-        int status = getStatus(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        int status = getStatus(ACCOUNT_ID);
         assertThat(status, equalTo(AccountStatus.NOT_CREATED));
     }
 
@@ -181,7 +142,7 @@ public class AccountInfoRetrieverTest {
 
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(Matchers.<Throwable>instanceOf(HttpResponseException.class));
-        getBalance(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getBalance(ACCOUNT_ID);
     }
 
     @Test
@@ -192,7 +153,7 @@ public class AccountInfoRetrieverTest {
 
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(Matchers.<Throwable>instanceOf(HttpResponseException.class));
-        getStatus(ACCOUNT_ID_KIN_ISSUER, ACCOUNT_ID);
+        getStatus(ACCOUNT_ID);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -202,8 +163,7 @@ public class AccountInfoRetrieverTest {
             .setResponseCode(500)
         );
         expectedEx.expect(IllegalArgumentException.class);
-        KinAsset kinAsset = createKinAsset(ACCOUNT_ID_KIN_ISSUER);
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server, kinAsset);
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
         accountInfoRetriever.getBalance(null);
     }
 
@@ -214,20 +174,17 @@ public class AccountInfoRetrieverTest {
             .setResponseCode(500)
         );
         expectedEx.expect(IllegalArgumentException.class);
-        KinAsset kinAsset = createKinAsset(ACCOUNT_ID_KIN_ISSUER);
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server, kinAsset);
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
         accountInfoRetriever.getStatus(null);
     }
 
-    private Balance getBalance(String issuerAccountId, String accountId) throws OperationFailedException {
-        KinAsset kinAsset = createKinAsset(issuerAccountId);
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server, kinAsset);
+    private Balance getBalance(String accountId) throws OperationFailedException {
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
         return accountInfoRetriever.getBalance(accountId);
     }
 
-    private int getStatus(String issuerAccountId, String accountId) throws OperationFailedException {
-        KinAsset kinAsset = createKinAsset(issuerAccountId);
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server, kinAsset);
+    private int getStatus(String accountId) throws OperationFailedException {
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
         return accountInfoRetriever.getStatus(accountId);
     }
 

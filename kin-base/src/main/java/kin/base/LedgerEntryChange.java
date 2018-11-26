@@ -18,6 +18,8 @@ public class LedgerEntryChange {
     LedgerEntryChange entryChange = null;
     switch (xdr.getData().getDiscriminant()) {
       case ACCOUNT:
+        entryChange = AccountLedgerEntryChange.fromXdr(xdr.getData().getAccount());
+        entryChange.lastModifiedLedgerSequence = xdr.getLastModifiedLedgerSeq().getUint32().longValue();
         break;
       case TRUSTLINE:
         entryChange = TrustLineLedgerEntryChange.fromXdr(xdr.getData().getTrustLine());

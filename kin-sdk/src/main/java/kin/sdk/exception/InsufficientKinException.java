@@ -1,7 +1,7 @@
 package kin.sdk.exception;
 
 /**
- * Transaction failed due to insufficient kin balance.
+ * Transaction failed due to insufficient kin.
  */
 public class InsufficientKinException extends OperationFailedException {
 

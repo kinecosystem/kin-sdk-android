@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.widget.TextView;
 import kin.sdk.KinClient;
-import kin.sdk.core.sample.R;
 
 /**
  * User is given a choice to create or use an account on the MAIN or TEST(test) networks

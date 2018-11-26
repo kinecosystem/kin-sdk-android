@@ -4,8 +4,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.math.BigDecimal;
-import kin.sdk.Environment.KinAsset;
-import kin.sdk.exception.AccountNotActivatedException;
+
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.OperationFailedException;
 import kin.base.KeyPair;
@@ -16,11 +15,9 @@ import kin.base.responses.HttpResponseException;
 class AccountInfoRetriever {
 
     private final Server server;
-    private final KinAsset kinAsset;
 
-    AccountInfoRetriever(Server server, KinAsset kinAsset) {
+    AccountInfoRetriever(Server server) {
         this.server = server;
-        this.kinAsset = kinAsset;
     }
 
     /**
@@ -29,7 +26,6 @@ class AccountInfoRetriever {
      * @param accountId the account ID to check balance
      * @return the account {@link Balance}
      * @throws AccountNotFoundException if account not created yet
-     * @throws AccountNotActivatedException if account has no Kin trust
      * @throws OperationFailedException any other error
      */
     Balance getBalance(@NonNull String accountId) throws OperationFailedException {
@@ -41,9 +37,9 @@ class AccountInfoRetriever {
                 throw new OperationFailedException("can't retrieve data for account " + accountId);
             }
             for (AccountResponse.Balance assetBalance : accountResponse.getBalances()) {
-                if (kinAsset.isKinAsset(assetBalance.getAsset())) {
+                if (assetBalance.getAsset().getType().equalsIgnoreCase("native")) {
                     balance = new BalanceImpl(new BigDecimal(assetBalance.getBalance()));
-                    break;
+
                 }
             }
         } catch (HttpResponseException httpError) {
@@ -56,7 +52,7 @@ class AccountInfoRetriever {
             throw new OperationFailedException(e);
         }
         if (balance == null) {
-            throw new AccountNotActivatedException(accountId);
+            throw new OperationFailedException(accountId);
         }
 
         return balance;
@@ -66,11 +62,9 @@ class AccountInfoRetriever {
     int getStatus(@NonNull String accountId) throws OperationFailedException {
         try {
             getBalance(accountId);
-            return AccountStatus.ACTIVATED;
+            return AccountStatus.CREATED;
         } catch (AccountNotFoundException e) {
             return AccountStatus.NOT_CREATED;
-        } catch (AccountNotActivatedException e) {
-            return AccountStatus.NOT_ACTIVATED;
         }
     }
 }

@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 import com.here.oksse.ServerSentEvent;
 import java.math.BigDecimal;
 import java.util.List;
-import kin.sdk.Environment.KinAsset;
+
+import kin.base.AccountLedgerEntryChange;
+import kin.base.Asset;
 import kin.base.KeyPair;
 import kin.base.LedgerEntryChange;
 import kin.base.LedgerEntryChanges;
@@ -24,14 +26,14 @@ import kin.base.responses.TransactionResponse;
  */
 class BlockchainEvents {
 
+    private String ASSET_TYPE_NATIVE = "native";
     private static final String CURSOR_FUTURE_ONLY = "now";
+
     private final Server server;
-    private final KinAsset kinAsset;
     private final KeyPair accountKeyPair;
 
-    BlockchainEvents(Server server, String accountId, KinAsset kinAsset) {
+    BlockchainEvents(Server server, String accountId) {
         this.server = server;
-        this.kinAsset = kinAsset;
         this.accountKeyPair = KeyPair.fromAccountId(accountId);
     }
 
@@ -44,20 +46,20 @@ class BlockchainEvents {
     ListenerRegistration addBalanceListener(@NonNull final EventListener<Balance> listener) {
         checkNotNull(listener, "listener");
         ServerSentEvent serverSentEvent = server
-            .transactions()
-            .forAccount(accountKeyPair)
-            .cursor(CURSOR_FUTURE_ONLY)
-            .stream(new kin.base.requests.EventListener<TransactionResponse>() {
-                @Override
-                public void onEvent(TransactionResponse transactionResponse) {
-                    extractBalanceChangeFromTransaction(transactionResponse, listener);
-                }
-            });
+                .transactions()
+                .forAccount(accountKeyPair)
+                .cursor(CURSOR_FUTURE_ONLY)
+                .stream(new kin.base.requests.EventListener<TransactionResponse>() {
+                    @Override
+                    public void onEvent(TransactionResponse transactionResponse) {
+                        extractBalanceChangeFromTransaction(transactionResponse, listener);
+                    }
+                });
         return new ListenerRegistration(serverSentEvent);
     }
 
     private void extractBalanceChangeFromTransaction(TransactionResponse transactionResponse,
-        @NonNull EventListener<Balance> listener) {
+                                                     @NonNull EventListener<Balance> listener) {
         List<LedgerEntryChanges> ledgerChanges = transactionResponse.getLedgerChanges();
         if (ledgerChanges != null) {
             for (LedgerEntryChanges ledgerChange : ledgerChanges) {
@@ -72,15 +74,14 @@ class BlockchainEvents {
     }
 
     private void extractBalanceFromTrustLineUpdate(@NonNull EventListener<Balance> listener,
-        LedgerEntryChange ledgerEntryUpdate) {
-        if (ledgerEntryUpdate instanceof TrustLineLedgerEntryChange) {
-            TrustLineLedgerEntryChange trustLineUpdate = (TrustLineLedgerEntryChange) ledgerEntryUpdate;
-            KeyPair account = trustLineUpdate.getAccount();
+                                                   LedgerEntryChange ledgerEntryUpdate) {
+        if (ledgerEntryUpdate instanceof AccountLedgerEntryChange) {
+            AccountLedgerEntryChange accountLedgerEntryChange = (AccountLedgerEntryChange) ledgerEntryUpdate;
+            KeyPair account = accountLedgerEntryChange.getAccount();
             if (account != null) {
-                if (accountKeyPair.getAccountId().equals(account.getAccountId())
-                    && kinAsset.isKinAsset(trustLineUpdate.getAsset())) {
+                if (accountKeyPair.getAccountId().equals(account.getAccountId())) {
                     BalanceImpl balance = new BalanceImpl(
-                        new BigDecimal(trustLineUpdate.getBalance()));
+                            new BigDecimal(accountLedgerEntryChange.getBalance()));
                     listener.onEvent(balance);
                 }
             }
@@ -96,15 +97,15 @@ class BlockchainEvents {
     ListenerRegistration addPaymentListener(@NonNull final EventListener<PaymentInfo> listener) {
         checkNotNull(listener, "listener");
         ServerSentEvent serverSentEvent = server
-            .transactions()
-            .forAccount(accountKeyPair)
-            .cursor(CURSOR_FUTURE_ONLY)
-            .stream(new kin.base.requests.EventListener<TransactionResponse>() {
-                @Override
-                public void onEvent(TransactionResponse transactionResponse) {
-                    extractPaymentsFromTransaction(transactionResponse, listener);
-                }
-            });
+                .transactions()
+                .forAccount(accountKeyPair)
+                .cursor(CURSOR_FUTURE_ONLY)
+                .stream(new kin.base.requests.EventListener<TransactionResponse>() {
+                    @Override
+                    public void onEvent(TransactionResponse transactionResponse) {
+                        extractPaymentsFromTransaction(transactionResponse, listener);
+                    }
+                });
         return new ListenerRegistration(serverSentEvent);
     }
 
@@ -117,38 +118,38 @@ class BlockchainEvents {
     ListenerRegistration addAccountCreationListener(final EventListener<Void> listener) {
         checkNotNull(listener, "listener");
         ServerSentEvent serverSentEvent = server.transactions()
-            .forAccount(accountKeyPair)
-            .stream(new kin.base.requests.EventListener<TransactionResponse>() {
+                .forAccount(accountKeyPair)
+                .stream(new kin.base.requests.EventListener<TransactionResponse>() {
 
-                private boolean eventOccurred = false;
+                    private boolean eventOccurred = false;
 
-                @Override
-                public void onEvent(TransactionResponse transactionResponse) {
-                    //account creation is one time operation, fire event only once
-                    if (!eventOccurred) {
-                        eventOccurred = true;
-                        listener.onEvent(null);
+                    @Override
+                    public void onEvent(TransactionResponse transactionResponse) {
+                        //account creation is one time operation, fire event only once
+                        if (!eventOccurred) {
+                            eventOccurred = true;
+                            listener.onEvent(null);
+                        }
                     }
-                }
-            });
+                });
         return new ListenerRegistration(serverSentEvent);
     }
 
     private void extractPaymentsFromTransaction(TransactionResponse transactionResponse,
-        EventListener<PaymentInfo> listener) {
+                                                EventListener<PaymentInfo> listener) {
         List<Operation> operations = transactionResponse.getOperations();
         if (operations != null) {
             for (Operation operation : operations) {
                 if (operation instanceof PaymentOperation) {
                     PaymentOperation paymentOperation = (PaymentOperation) operation;
-                    if (isPaymentInKin(paymentOperation)) {
+                    if (isPaymentNative(paymentOperation.getAsset())) {
                         PaymentInfo paymentInfo = new PaymentInfoImpl(
-                            transactionResponse.getCreatedAt(),
-                            paymentOperation.getDestination().getAccountId(),
-                            extractSourceAccountId(transactionResponse, paymentOperation),
-                            new BigDecimal(paymentOperation.getAmount()),
-                            new TransactionIdImpl(transactionResponse.getHash()),
-                            extractHashTextIfAny(transactionResponse)
+                                transactionResponse.getCreatedAt(),
+                                paymentOperation.getDestination().getAccountId(),
+                                extractSourceAccountId(transactionResponse, paymentOperation),
+                                new BigDecimal(paymentOperation.getAmount()),
+                                new TransactionIdImpl(transactionResponse.getHash()),
+                                extractHashTextIfAny(transactionResponse)
                         );
                         listener.onEvent(paymentInfo);
                     }
@@ -158,15 +159,15 @@ class BlockchainEvents {
         }
     }
 
+    private boolean isPaymentNative(Asset asset) {
+        return asset != null && asset.getType().equalsIgnoreCase(ASSET_TYPE_NATIVE);
+    }
+
     private String extractSourceAccountId(TransactionResponse transactionResponse, Operation operation) {
         //if payment was sent on behalf of other account - paymentOperation will contains this account, o.w. the source
         //is the transaction source account
         return operation.getSourceAccount() != null ? operation.getSourceAccount()
-            .getAccountId() : transactionResponse.getSourceAccount().getAccountId();
-    }
-
-    private boolean isPaymentInKin(PaymentOperation paymentOperation) {
-        return kinAsset.isKinAsset(paymentOperation.getAsset());
+                .getAccountId() : transactionResponse.getSourceAccount().getAccountId();
     }
 
     private String extractHashTextIfAny(TransactionResponse transactionResponse) {

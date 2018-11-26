@@ -14,6 +14,7 @@ import org.apache.commons.android.codec.binary.Base64;
 import kin.base.xdr.DecoratedSignature;
 import kin.base.xdr.EnvelopeType;
 import kin.base.xdr.SignatureHint;
+import kin.base.xdr.TransactionEnvelope;
 import kin.base.xdr.XdrDataOutputStream;
 
 
@@ -21,7 +22,6 @@ import kin.base.xdr.XdrDataOutputStream;
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction {
-  private final int BASE_FEE = 100;
 
   private final int mFee;
   private final KeyPair mSourceAccount;
@@ -31,13 +31,13 @@ public class Transaction {
   private final TimeBounds mTimeBounds;
   private List<DecoratedSignature> mSignatures;
 
-  Transaction(KeyPair sourceAccount, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
+  Transaction(KeyPair sourceAccount, int fee, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
     mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
     mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
     mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
 
-    mFee = operations.length * BASE_FEE;
+    mFee = operations.length * fee ;
     mSignatures = new ArrayList<DecoratedSignature>();
     mMemo = memo != null ? memo : Memo.none();
     mTimeBounds = timeBounds;
@@ -122,7 +122,11 @@ public class Transaction {
   public Memo getMemo() {
     return mMemo;
   }
-  
+
+  public Operation[] getOperations() {
+    return mOperations;
+  }
+
   /**
    * @return TimeBounds, or null (representing no time restrictions)
    */
@@ -207,10 +211,49 @@ public class Transaction {
   }
 
   /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
+   * @return
+   * @throws IOException
+   */
+  public static Transaction fromEnvelopeXdr(String envelope) throws IOException {
+    TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(Util.createXdrDataInputStream(envelope));
+    return fromEnvelopeXdr(transactionEnvelope);
+  }
+
+  /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
+   * @return
+   */
+  public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
+    kin.base.xdr.Transaction tx = envelope.getTx();
+    int mFee = tx.getFee().getUint32();
+    KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
+    Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getUint64();
+    Memo mMemo = Memo.fromXdr(tx.getMemo());
+    TimeBounds mTimeBounds = TimeBounds.fromXdr(tx.getTimeBounds());
+
+    Operation[] mOperations = new Operation[tx.getOperations().length];
+    for (int i = 0; i < tx.getOperations().length; i++) {
+      mOperations[i] = Operation.fromXdr(tx.getOperations()[i]);
+    }
+
+    Transaction transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds);
+
+    for (DecoratedSignature signature : envelope.getSignatures()) {
+      transaction.mSignatures.add(signature);
+    }
+
+    return transaction;
+  }
+
+  /**
    * Builds a new Transaction object.
    */
   public static class Builder {
     private final TransactionBuilderAccount mSourceAccount;
+    private int fee ;
     private Memo mMemo;
     private TimeBounds mTimeBounds;
     List<Operation> mOperations;
@@ -240,6 +283,15 @@ public class Transaction {
     public Builder addOperation(Operation operation) {
       checkNotNull(operation, "operation cannot be null");
       mOperations.add(operation);
+      return this;
+    }
+
+    /**
+     * @param fee this transaction fee
+     * @return Builder object so you can chain methods.
+     */
+    public Builder addFee(int fee) {
+      this.fee = fee;
       return this;
     }
 
@@ -279,7 +331,7 @@ public class Transaction {
     public Transaction build() {
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
+      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), fee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
       // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
       return transaction;

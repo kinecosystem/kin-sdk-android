@@ -13,7 +13,6 @@ import kin.sdk.KinAccount;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
-import kin.sdk.core.sample.R;
 
 /**
  * Enter passphrase to generate Json content that can be used to access the current account

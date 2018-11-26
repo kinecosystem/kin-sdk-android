@@ -1,15 +1,15 @@
 ![Kin Token](kin_android.png)
 # Kin SDK for Android - Working in progress.
 # for stable version please refer to kin-core-android: https://github.com/kinecosystem/kin-core-android
-[![Build Status](https://travis-ci.org/kinecosystem/kin-core-android.svg?branch=dev)](https://travis-ci.org/kinecosystem/kin-core-android)
-[![codecov](https://codecov.io/gh/kinecosystem/kin-core-android/branch/dev/graph/badge.svg)](https://codecov.io/gh/kinecosystem/kin-core-android)
+[![Build Status](https://travis-ci.org/kinecosystem/kin-sdk-android.svg?branch=dev)](https://travis-ci.org/kinecosystem/kin-sdk-android)
+[![codecov](https://codecov.io/gh/kinecosystem/kin-sdk-android/branch/dev/graph/badge.svg)](https://codecov.io/gh/kinecosystem/kin-sdk-android)
 
 Android library responsible for creating and managing KIN accounts.
 
 
 # Android
 
-## Add Kin Core SDK to your project
+## Add Kin SDK to your project
 
 Add this to your module's `build.gradle` file.
 
@@ -24,13 +24,13 @@ repositories {
 dependencies {
     ...
 
-    compile "com.github.kinecosystem:kin-core-android:<latest release>"
+    compile "com.github.kinecosystem:kin-sdk-android:<latest release>"
 }
 ```
 
-For latest release version go to [https://github.com/kinecosystem/kin-core-android/releases](https://github.com/kinecosystem/kin-core-android/releases).
+For latest release version go to [https://github.com/kinecosystem/kin-sdk-android/releases](https://github.com/kinecosystem/kin-sdk-android/releases).
 
-The main repository is at [github.com/kinecosystem/kin-core-android](https://github.com/kinecosystem/kin-core-android).
+The main repository is at [github.com/kinecosystem/kin-sdk-android](https://github.com/kinecosystem/kin-sdk-android).
 
 ## Get Started
 
@@ -87,24 +87,7 @@ kinClient.deleteAccount(int index);
 Before an account can be used on the configured network, it must be funded with the native network asset,
 This step must be performed by a service, see [Fee token faucet service](fee-faucet.md).
 
-The second step is to activate this account on the client side, using `activate` method. The account will not be able to receive or send KIN before activation.
-
-```java
-Request<Void> activationRequest = account.activate()
-activationRequest.run(new ResultCallback<Void>() {
-    @Override
-    public void onResult(Void result) {
-        Log.d("example", "Account is activated");
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-    }
-});
-```
-
-For more details see [Onboarding](onboarding.md), also take a look at Sample App [OnBoarding](https://github.com/kinecosystem/kin-core-android/blob/dev/sample/src/main/java/kin/core/sample/OnBoarding.java) class for a complete example.
+For more details see [Onboarding](onboarding.md), also take a look at Sample App [OnBoarding](https://github.com/kinecosystem/kin-sdk-android/blob/master/sample/src/main/java/kin/sdk/sample/OnBoarding.java) class for a complete example.
 
 ## Account Information
 
@@ -119,11 +102,10 @@ account.getPublicAddress();
 ### Query Account Status
 
 Current account status on the blockchain can be queried using `getStatus` method,
-status will be one of the following 3 options:
+status will be one of the following 2 options:
 
 * `AccountStatus.NOT_CREATED` - Account is not created (funded with native asset) on the network.
-* `AccountStatus.NOT_ACTIVATED` - Account was created but not activated yet, the account cannot send or receive KIN yet.
-* `AccountStatus.ACTIVATED` - Account was created and activated, account can send and receive KIN.
+* `AccountStatus.CREATED` - Account was created, account can send and receive KIN.
 
 ```java
 Request<Integer> statusRequest = account.getStatus();
@@ -131,14 +113,11 @@ statusRequest.run(new ResultCallback<Integer>() {
     @Override
     public void onResult(Integer result) {
         switch (result) {
-            case AccountStatus.ACTIVATED:
+            case AccountStatus.CREATED:
                 //you're good to go!!!
                 break;
-            case AccountStatus.NOT_ACTIVATED:
-                //activate account using account.activate() for sending/receiving KIN
-                break;
             case AccountStatus.NOT_CREATED:
-                //first create an account on the blockchain, second activate the account using account.activate()
+                //first create an account on the blockchain.
                 break;
         }
     }
@@ -175,22 +154,32 @@ balanceRequest.run(new ResultCallback<Balance>() {
 ### Transferring KIN to another account
 
 To transfer KIN to another account, you need the public address of the account you want to transfer the KIN to.
+Also in case your app is not in the kin whitelist then you need to also use fee.
+Amount of 1 fee equals to 1/100000 KIN.
+If you are in the whitelist then look after the next example to see how you can send a whitelist transaction.
 
 The following code will transfer 20 KIN to the recipient account "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO".
 
 ```java
+
 String toAddress = "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO";
 BigDecimal amountInKin = new BigDecimal("20");
 
+// we could use here some custom fee or we can can call the blockchain in order to retrieve
+// the current minimum fee by calling kinClient.getMinimumFee() or kinClient.getMinimumFeeSync().
+// Then when you get the minimum fee returned and you can start the 'send transaction flow'
+// with this fee.(see the sample app).
+int fee = 100;
+
 // Build the transaction and get a Request<Transaction> object.
-buildTransactionRequest = account.buildTransaction(toAddress, amountInKin);
+buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
 // Actually run the build transaction code in a background thread and get 
-// notify of success/failure methods which runs on the main thread
+// notify of success/failure methods (which runs on the main thread)
 buildTransactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
     public void onResult(Transaction transaction) {
-        // Here we already got a Transaction object before sending the transaction. This means 
+        // Here we already got a Transaction object before actually sending the transaction. This means
         // that we can, for example, send the transaction id to our servers or save it locally  
         // in order to use it later. For example if we lose network just after sending 
         // the transaction then we will not know what happened with this transaction. 
@@ -212,7 +201,51 @@ buildTransactionRequest.run(new ResultCallback<TransactionId>() {
                 e.printStackTrace();
             }
         });
+    }
 
+    @Override
+    public void onError(Exception e) {
+        e.printStackTrace();
+    }
+});
+
+```
+### Transferring KIN to another account using whitelist service
+The flow is very similar to the above code but here there is a middle stage in which you get the 'WhitelistableTransaction' object from the 'Transaction' object just after you build the transaction and you send it to the whitelist service.
+Then you just use the method 'sendWhitelistTransaction(String whitelist)' and the parameter for that method is what you got from that service.
+
+```java
+String toAddress = "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO";
+BigDecimal amountInKin = new BigDecimal("20");
+// because it is white list then no fee is needed.
+// even if the user will enter an amount bigger then zero it will not be deduced from his balance.
+int fee = 0
+
+buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
+buildTransactionRequest.run(new ResultCallback<TransactionId>() {
+
+    @Override
+    public void onResult(Transaction transaction) {
+        Log.d("example", "The transaction id before sending: " + transaction.getId().id());
+
+        // depends on your service but you could probably do it this way
+        // or give it some listener or some other way.
+        String whitelistTransaction = whitelistService.whitelistTransaction(transaction.getWhitelistableTransaction())
+
+        // Create the send the white list transaction request
+        sendTransactionRequest = account.sendWhitelistTransaction(whitelistTransaction);
+        sendTransactionRequest.run(new ResultCallback<TransactionId>() {
+
+            @Override
+            public void onResult(TransactionId id) {
+                Log.d("example", "The transaction id: " + id);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -223,6 +256,7 @@ buildTransactionRequest.run(new ResultCallback<TransactionId>() {
 
 ```
 
+
 #### Memo
 
 Arbitrary data can be added to a transfer operation using the memo parameter,
@@ -231,7 +265,7 @@ the memo can contain a utf-8 string up to 21 bytes in length. A typical usage is
 ```java
 String memo = "arbitrary data";
 
-buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, memo);
+buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee, memo);
 buildTransactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
@@ -324,7 +358,7 @@ try {
 
 try {
     // build the transaction
-    Transaction transaction = account.buildTransactionSync(toAddress, amountInKin)
+    Transaction transaction = account.buildTransactionSync(toAddress, amountInKin, fee)
     // send the transaction
     TransactionId transactionId = account.sendTransactionSync(transaction);
 } catch (OperationFailedException e){
@@ -334,35 +368,29 @@ try {
 
 ## Error Handling
 
-`kin-core` wraps errors with exceptions, synchronous methods can throw exceptions and asynchronous requests has `onError(Exception e)` callback.
+`kin-sdk` wraps errors with exceptions, synchronous methods can throw exceptions and asynchronous requests has `onError(Exception e)` callback.
 
 ### Common Errors
 
 `AccountNotFoundException` - Account is not created (funded with native asset) on the network.  
-`AccountNotActivatedException` - Account was created but not activated yet, the account cannot send or receive KIN yet.  
-`InsufficientKinException` - Account has not enough kin funds to perform the transaction.
+`InsufficientKinException` - Account has not enough kin funds to perform the transaction.  
+`InsufficientFeeException` - Transaction has not enough fee to perform the transaction.  
+for all the exception you can look [here](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/src/main/java/kin/sdk/exception/).
 
 ## Sample Application
 
 ![Sample App](../.github/android_sample_app_screenshot.png)
 
-Sample app covers the entire functionality of `kin-core`, and serves as a detailed example on how to use the library.  
-Sample app source code can be found [here](https://github.com/kinecosystem/kin-core-android/tree/dev/sample/).
+Sample app covers the entire functionality of `kin-sdk`, and serves as a detailed example on how to use the library.
+Sample app source code can be found [here](https://github.com/kinecosystem/kin-sdk-android/tree/dev/sample/).
 
 ## Building from Source
 
 Clone the repo:
 
 ```bash
-$ git clone https://github.com/kinecosystem/kin-core-android.git
+$ git clone https://github.com/kinecosystem/kin-sdk-android.git
 ```
-
-Next, initialize and update git submodules:
-
-```bash
-$ git submodule init && git submodule update
-```
-
 Now you can build the library using gradle, or open the project using Android Studio.
 
 ### Tests
@@ -379,7 +407,7 @@ $ ./run_integ_test.sh
 Running tests without integration tests
 
 ```bash
-$ ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.core.KinAccountIntegrationTest
+$ ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.sdk.KinAccountIntegrationTest
 ```
 
 Generated report can be found at:  
@@ -390,4 +418,4 @@ Generated report can be found at:
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
 
 ## License
-The kin-core-android library is licensed under [MIT license](LICENSE.md).
+The kin-sdk-android library is licensed under [MIT license](LICENSE.md).

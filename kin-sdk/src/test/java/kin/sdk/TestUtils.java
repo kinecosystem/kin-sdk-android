@@ -4,7 +4,6 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
-import kin.sdk.Environment.KinAsset;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -29,7 +28,4 @@ final class TestUtils {
         mockWebServer.enqueue(new MockResponse().setBodyDelay(1, TimeUnit.SECONDS));
     }
 
-    static KinAsset createKinAsset(String issuer) {
-        return new KinAsset("KIN", issuer);
-    }
 }

@@ -35,7 +35,7 @@ public class LedgerDeserializerTest extends TestCase {
             "  \"closed_at\": \"2015-11-19T21:35:59Z\",\n" +
             "  \"total_coins\": \"101343867604.8975480\",\n" +
             "  \"fee_pool\": \"1908.2248818\",\n" +
-            "  \"base_fee\": 100,\n" +
+            "  \"base_fee_in_stroops\": 100,\n" +
             "  \"base_reserve\": \"10.0000000\",\n" +
             "  \"max_tx_set_size\": 50\n" +
             "}";

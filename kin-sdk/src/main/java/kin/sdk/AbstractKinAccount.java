@@ -9,21 +9,22 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount) {
+    public Request<Transaction> buildTransaction(@NonNull final String publicAddress,
+                                                 @NonNull final BigDecimal amount, final int fee) {
         return new Request<>(new Callable<Transaction>() {
             @Override
             public Transaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount);
+                return buildTransactionSync(publicAddress, amount, fee);
             }
         });
     }@NonNull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress,
-                                                 @NonNull final BigDecimal amount, @Nullable final String memo) {
+    public Request<Transaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
+                                                 final int fee, @Nullable final String memo) {
         return new Request<>(new Callable<Transaction>() {
             @Override
             public Transaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount, memo);
+                return buildTransactionSync(publicAddress, amount, fee, memo);
             }
         });
     }
@@ -41,23 +42,22 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<Balance> getBalance() {
-        return new Request<>(new Callable<Balance>() {
+    public Request<TransactionId> sendWhitelistTransaction(final String whitelist) {
+        return new Request<>(new Callable<TransactionId>() {
             @Override
-            public Balance call() throws Exception {
-                return getBalanceSync();
+            public TransactionId call() throws Exception {
+                return sendWhitelistTransactionSync(whitelist);
             }
         });
     }
 
     @NonNull
     @Override
-    public Request<Void> activate() {
-        return new Request<>(new Callable<Void>() {
+    public Request<Balance> getBalance() {
+        return new Request<>(new Callable<Balance>() {
             @Override
-            public Void call() throws Exception {
-                activateSync();
-                return null;
+            public Balance call() throws Exception {
+                return getBalanceSync();
             }
         });
     }

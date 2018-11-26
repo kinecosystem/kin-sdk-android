@@ -3,7 +3,6 @@ package kin.sdk
 import android.support.test.InstrumentationRegistry
 import android.support.test.filters.LargeTest
 import kin.sdk.IntegConsts.TEST_NETWORK_URL
-import kin.sdk.exception.AccountNotActivatedException
 import kin.sdk.exception.AccountNotFoundException
 import kin.sdk.exception.InsufficientKinException
 import org.hamcrest.CoreMatchers.*
@@ -13,18 +12,23 @@ import org.junit.rules.ExpectedException
 import kin.base.Memo
 import kin.base.MemoText
 import kin.base.Server
+import kin.sdk.exception.InsufficientFeeException
 import java.io.IOException
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 @Suppress("FunctionName")
 class KinAccountIntegrationTest {
 
     private val appId = "1a2c"
+    private val fee: Int = 100
     private val appIdVersionPrefix = "1"
+    private val timeoutDurationSeconds : Long = 10
+    private val timeoutDurationSecondsLong : Long = 15
 
     private lateinit var kinClient: KinClient
 
@@ -32,7 +36,7 @@ class KinAccountIntegrationTest {
     @JvmField
     val expectedEx: ExpectedException = ExpectedException.none()
 
-    private val environment: Environment = Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID, fakeKinIssuer.accountId)
+    private val environment: Environment = Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID)
 
     @Before
     @Throws(IOException::class)
@@ -69,62 +73,47 @@ class KinAccountIntegrationTest {
 
     @Test
     @LargeTest
-    fun getBalanceSync_AccountNotActivated_AccountNotActivatedException() {
-        val kinAccount = kinClient.addAccount()
-        fakeKinIssuer.createAccount(kinAccount.publicAddress.orEmpty())
-
-        expectedEx.expect(AccountNotActivatedException::class.java)
-        expectedEx.expectMessage(kinAccount.publicAddress.orEmpty())
-        kinAccount.balanceSync
-    }
-
-    @Test
-    @LargeTest
-    @Throws(Exception::class)
-    fun getStatusSync_AccountNotActivated_StatusNotActivated() {
-        val kinAccount = kinClient.addAccount()
-        fakeKinIssuer.createAccount(kinAccount.publicAddress.orEmpty())
-
-        val status = kinAccount.statusSync
-        assertThat(status, equalTo(AccountStatus.NOT_ACTIVATED))
-    }
-
-    @Test
-    @LargeTest
     @Throws(Exception::class)
     fun getBalanceSync_FundedAccount_GotBalance() {
         val kinAccount = kinClient.addAccount()
-        fakeKinIssuer.createAccount(kinAccount.publicAddress.orEmpty())
 
-        kinAccount.activateSync()
-        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.0000000")))
+        val latch = CountDownLatch(1)
 
-        fakeKinIssuer.fundWithKin(kinAccount.publicAddress.orEmpty(), "3.1415926")
-        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("3.1415926")))
+        var listenerRegistration : ListenerRegistration? = null
+        listenerRegistration = kinAccount.addAccountCreationListener {
+            listenerRegistration?.remove()
+            latch.countDown()
+        }
+        fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty())
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
+
+        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.00000")))
+        fakeKinOnBoard.fundWithKin(kinAccount.publicAddress.orEmpty(), "3.14159")
+        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("3.14159")))
+
     }
 
     @Test
     @LargeTest
     @Throws(Exception::class)
-    fun getStatusSync_CreateAndActivateAccount_StatusActivated() {
+    fun getStatusSync_CreateAccount_StatusCreated() {
         val kinAccount = kinClient.addAccount()
-        fakeKinIssuer.createAccount(kinAccount.publicAddress.orEmpty())
 
-        kinAccount.activateSync()
-        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.0000000")))
+        val latch = CountDownLatch(1)
+
+        var listenerRegistration : ListenerRegistration? = null
+        listenerRegistration = kinAccount.addAccountCreationListener {
+            listenerRegistration?.remove()
+            latch.countDown()
+        }
+        fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty())
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
+
+        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.00000")))
         val status = kinAccount.statusSync
-        assertThat(status, equalTo(AccountStatus.ACTIVATED))
-    }
-
-    @Test
-    @LargeTest
-    @Throws(Exception::class)
-    fun activateSync_AccountNotCreated_AccountNotFoundException() {
-        val kinAccount = kinClient.addAccount()
-
-        expectedEx.expect(AccountNotFoundException::class.java)
-        expectedEx.expectMessage(kinAccount.publicAddress.orEmpty())
-        kinAccount.activateSync()
+        assertThat(status, equalTo(AccountStatus.CREATED))
     }
 
     @Test
@@ -140,12 +129,12 @@ class KinAccountIntegrationTest {
         val listenerRegistration = kinAccountReceiver.addPaymentListener { _ -> latch.countDown() }
 
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
-                BigDecimal("21.123"), memo)
+                BigDecimal("21.123"), fee, memo)
         val transactionId = kinAccountSender.sendTransactionSync(transaction)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.8770000")))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.1230000")))
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700")))
+        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
 
-        latch.await(10, TimeUnit.SECONDS)
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
         listenerRegistration.remove()
 
         val server = Server(TEST_NETWORK_URL)
@@ -161,13 +150,24 @@ class KinAccountIntegrationTest {
     fun sendTransaction_ReceiverAccountNotCreated_AccountNotFoundException() {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
-        fakeKinIssuer.createAccount(kinAccountSender.publicAddress.orEmpty())
-        kinAccountSender.activateSync()
+
+        val latch = CountDownLatch(1)
+
+        var listenerRegistration : ListenerRegistration? = null
+        listenerRegistration = kinAccountSender.addAccountCreationListener {
+            listenerRegistration?.remove()
+            latch.countDown()
+        }
+
+        fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty())
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         expectedEx.expect(AccountNotFoundException::class.java)
         expectedEx.expectMessage(kinAccountReceiver.publicAddress)
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"))
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
         kinAccountSender.sendTransactionSync(transaction)
+
     }
 
     @Test
@@ -176,41 +176,77 @@ class KinAccountIntegrationTest {
     fun sendTransaction_SenderAccountNotCreated_AccountNotFoundException() {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
-        fakeKinIssuer.createAccount(kinAccountReceiver.publicAddress.orEmpty())
+
+        val latch = CountDownLatch(1)
+
+        var listenerRegistration : ListenerRegistration? = null
+        listenerRegistration = kinAccountReceiver.addAccountCreationListener {
+            listenerRegistration?.remove()
+            latch.countDown()
+        }
+
+        fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty())
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         expectedEx.expect(AccountNotFoundException::class.java)
         expectedEx.expectMessage(kinAccountSender.publicAddress)
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"))
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
         kinAccountSender.sendTransactionSync(transaction)
     }
 
     @Test
     @LargeTest
     @Throws(Exception::class)
-    fun sendTransaction_ReceiverAccountNotActivated_AccountNotFoundException() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(activateSender = true, activateReceiver = false)
+    fun sendWhitelistTransaction_AccountNotCreated_AccountNotFoundException() {
+        val kinAccount = kinClient.addAccount()
+        kinClient.deleteAccount(0)
+        val transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
+                BigDecimal(10), 0)
 
-        expectedEx.expect(AccountNotActivatedException::class.java)
-        expectedEx.expectMessage(kinAccountReceiver.publicAddress)
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"))
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        kinAccount.sendWhitelistTransactionSync(whitelist)
+    }
+
+    @Test
+    @LargeTest
+    @Throws(Exception::class)
+    fun sendTransaction_NotEnoughFee_InsufficientFeeException() {
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
+
+        expectedEx.expect(InsufficientFeeException::class.java)
+        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), minFee - 1)
         kinAccountSender.sendTransactionSync(transaction)
     }
 
     @Test
     @LargeTest
     @Throws(Exception::class)
-    fun sendTransaction_SenderAccountNotActivated_AccountNotFoundException() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(activateSender = false, activateReceiver = true)
+    fun sendWhitelistTransaction_FeeNotReduce() {
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        fakeKinIssuer.createAccount(kinAccountSender.publicAddress.orEmpty())
-        fakeKinIssuer.createAccount(kinAccountReceiver.publicAddress.orEmpty())
+        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
+                BigDecimal("20"), minFee + 100000)
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        kinAccountSender.sendWhitelistTransactionSync(whitelist)
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80")))
+    }
 
-        kinAccountReceiver.activateSync()
+    @Test
+    @LargeTest
+    @Throws(Exception::class)
+    fun sendWhitelistTransaction_Success() {
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        expectedEx.expect(AccountNotActivatedException::class.java)
-        expectedEx.expectMessage(kinAccountSender.publicAddress)
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"))
-        kinAccountSender.sendTransactionSync(transaction)
+        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
+                BigDecimal("20"), minFee)
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        kinAccountSender.sendWhitelistTransactionSync(whitelist)
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80")))
+        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20")))
     }
 
     @Test
@@ -234,7 +270,7 @@ class KinAccountIntegrationTest {
         val fundingAmount = BigDecimal("100")
         val transactionAmount = BigDecimal("21.123")
 
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(true, true, 0, 0)
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(0, 0)
 
         //register listeners for testing
         val actualPaymentsResults = ArrayList<PaymentInfo>()
@@ -254,16 +290,16 @@ class KinAccountIntegrationTest {
         }
 
         //send the transaction we want to observe
-        fakeKinIssuer.fundWithKin(kinAccountSender.publicAddress.orEmpty(), "100")
+        fakeKinOnBoard.fundWithKin(kinAccountSender.publicAddress.orEmpty(), "100")
         val memo = "memo"
         val expectedMemo = addAppIdToMemo(memo)
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), transactionAmount, memo)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), transactionAmount, fee, memo)
         val expectedTransactionId = kinAccountSender.sendTransactionSync(transaction)
 
         //verify data notified by listeners
         val transactionIndex = if (sender) 1 else 0 //in case of observing the sender we'll get 2 events (1 for funding 1 for the
         //transaction) in case of receiver - only 1 event
-        latch.await(10, TimeUnit.SECONDS)
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
         paymentListener.remove()
         balanceListener.remove()
         val paymentInfo = actualPaymentsResults[transactionIndex]
@@ -290,40 +326,47 @@ class KinAccountIntegrationTest {
         }
         listenerRegistration.remove()
 
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), null)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee,null)
         kinAccountSender.sendTransactionSync(transaction)
-
-        latch.await(15, TimeUnit.SECONDS)
+        // TODO check if this test work because it's a bit weird that there is no latch.countDown()
+        assertTrue(latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS))
     }
 
     @Test
     @LargeTest
     @Throws(Exception::class)
-    fun sendTransaction_NotEnoughKin_TransactionFailedException() {
+    fun sendTransaction_NotEnoughKin_InsufficientKinException() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
 
         expectedEx.expect(InsufficientKinException::class.java)
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"))
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
         kinAccountSender.sendTransactionSync(transaction)
     }
 
-    private fun onboardAccounts(activateSender: Boolean = true, activateReceiver: Boolean = true, senderFundAmount: Int = 0,
+    private fun onboardAccounts(senderFundAmount: Int = 0,
                                 receiverFundAmount: Int = 0): Pair<KinAccount, KinAccount> {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
-        onboardSingleAccount(kinAccountSender, activateSender, senderFundAmount)
-        onboardSingleAccount(kinAccountReceiver, activateReceiver, receiverFundAmount)
+        onboardSingleAccount(kinAccountSender, senderFundAmount)
+        onboardSingleAccount(kinAccountReceiver, receiverFundAmount)
         return Pair(kinAccountSender, kinAccountReceiver)
     }
 
-    private fun onboardSingleAccount(account: KinAccount, shouldActivate: Boolean, fundAmount: Int) {
-        fakeKinIssuer.createAccount(account.publicAddress.orEmpty())
-        if (shouldActivate) {
-            account.activateSync()
+    private fun onboardSingleAccount(account: KinAccount, fundAmount: Int) {
+        val latch = CountDownLatch(1)
+
+        var listenerRegistration : ListenerRegistration? = null
+        listenerRegistration = account.addAccountCreationListener {
+            listenerRegistration?.remove()
+            if (fundAmount > 0) {
+                fakeKinOnBoard.fundWithKin(account.publicAddress.orEmpty(), fundAmount.toString())
+            }
+            latch.countDown()
         }
-        if (fundAmount > 0) {
-            fakeKinIssuer.fundWithKin(account.publicAddress.orEmpty(), fundAmount.toString())
-        }
+
+        fakeKinOnBoard.createAccount(account.publicAddress.orEmpty())
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
     }
 
     private fun addAppIdToMemo(memo: String): String {
@@ -332,13 +375,13 @@ class KinAccountIntegrationTest {
 
     companion object {
 
-        private lateinit var fakeKinIssuer: FakeKinIssuer
+        private lateinit var fakeKinOnBoard: FakeKinOnBoard
 
         @BeforeClass
         @JvmStatic
         @Throws(IOException::class)
-        fun setupKinIssuer() {
-            fakeKinIssuer = FakeKinIssuer()
+        fun setupKinOnBoard() {
+            fakeKinOnBoard = FakeKinOnBoard()
         }
     }
 }

@@ -1,8 +1,6 @@
 package kin.sdk;
 
-
 import static junit.framework.Assert.assertNull;
-
 import android.support.test.InstrumentationRegistry;
 import java.math.BigDecimal;
 import kin.sdk.exception.AccountDeletedException;
@@ -16,6 +14,7 @@ import org.junit.rules.ExpectedException;
 public class KinAccountTest {
 
     private static final String APP_ID = "1a2c";
+    private static final int FEE = 100;
 
     private KinClient kinClient;
 
@@ -31,13 +30,6 @@ public class KinAccountTest {
     @After
     public void teardown() {
         kinClient.clearAllAccounts();
-    }
-
-    @Test(expected = AccountDeletedException.class)
-    public void activateSync_DeletedAccount_AccountDeletedException() throws Exception {
-        KinAccount kinAccount = kinClient.addAccount();
-        kinClient.deleteAccount(0);
-        kinAccount.activateSync();
     }
 
     @Test(expected = AccountDeletedException.class)
@@ -59,8 +51,19 @@ public class KinAccountTest {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);
         Transaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
-                new BigDecimal(10));
+                new BigDecimal(10), FEE);
         kinAccount.sendTransactionSync(transaction);
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void sendWhitelistTransaction_DeletedAccount_AccountDeletedException() throws Exception {
+        KinAccount kinAccount = kinClient.addAccount();
+        kinClient.deleteAccount(0);
+        Transaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
+                new BigDecimal(10), 0);
+
+        String whitelist = new WhitelistServiceForTest().whitelistTransaction(transaction.getWhitelistableTransaction());
+        kinAccount.sendWhitelistTransactionSync(whitelist);
     }
 
     @Test

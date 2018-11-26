@@ -22,8 +22,6 @@ public class KinAccountImplTest {
     @Mock
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
-    private AccountActivator mockAccountActivator;
-    @Mock
     private BlockchainEventsCreator mockBlockchainEventsCreator;
     private KinAccountImpl kinAccount;
     private KeyPair expectedRandomAccount;
@@ -36,7 +34,6 @@ public class KinAccountImplTest {
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
         kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-            mockAccountActivator,
             mockAccountInfoRetriever, mockBlockchainEventsCreator);
     }
 
@@ -57,7 +54,7 @@ public class KinAccountImplTest {
 
         when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
-        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount);
+        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -75,7 +72,7 @@ public class KinAccountImplTest {
 
         when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
-        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, memo);
+        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100, memo);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -99,21 +96,12 @@ public class KinAccountImplTest {
     public void getStatusSync() throws Exception {
         initWithRandomAccount();
 
-        when(mockAccountInfoRetriever.getStatus(anyString())).thenReturn(AccountStatus.ACTIVATED);
+        when(mockAccountInfoRetriever.getStatus(anyString())).thenReturn(AccountStatus.CREATED);
 
         int status = kinAccount.getStatusSync();
 
-        assertEquals(AccountStatus.ACTIVATED, status);
+        assertEquals(AccountStatus.CREATED, status);
         verify(mockAccountInfoRetriever).getStatus(expectedRandomAccount.getAccountId());
-    }
-
-    @Test
-    public void activateSync() throws Exception {
-        initWithRandomAccount();
-
-        kinAccount.activateSync();
-
-        verify(mockAccountActivator).activate(expectedRandomAccount);
     }
 
     @Test(expected = AccountDeletedException.class)
@@ -121,8 +109,17 @@ public class KinAccountImplTest {
         initWithRandomAccount();
         kinAccount.markAsDeleted();
 
-        Transaction transaction = kinAccount.buildTransactionSync("GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"));
+        Transaction transaction = kinAccount.buildTransactionSync("GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"), 100);
         kinAccount.sendTransactionSync(transaction);
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void sendWhitelistTransaction_DeletedAccount_Exception() throws Exception {
+        initWithRandomAccount();
+        kinAccount.markAsDeleted();
+
+        String whitelist = "whitelist test string";
+        kinAccount.sendWhitelistTransactionSync(whitelist);
     }
 
     @Test(expected = AccountDeletedException.class)
@@ -139,14 +136,6 @@ public class KinAccountImplTest {
 
         kinAccount.markAsDeleted();
         kinAccount.getStatusSync();
-    }
-
-    @Test(expected = AccountDeletedException.class)
-    public void activateSync_DeletedAccount_Exception() throws Exception {
-        initWithRandomAccount();
-
-        kinAccount.markAsDeleted();
-        kinAccount.activateSync();
     }
 
     @Test

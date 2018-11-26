@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -33,7 +34,7 @@ public class KinClientTest {
     @Mock
     private TransactionSender mockTransactionSender;
     @Mock
-    private AccountActivator mockAccountActivator;
+    private GeneralBlockchainInfoRetrieverImpl mockGeneralBlockchainInfoRetriever;
     @Mock
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
@@ -45,7 +46,7 @@ public class KinClientTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        fakeEnvironment = new Environment("empty", Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId());
+        fakeEnvironment = new Environment("empty", Environment.TEST.getNetworkPassphrase());
         fakeKeyStore = new FakeKeyStore();
         kinClient = createNewKinClient();
     }
@@ -327,9 +328,9 @@ public class KinClientTest {
     @Test
     public void getEnvironment() throws Exception {
         String url = "My awesome Horizon server";
-        Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId());
-        kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender, mockAccountActivator,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator, new FakeBackupRestore());
+        Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
+        kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender,
+            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator, new FakeBackupRestore());
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);
@@ -343,7 +344,7 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkUrl");
 
-        new Environment(null, Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId());
+        new Environment(null, Environment.TEST.getNetworkPassphrase());
     }
 
     @Test
@@ -351,23 +352,7 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkPassphrase");
 
-        new Environment(Environment.TEST.getNetworkUrl(), null, Environment.TEST.getIssuerAccountId());
-    }
-
-    @Test
-    public void environment_MissingIssuerAccountId_IllegalArgumentException() throws Exception {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("issuerAccountId");
-
-        new Environment(Environment.TEST.getNetworkUrl(), Environment.TEST.getNetworkPassphrase(), null);
-    }
-
-    @Test
-    public void environment_MissingAssetCode_IllegalArgumentException() throws Exception {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("assetCode");
-
-        new Environment(Environment.TEST.getNetworkUrl(), Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId(), null);
+        new Environment(Environment.TEST.getNetworkUrl(), null);
     }
 
     @Test
@@ -375,7 +360,7 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkUrl");
 
-        new Environment("", Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId());
+        new Environment("", Environment.TEST.getNetworkPassphrase());
     }
 
     @Test
@@ -383,28 +368,21 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkPassphrase");
 
-        new Environment(Environment.TEST.getNetworkUrl(), "", Environment.TEST.getIssuerAccountId());
+        new Environment(Environment.TEST.getNetworkUrl(), "");
     }
 
     @Test
-    public void environment_EmptyIssuerAccountId_IllegalArgumentException() throws Exception {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("issuerAccountId");
-
-        new Environment(Environment.TEST.getNetworkUrl(), Environment.TEST.getNetworkPassphrase(), "");
-    }
-
-    @Test
-    public void environment_EmptyAssetCode_IllegalArgumentException() throws Exception {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("assetCode");
-
-        new Environment(Environment.TEST.getNetworkUrl(), Environment.TEST.getNetworkPassphrase(), Environment.TEST.getIssuerAccountId(), "");
+    public void getMinimumFee() throws Exception {
+        long expectedMinFee = 100;
+        when(mockGeneralBlockchainInfoRetriever.getMinimumFeeSync()).thenReturn(expectedMinFee);
+        
+        long minFee = kinClient.getMinimumFeeSync();
+        assertEquals(expectedMinFee, minFee);
     }
 
     @NonNull
     private KinClient createNewKinClient() {
-        return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender, mockAccountActivator,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator,  new FakeBackupRestore());
+        return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender,
+            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,  new FakeBackupRestore());
     }
 }

@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.EditText;
 import kin.sdk.KinClient;
 import kin.sdk.exception.CreateAccountException;
-import kin.sdk.core.sample.R;
 
 public class CreateWalletActivity extends BaseActivity {
 

@@ -3,7 +3,6 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
-import kin.sdk.exception.AccountNotActivatedException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.InsufficientKinException;
@@ -23,22 +22,24 @@ public interface KinAccount {
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address.
-     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal)} for possibles errors</p>
-     * @param publicAddress the account address to send the specified kin amount
-     * @param amount the amount of kin to transfer
-     * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
+     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
+     * @param publicAddress the account address to send the specified kin amount.
+     * @param amount the amount of kin to transfer.
+     * @param fee the amount of fee(in stroops) for this transfer.
+     * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount);
+    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
-     * <p> See {@link KinAccount#buildTransaction(String, BigDecimal, String)} for possibles errors</p>
-     * @param publicAddress the account address to send the specified kin amount
-     * @param amount the amount of kin to transfer
+     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
+     * @param publicAddress the account address to send the specified kin amount.
+     * @param amount the amount of kin to transfer.
+     * @param fee the amount of fee(in stroops) for this transfer.
      * @param memo An optional string, can contain a utf-8 string up to 28 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, @Nullable String memo);
+    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
 
     /**
      * Create {@link Request} for signing and sending a transaction
@@ -50,46 +51,70 @@ public interface KinAccount {
     Request<TransactionId> sendTransaction(Transaction transaction);
 
     /**
+     * Create {@link Request} for signing and sending a transaction from a whitelist.
+     * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
+     * <p> See {@link KinAccount#sendWhitelistTransactionSync(String)} for possibles errors</p>
+     * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
+     * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
+     */
+    @NonNull
+    Request<TransactionId> sendWhitelistTransaction(String whitelist);
+
+    /**
      * Build a Transaction object of the given amount in kin, to the specified public address.
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
-     * @param publicAddress the account address to send the specified kin amount
-     * @param amount the amount of kin to transfer
+     * @param publicAddress the account address to send the specified kin amount.
+     * @param amount the amount of kin to transfer.
+     * @param fee the amount of fee(in stroops) for this transfer.
      * @return a Transaction object which also includes the transaction id.
-     * @throws AccountNotFoundException if the sender or destination account was not created
-     * @throws AccountNotActivatedException if the sender or destination account is not activated
-     * @throws OperationFailedException other error occurred
+     * @throws AccountNotFoundException if the sender or destination account was not created.
+     * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount) throws OperationFailedException;
+    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
-     * @param publicAddress the account address to send the specified kin amount
-     * @param amount the amount of kin to transfer
+     * @param publicAddress the account address to send the specified kin amount.
+     * @param amount the amount of kin to transfer.
+     * @param fee the amount of fee(in stroops) for this transfer.
      * @param memo An optional string, can contain a utf-8 string up to 28 bytes in length, included on the transaction record.
      * @return a Transaction object which also includes the transaction id.
-     * @throws AccountNotFoundException if the sender or destination account was not created
-     * @throws AccountNotActivatedException if the sender or destination account is not activated
-     * @throws OperationFailedException other error occurred
+     * @throws AccountNotFoundException if the sender or destination account was not created.
+     * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, @Nullable String memo) throws OperationFailedException;
+    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
 
     /**
      * send a transaction.
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @param transaction is the transaction object to send.
-     * @return TransactionId the transaction identifier
-     * @throws AccountNotFoundException if the sender or destination account was not created
-     * @throws AccountNotActivatedException if the sender or destination account is not activated
-     * @throws InsufficientKinException if account balance has not enough kin
-     * @throws TransactionFailedException if transaction failed, contains blockchain failure details
-     * @throws OperationFailedException other error occurred
+     * @return TransactionId the transaction identifier.
+     * @throws AccountNotFoundException if the sender or destination account was not created.
+     * @throws InsufficientKinException if account balance has not enough kin.
+     * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
+     * @throws OperationFailedException other error occurred.
      */
     @NonNull
     TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException;
+
+    /**
+     * send a whitelist transaction.
+     * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
+     * @return TransactionId the transaction identifier.
+     * @throws AccountNotFoundException if the sender or destination account was not created.
+     * @throws InsufficientKinException if account balance has not enough kin.
+     * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
+     * @throws OperationFailedException other error occurred.
+     */
+    @NonNull
+    TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException;
 
     /**
      * Create {@link Request} for getting the current confirmed balance in kin
@@ -106,36 +131,16 @@ public interface KinAccount {
      *
      * @return the balance in kin
      * @throws AccountNotFoundException if account was not created
-     * @throws AccountNotActivatedException if account is not activated
      * @throws OperationFailedException any other error
      */
     @NonNull
     Balance getBalanceSync() throws OperationFailedException;
 
     /**
-     * Create {@link Request} for allowing an account to receive kin.
-     * <p> See {@link KinAccount#activateSync()} for possibles errors</p>
-     *
-     * @return {@code Request<Void>}
-     */
-    @NonNull
-    Request<Void> activate();
-
-    /**
-     * Allow an account to receive kin.
-     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
-     *
-     * @throws AccountNotFoundException if account is not created
-     * @throws TransactionFailedException if activation transaction failed, contains blockchain failure details
-     * @throws OperationFailedException any other error
-     */
-    void activateSync() throws OperationFailedException;
-
-    /**
      * Get current account status on blockchain network.
      *
-     * @return account status, either {@link AccountStatus#NOT_CREATED}, {@link AccountStatus#NOT_ACTIVATED} or {@link
-     * AccountStatus#ACTIVATED}
+     * @return account status, either {@link AccountStatus#NOT_CREATED}, or {@link
+     * AccountStatus#CREATED}
      * @throws OperationFailedException any other error
      */
     @AccountStatus
@@ -145,8 +150,8 @@ public interface KinAccount {
      * Create {@link Request} for getting current account status on blockchain network.
      * <p> See {@link KinAccount#getStatusSync()} for possibles errors</p>
      *
-     * @return account status, either {@link AccountStatus#NOT_CREATED}, {@link AccountStatus#NOT_ACTIVATED} or {@link
-     * AccountStatus#ACTIVATED}
+     * @return account status, either {@link AccountStatus#NOT_CREATED}, or {@link
+     * AccountStatus#CREATED}
      */
     Request<Integer> getStatus();
 

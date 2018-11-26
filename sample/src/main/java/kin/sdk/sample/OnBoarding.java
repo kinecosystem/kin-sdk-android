@@ -4,13 +4,11 @@ package kin.sdk.sample;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.text.format.DateUtils;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import kin.sdk.KinAccount;
 import kin.sdk.ListenerRegistration;
-import kin.sdk.ResultCallback;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -19,10 +17,10 @@ import okhttp3.Response;
 
 class OnBoarding {
 
-    private static final String URL_CREATE_ACCOUNT = "http://friendbot-playground.kininfrastructure.com/?addr=";
+    private static final String URL_CREATE_ACCOUNT = "http://18.206.35.110:8001?addr=";
     private static final int FUND_KIN_AMOUNT = 6000;
     private static final String URL_FUND =
-        "http://faucet-playground.kininfrastructure.com/fund?account=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+        "http://18.206.35.110:3000/fund?account=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
@@ -30,8 +28,8 @@ class OnBoarding {
     public interface Callbacks {
 
         void onSuccess();
-
         void onFailure(Exception e);
+
     }
 
     OnBoarding() {
@@ -47,13 +45,11 @@ class OnBoarding {
             listenerRegistration.remove();
             fireOnFailure(callbacks, new TimeoutException("Waiting for account creation event time out"));
         };
-
         listenerRegistration = account.addAccountCreationListener(data -> {
             listenerRegistration.remove();
             handler.removeCallbacks(accountCreationListeningTimeout);
-            activateAccount(account, callbacks);
+            fundAccountWithKin(account, callbacks);
         });
-        handler.postDelayed(accountCreationListeningTimeout, 10 * DateUtils.SECOND_IN_MILLIS);
         createAccount(account, callbacks);
     }
 
@@ -70,29 +66,12 @@ class OnBoarding {
                 }
 
                 @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
                     int code = response.code();
                     response.close();
                     if (code != 200) {
                         fireOnFailure(callbacks, new Exception("Create account - response code is " + response.code()));
                     }
-                }
-            });
-
-    }
-
-    private void activateAccount(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
-        account.activate()
-            .run(new ResultCallback<Void>() {
-                @Override
-                public void onResult(Void result) {
-                    //This is not mandatory part of onboarding, account is now ready to send/receive kin
-                    fundAccountWithKin(account, callbacks);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    fireOnFailure(callbacks, e);
                 }
             });
     }
@@ -110,8 +89,7 @@ class OnBoarding {
                 }
 
                 @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response)
-                    throws IOException {
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
                     int code = response.code();
                     response.close();
                     if (code == 200) {
