@@ -17,6 +17,7 @@ import kin.sdk.exception.DeleteAccountException;
 import kin.base.KeyPair;
 import kin.base.Network;
 import kin.base.Server;
+import kin.sdk.exception.LoadAccountException;
 import kin.sdk.exception.OperationFailedException;
 
 /**
