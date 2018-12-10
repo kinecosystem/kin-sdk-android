@@ -1,10 +1,9 @@
 package kin.base;
 
-
-import org.apache.commons.android.codec.DecoderException;
-import org.apache.commons.android.codec.binary.Hex;
-
 import java.util.Arrays;
+
+import kin.base.codec.DecoderException;
+import kin.base.codec.Hex;
 
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
