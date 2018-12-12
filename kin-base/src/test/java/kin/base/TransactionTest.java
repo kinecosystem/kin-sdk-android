@@ -1,8 +1,9 @@
 package kin.base;
 
-import org.apache.commons.android.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
+
+import kin.base.codec.Base64;
 import kin.base.xdr.XdrDataInputStream;
 
 import java.io.ByteArrayInputStream;

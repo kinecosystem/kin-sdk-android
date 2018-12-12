@@ -1,7 +1,8 @@
 package kin.base;
 
-import org.apache.commons.android.codec.DecoderException;
 import org.junit.Test;
+
+import kin.base.codec.DecoderException;
 import kin.base.xdr.MemoType;
 
 import java.util.Arrays;
