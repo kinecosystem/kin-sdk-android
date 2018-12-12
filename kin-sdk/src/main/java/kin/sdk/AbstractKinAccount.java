@@ -24,7 +24,7 @@ abstract class AbstractKinAccount implements KinAccount {
         return new Request<>(new Callable<Transaction>() {
             @Override
             public Transaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount, fee, memo);
+                return buildTransactionSync(publicAddress, amount, fee, memo); 
             }
         });
     }
