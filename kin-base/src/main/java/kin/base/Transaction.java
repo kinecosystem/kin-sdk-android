@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.android.codec.binary.Base64;
+import kin.base.codec.Base64;
 import kin.base.xdr.DecoratedSignature;
 import kin.base.xdr.EnvelopeType;
 import kin.base.xdr.SignatureHint;

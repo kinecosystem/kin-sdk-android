@@ -7,9 +7,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import org.apache.commons.android.codec.binary.Base64;
 import kin.base.KeyPair;
 import kin.base.Memo;
+import kin.base.codec.Base64;
 
 import java.lang.reflect.Type;
 

@@ -1,6 +1,6 @@
 package kin.base;
 
-import org.apache.commons.android.codec.DecoderException;
+import kin.base.codec.DecoderException;
 import kin.base.xdr.Memo;
 import kin.base.xdr.MemoType;
 

@@ -3,8 +3,8 @@ package kin.base.responses;
 import com.google.gson.annotations.SerializedName;
 
 import kin.base.Transaction;
-import org.apache.commons.android.codec.binary.Base64;
 import kin.base.Server;
+import kin.base.codec.Base64;
 import kin.base.xdr.OperationType;
 import kin.base.xdr.TransactionResult;
 import kin.base.xdr.XdrDataInputStream;

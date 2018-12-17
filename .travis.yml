@@ -49,7 +49,8 @@ before_script:
 script:
   - cd ../..
   - ./gradlew :sample:assembleDebug
-  - ./gradlew :kin-sdk:testDebugUnitTest
+  - ./gradlew testDebugUnitTest
+
 #  - ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.sdk.KinAccountIntegrationTest --info
 
 after_success:
