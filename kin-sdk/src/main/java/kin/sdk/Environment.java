@@ -14,8 +14,8 @@ public class Environment {
             "Public Global Kin Ecosystem Network ; June 2018");
 
     public static final Environment TEST =
-        new Environment("http://18.206.35.110:8008",
-            "Integration Test Network ; zulucrypto");
+        new Environment("http://horizon-testnet.kininfrastructure.com/",
+            "Kin Testnet ; December 2018");
 
     private final String networkUrl;
     private final Network network;

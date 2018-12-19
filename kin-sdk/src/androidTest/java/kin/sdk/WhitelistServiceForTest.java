@@ -12,7 +12,7 @@ import okhttp3.Response;
 
 public class WhitelistServiceForTest {
 
-    private static final String URL_WHITELISTING_SERVICE = "http://18.206.35.110:3000/whitelist";
+    private static final String URL_WHITELISTING_SERVICE = "http://10.4.59.1:3003/whitelist";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final OkHttpClient okHttpClient;

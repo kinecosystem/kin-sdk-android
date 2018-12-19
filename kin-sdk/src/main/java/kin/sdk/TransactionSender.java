@@ -58,11 +58,12 @@ class TransactionSender {
         TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
         WhitelistableTransaction whitelistableTransaction =
                 new WhitelistableTransaction(stellarTransaction.toEnvelopeXdrBase64(), Network.current().getNetworkPassphrase());
-        return new Transaction(addressee, from, amount, fee, memo, id, stellarTransaction, whitelistableTransaction);
+        Transaction transaction = new Transaction(addressee, from, amount, fee, memo, id, stellarTransaction, whitelistableTransaction);
+        verifyAddresseeAccount(generateAddresseeKeyPair(transaction.getDestination().getAccountId()));
+        return transaction;
     }
 
     TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
-        verifyAddresseeAccount(generateAddresseeKeyPair(transaction.getDestination().getAccountId()));
         return sendTransaction(transaction.getStellarTransaction());
     }
 
