@@ -349,6 +349,7 @@ class KinAccountIntegrationTest {
         assertThat(paymentInfo.amount(), equalTo(transactionAmount))
         assertThat(paymentInfo.destinationPublicKey(), equalTo(kinAccountReceiver.publicAddress))
         assertThat(paymentInfo.sourcePublicKey(), equalTo(kinAccountSender.publicAddress))
+        assertThat(paymentInfo.fee(), equalTo(100L))
         assertThat(paymentInfo.memo(), equalTo(expectedMemo))
         assertThat(paymentInfo.hash().id(), equalTo(expectedTransactionId.id()))
 

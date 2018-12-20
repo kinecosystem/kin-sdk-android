@@ -151,6 +151,7 @@ public class BlockchainEventsTest {
             equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
         assertThat(payment1.amount(), equalTo(new BigDecimal("250")));
         assertThat(payment1.createdAt(), equalTo("2018-11-19T15:59:07Z"));
+        assertThat(payment1.fee(), equalTo(100L));
         assertThat(payment1.memo(), equalTo("1-test-test1"));
 
         assertThat(payment2.hash().id(),
@@ -160,6 +161,7 @@ public class BlockchainEventsTest {
             equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
         assertThat(payment2.amount(), equalTo(new BigDecimal("250")));
         assertThat(payment2.createdAt(), equalTo("2018-11-19T16:36:42Z"));
+        assertThat(payment2.fee(), equalTo(100L));
         assertThat(payment2.memo(), equalTo("1-test-test1"));
     }
 
