@@ -148,6 +148,7 @@ class BlockchainEvents {
                                 extractSourceAccountId(transactionResponse, paymentOperation),
                                 new BigDecimal(paymentOperation.getAmount()),
                                 new TransactionIdImpl(transactionResponse.getHash()),
+                                transactionResponse.getFeePaid(),
                                 extractHashTextIfAny(transactionResponse)
                         );
                         listener.onEvent(paymentInfo);
