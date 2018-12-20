@@ -53,14 +53,13 @@ class TransactionSender {
         memo = addAppIdToMemo(memo);
 
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
+        verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         AccountResponse sourceAccount = loadSourceAccount(from);
         kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee, memo);
         TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
         WhitelistableTransaction whitelistableTransaction =
                 new WhitelistableTransaction(stellarTransaction.toEnvelopeXdrBase64(), Network.current().getNetworkPassphrase());
-        Transaction transaction = new Transaction(addressee, from, amount, fee, memo, id, stellarTransaction, whitelistableTransaction);
-        verifyAddresseeAccount(generateAddresseeKeyPair(transaction.getDestination().getAccountId()));
-        return transaction;
+        return new Transaction(addressee, from, amount, fee, memo, id, stellarTransaction, whitelistableTransaction);
     }
 
     TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {

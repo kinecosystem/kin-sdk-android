@@ -77,7 +77,6 @@ class OnBoarding {
     }
 
     private void fundAccountWithKin(KinAccount account, @NonNull Callbacks callbacks) {
-//        fireOnSuccess(callbacks);
         Request request = new Request.Builder()
             .url(String.format(URL_FUND, account.getPublicAddress()))
             .get()

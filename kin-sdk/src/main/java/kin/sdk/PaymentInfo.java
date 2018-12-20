@@ -39,7 +39,7 @@ public interface PaymentInfo {
     String memo();
 
     /**
-     * amount of fee
+     * Amount of fee(in stroops) for this payment.
      */
     long fee();
 }
