@@ -53,8 +53,8 @@ class TransactionSender {
         memo = addAppIdToMemo(memo);
 
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
-        verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         AccountResponse sourceAccount = loadSourceAccount(from);
+        verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee, memo);
         TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
         WhitelistableTransaction whitelistableTransaction =
