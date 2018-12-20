@@ -26,6 +26,7 @@ class KinAccountIntegrationTest {
 
     private val appId = "1a2c"
     private val fee: Int = 100
+    private val feeInKin: BigDecimal = BigDecimal.valueOf(0.001)
     private val appIdVersionPrefix = "1"
     private val timeoutDurationSeconds : Long = 10
     private val timeoutDurationSecondsLong : Long = 15
@@ -131,7 +132,7 @@ class KinAccountIntegrationTest {
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("21.123"), fee, memo)
         val transactionId = kinAccountSender.sendTransactionSync(transaction)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700")))
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
         assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
 
         assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
@@ -198,14 +199,56 @@ class KinAccountIntegrationTest {
     @Test
     @LargeTest
     @Throws(Exception::class)
-    fun sendWhitelistTransaction_AccountNotCreated_AccountNotFoundException() {
-        val kinAccount = kinClient.addAccount()
-        kinClient.deleteAccount(0)
-        val transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
-                BigDecimal(10), 0)
+    fun sendWhitelistTransaction_SenderAccountNotCreated_AccountNotFoundException() {
+        val kinAccountSender = kinClient.addAccount()
+        val kinAccountReceiver = kinClient.addAccount()
 
+        val latch = CountDownLatch(1)
+
+        var listenerRegistration : ListenerRegistration? = null
+        listenerRegistration = kinAccountReceiver.addAccountCreationListener {
+            listenerRegistration?.remove()
+            latch.countDown()
+        }
+
+        fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty())
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
+
+        expectedEx.expect(AccountNotFoundException::class.java)
+        expectedEx.expectMessage(kinAccountSender.publicAddress)
+
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
-        kinAccount.sendWhitelistTransactionSync(whitelist)
+        kinAccountSender.sendWhitelistTransactionSync(whitelist)
+    }
+
+    @Test
+    @LargeTest
+    @Throws(Exception::class)
+    fun sendWhitelistTransaction_ReceiverAccountNotCreated_AccountNotFoundException() {
+        val kinAccountSender = kinClient.addAccount()
+        val kinAccountReceiver = kinClient.addAccount()
+
+        val latch = CountDownLatch(1)
+
+        var listenerRegistration : ListenerRegistration? = null
+        listenerRegistration = kinAccountSender.addAccountCreationListener {
+            listenerRegistration?.remove()
+            latch.countDown()
+        }
+
+        fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty())
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
+
+        expectedEx.expect(AccountNotFoundException::class.java)
+        expectedEx.expectMessage(kinAccountReceiver.publicAddress)
+
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        kinAccountSender.sendWhitelistTransactionSync(whitelist)
+
     }
 
     @Test
@@ -231,7 +274,7 @@ class KinAccountIntegrationTest {
                 BigDecimal("20"), minFee + 100000)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80")))
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
     }
 
     @Test
@@ -245,8 +288,8 @@ class KinAccountIntegrationTest {
                 BigDecimal("20"), minFee)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80")))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20")))
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
+        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20.00000")))
     }
 
     @Test
@@ -306,12 +349,13 @@ class KinAccountIntegrationTest {
         assertThat(paymentInfo.amount(), equalTo(transactionAmount))
         assertThat(paymentInfo.destinationPublicKey(), equalTo(kinAccountReceiver.publicAddress))
         assertThat(paymentInfo.sourcePublicKey(), equalTo(kinAccountSender.publicAddress))
+        assertThat(paymentInfo.fee(), equalTo(100L))
         assertThat(paymentInfo.memo(), equalTo(expectedMemo))
         assertThat(paymentInfo.hash().id(), equalTo(expectedTransactionId.id()))
 
         val balance = actualBalanceResults[transactionIndex]
         assertThat(balance.value(),
-                equalTo(if (sender) fundingAmount.subtract(transactionAmount) else transactionAmount))
+                equalTo(if (sender) fundingAmount.subtract(feeInKin).subtract(transactionAmount) else transactionAmount))
     }
 
     @Test
@@ -328,8 +372,7 @@ class KinAccountIntegrationTest {
 
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee,null)
         kinAccountSender.sendTransactionSync(transaction)
-        // TODO check if this test work because it's a bit weird that there is no latch.countDown()
-        assertTrue(latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS))
+        latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS)
     }
 
     @Test

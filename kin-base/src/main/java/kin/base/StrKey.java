@@ -1,11 +1,10 @@
 package kin.base;
 
-
-import org.apache.commons.android.codec.binary.Base32;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+
+import kin.base.codec.Base32;
 
 class StrKey {
     public enum VersionByte {

@@ -7,6 +7,7 @@ import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.DeleteAccountException;
 import kin.base.KeyPair;
+import kin.sdk.exception.LoadAccountException;
 
 interface KeyStore {
 

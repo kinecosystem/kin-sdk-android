@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import kin.base.KeyPair;
+import kin.sdk.exception.LoadAccountException;
 
 
 @RunWith(RobolectricTestRunner.class)

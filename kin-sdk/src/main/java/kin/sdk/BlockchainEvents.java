@@ -18,7 +18,6 @@ import kin.base.MemoText;
 import kin.base.Operation;
 import kin.base.PaymentOperation;
 import kin.base.Server;
-import kin.base.TrustLineLedgerEntryChange;
 import kin.base.responses.TransactionResponse;
 
 /**
@@ -26,7 +25,7 @@ import kin.base.responses.TransactionResponse;
  */
 class BlockchainEvents {
 
-    private String ASSET_TYPE_NATIVE = "native";
+    private static final String ASSET_TYPE_NATIVE = "native";
     private static final String CURSOR_FUTURE_ONLY = "now";
 
     private final Server server;
@@ -66,15 +65,15 @@ class BlockchainEvents {
                 LedgerEntryChange[] ledgerEntryUpdates = ledgerChange.getLedgerEntryUpdates();
                 if (ledgerEntryUpdates != null) {
                     for (LedgerEntryChange ledgerEntryUpdate : ledgerEntryUpdates) {
-                        extractBalanceFromTrustLineUpdate(listener, ledgerEntryUpdate);
+                        extractBalanceFromUpdate(listener, ledgerEntryUpdate);
                     }
                 }
             }
         }
     }
 
-    private void extractBalanceFromTrustLineUpdate(@NonNull EventListener<Balance> listener,
-                                                   LedgerEntryChange ledgerEntryUpdate) {
+    private void extractBalanceFromUpdate(@NonNull EventListener<Balance> listener,
+                                          LedgerEntryChange ledgerEntryUpdate) {
         if (ledgerEntryUpdate instanceof AccountLedgerEntryChange) {
             AccountLedgerEntryChange accountLedgerEntryChange = (AccountLedgerEntryChange) ledgerEntryUpdate;
             KeyPair account = accountLedgerEntryChange.getAccount();
@@ -149,6 +148,7 @@ class BlockchainEvents {
                                 extractSourceAccountId(transactionResponse, paymentOperation),
                                 new BigDecimal(paymentOperation.getAmount()),
                                 new TransactionIdImpl(transactionResponse.getHash()),
+                                transactionResponse.getFeePaid(),
                                 extractHashTextIfAny(transactionResponse)
                         );
                         listener.onEvent(paymentInfo);

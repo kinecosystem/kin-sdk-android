@@ -37,4 +37,9 @@ public interface PaymentInfo {
      * An optional string, up-to 28 characters, included on the transaction record.
      */
     String memo();
+
+    /**
+     * Amount of fee(in stroops) for this payment.
+     */
+    long fee();
 }

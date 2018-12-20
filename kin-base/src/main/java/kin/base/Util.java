@@ -1,7 +1,5 @@
 package kin.base;
 
-import org.apache.commons.android.codec.binary.Base64;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -9,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import kin.base.codec.Base64;
 import kin.base.xdr.XdrDataInputStream;
 
 public class Util {

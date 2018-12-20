@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import kin.base.KeyPair;
+import kin.sdk.exception.LoadAccountException;
 
 class KeyStoreImpl implements KeyStore {
 

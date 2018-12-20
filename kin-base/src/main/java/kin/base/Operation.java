@@ -1,13 +1,10 @@
 package kin.base;
 
-import android.util.Log;
-
 import static kin.base.Util.checkNotNull;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import org.apache.commons.android.codec.binary.Base64;
+import kin.base.codec.Base64;
 import kin.base.xdr.AccountID;
 import kin.base.xdr.XdrDataOutputStream;
 

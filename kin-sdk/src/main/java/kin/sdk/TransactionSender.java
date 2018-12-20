@@ -54,6 +54,7 @@ class TransactionSender {
 
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
         AccountResponse sourceAccount = loadSourceAccount(from);
+        verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee, memo);
         TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
         WhitelistableTransaction whitelistableTransaction =
@@ -62,7 +63,6 @@ class TransactionSender {
     }
 
     TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
-        verifyAddresseeAccount(generateAddresseeKeyPair(transaction.getDestination().getAccountId()));
         return sendTransaction(transaction.getStellarTransaction());
     }
 

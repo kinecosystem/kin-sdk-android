@@ -16,7 +16,7 @@ constructor() {
     fun createAccount(destinationAccount: String) {
         val client = OkHttpClient()
         val request = Request.Builder()
-                .url(URL_CREATE_ACCOUNT + destinationAccount).build()
+                .url(String.format(URL_CREATE_ACCOUNT, destinationAccount)).build()
         client.newCall(request).execute()?.let {
             if (it.body() == null || it.code() != 200) {
                 Log.d("test", "createAccount error, error code = ${it.code()}, message = ${it.message()}")

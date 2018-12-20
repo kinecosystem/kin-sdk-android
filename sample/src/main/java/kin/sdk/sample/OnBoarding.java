@@ -17,10 +17,10 @@ import okhttp3.Response;
 
 class OnBoarding {
 
-    private static final String URL_CREATE_ACCOUNT = "http://18.206.35.110:8001?addr=";
     private static final int FUND_KIN_AMOUNT = 6000;
+    private static final String URL_CREATE_ACCOUNT = "http://friendbot-testnet.kininfrastructure.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private static final String URL_FUND =
-        "http://18.206.35.110:3000/fund?account=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+        "http://friendbot-testnet.kininfrastructure.com/fund?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
@@ -55,7 +55,7 @@ class OnBoarding {
 
     private void createAccount(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
         Request request = new Request.Builder()
-            .url(URL_CREATE_ACCOUNT + account.getPublicAddress())
+            .url(String.format(URL_CREATE_ACCOUNT, account.getPublicAddress()))
             .get()
             .build();
         okHttpClient.newCall(request)
