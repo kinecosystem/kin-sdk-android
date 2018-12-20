@@ -19,8 +19,6 @@ class OnBoarding {
 
     private static final int FUND_KIN_AMOUNT = 6000;
     private static final String URL_CREATE_ACCOUNT = "http://friendbot-testnet.kininfrastructure.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
-    private static final String URL_FUND =
-        "http://friendbot-testnet.kininfrastructure.com/fund?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
@@ -48,7 +46,7 @@ class OnBoarding {
         listenerRegistration = account.addAccountCreationListener(data -> {
             listenerRegistration.remove();
             handler.removeCallbacks(accountCreationListeningTimeout);
-            fundAccountWithKin(account, callbacks);
+            fireOnSuccess(callbacks);
         });
         createAccount(account, callbacks);
     }
@@ -71,32 +69,6 @@ class OnBoarding {
                     response.close();
                     if (code != 200) {
                         fireOnFailure(callbacks, new Exception("Create account - response code is " + response.code()));
-                    }
-                }
-            });
-    }
-
-    private void fundAccountWithKin(KinAccount account, @NonNull Callbacks callbacks) {
-        Request request = new Request.Builder()
-            .url(String.format(URL_FUND, account.getPublicAddress()))
-            .get()
-            .build();
-        okHttpClient.newCall(request)
-            .enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    fireOnFailure(callbacks, e);
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) {
-                    int code = response.code();
-                    response.close();
-                    if (code == 200) {
-                        //will trigger a call to get updated balance
-                        fireOnSuccess(callbacks);
-                    } else {
-                        fireOnFailure(callbacks, new Exception("Fund account - response code is " + response.code()));
                     }
                 }
             });
