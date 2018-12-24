@@ -270,7 +270,7 @@ buildTransactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
     public void onResult(Transaction transaction) {
-        Log.d("example", "The transaction id before sending: " + transaction.getId.().id());
+        Log.d("example", "The transaction id before sending: " + transaction.getId().id());
 
         sendTransactionRequest = account.sendTransaction(transaction);
         sendTransactionRequest.run(new ResultCallback<TransactionId>() {
