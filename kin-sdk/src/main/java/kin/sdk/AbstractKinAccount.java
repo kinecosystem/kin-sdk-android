@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
 
+import kin.utils.Request;
+
 abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull

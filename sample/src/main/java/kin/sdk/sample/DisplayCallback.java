@@ -2,7 +2,6 @@ package kin.sdk.sample;
 
 import android.content.Context;
 import android.view.View;
-import kin.sdk.ResultCallback;
 
 /**
  * Will hide a progressBar and display result on a displayView passed at constructor

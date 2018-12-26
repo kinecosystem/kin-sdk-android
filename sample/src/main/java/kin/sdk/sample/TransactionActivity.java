@@ -15,8 +15,6 @@ import org.json.JSONException;
 
 import java.math.BigDecimal;
 import kin.sdk.KinAccount;
-import kin.sdk.Request;
-import kin.sdk.ResultCallback;
 import kin.sdk.Transaction;
 import kin.sdk.TransactionId;
 import kin.sdk.exception.AccountDeletedException;

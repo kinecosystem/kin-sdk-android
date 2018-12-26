@@ -10,8 +10,6 @@ import kin.sdk.AccountStatus;
 import kin.sdk.Balance;
 import kin.sdk.KinAccount;
 import kin.sdk.ListenerRegistration;
-import kin.sdk.Request;
-import kin.sdk.ResultCallback;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.sample.OnBoarding.Callbacks;
 
