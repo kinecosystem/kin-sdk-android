@@ -3,6 +3,8 @@ package kin.sdk.sample;
 import android.content.Context;
 import android.view.View;
 
+import kin.utils.ResultCallback;
+
 /**
  * Will hide a progressBar and display result on a displayView passed at constructor
  * Holds the views as weakReferences and clears the references when canceled

@@ -12,6 +12,8 @@ import kin.sdk.KinAccount;
 import kin.sdk.ListenerRegistration;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.sample.OnBoarding.Callbacks;
+import kin.utils.Request;
+import kin.utils.ResultCallback;
 
 /**
  * Responsible for presenting details about the account
