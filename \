@@ -1,0 +1,101 @@
+Rearrnged project folders structure:
+1. changed the name of the sample directory to sample-app directory
+2. added samples directory and added the hello-world and sample-app to
+that directory
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Thu Dec 27 10:41:53 2018 +0200
+#
+# On branch ravit/DP-224_create_android_hello_world_app
+# Your branch is up to date with 'origin/ravit/DP-224_create_android_hello_world_app'.
+#
+# Changes to be committed:
+#	renamed:    hello-world/.gitignore -> samples/hello-world/.gitignore
+#	renamed:    hello-world/build.gradle -> samples/hello-world/build.gradle
+#	renamed:    hello-world/proguard-rules.pro -> samples/hello-world/proguard-rules.pro
+#	renamed:    hello-world/src/androidTest/java/com/example/hello_world/ExampleInstrumentedTest.java -> samples/hello-world/src/androidTest/java/com/example/hello_world/ExampleInstrumentedTest.java
+#	renamed:    hello-world/src/main/AndroidManifest.xml -> samples/hello-world/src/main/AndroidManifest.xml
+#	renamed:    hello-world/src/main/java/com/example/hello_world/MainActivity.java -> samples/hello-world/src/main/java/com/example/hello_world/MainActivity.java
+#	renamed:    hello-world/src/main/res/drawable-v24/ic_launcher_foreground.xml -> samples/hello-world/src/main/res/drawable-v24/ic_launcher_foreground.xml
+#	renamed:    hello-world/src/main/res/drawable/ic_launcher_background.xml -> samples/hello-world/src/main/res/drawable/ic_launcher_background.xml
+#	renamed:    hello-world/src/main/res/layout/activity_main.xml -> samples/hello-world/src/main/res/layout/activity_main.xml
+#	renamed:    hello-world/src/main/res/mipmap-anydpi-v26/ic_launcher.xml -> samples/hello-world/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+#	renamed:    hello-world/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml -> samples/hello-world/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+#	renamed:    hello-world/src/main/res/mipmap-hdpi/ic_launcher.png -> samples/hello-world/src/main/res/mipmap-hdpi/ic_launcher.png
+#	renamed:    hello-world/src/main/res/mipmap-hdpi/ic_launcher_round.png -> samples/hello-world/src/main/res/mipmap-hdpi/ic_launcher_round.png
+#	renamed:    hello-world/src/main/res/mipmap-mdpi/ic_launcher.png -> samples/hello-world/src/main/res/mipmap-mdpi/ic_launcher.png
+#	renamed:    hello-world/src/main/res/mipmap-mdpi/ic_launcher_round.png -> samples/hello-world/src/main/res/mipmap-mdpi/ic_launcher_round.png
+#	renamed:    hello-world/src/main/res/mipmap-xhdpi/ic_launcher.png -> samples/hello-world/src/main/res/mipmap-xhdpi/ic_launcher.png
+#	renamed:    hello-world/src/main/res/mipmap-xhdpi/ic_launcher_round.png -> samples/hello-world/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+#	renamed:    hello-world/src/main/res/mipmap-xxhdpi/ic_launcher.png -> samples/hello-world/src/main/res/mipmap-xxhdpi/ic_launcher.png
+#	renamed:    hello-world/src/main/res/mipmap-xxhdpi/ic_launcher_round.png -> samples/hello-world/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+#	renamed:    hello-world/src/main/res/mipmap-xxxhdpi/ic_launcher.png -> samples/hello-world/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+#	renamed:    hello-world/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png -> samples/hello-world/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+#	renamed:    hello-world/src/main/res/values/colors.xml -> samples/hello-world/src/main/res/values/colors.xml
+#	renamed:    hello-world/src/main/res/values/ids.xml -> samples/hello-world/src/main/res/values/ids.xml
+#	renamed:    hello-world/src/main/res/values/strings.xml -> samples/hello-world/src/main/res/values/strings.xml
+#	renamed:    hello-world/src/main/res/values/styles.xml -> samples/hello-world/src/main/res/values/styles.xml
+#	renamed:    hello-world/src/test/java/com/example/hello_world/ExampleUnitTest.java -> samples/hello-world/src/test/java/com/example/hello_world/ExampleUnitTest.java
+#	renamed:    sample/.gitignore -> samples/sample-app/.gitignore
+#	renamed:    sample/build.gradle -> samples/sample-app/build.gradle
+#	renamed:    sample/proguard-rules.pro -> samples/sample-app/proguard-rules.pro
+#	renamed:    sample/src/main/AndroidManifest.xml -> samples/sample-app/src/main/AndroidManifest.xml
+#	renamed:    sample/src/main/java/kin/sdk/sample/BaseActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/BaseActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/ChooseNetworkActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/ChooseNetworkActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/CreateWalletActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/CreateWalletActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/DisplayCallback.java -> samples/sample-app/src/main/java/kin/sdk/sample/DisplayCallback.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/ExportKeystoreActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/ExportKeystoreActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/KinAlertDialog.java -> samples/sample-app/src/main/java/kin/sdk/sample/KinAlertDialog.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/KinClientSampleApplication.java -> samples/sample-app/src/main/java/kin/sdk/sample/KinClientSampleApplication.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/OnBoarding.java -> samples/sample-app/src/main/java/kin/sdk/sample/OnBoarding.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/OnConfirmedListener.java -> samples/sample-app/src/main/java/kin/sdk/sample/OnConfirmedListener.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/PaymentListenerActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/PaymentListenerActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/TransactionActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/TransactionActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/Utils.java -> samples/sample-app/src/main/java/kin/sdk/sample/Utils.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/WalletActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/WalletActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/WebWrapperActivity.java -> samples/sample-app/src/main/java/kin/sdk/sample/WebWrapperActivity.java
+#	renamed:    sample/src/main/java/kin/sdk/sample/WhitelistService.java -> samples/sample-app/src/main/java/kin/sdk/sample/WhitelistService.java
+#	renamed:    sample/src/main/res/anim/slide_in_left.xml -> samples/sample-app/src/main/res/anim/slide_in_left.xml
+#	renamed:    sample/src/main/res/anim/slide_in_right.xml -> samples/sample-app/src/main/res/anim/slide_in_right.xml
+#	renamed:    sample/src/main/res/anim/slide_out_left.xml -> samples/sample-app/src/main/res/anim/slide_out_left.xml
+#	renamed:    sample/src/main/res/anim/slide_out_right.xml -> samples/sample-app/src/main/res/anim/slide_out_right.xml
+#	renamed:    sample/src/main/res/color/switch_color.xml -> samples/sample-app/src/main/res/color/switch_color.xml
+#	renamed:    sample/src/main/res/drawable-hdpi/kin_small_icon.png -> samples/sample-app/src/main/res/drawable-hdpi/kin_small_icon.png
+#	renamed:    sample/src/main/res/drawable-mdpi/kin_small_icon.png -> samples/sample-app/src/main/res/drawable-mdpi/kin_small_icon.png
+#	renamed:    sample/src/main/res/drawable-xhdpi/kin_small_icon.png -> samples/sample-app/src/main/res/drawable-xhdpi/kin_small_icon.png
+#	renamed:    sample/src/main/res/drawable-xxhdpi/kin_small_icon.png -> samples/sample-app/src/main/res/drawable-xxhdpi/kin_small_icon.png
+#	renamed:    sample/src/main/res/drawable-xxxhdpi/kin_small_icon.png -> samples/sample-app/src/main/res/drawable-xxxhdpi/kin_small_icon.png
+#	renamed:    sample/src/main/res/drawable/button_main_network_bg.xml -> samples/sample-app/src/main/res/drawable/button_main_network_bg.xml
+#	renamed:    sample/src/main/res/drawable/button_red_bg.xml -> samples/sample-app/src/main/res/drawable/button_red_bg.xml
+#	renamed:    sample/src/main/res/drawable/button_test_network_bg.xml -> samples/sample-app/src/main/res/drawable/button_test_network_bg.xml
+#	renamed:    sample/src/main/res/drawable/output_rectangle_bg.xml -> samples/sample-app/src/main/res/drawable/output_rectangle_bg.xml
+#	renamed:    sample/src/main/res/drawable/text_color.xml -> samples/sample-app/src/main/res/drawable/text_color.xml
+#	renamed:    sample/src/main/res/layout/choose_network_activity.xml -> samples/sample-app/src/main/res/layout/choose_network_activity.xml
+#	renamed:    sample/src/main/res/layout/create_wallet_activity.xml -> samples/sample-app/src/main/res/layout/create_wallet_activity.xml
+#	renamed:    sample/src/main/res/layout/export_key_store_activity.xml -> samples/sample-app/src/main/res/layout/export_key_store_activity.xml
+#	renamed:    sample/src/main/res/layout/import_wallet.xml -> samples/sample-app/src/main/res/layout/import_wallet.xml
+#	renamed:    sample/src/main/res/layout/payment_info.xml -> samples/sample-app/src/main/res/layout/payment_info.xml
+#	renamed:    sample/src/main/res/layout/payments_listener_activity.xml -> samples/sample-app/src/main/res/layout/payments_listener_activity.xml
+#	renamed:    sample/src/main/res/layout/transaction_activity.xml -> samples/sample-app/src/main/res/layout/transaction_activity.xml
+#	renamed:    sample/src/main/res/layout/wallet_activity.xml -> samples/sample-app/src/main/res/layout/wallet_activity.xml
+#	renamed:    sample/src/main/res/layout/web_holder_activity.xml -> samples/sample-app/src/main/res/layout/web_holder_activity.xml
+#	renamed:    sample/src/main/res/mipmap-hdpi/ic_launcher.png -> samples/sample-app/src/main/res/mipmap-hdpi/ic_launcher.png
+#	renamed:    sample/src/main/res/mipmap-hdpi/ic_launcher_rounded.png -> samples/sample-app/src/main/res/mipmap-hdpi/ic_launcher_rounded.png
+#	renamed:    sample/src/main/res/mipmap-mdpi/ic_launcher.png -> samples/sample-app/src/main/res/mipmap-mdpi/ic_launcher.png
+#	renamed:    sample/src/main/res/mipmap-mdpi/ic_launcher_rounded.png -> samples/sample-app/src/main/res/mipmap-mdpi/ic_launcher_rounded.png
+#	renamed:    sample/src/main/res/mipmap-xhdpi/ic_launcher.png -> samples/sample-app/src/main/res/mipmap-xhdpi/ic_launcher.png
+#	renamed:    sample/src/main/res/mipmap-xhdpi/ic_launcher_rounded.png -> samples/sample-app/src/main/res/mipmap-xhdpi/ic_launcher_rounded.png
+#	renamed:    sample/src/main/res/mipmap-xxhdpi/ic_launcher.png -> samples/sample-app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+#	renamed:    sample/src/main/res/mipmap-xxhdpi/ic_launcher_rounded.png -> samples/sample-app/src/main/res/mipmap-xxhdpi/ic_launcher_rounded.png
+#	renamed:    sample/src/main/res/mipmap-xxxhdpi/ic_launcher.png -> samples/sample-app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+#	renamed:    sample/src/main/res/mipmap-xxxhdpi/ic_launcher_rounded.png -> samples/sample-app/src/main/res/mipmap-xxxhdpi/ic_launcher_rounded.png
+#	renamed:    sample/src/main/res/values-hdpi/dimens.xml -> samples/sample-app/src/main/res/values-hdpi/dimens.xml
+#	renamed:    sample/src/main/res/values-xhdpi/dimens.xml -> samples/sample-app/src/main/res/values-xhdpi/dimens.xml
+#	renamed:    sample/src/main/res/values/colors.xml -> samples/sample-app/src/main/res/values/colors.xml
+#	renamed:    sample/src/main/res/values/dimens.xml -> samples/sample-app/src/main/res/values/dimens.xml
+#	renamed:    sample/src/main/res/values/strings.xml -> samples/sample-app/src/main/res/values/strings.xml
+#	renamed:    sample/src/main/res/values/styles.xml -> samples/sample-app/src/main/res/values/styles.xml
+#	modified:   settings.gradle
+#

@@ -2,9 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-
-
-
     defaultConfig {
         applicationId "com.example.hello_world"
         minSdkVersion 16
@@ -15,7 +12,17 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-
+    // Temporary change
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == "com.android.support") {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion "26.+"
+                }
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -37,5 +44,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.github.kinecosystem:kin-sdk-android:one_blockhain_changes-SNAPSHOT' // TODO: make sure that this line is updated
+    implementation 'com.github.kinecosystem:kin-sdk-android:0dd65b0b7' // Do not use in production, it is a temporary repo
 }
