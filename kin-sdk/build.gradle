@@ -43,7 +43,9 @@ dependencies {
     implementation project(':kin-base')
 
     implementation supportDependencies.supportAnnotations
+
     implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
+    api 'com.github.kinecosystem:kin-utils-android:1.1'
 
     testImplementation testingDependencies.junit
     testImplementation testingDependencies.mockito

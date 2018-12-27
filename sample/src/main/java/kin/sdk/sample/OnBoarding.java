@@ -4,6 +4,8 @@ package kin.sdk.sample;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -48,6 +50,7 @@ class OnBoarding {
             handler.removeCallbacks(accountCreationListeningTimeout);
             fireOnSuccess(callbacks);
         });
+        handler.postDelayed(accountCreationListeningTimeout, 10 * DateUtils.SECOND_IN_MILLIS);
         createAccount(account, callbacks);
     }
 
