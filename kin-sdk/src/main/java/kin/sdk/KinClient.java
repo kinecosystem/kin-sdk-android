@@ -49,7 +49,7 @@ public class KinClient {
      * @param context android context
      * @param environment the blockchain network details.
      * @param appId a 4 character string which represent the application id which will be added to each transaction.
-     *              <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string length is exactly 4.
+     *              <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.
      *              For example 1234 or 2ab3 or bcda, etc.</br>
      * @param storeKey an optional param which is the key for storing this KinClient data, different keys will store a different accounts.
      */
@@ -110,9 +110,9 @@ public class KinClient {
 
     private void validateAppId(String appId) {
         checkNotEmpty(appId, "appId");
-        if (!appId.matches("[a-zA-Z0-9]{4}")) {
-            throw new IllegalArgumentException("appId must contain only upper and/or lower case letters and/or digits and that the total string length is exactly 4.\n" +
-                    "for example 1234 or 2ab3 or bcda, etc.");
+        if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
+            throw new IllegalArgumentException("appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.\n" +
+                    "for example 1234 or 2ab3 or cd2 or fqa, etc.");
         }
     }
 

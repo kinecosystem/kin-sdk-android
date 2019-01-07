@@ -75,7 +75,7 @@ class WhitelistService {
 
     private String toJson(WhitelistableTransaction whitelistableTransaction) throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("envelop", whitelistableTransaction.getTransactionPayload());
+        jo.put("envelope", whitelistableTransaction.getTransactionPayload());
         jo.put("network_id", whitelistableTransaction.getNetworkPassphrase());
         return jo.toString();
     }
