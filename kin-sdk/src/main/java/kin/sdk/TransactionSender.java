@@ -30,7 +30,8 @@ class TransactionSender {
 
     private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
     private static final int MAX_NUM_OF_DECIMAL_PLACES = 4 ;
-    private static String APP_ID_VERSION_PREFIX = "1";
+    private static String MEMO_APP_ID_VERSION_PREFIX = "1";
+    private static String MEMO_DELIMITER = "-";
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
     private static final String INSUFFICIENT_BALANCE_RESULT_CODE = "tx_insufficient_balance";
@@ -83,10 +84,10 @@ class TransactionSender {
             memo = memo.trim(); // remove leading and trailing whitespaces.
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(APP_ID_VERSION_PREFIX)
-                .append("-")
+        sb.append(MEMO_APP_ID_VERSION_PREFIX)
+                .append(MEMO_DELIMITER)
                 .append(appId)
-                .append("-")
+                .append(MEMO_DELIMITER)
                 .append(memo);
         return sb.toString();
     }

@@ -37,7 +37,7 @@ public interface KinAccount {
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
      * @param fee the amount of fee(in stroops) for this transfer.
-     * @param memo An optional string, can contain a utf-8 string up to 28 bytes in length, included on the transaction record.
+     * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
     Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
@@ -81,7 +81,7 @@ public interface KinAccount {
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
      * @param fee the amount of fee(in stroops) for this transfer.
-     * @param memo An optional string, can contain a utf-8 string up to 28 bytes in length, included on the transaction record.
+     * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.

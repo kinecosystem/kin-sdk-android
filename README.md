@@ -39,7 +39,7 @@ The main repository is at [github.com/kinecosystem/kin-sdk-android](https://gith
 Create a new `KinClient`, with an `Environment` object that provides details of how to access the kin blockchain end point, Environment provides the predefined 
 `Environment.TEST` and `Environment.PRODUCTION`.<br/>
 `appId` is a 4 character string which represent the application id which will be added to each transaction.
-appId must contain only upper and/or lower case letters and/or digits and that the total string length is exactly 4.<br/>
+appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.<br/>
 An optional parameter is `storeKey` which can be used to create a multiple accounts data set,
 each different `storeKey` will have a separate data, an example use-case - store multiple users accounts separately.
 
@@ -260,7 +260,7 @@ buildTransactionRequest.run(new ResultCallback<TransactionId>() {
 #### Memo
 
 Arbitrary data can be added to a transfer operation using the memo parameter,
-the memo can contain a utf-8 string up to 21 bytes in length. A typical usage is to include an order number that a service can use to verify payment.
+the memo can contain a utf-8 string up to 21 (or 22 if appId length was only 3) bytes in length. A typical usage is to include an order number that a service can use to verify payment.
 
 ```java
 String memo = "arbitrary data";
