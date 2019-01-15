@@ -17,3 +17,6 @@
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
+
+# Ignore usages of x509 in eddsa library as it's not in use in our case
+-dontwarn sun.security.x509.**

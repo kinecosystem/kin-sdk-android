@@ -15,12 +15,12 @@ import org.json.JSONException;
 
 import java.math.BigDecimal;
 import kin.sdk.KinAccount;
-import kin.sdk.Request;
-import kin.sdk.ResultCallback;
 import kin.sdk.Transaction;
 import kin.sdk.TransactionId;
+import kin.utils.Request;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.OperationFailedException;
+import kin.utils.ResultCallback;
 
 /**
  * Displays form to enter public address and amount and a button to send a transaction

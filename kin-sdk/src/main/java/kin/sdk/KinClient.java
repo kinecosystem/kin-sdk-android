@@ -19,6 +19,7 @@ import kin.base.Network;
 import kin.base.Server;
 import kin.sdk.exception.LoadAccountException;
 import kin.sdk.exception.OperationFailedException;
+import kin.utils.Request;
 
 /**
  * An account manager for a {@link KinAccount}.

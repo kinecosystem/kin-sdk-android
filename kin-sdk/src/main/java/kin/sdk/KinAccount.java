@@ -8,6 +8,7 @@ import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
+import kin.utils.Request;
 
 /**
  * Represents an account which holds Kin.
