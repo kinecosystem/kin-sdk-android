@@ -10,8 +10,8 @@ import kin.base.Network;
 public class Environment {
 
     public static final Environment PRODUCTION =
-        new Environment("https://horizon-ecosystem.kininfrastructure.com",
-            "Public Global Kin Ecosystem Network ; June 2018");
+		new Environment("https://horizon.kinfederation.com",
+			"Kin Mainnet ; December 2018");
 
     public static final Environment TEST =
         new Environment("http://horizon-testnet.kininfrastructure.com/",
