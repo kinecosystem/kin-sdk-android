@@ -16,13 +16,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import kin.base.KeyPair;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import kin.base.KeyPair;
 
 @SuppressWarnings("deprecation")
 public class KinClientTest {
@@ -330,7 +330,8 @@ public class KinClientTest {
         String url = "My awesome Horizon server";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
         kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender,
-            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator, new FakeBackupRestore());
+            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
+            new FakeBackupRestore(), "");
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);
@@ -383,6 +384,7 @@ public class KinClientTest {
     @NonNull
     private KinClient createNewKinClient() {
         return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender,
-            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,  new FakeBackupRestore());
+            mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
+            new FakeBackupRestore(), "");
     }
 }
