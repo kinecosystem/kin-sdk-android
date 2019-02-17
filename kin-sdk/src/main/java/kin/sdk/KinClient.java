@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import kin.base.KeyPair;
+import kin.base.Network;
+import kin.base.Server;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.DeleteAccountException;
-import kin.base.KeyPair;
-import kin.base.Network;
-import kin.base.Server;
 import kin.sdk.exception.LoadAccountException;
 import kin.sdk.exception.OperationFailedException;
 import kin.utils.Request;
@@ -81,7 +81,8 @@ public class KinClient {
         this.generalBlockchainInfoRetriever = generalBlockchainInfoRetriever;
         this.blockchainEventsCreator = blockchainEventsCreator;
         this.backupRestore = backupRestore;
-        loadAccounts();
+
+		loadAccounts();
     }
 
     private Server initServer() {
