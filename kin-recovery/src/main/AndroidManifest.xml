@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kin.sdk.recovery">
+    package="kin.recovery">
 
     <application>
         <provider
             android:authorities="${applicationId}.KinRecoveryFileProvider"
             android:exported="false"
             android:grantUriPermissions="true"
-            android:name="com.kin.sdk.recovery.KinRecoveryFileProvider">
+            android:name="kin.recovery.KinRecoveryFileProvider">
 
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
@@ -16,13 +16,13 @@
 
         <activity
             android:label="@string/kinrecovery_backup"
-            android:name="com.kin.sdk.recovery.backup.view.BackupActivity"
+            android:name="kin.recovery.backup.view.BackupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/KinrecoveryNoActionBar"/>
 
         <activity
             android:label="@string/kinrecovery_restore"
-            android:name="com.kin.sdk.recovery.restore.view.RestoreActivity"
+            android:name="kin.recovery.restore.view.RestoreActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/KinrecoveryNoActionBar"/>
