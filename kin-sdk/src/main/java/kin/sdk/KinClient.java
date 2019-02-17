@@ -81,8 +81,7 @@ public class KinClient {
         this.generalBlockchainInfoRetriever = generalBlockchainInfoRetriever;
         this.blockchainEventsCreator = blockchainEventsCreator;
         this.backupRestore = backupRestore;
-
-		loadAccounts();
+        loadAccounts();
     }
 
     private Server initServer() {
