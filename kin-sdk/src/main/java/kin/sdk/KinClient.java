@@ -35,6 +35,7 @@ public class KinClient {
     private final GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever;
     private final BlockchainEventsCreator blockchainEventsCreator;
     private final BackupRestore backupRestore;
+    private final String storeKey;
     @NonNull
     private final List<KinAccountImpl> kinAccounts = new ArrayList<>(1);
 
@@ -63,6 +64,7 @@ public class KinClient {
         this.backupRestore = new BackupRestoreImpl();
         Server server = initServer();
         keyStore = initKeyStore(context.getApplicationContext(), storeKey);
+        this.storeKey = storeKey;
         transactionSender = new TransactionSender(server, appId);
         accountInfoRetriever = new AccountInfoRetriever(server);
         generalBlockchainInfoRetriever = new GeneralBlockchainInfoRetrieverImpl(server);
@@ -73,7 +75,7 @@ public class KinClient {
     @VisibleForTesting
     KinClient(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
         AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
-        BlockchainEventsCreator blockchainEventsCreator,  BackupRestore backupRestore) {
+        BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String storeKey) {
         this.environment = environment;
         this.keyStore = keyStore;
         this.transactionSender = transactionSender;
@@ -81,6 +83,7 @@ public class KinClient {
         this.generalBlockchainInfoRetriever = generalBlockchainInfoRetriever;
         this.blockchainEventsCreator = blockchainEventsCreator;
         this.backupRestore = backupRestore;
+        this.storeKey = storeKey;
         loadAccounts();
     }
 
@@ -237,4 +240,7 @@ public class KinClient {
         return generalBlockchainInfoRetriever.getMinimumFeeSync();
     }
 
+    public String getStoreKey() {
+        return storeKey;
+    }
 }
