@@ -6,31 +6,36 @@ import android.support.annotation.NonNull;
 import kin.recovery.events.BroadcastManagerImpl;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
+import kin.recovery.exception.BackupException;
+import kin.sdk.KinAccount;
+import kin.sdk.KinClient;
 
 public final class BackupManager {
 
-	private static volatile KeyStoreProvider keyStoreProvider;
+	public static final String NETWORK_URL_EXTRA = "networkUrlExtra";
+	public static final String NETWORK_PASSPHRASE_EXTRA = "networkPassphraseExtra";
+	public static final String APP_ID_EXTRA = "appIdExtra";
+	public static final String STORE_KEY_EXTRA = "storeKeyExtra";
+	public static final String PUBLIC_ADDRESS_EXTRA = "publicAddressExtra";
+
 	private final CallbackManager callbackManager;
+	private final KinClient kinClient;
 	private Activity activity;
 
-	public BackupManager(@NonNull final Activity activity, @NonNull final KeyStoreProvider keyStoreProvider) {
+	public BackupManager(@NonNull final Activity activity, @NonNull KinClient kinClient) {
 		Validator.checkNotNull(activity, "activity");
-		BackupManager.keyStoreProvider = keyStoreProvider;
 		this.activity = activity;
+		this.kinClient = kinClient;
 		this.callbackManager = new CallbackManager(
 			new EventDispatcherImpl(new BroadcastManagerImpl(activity)));
 	}
 
-	public static KeyStoreProvider getKeyStoreProvider() {
-		return keyStoreProvider;
+	public void backup(String publicAddress) {
+		new Launcher(activity, kinClient).backupFlow(publicAddress);
 	}
 
-	public void backupFlow() {
-		new Launcher(activity).backupFlow();
-	}
-
-	public void restoreFlow() {
-		new Launcher(activity).restoreFlow();
+	public void restore() {
+		new Launcher(activity, kinClient).restoreFlow();
 	}
 
 	public void registerBackupCallback(@NonNull final BackupCallback backupCallback) {
@@ -38,20 +43,42 @@ public final class BackupManager {
 		this.callbackManager.setBackupCallback(backupCallback);
 	}
 
-	public void registerBackupEvents(@NonNull final BackupEvents backupEvents) {
-		Validator.checkNotNull(backupEvents, "backupEvents");
-		this.callbackManager.setBackupEvents(backupEvents);
-	}
+//	public void registerBackupEvents(@NonNull final BackupEvents backupEvents) {
+//		Validator.checkNotNull(backupEvents, "backupEvents");
+//		this.callbackManager.setBackupEvents(backupEvents);
+//	}
 
 	public void registerRestoreCallback(@NonNull final RestoreCallback restoreCallback) {
 		Validator.checkNotNull(restoreCallback, "restoreCallback");
-		this.callbackManager.setRestoreCallback(restoreCallback);
+		this.callbackManager.setRestoreFinishCallback(new RestoreFinishCallback() {
+
+			@Override
+			public void onRestoreFinishedSuccessfully(String publicAddress) {
+				restoreCallback.onSuccess(AccountExtractor.getKinAccount(kinClient, publicAddress));
+			}
+
+			@Override
+			public void onSuccess(KinAccount kinAccount) {
+				// TODO A bit awkward because this method will never be called here. any suggestions regarding this interface?
+				restoreCallback.onSuccess(kinAccount);
+			}
+
+			@Override
+			public void onCancel() {
+				restoreCallback.onCancel();
+			}
+
+			@Override
+			public void onFailure(BackupException throwable) {
+				restoreCallback.onFailure(throwable);
+			}
+		});
 	}
 
-	public void registerRestoreEvents(@NonNull final RestoreEvents restoreEvents) {
-		Validator.checkNotNull(restoreEvents, "restoreEvents");
-		this.callbackManager.setRestoreEvents(restoreEvents);
-	}
+//	public void registerRestoreEvents(@NonNull final RestoreEvents restoreEvents) {
+//		Validator.checkNotNull(restoreEvents, "restoreEvents");
+//		this.callbackManager.setRestoreEvents(restoreEvents);
+//	}
 
 	public void release() {
 		this.callbackManager.unregisterCallbacksAndEvents();
@@ -60,4 +87,5 @@ public final class BackupManager {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		this.callbackManager.onActivityResult(requestCode, resultCode, data);
 	}
+
 }

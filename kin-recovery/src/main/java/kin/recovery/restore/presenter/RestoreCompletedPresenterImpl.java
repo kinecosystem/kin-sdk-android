@@ -1,18 +1,11 @@
 package kin.recovery.restore.presenter;
 
-
-import static kin.recovery.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_INDEX;
-
-import android.os.Bundle;
 import kin.recovery.restore.view.RestoreCompletedView;
 
 public class RestoreCompletedPresenterImpl extends BaseChildPresenterImpl<RestoreCompletedView> implements
 	RestoreCompletedPresenter {
 
-	private final int accountIndex;
-
-	public RestoreCompletedPresenterImpl(int accountIndex) {
-		this.accountIndex = accountIndex;
+	public RestoreCompletedPresenterImpl() {
 	}
 
 	@Override
@@ -22,11 +15,7 @@ public class RestoreCompletedPresenterImpl extends BaseChildPresenterImpl<Restor
 
 	@Override
 	public void close() {
-		getParentPresenter().closeFlow(accountIndex);
+		getParentPresenter().closeFlow();
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt(KEY_ACCOUNT_INDEX, accountIndex);
-	}
 }

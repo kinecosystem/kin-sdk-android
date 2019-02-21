@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import kin.recovery.BackupManager;
 import kin.recovery.R;
 import kin.recovery.backup.presenter.CreatePasswordPresenter;
 import kin.recovery.backup.presenter.CreatePasswordPresenterImpl;
@@ -25,14 +24,16 @@ import kin.recovery.events.BroadcastManagerImpl;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
 import kin.recovery.widget.PasswordEditText;
+import kin.sdk.KinAccount;
 
 public class CreatePasswordFragment extends Fragment implements CreatePasswordView {
 
 	public static CreatePasswordFragment newInstance(@NonNull final BackupNavigator nextStepListener,
-		@NonNull final KeyboardHandler keyboardHandler) {
+		@NonNull final KeyboardHandler keyboardHandler, @NonNull KinAccount kinAccount) {
 		CreatePasswordFragment fragment = new CreatePasswordFragment();
 		fragment.setNextStepListener(nextStepListener);
 		fragment.setKeyboardHandler(keyboardHandler);
+		fragment.setKinAccount(kinAccount);
 		return fragment;
 	}
 
@@ -42,6 +43,7 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 	private BackupNavigator nextStepListener;
 	private KeyboardHandler keyboardHandler;
 	private CreatePasswordPresenter createPasswordPresenter;
+	private KinAccount kinAccount; //TODO don't like the idea that it is here although no one use it because we only passing it to the presenter, any suggestions?
 
 	private PasswordEditText enterPassEditText;
 	private PasswordEditText confirmPassEditText;
@@ -55,7 +57,7 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 		initViews(root);
 		createPasswordPresenter = new CreatePasswordPresenterImpl(
 			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener,
-			BackupManager.getKeyStoreProvider());
+			kinAccount);
 		createPasswordPresenter.onAttach(this);
 		return root;
 	}
@@ -139,6 +141,10 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 
 	public void setKeyboardHandler(KeyboardHandler keyboardHandler) {
 		this.keyboardHandler = keyboardHandler;
+	}
+
+	public void setKinAccount(KinAccount kinAccount) {
+		this.kinAccount = kinAccount;
 	}
 
 	private void openKeyboard(View view) {

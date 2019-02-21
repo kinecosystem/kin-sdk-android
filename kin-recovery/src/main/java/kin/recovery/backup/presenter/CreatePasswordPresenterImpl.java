@@ -5,30 +5,35 @@ import static kin.recovery.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_NE
 import static kin.recovery.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED;
 
 import android.support.annotation.NonNull;
-import kin.recovery.KeyStoreProvider;
+import java.util.regex.Pattern;
+import kin.recovery.Validator;
 import kin.recovery.backup.view.BackupNavigator;
 import kin.recovery.backup.view.CreatePasswordView;
 import kin.recovery.base.BasePresenterImpl;
 import kin.recovery.events.CallbackManager;
-import kin.recovery.exception.BackupException;
+import kin.sdk.KinAccount;
+import kin.sdk.exception.CryptoException;
 
 public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswordView> implements
 	CreatePasswordPresenter {
 
 	private final BackupNavigator backupNavigator;
-	private final KeyStoreProvider keyStoreProvider;
 	private final CallbackManager callbackManager;
+	private KinAccount kinAccount;
 
 	private boolean isPasswordRulesOK = false;
 	private boolean isPasswordsMatches = false;
 	private boolean isIUnderstandChecked = false;
+	private final Pattern pattern;
 
 	public CreatePasswordPresenterImpl(@NonNull final CallbackManager callbackManager,
-		@NonNull final BackupNavigator backupNavigator, @NonNull final KeyStoreProvider keyStoreProvider) {
+		@NonNull final BackupNavigator backupNavigator, @NonNull KinAccount kinAccount) {
 		this.backupNavigator = backupNavigator;
-		this.keyStoreProvider = keyStoreProvider;
 		this.callbackManager = callbackManager;
 		this.callbackManager.sendBackupEvent(BACKUP_CREATE_PASSWORD_PAGE_VIEWED);
+		this.kinAccount = kinAccount;
+		this.pattern = Pattern
+			.compile("^(?=.*\\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\\[\\]])(?!.*[^a-zA-Z0-9!@#$%^&*()_+{}\\[\\]])(.{9,})$");
 	}
 
 	@Override
@@ -38,7 +43,7 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 
 	@Override
 	public void enterPasswordChanged(String password, String confirmPassword) {
-		if (keyStoreProvider.validatePassword(password)) {
+		if (validatePassword(password)) {
 			isPasswordRulesOK = true;
 			if (view != null) {
 				view.setEnterPasswordIsCorrect(true);
@@ -102,9 +107,9 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 
 	private void exportAccount(String password) {
 		try {
-			final String accountKey = keyStoreProvider.exportAccount(password);
+			final String accountKey = kinAccount.export(password);
 			backupNavigator.navigateToSaveAndSharePage(accountKey);
-		} catch (BackupException e) {
+		} catch (CryptoException e) {
 			if (view != null) {
 				view.showBackupFailed();
 			}
@@ -134,5 +139,10 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 		if (view != null) {
 			view.enableNextButton();
 		}
+	}
+
+	private boolean validatePassword(@NonNull final String password) {
+		Validator.checkNotNull(password, "password");
+		return pattern.matcher(password).matches();
 	}
 }
