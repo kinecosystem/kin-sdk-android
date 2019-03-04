@@ -6,8 +6,6 @@ import com.nhaarman.mockitokotlin2.*
 import kin.recovery.events.CallbackManager
 import kin.recovery.restore.presenter.RestorePresenterImpl.*
 import kin.recovery.restore.view.RestoreView
-import kin.sdk.KinAccount
-import kin.sdk.KinClient
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
