@@ -32,8 +32,7 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 		this.callbackManager = callbackManager;
 		this.callbackManager.sendBackupEvent(BACKUP_CREATE_PASSWORD_PAGE_VIEWED);
 		this.kinAccount = kinAccount;
-		this.pattern = Pattern
-			.compile("^(?=.*\\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\\[\\]])(?!.*[^a-zA-Z0-9!@#$%^&*()_+{}\\[\\]])(.{9,})$");
+		this.pattern = getPattern();
 	}
 
 	@Override
@@ -140,6 +139,26 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 			view.enableNextButton();
 		}
 	}
+
+	private Pattern getPattern() {
+		String digit = "(?=.*\\d)";
+		String upper = "(?=.*[A-Z])";
+		String lower = "(?=.*[a-z])";
+		String special = "(?=.*[!@#$%^&*()_+{}\\[\\]])";
+		int min = 9;
+		int max = 20;
+		StringBuilder sb = new StringBuilder()
+			.append("^")
+			.append(digit)
+			.append(upper)
+			.append(lower)
+			.append(special)
+			.append("(.{")
+			.append(min).append(",")
+			.append(max).append("})$");
+		return Pattern.compile(sb.toString());
+	}
+
 
 	private boolean validatePassword(@NonNull final String password) {
 		Validator.checkNotNull(password, "password");
