@@ -12,6 +12,7 @@ import kin.recovery.exception.BackupException
 import kin.recovery.exception.BackupException.CODE_RESTORE_INVALID_KEYSTORE_FORMAT
 import kin.recovery.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY
 import kin.recovery.restore.view.RestoreEnterPasswordView
+import kin.sdk.KinAccount
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -28,6 +29,7 @@ class RestoreEnterPasswordPresenterImplTest {
     }
 
     private val callbackManager: CallbackManager = mock()
+    private val kinAccount: KinAccount = mock()
     private val keyStoreProvider: KeyStoreProvider = mock()
     private val view: RestoreEnterPasswordView = mock()
     private val parentPresenter: RestorePresenter = mock()
@@ -67,7 +69,7 @@ class RestoreEnterPasswordPresenterImplTest {
         val accountIndex = 1
         whenever(keyStoreProvider.importAccount(any(), any())).thenReturn(accountIndex)
         presenter.restoreClicked(PASS)
-        verify(parentPresenter).navigateToRestoreCompletedPage(accountIndex);
+        verify(parentPresenter).navigateToRestoreCompletedPage(kinAccount)
     }
 
     @Test
@@ -99,7 +101,7 @@ class RestoreEnterPasswordPresenterImplTest {
     }
 
     private fun createPresenter() {
-        presenter = RestoreEnterPasswordPresenterImpl(callbackManager, keyStoreData, keyStoreProvider)
+        presenter = RestoreEnterPasswordPresenterImpl(callbackManager, keyStoreData)
         presenter.onAttach(view, parentPresenter)
     }
 }

@@ -7,12 +7,14 @@ import kin.recovery.backup.view.CreatePasswordView
 import kin.recovery.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED
 import kin.recovery.events.CallbackManager
 import kin.recovery.exception.BackupException
+import kin.sdk.KinAccount
 import org.junit.Before
 import org.junit.Test
 
 class CreatePasswordPresenterImplTest {
 
     private val callbackManager: CallbackManager = mock()
+    private val kinAccount: KinAccount = mock()
     private val backupNavigator: BackupNavigator = mock()
     private val keyStoreProvider: KeyStoreProvider = mock()
 
@@ -26,7 +28,7 @@ class CreatePasswordPresenterImplTest {
 
     @Before
     fun setUp() {
-        presenter = CreatePasswordPresenterImpl(callbackManager, backupNavigator, keyStoreProvider)
+        presenter = CreatePasswordPresenterImpl(callbackManager, backupNavigator, kinAccount)
         presenter.onAttach(view)
     }
 

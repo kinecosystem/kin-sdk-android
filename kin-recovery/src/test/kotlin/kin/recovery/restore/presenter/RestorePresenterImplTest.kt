@@ -6,6 +6,8 @@ import com.nhaarman.mockitokotlin2.*
 import kin.recovery.events.CallbackManager
 import kin.recovery.restore.presenter.RestorePresenterImpl.*
 import kin.recovery.restore.view.RestoreView
+import kin.sdk.KinAccount
+import kin.sdk.KinClient
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,16 +19,19 @@ import org.robolectric.annotation.Config
 class RestorePresenterImplTest {
 
     private val callbackManager: CallbackManager = mock()
-    private val savedInstanceState: Bundle = mock {
-        // a bug does not return the default as it should be, it returns 0 and not -1 as we wrote.
-        // so we will force it :)
-        on { getInt(KEY_ACCOUNT_INDEX, -1) } doReturn (-1)
-    }
+    private val kinAccount: KinAccount = mock()
+    private val kinClient: KinClient = mock()
+    //    private val savedInstanceState: Bundle = mock {
+//        // a bug does not return the default as it should be, it returns 0 and not -1 as we wrote.
+//        // so we will force it :)
+//        val defaultReturnValue : String? = null
+//        on { getString(KEY_PUBLIC_ADDRESS, null) } doReturn (defaultReturnValue)
+//    }
+    private val savedInstanceState: Bundle = mock()
     private val view: RestoreView = mock()
 
     private val accountKey = "some_fake_account_key"
-    private val accountIndex = 1
-
+    private val publicAddress = " some_fake_public_address"
     private lateinit var presenter: RestorePresenterImpl
 
     @Test
@@ -54,10 +59,10 @@ class RestorePresenterImplTest {
     @Test
     fun `initial step is STEP_RESTORE_COMPLETED and accountIndex is set, navigate to restore completed page`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_RESTORE_COMPLETED)
-        whenever(savedInstanceState.getInt(KEY_ACCOUNT_INDEX, -1)) doReturn (accountIndex)
+        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS, null)) doReturn (publicAddress)
         createPresenter()
         verify(view).closeKeyboard()
-        verify(view).navigateToRestoreCompleted(accountIndex)
+        verify(view).navigateToRestoreCompleted()
     }
 
     @Test
@@ -71,9 +76,9 @@ class RestorePresenterImplTest {
     @Test
     fun `initial step is STEP_FINISH and accountIndex is set, set result success`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_FINISH)
-        whenever(savedInstanceState.getInt(KEY_ACCOUNT_INDEX, -1)) doReturn (accountIndex)
+        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS, null)) doReturn (publicAddress)
         createPresenter()
-        verify(callbackManager).sendRestoreSuccessResult(accountIndex)
+        verify(callbackManager).sendRestoreSuccessResult(publicAddress)
         verify(view).close()
     }
 
@@ -94,15 +99,15 @@ class RestorePresenterImplTest {
     @Test
     fun `navigate to restore completed page`() {
         createPresenter()
-        presenter.navigateToRestoreCompletedPage(accountIndex)
-        verify(view).navigateToRestoreCompleted(accountIndex)
+        presenter.navigateToRestoreCompletedPage(kinAccount)
+        verify(view).navigateToRestoreCompleted()
     }
 
     @Test
     fun `close flow`() {
         createPresenter()
-        presenter.closeFlow(accountIndex)
-        verify(callbackManager).sendRestoreSuccessResult(accountIndex)
+        presenter.closeFlow()
+        verify(callbackManager).sendRestoreSuccessResult(publicAddress)
         verify(view).close()
     }
 
@@ -152,23 +157,23 @@ class RestorePresenterImplTest {
         outState.apply {
             assertEquals(STEP_ENTER_PASSWORD, getInt(KEY_RESTORE_STEP))
             assertEquals(accountKey, getString(KEY_ACCOUNT_KEY))
-            assertEquals(-1, getInt(KEY_ACCOUNT_INDEX, -1))
+            assertEquals(publicAddress, getString(publicAddress, null))
         }
 
         presenter.apply {
-            navigateToRestoreCompletedPage(accountIndex)
+            navigateToRestoreCompletedPage(kinAccount)
             onSaveInstanceState(outState)
         }
 
         outState.apply {
             assertEquals(STEP_RESTORE_COMPLETED, getInt(KEY_RESTORE_STEP))
             assertEquals(accountKey, getString(KEY_ACCOUNT_KEY))
-            assertEquals(accountIndex, getInt(KEY_ACCOUNT_INDEX))
+            assertEquals(publicAddress, getString(publicAddress))
         }
     }
 
     private fun createPresenter() {
-        presenter = RestorePresenterImpl(callbackManager, savedInstanceState)
+        presenter = RestorePresenterImpl(callbackManager, kinClient, savedInstanceState)
         presenter.onAttach(view)
     }
 }

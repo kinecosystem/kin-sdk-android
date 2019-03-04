@@ -8,6 +8,7 @@ import kin.recovery.backup.view.BackupNavigator.*
 import kin.recovery.backup.view.BackupView
 import kin.recovery.events.BackupEventCode.*
 import kin.recovery.events.CallbackManager
+import kin.sdk.KinAccount
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -20,6 +21,7 @@ import org.robolectric.annotation.Config
 class BackupPresenterImplTest {
 
     private val callbackManager: CallbackManager = mock()
+    private val kinAccount: KinAccount = mock()
     private val savedInstanceState: Bundle = mock()
     private val view: BackupView = mock()
 
@@ -33,7 +35,7 @@ class BackupPresenterImplTest {
 
     @Test
     fun `initial step saveInstanceState is null`() {
-        backupPresenter = BackupPresenterImpl(callbackManager, null)
+        backupPresenter = BackupPresenterImpl(callbackManager, kinAccount, null)
         backupPresenter.onAttach(view)
         verify(view).startBackupFlow()
     }
@@ -156,7 +158,7 @@ class BackupPresenterImplTest {
     }
 
     private fun createPresenter() {
-        backupPresenter = BackupPresenterImpl(callbackManager, savedInstanceState)
+        backupPresenter = BackupPresenterImpl(callbackManager, kinAccount, savedInstanceState)
         backupPresenter.onAttach(view)
     }
 

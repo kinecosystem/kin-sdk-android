@@ -1,11 +1,8 @@
 package kin.recovery.restore.presenter
 
-import android.os.Bundle
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import kin.recovery.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_INDEX
 import kin.recovery.restore.view.RestoreCompletedView
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,10 +12,6 @@ import org.robolectric.annotation.Config
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
 class RestoreCompletedPresenterImplTest {
-
-    companion object {
-        const val accountIndex = 1
-    }
 
     private val view: RestoreCompletedView = mock()
     private val parentPresenter: RestorePresenter = mock()
@@ -39,18 +32,11 @@ class RestoreCompletedPresenterImplTest {
     @Test
     fun `close flow with the correect account index`() {
         presenter.close()
-        verify(parentPresenter).closeFlow(accountIndex)
-    }
-
-    @Test
-    fun `onSaveInstanceState save the correct values`() {
-        val bundle = Bundle()
-        presenter.onSaveInstanceState(bundle)
-        assertEquals(accountIndex, bundle.getInt(KEY_ACCOUNT_INDEX))
+        verify(parentPresenter).closeFlow()
     }
 
     private fun createPresenter() {
-        presenter = RestoreCompletedPresenterImpl(accountIndex)
+        presenter = RestoreCompletedPresenterImpl()
         presenter.onAttach(view, parentPresenter)
     }
 }

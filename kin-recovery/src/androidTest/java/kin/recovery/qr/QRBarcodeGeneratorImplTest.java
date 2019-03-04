@@ -7,7 +7,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import java.io.IOException;
 import java.util.HashMap;
 import kin.recovery.qr.QRBarcodeGenerator.QRNotFoundInImageException;
 import org.junit.Before;
@@ -49,13 +48,13 @@ public class QRBarcodeGeneratorImplTest {
 
 		@NonNull
 		@Override
-		public Bitmap loadFile(@NonNull Uri uri) throws IOException {
+		public Bitmap loadFile(@NonNull Uri uri) {
 			return map.get(uri);
 		}
 
 		@NonNull
 		@Override
-		public Uri saveFile(@NonNull Bitmap image) throws IOException {
+		public Uri saveFile(@NonNull Bitmap image) {
 			Uri fakeUri = Uri.parse("file://test/" + counter + ".png");
 			map.put(fakeUri, image);
 			return fakeUri;
@@ -63,7 +62,7 @@ public class QRBarcodeGeneratorImplTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		fakeQRFileHandler = new FakeQRFileUriHandler();
 		qrBarcodeGenerator = new QRBarcodeGeneratorImpl(fakeQRFileHandler);
@@ -71,15 +70,14 @@ public class QRBarcodeGeneratorImplTest {
 
 	@Test
 	public void generate_success() throws Exception {
-		Uri uri = qrBarcodeGenerator
-			.generate(TEST_DATA);
+		Uri uri = qrBarcodeGenerator.generate(TEST_DATA);
 		assertNotNull(uri);
 		assertNotNull(fakeQRFileHandler.loadFile(uri));
 	}
 
 	@Test
 	public void decodeQR_success() throws Exception {
-		// test a QR that was being able to be decoded only with TRY_HARDER flag on in zxing library
+		// test a QR that was being able to be decoded only with TRY_HARDER flag in zxing library
 		Bitmap bitmap = TestUtils.loadBitmapFromResource(this.getClass(), "backup_qr_try_harder.png");
 		Uri uri = fakeQRFileHandler.saveFile(bitmap);
 		String decodedQR = qrBarcodeGenerator.decodeQR(uri);
