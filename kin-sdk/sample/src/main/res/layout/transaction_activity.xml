@@ -15,7 +15,7 @@
         android:clickable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        tools:context="kin.sdk.sample.TransactionActivity">
+        tools:context="kin.sdk.sample.sdk.sample.TransactionActivity">
 
         <TextView
             style="@style/KinText.Title.Bold"

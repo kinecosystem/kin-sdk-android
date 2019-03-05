@@ -1,1 +1,1 @@
-include  ':kin-sdk:sdk', ':kin-sdk:base', ':kin-sdk:sample', ':kin-recovery:recovery'
+include  ':kin-sdk:sdk', ':kin-sdk:base', ':kin-sdk:sample', ':kin-recovery:recovery', ':kin-recovery:recovery-sample'

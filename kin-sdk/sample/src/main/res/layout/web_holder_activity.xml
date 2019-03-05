@@ -4,6 +4,6 @@
     android:id="@+id/web"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="kin.sdk.sample.WebWrapperActivity">
+    tools:context="sdk.sample.WebWrapperActivity">
 
 </WebView>

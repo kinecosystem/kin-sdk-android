@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="kin.sdk.sample.ExportKeystoreActivity">
+    tools:context="sdk.sample.ExportKeystoreActivity">
 
 
     <EditText
