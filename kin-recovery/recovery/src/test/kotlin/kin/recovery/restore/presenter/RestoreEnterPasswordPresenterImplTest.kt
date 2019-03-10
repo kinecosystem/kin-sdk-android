@@ -12,6 +12,7 @@ import kin.recovery.exception.BackupException
 import kin.recovery.exception.BackupException.CODE_RESTORE_INVALID_KEYSTORE_FORMAT
 import kin.recovery.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY
 import kin.recovery.restore.view.RestoreEnterPasswordView
+import kin.sdk.KinAccount
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

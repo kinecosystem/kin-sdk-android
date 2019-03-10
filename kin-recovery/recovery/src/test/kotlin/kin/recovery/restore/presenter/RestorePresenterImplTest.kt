@@ -6,6 +6,8 @@ import com.nhaarman.mockitokotlin2.*
 import kin.recovery.events.CallbackManager
 import kin.recovery.restore.presenter.RestorePresenterImpl.*
 import kin.recovery.restore.view.RestoreView
+import kin.sdk.KinAccount
+import kin.sdk.KinClient
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -72,16 +74,16 @@ class RestorePresenterImplTest {
     }
 
     @Test
-    fun `initial step is STEP_FINISH and accountIndex is set, set result success`() {
+    fun `initial step is STEP_FINISH and kinAccount is set, set result success`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_FINISH)
-        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS, null)) doReturn (publicAddress)
+        mockKinAccountAtConstructor()
         createPresenter()
         verify(callbackManager).sendRestoreSuccessResult(publicAddress)
         verify(view).close()
     }
 
     @Test
-    fun `initial step is STEP_FINISH and accountIndex is not set, show error`() {
+    fun `initial step is STEP_FINISH and kinAccount is not set, show error`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_FINISH)
         createPresenter()
         verify(view).showError()
@@ -103,9 +105,20 @@ class RestorePresenterImplTest {
 
     @Test
     fun `close flow`() {
+        whenever(kinAccount.publicAddress).thenReturn(publicAddress)
         createPresenter()
+        presenter.navigateToRestoreCompletedPage(kinAccount)
         presenter.closeFlow()
         verify(callbackManager).sendRestoreSuccessResult(publicAddress)
+        verify(view).close()
+    }
+
+    @Test
+    fun `close flow called not in the correct state`() {
+        whenever(kinAccount.publicAddress).thenReturn(publicAddress)
+        createPresenter()
+        presenter.closeFlow()
+        verify(view).showError()
         verify(view).close()
     }
 
@@ -168,6 +181,14 @@ class RestorePresenterImplTest {
             assertEquals(accountKey, getString(KEY_ACCOUNT_KEY))
             assertEquals(publicAddress, getString(publicAddress))
         }
+    }
+
+    // If you want to used it correctly then it should be called before 'createPresenter' method.
+    private fun mockKinAccountAtConstructor() {
+        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS)) doReturn (publicAddress)
+        whenever(kinClient.accountCount) doReturn (1)
+        whenever(kinClient.getAccount(0)) doReturn (kinAccount)
+        whenever(kinAccount.publicAddress) doReturn (publicAddress)
     }
 
     private fun createPresenter() {

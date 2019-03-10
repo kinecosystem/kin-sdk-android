@@ -7,6 +7,7 @@ import kin.recovery.backup.view.CreatePasswordView
 import kin.recovery.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED
 import kin.recovery.events.CallbackManager
 import kin.recovery.exception.BackupException
+import kin.sdk.KinAccount
 import org.junit.Before
 import org.junit.Test
 
