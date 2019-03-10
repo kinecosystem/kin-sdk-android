@@ -54,7 +54,6 @@ public final class BackupManager {
 
 			@Override
 			public void onSuccess(String publicAddress) {
-				// TODO A bit awkward because this method will never be called here. any suggestions regarding this interface?
 				restoreCallback.onSuccess(AccountExtractor.getKinAccount(kinClient, publicAddress));
 			}
 
