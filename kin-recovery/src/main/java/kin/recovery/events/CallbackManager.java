@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import kin.recovery.BackupCallback;
 import kin.recovery.BackupEvents;
+import kin.recovery.RestoreCallback;
 import kin.recovery.RestoreEvents;
-import kin.recovery.RestoreFinishCallback;
 import kin.recovery.exception.BackupException;
 
 public class CallbackManager {
@@ -16,7 +16,7 @@ public class CallbackManager {
 	@Nullable
 	private BackupCallback backupCallback;
 	@Nullable
-	private RestoreFinishCallback restoreFinishCallback;
+	private RestoreCallback restoreCallback;
 
 	private final EventDispatcher eventDispatcher;
 
@@ -40,8 +40,8 @@ public class CallbackManager {
 		this.backupCallback = backupCallback;
 	}
 
-	public void setRestoreFinishCallback(@Nullable RestoreFinishCallback restoreFinishCallback) {
-		this.restoreFinishCallback = restoreFinishCallback;
+	public void setRestoreCallback(@Nullable RestoreCallback restoreCallback) {
+		this.restoreCallback = restoreCallback;
 	}
 
 	public void setBackupEvents(@Nullable BackupEvents backupEvents) {
@@ -55,7 +55,7 @@ public class CallbackManager {
 	public void unregisterCallbacksAndEvents() {
 		this.eventDispatcher.unregister();
 		this.backupCallback = null;
-		this.restoreFinishCallback = null;
+		this.restoreCallback = null;
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -81,26 +81,26 @@ public class CallbackManager {
 	}
 
 	private void handleRestoreResult(int resultCode, Intent data) {
-		if (restoreFinishCallback != null) {
+		if (restoreCallback != null) {
 			switch (resultCode) {
 				case RES_CODE_SUCCESS:
 					final String publicAddress = data.getStringExtra(EXTRA_KEY_PUBLIC_ADDRESS);
 					if (publicAddress == null) {
-						restoreFinishCallback.onFailure(new BackupException(CODE_UNEXPECTED,
+						restoreCallback.onFailure(new BackupException(CODE_UNEXPECTED,
 							"Unexpected error - imported account public address not found"));
 					}
-					restoreFinishCallback.onRestoreFinishedSuccessfully(publicAddress);
+					restoreCallback.onSuccess(publicAddress);
 					break;
 				case RES_CODE_CANCEL:
-					restoreFinishCallback.onCancel();
+					restoreCallback.onCancel();
 					break;
 				case RES_CODE_FAILED:
 					String errorMessage = data.getStringExtra(EXTRA_KEY_ERROR_MESSAGE);
 					int code = data.getIntExtra(EXTRA_KEY_ERROR_CODE, 0);
-					restoreFinishCallback.onFailure(new BackupException(code, errorMessage));
+					restoreCallback.onFailure(new BackupException(code, errorMessage));
 					break;
 				default:
-					restoreFinishCallback.onFailure(
+					restoreCallback.onFailure(
 						new BackupException(CODE_UNEXPECTED, "Unexpected error - unknown result code " + resultCode));
 					break;
 			}

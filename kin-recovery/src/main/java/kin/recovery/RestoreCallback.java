@@ -1,11 +1,10 @@
 package kin.recovery;
 
 import kin.recovery.exception.BackupException;
-import kin.sdk.KinAccount;
 
-public interface RestoreCallback {
+public interface RestoreCallback<T> {
 
-	void onSuccess(KinAccount kinAccount);
+	void onSuccess(T t);
 
 	void onCancel();
 

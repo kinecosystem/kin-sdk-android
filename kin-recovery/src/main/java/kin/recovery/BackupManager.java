@@ -48,19 +48,14 @@ public final class BackupManager {
 //		this.callbackManager.setBackupEvents(backupEvents);
 //	}
 
-	public void registerRestoreCallback(@NonNull final RestoreCallback restoreCallback) {
+	public void registerRestoreCallback(@NonNull final RestoreCallback<KinAccount> restoreCallback) {
 		Validator.checkNotNull(restoreCallback, "restoreCallback");
-		this.callbackManager.setRestoreFinishCallback(new RestoreFinishCallback() {
+		this.callbackManager.setRestoreCallback(new RestoreCallback<String>() {
 
 			@Override
-			public void onRestoreFinishedSuccessfully(String publicAddress) {
-				restoreCallback.onSuccess(AccountExtractor.getKinAccount(kinClient, publicAddress));
-			}
-
-			@Override
-			public void onSuccess(KinAccount kinAccount) {
+			public void onSuccess(String publicAddress) {
 				// TODO A bit awkward because this method will never be called here. any suggestions regarding this interface?
-				restoreCallback.onSuccess(kinAccount);
+				restoreCallback.onSuccess(AccountExtractor.getKinAccount(kinClient, publicAddress));
 			}
 
 			@Override

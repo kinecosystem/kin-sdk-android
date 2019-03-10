@@ -26,7 +26,7 @@ public class BackupPresenterImpl extends BasePresenterImpl<BackupView> implement
 	private String accountKey;
 
 
-	public BackupPresenterImpl(CallbackManager callbackManager, @NonNull KinAccount kinAccount,
+	public BackupPresenterImpl(@NonNull CallbackManager callbackManager, @NonNull KinAccount kinAccount,
 		@Nullable final Bundle savedInstanceState) {
 		this.callbackManager = callbackManager;
 		this.step = getStep(savedInstanceState);
