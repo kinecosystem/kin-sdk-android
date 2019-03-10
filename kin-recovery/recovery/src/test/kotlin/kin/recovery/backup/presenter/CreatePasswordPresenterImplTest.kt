@@ -1,13 +1,12 @@
 package kin.recovery.backup.presenter
 
 import com.nhaarman.mockitokotlin2.*
-import kin.recovery.KeyStoreProvider
 import kin.recovery.backup.view.BackupNavigator
 import kin.recovery.backup.view.CreatePasswordView
 import kin.recovery.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED
 import kin.recovery.events.CallbackManager
-import kin.recovery.exception.BackupException
 import kin.sdk.KinAccount
+import kin.sdk.exception.CryptoException
 import org.junit.Before
 import org.junit.Test
 
@@ -16,7 +15,6 @@ class CreatePasswordPresenterImplTest {
     private val callbackManager: CallbackManager = mock()
     private val kinAccount: KinAccount = mock()
     private val backupNavigator: BackupNavigator = mock()
-    private val keyStoreProvider: KeyStoreProvider = mock()
 
     private val view: CreatePasswordView = mock()
 
@@ -45,14 +43,12 @@ class CreatePasswordPresenterImplTest {
 
     @Test
     fun `enter password changed, password is valid but did not complete all other requirements`() {
-        whenever(keyStoreProvider.validatePassword(pass)) doReturn (true)
         presenter.enterPasswordChanged(pass, otherPass)
         verify(view).disableNextButton()
     }
 
     @Test
     fun `enter password changed, password is valid and completed all other requirements`() {
-        whenever(keyStoreProvider.validatePassword(pass)) doReturn (true)
         presenter.apply {
             enterPasswordChanged(pass, "")
             confirmPasswordChanged(pass, pass)
@@ -63,15 +59,13 @@ class CreatePasswordPresenterImplTest {
 
     @Test
     fun `enter password changed, password is not empty but not valid`() {
-        whenever(keyStoreProvider.validatePassword(pass)) doReturn (false)
-        presenter.enterPasswordChanged(pass, otherPass)
+        presenter.enterPasswordChanged(otherPass, pass)
         verify(view).setEnterPasswordIsCorrect(false)
         verify(view).disableNextButton()
     }
 
     @Test
     fun `enter password changed, password is empty reset fields`() {
-        whenever(keyStoreProvider.validatePassword(pass)) doReturn (false)
         presenter.enterPasswordChanged("", otherPass)
         verify(view).resetEnterPasswordField()
         verify(view).resetConfirmPasswordField()
@@ -98,7 +92,6 @@ class CreatePasswordPresenterImplTest {
 
     @Test
     fun `i understand is checked and passwords are matches, next button should become enabled`() {
-        whenever(keyStoreProvider.validatePassword(pass)) doReturn (true)
         presenter.apply {
             enterPasswordChanged(pass, pass)
             confirmPasswordChanged(pass, pass)
@@ -109,7 +102,6 @@ class CreatePasswordPresenterImplTest {
 
     @Test
     fun `i understand is unchecked`() {
-        whenever(keyStoreProvider.validatePassword(pass)) doReturn (true)
         presenter.apply {
             enterPasswordChanged(pass, pass)
             confirmPasswordChanged(pass, otherPass)
@@ -120,28 +112,28 @@ class CreatePasswordPresenterImplTest {
 
     @Test
     fun `next button clicked and export succeeded`() {
-        whenever(keyStoreProvider.exportAccount(pass)) doReturn (accountKey)
+        whenever(kinAccount.export(pass)) doReturn (accountKey)
         presenter.nextButtonClicked(pass)
         verify(backupNavigator).navigateToSaveAndSharePage(accountKey)
     }
 
     @Test
     fun `next button clicked and export failed`() {
-        whenever(keyStoreProvider.exportAccount(pass)) doThrow (BackupException::class)
+        whenever(kinAccount.export(pass)) doThrow (CryptoException::class)
         presenter.nextButtonClicked(pass)
         verify(view).showBackupFailed()
     }
 
     @Test
     fun `onRetryClicked and export succeed`() {
-        whenever(keyStoreProvider.exportAccount(pass)) doReturn (accountKey)
+        whenever(kinAccount.export(pass)) doReturn (accountKey)
         presenter.onRetryClicked(pass)
         verify(backupNavigator).navigateToSaveAndSharePage(accountKey)
     }
 
     @Test
     fun `onRetryClicked and export failed`() {
-        whenever(keyStoreProvider.exportAccount(pass)) doThrow (BackupException::class)
+        whenever(kinAccount.export(pass)) doThrow (CryptoException::class)
         presenter.onRetryClicked(pass)
         verify(view).showBackupFailed()
     }

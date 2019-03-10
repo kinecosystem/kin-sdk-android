@@ -1,18 +1,15 @@
 package kin.recovery.restore.presenter
 
 import android.os.Bundle
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import kin.recovery.KeyStoreProvider
+import com.nhaarman.mockitokotlin2.*
 import kin.recovery.events.CallbackManager
 import kin.recovery.events.RestoreEventCode.*
-import kin.recovery.exception.BackupException
-import kin.recovery.exception.BackupException.CODE_RESTORE_INVALID_KEYSTORE_FORMAT
 import kin.recovery.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY
 import kin.recovery.restore.view.RestoreEnterPasswordView
 import kin.sdk.KinAccount
+import kin.sdk.KinClient
+import kin.sdk.exception.CorruptedDataException
+import kin.sdk.exception.CryptoException
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +27,7 @@ class RestoreEnterPasswordPresenterImplTest {
 
     private val callbackManager: CallbackManager = mock()
     private val kinAccount: KinAccount = mock()
-    private val keyStoreProvider: KeyStoreProvider = mock()
+    private val kinClient: KinClient = mock()
     private val view: RestoreEnterPasswordView = mock()
     private val parentPresenter: RestorePresenter = mock()
 
@@ -60,28 +57,32 @@ class RestoreEnterPasswordPresenterImplTest {
 
     @Test
     fun `restore clicked, send event password done tapped`() {
+        whenever(kinClient.importAccount(any(), any())).thenReturn(kinAccount)
+        whenever(parentPresenter.kinClient) doReturn (kinClient)
         presenter.restoreClicked(PASS)
         verify(callbackManager).sendRestoreEvent(RESTORE_PASSWORD_DONE_TAPPED)
     }
 
     @Test
     fun `restore clicked import account succeed, navigate to complete page`() {
-        val accountIndex = 1
-        whenever(keyStoreProvider.importAccount(any(), any())).thenReturn(accountIndex)
+        whenever(kinClient.importAccount(any(), any())).thenReturn(kinAccount)
+        whenever(parentPresenter.kinClient) doReturn (kinClient)
         presenter.restoreClicked(PASS)
         verify(parentPresenter).navigateToRestoreCompletedPage(kinAccount)
     }
 
     @Test
     fun `restore clicked, exception with error code CODE_RESTORE_INVALID_KEYSTORE_FORMAT, show invalid qr error`() {
-        whenever(keyStoreProvider.importAccount(any(), any())).thenThrow(BackupException(CODE_RESTORE_INVALID_KEYSTORE_FORMAT, "some msg"))
+        whenever(kinClient.importAccount(any(), any())).thenThrow(CorruptedDataException("some msg"))
+        whenever(parentPresenter.kinClient) doReturn (kinClient)
         presenter.restoreClicked(PASS)
         verify(view).invalidQrError()
     }
 
     @Test
     fun `restore clicked, exception with decode error , show decode error`() {
-        whenever(keyStoreProvider.importAccount(any(), any())).thenThrow(BackupException::class.java)
+        whenever(kinClient.importAccount(any(), any())).thenThrow(CryptoException::class.java)
+        whenever(parentPresenter.kinClient) doReturn (kinClient)
         presenter.restoreClicked(PASS)
         verify(view).decodeError()
     }

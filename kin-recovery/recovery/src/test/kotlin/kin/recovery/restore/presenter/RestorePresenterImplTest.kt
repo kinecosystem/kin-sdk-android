@@ -57,16 +57,16 @@ class RestorePresenterImplTest {
     }
 
     @Test
-    fun `initial step is STEP_RESTORE_COMPLETED and accountIndex is set, navigate to restore completed page`() {
+    fun `initial step is STEP_RESTORE_COMPLETED and kinAccount is set, navigate to restore completed page`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_RESTORE_COMPLETED)
-        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS, null)) doReturn (publicAddress)
+        mockKinAccountAtConstructor()
         createPresenter()
         verify(view).closeKeyboard()
         verify(view).navigateToRestoreCompleted()
     }
 
     @Test
-    fun `initial step is STEP_RESTORE_COMPLETED and accountIndex is not set, show error`() {
+    fun `initial step is STEP_RESTORE_COMPLETED and kinAccount is not set, show error`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_RESTORE_COMPLETED)
         createPresenter()
         verify(view).closeKeyboard()
@@ -105,7 +105,7 @@ class RestorePresenterImplTest {
 
     @Test
     fun `close flow`() {
-        whenever(kinAccount.publicAddress).thenReturn(publicAddress)
+        whenever(kinAccount.publicAddress) doReturn (publicAddress)
         createPresenter()
         presenter.navigateToRestoreCompletedPage(kinAccount)
         presenter.closeFlow()
@@ -115,7 +115,7 @@ class RestorePresenterImplTest {
 
     @Test
     fun `close flow called not in the correct state`() {
-        whenever(kinAccount.publicAddress).thenReturn(publicAddress)
+        whenever(kinAccount.publicAddress).doReturn(publicAddress)
         createPresenter()
         presenter.closeFlow()
         verify(view).showError()
@@ -168,18 +168,19 @@ class RestorePresenterImplTest {
         outState.apply {
             assertEquals(STEP_ENTER_PASSWORD, getInt(KEY_RESTORE_STEP))
             assertEquals(accountKey, getString(KEY_ACCOUNT_KEY))
-            assertEquals(publicAddress, getString(publicAddress, null))
+            assertEquals(null, getString(publicAddress))
         }
 
         presenter.apply {
             navigateToRestoreCompletedPage(kinAccount)
+            whenever(kinAccount.publicAddress) doReturn (publicAddress)
             onSaveInstanceState(outState)
         }
 
         outState.apply {
             assertEquals(STEP_RESTORE_COMPLETED, getInt(KEY_RESTORE_STEP))
             assertEquals(accountKey, getString(KEY_ACCOUNT_KEY))
-            assertEquals(publicAddress, getString(publicAddress))
+            assertEquals(publicAddress, getString(KEY_PUBLIC_ADDRESS))
         }
     }
 
