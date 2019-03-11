@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import kin.recovery.events.BroadcastManagerImpl;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
+import kin.recovery.events.InternalRestoreCallback;
 import kin.recovery.exception.BackupException;
-import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
 public final class BackupManager {
@@ -50,17 +50,11 @@ public final class BackupManager {
 
 	public void registerRestoreCallback(@NonNull final RestoreCallback restoreCallback) {
 		Validator.checkNotNull(restoreCallback, "restoreCallback");
-		this.callbackManager.setRestoreFinishCallback(new RestoreFinishCallback() {
+		this.callbackManager.setRestoreCallback(new InternalRestoreCallback() {
 
 			@Override
-			public void onRestoreFinishedSuccessfully(String publicAddress) {
+			public void onSuccess(String publicAddress) {
 				restoreCallback.onSuccess(AccountExtractor.getKinAccount(kinClient, publicAddress));
-			}
-
-			@Override
-			public void onSuccess(KinAccount kinAccount) {
-				// TODO A bit awkward because this method will never be called here. any suggestions regarding this interface?
-				restoreCallback.onSuccess(kinAccount);
 			}
 
 			@Override
