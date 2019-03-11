@@ -4,6 +4,10 @@ language: android
 services:
   - docker
 
+before_install:
+- yes | sdkmanager "platforms;android-26"
+- yes | sdkmanager "platforms;android-28"
+
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
