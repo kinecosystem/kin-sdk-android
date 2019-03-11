@@ -35,6 +35,7 @@ public class KinClient {
     private final GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever;
     private final BlockchainEventsCreator blockchainEventsCreator;
     private final BackupRestore backupRestore;
+    private final String appId;
     private final String storeKey;
     @NonNull
     private final List<KinAccountImpl> kinAccounts = new ArrayList<>(1);
@@ -63,8 +64,9 @@ public class KinClient {
         this.environment = environment;
         this.backupRestore = new BackupRestoreImpl();
         Server server = initServer();
-        keyStore = initKeyStore(context.getApplicationContext(), storeKey);
+        this.appId = appId;
         this.storeKey = storeKey;
+        keyStore = initKeyStore(context.getApplicationContext(), storeKey);
         transactionSender = new TransactionSender(server, appId);
         accountInfoRetriever = new AccountInfoRetriever(server);
         generalBlockchainInfoRetriever = new GeneralBlockchainInfoRetrieverImpl(server);
@@ -75,7 +77,7 @@ public class KinClient {
     @VisibleForTesting
     KinClient(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
         AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
-        BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String storeKey) {
+        BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String appId, String storeKey) {
         this.environment = environment;
         this.keyStore = keyStore;
         this.transactionSender = transactionSender;
@@ -83,6 +85,7 @@ public class KinClient {
         this.generalBlockchainInfoRetriever = generalBlockchainInfoRetriever;
         this.blockchainEventsCreator = blockchainEventsCreator;
         this.backupRestore = backupRestore;
+        this.appId = appId;
         this.storeKey = storeKey;
         loadAccounts();
     }
@@ -238,6 +241,10 @@ public class KinClient {
      */
     public long getMinimumFeeSync() throws OperationFailedException {
         return generalBlockchainInfoRetriever.getMinimumFeeSync();
+    }
+
+    public String getAppId() {
+        return appId;
     }
 
     public String getStoreKey() {

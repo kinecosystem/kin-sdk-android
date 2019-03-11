@@ -1,8 +1,5 @@
 package kin.recovery.restore.view;
 
-
-import static kin.recovery.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_INDEX;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,14 +17,8 @@ public class RestoreCompletedFragment extends Fragment implements RestoreComplet
 
 	private RestoreCompletedPresenter presenter;
 
-	public static RestoreCompletedFragment newInstance(Integer accountIndex) {
-		RestoreCompletedFragment fragment = new RestoreCompletedFragment();
-		if (accountIndex != -1) {
-			Bundle bundle = new Bundle();
-			bundle.putInt(KEY_ACCOUNT_INDEX, accountIndex);
-			fragment.setArguments(bundle);
-		}
-		return fragment;
+	public static RestoreCompletedFragment newInstance() {
+		return new RestoreCompletedFragment();
 	}
 
 	@Nullable
@@ -36,8 +27,7 @@ public class RestoreCompletedFragment extends Fragment implements RestoreComplet
 		@Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.kinrecovery_fragment_restore_completed, container, false);
 
-		int accountIndex = extractAccountIndex(savedInstanceState);
-		injectPresenter(accountIndex);
+		injectPresenter();
 		presenter.onAttach(this, ((RestoreActivity) getActivity()).getPresenter());
 
 		initToolbar();
@@ -45,26 +35,8 @@ public class RestoreCompletedFragment extends Fragment implements RestoreComplet
 		return root;
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		presenter.onSaveInstanceState(outState);
-		super.onSaveInstanceState(outState);
-	}
-
-	private int extractAccountIndex(@Nullable Bundle savedInstanceState) {
-		Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
-		if (bundle == null) {
-			throw new IllegalStateException("Bundle is null, can't extract required accountIndex data.");
-		}
-		int accountIndex = bundle.getInt(KEY_ACCOUNT_INDEX, -1);
-		if (accountIndex == -1) {
-			throw new IllegalStateException("Can't find accountIndex data inside Bundle.");
-		}
-		return accountIndex;
-	}
-
-	private void injectPresenter(int accountIndex) {
-		presenter = new RestoreCompletedPresenterImpl(accountIndex);
+	private void injectPresenter() {
+		presenter = new RestoreCompletedPresenterImpl();
 	}
 
 	private void initToolbar() {

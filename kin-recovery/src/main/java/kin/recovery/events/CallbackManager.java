@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import kin.recovery.BackupCallback;
 import kin.recovery.BackupEvents;
-import kin.recovery.RestoreCallback;
 import kin.recovery.RestoreEvents;
 import kin.recovery.exception.BackupException;
 
@@ -16,7 +15,7 @@ public class CallbackManager {
 	@Nullable
 	private BackupCallback backupCallback;
 	@Nullable
-	private RestoreCallback restoreCallback;
+	private InternalRestoreCallback internalRestoreCallback;
 
 	private final EventDispatcher eventDispatcher;
 
@@ -30,7 +29,7 @@ public class CallbackManager {
 	static final int RES_CODE_FAILED = 5002;
 	static final String EXTRA_KEY_ERROR_MESSAGE = "EXTRA_KEY_ERROR_MESSAGE";
 	static final String EXTRA_KEY_ERROR_CODE = "EXTRA_KEY_ERROR_CODE";
-	static final String EXTRA_KEY_IMPORTED_ACCOUNT_INDEX = "EXTRA_KEY_IMPORTED_ACCOUNT_INDEX";
+	static final String EXTRA_KEY_PUBLIC_ADDRESS = "EXTRA_KEY_PUBLIC_ADDRESS";
 
 	public CallbackManager(@NonNull final EventDispatcher eventDispatcher) {
 		this.eventDispatcher = eventDispatcher;
@@ -40,8 +39,8 @@ public class CallbackManager {
 		this.backupCallback = backupCallback;
 	}
 
-	public void setRestoreCallback(@Nullable RestoreCallback restoreCallback) {
-		this.restoreCallback = restoreCallback;
+	public void setRestoreCallback(@Nullable InternalRestoreCallback internalRestoreCallback) {
+		this.internalRestoreCallback = internalRestoreCallback;
 	}
 
 	public void setBackupEvents(@Nullable BackupEvents backupEvents) {
@@ -55,7 +54,7 @@ public class CallbackManager {
 	public void unregisterCallbacksAndEvents() {
 		this.eventDispatcher.unregister();
 		this.backupCallback = null;
-		this.restoreCallback = null;
+		this.internalRestoreCallback = null;
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -66,9 +65,9 @@ public class CallbackManager {
 		}
 	}
 
-	public void sendRestoreSuccessResult(int accountIndex) {
+	public void sendRestoreSuccessResult(String publicAddress) {
 		Intent intent = new Intent();
-		intent.putExtra(EXTRA_KEY_IMPORTED_ACCOUNT_INDEX, accountIndex);
+		intent.putExtra(EXTRA_KEY_PUBLIC_ADDRESS, publicAddress);
 		eventDispatcher.setActivityResult(RES_CODE_SUCCESS, intent);
 	}
 
@@ -81,28 +80,26 @@ public class CallbackManager {
 	}
 
 	private void handleRestoreResult(int resultCode, Intent data) {
-		if (restoreCallback != null) {
+		if (internalRestoreCallback != null) {
 			switch (resultCode) {
 				case RES_CODE_SUCCESS:
-					final int notFoundIndex = -1;
-					final int importedAccountIndex = data
-						.getIntExtra(EXTRA_KEY_IMPORTED_ACCOUNT_INDEX, notFoundIndex);
-					if (importedAccountIndex == notFoundIndex) {
-						restoreCallback.onFailure(new BackupException(CODE_UNEXPECTED,
-							"Unexpected error - imported account index not found"));
+					final String publicAddress = data.getStringExtra(EXTRA_KEY_PUBLIC_ADDRESS);
+					if (publicAddress == null) {
+						internalRestoreCallback.onFailure(new BackupException(CODE_UNEXPECTED,
+							"Unexpected error - imported account public address not found"));
 					}
-					restoreCallback.onSuccess(importedAccountIndex);
+					internalRestoreCallback.onSuccess(publicAddress);
 					break;
 				case RES_CODE_CANCEL:
-					restoreCallback.onCancel();
+					internalRestoreCallback.onCancel();
 					break;
 				case RES_CODE_FAILED:
 					String errorMessage = data.getStringExtra(EXTRA_KEY_ERROR_MESSAGE);
 					int code = data.getIntExtra(EXTRA_KEY_ERROR_CODE, 0);
-					restoreCallback.onFailure(new BackupException(code, errorMessage));
+					internalRestoreCallback.onFailure(new BackupException(code, errorMessage));
 					break;
 				default:
-					restoreCallback.onFailure(
+					internalRestoreCallback.onFailure(
 						new BackupException(CODE_UNEXPECTED, "Unexpected error - unknown result code " + resultCode));
 					break;
 			}

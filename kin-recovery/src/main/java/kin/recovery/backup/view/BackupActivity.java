@@ -1,5 +1,6 @@
 package kin.recovery.backup.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+import kin.recovery.AccountExtractor;
+import kin.recovery.BackupManager;
 import kin.recovery.R;
 import kin.recovery.backup.presenter.BackupPresenter;
 import kin.recovery.backup.presenter.BackupPresenterImpl;
@@ -16,6 +19,9 @@ import kin.recovery.base.BaseToolbarActivity;
 import kin.recovery.events.BroadcastManagerImpl;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
+import kin.sdk.Environment;
+import kin.sdk.KinAccount;
+import kin.sdk.KinClient;
 
 public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
@@ -34,8 +40,10 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		KinAccount kinAccount = getKinAccountFromClient();
 		backupPresenter = new BackupPresenterImpl(
-			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), savedInstanceState);
+			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), kinAccount,
+			savedInstanceState);
 		backupPresenter.onAttach(this);
 		setNavigationClickListener(new OnClickListener() {
 			@Override
@@ -43,6 +51,28 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 				backupPresenter.onBackClicked();
 			}
 		});
+	}
+
+	@Nullable
+	private KinAccount getKinAccountFromClient() {
+		KinAccount kinAccount = null;
+		Intent intent = getIntent();
+		if (intent != null) {
+			KinClient kinClient = getKinClientFromIntent(intent);
+			String publicAddress = intent.getStringExtra(BackupManager.PUBLIC_ADDRESS_EXTRA);
+			kinAccount = AccountExtractor.getKinAccount(kinClient, publicAddress);
+		}
+		return kinAccount;
+	}
+
+	@NonNull
+	private KinClient getKinClientFromIntent(Intent intent) {
+		String networkUrl = intent.getStringExtra(BackupManager.NETWORK_URL_EXTRA);
+		String networkPassphrase = intent.getStringExtra(BackupManager.NETWORK_PASSPHRASE_EXTRA);
+		String appId = intent.getStringExtra(BackupManager.APP_ID_EXTRA);
+		String storeKey = intent.getStringExtra(BackupManager.STORE_KEY_EXTRA);
+		return new KinClient(getApplicationContext(), new Environment(networkUrl,
+			networkPassphrase), appId, storeKey);
 	}
 
 	@Override
@@ -79,7 +109,8 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 		CreatePasswordFragment createPasswordFragment = getSavedCreatePasswordFragment();
 
 		if (createPasswordFragment == null) {
-			createPasswordFragment = CreatePasswordFragment.newInstance(backupPresenter, this);
+			createPasswordFragment = CreatePasswordFragment
+				.newInstance(backupPresenter, this, backupPresenter.getKinAccount());
 		} else {
 			setCreatePasswordFragmentAttributes(createPasswordFragment);
 		}
@@ -137,7 +168,6 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 		transaction.commit();
 	}
 
-
 	@Override
 	public void close() {
 		closeKeyboard(); // Verify the keyboard is hidden
@@ -185,6 +215,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	private void setCreatePasswordFragmentAttributes(CreatePasswordFragment createPasswordFragment) {
 		createPasswordFragment.setNextStepListener(backupPresenter);
 		createPasswordFragment.setKeyboardHandler(this);
+		createPasswordFragment.setKinAccount(backupPresenter.getKinAccount());
 	}
 
 	private CreatePasswordFragment getSavedCreatePasswordFragment() {

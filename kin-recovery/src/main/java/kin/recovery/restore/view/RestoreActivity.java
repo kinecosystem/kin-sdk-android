@@ -2,11 +2,13 @@ package kin.recovery.restore.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
+import kin.recovery.BackupManager;
 import kin.recovery.R;
 import kin.recovery.base.BaseToolbarActivity;
 import kin.recovery.events.BroadcastManagerImpl;
@@ -14,6 +16,8 @@ import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
 import kin.recovery.restore.presenter.RestorePresenter;
 import kin.recovery.restore.presenter.RestorePresenterImpl;
+import kin.sdk.Environment;
+import kin.sdk.KinClient;
 
 public class RestoreActivity extends BaseToolbarActivity implements RestoreView {
 
@@ -22,9 +26,22 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		KinClient kinClient = getKinClientFromIntent();
 		presenter = new RestorePresenterImpl(
-			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), savedInstanceState);
+			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), kinClient,
+			savedInstanceState);
 		presenter.onAttach(this);
+	}
+
+	@NonNull
+	private KinClient getKinClientFromIntent() {
+		Intent intent = getIntent();
+		String networkUrl = intent.getStringExtra(BackupManager.NETWORK_URL_EXTRA);
+		String networkPassphrase = intent.getStringExtra(BackupManager.NETWORK_PASSPHRASE_EXTRA);
+		String appId = intent.getStringExtra(BackupManager.APP_ID_EXTRA);
+		String storeKey = intent.getStringExtra(BackupManager.STORE_KEY_EXTRA);
+		return new KinClient(getApplicationContext(), new Environment(networkUrl,
+			networkPassphrase), appId, storeKey);
 	}
 
 	@Override
@@ -75,13 +92,13 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 	}
 
 	@Override
-	public void navigateToRestoreCompleted(Integer accountIndex) {
+	public void navigateToRestoreCompleted() {
 		final String fragmentName = RestoreCompletedFragment.class.getSimpleName();
 		RestoreCompletedFragment fragment = (RestoreCompletedFragment) getSupportFragmentManager()
 			.findFragmentByTag(fragmentName);
 
 		if (fragment == null) {
-			fragment = RestoreCompletedFragment.newInstance(accountIndex);
+			fragment = RestoreCompletedFragment.newInstance();
 			replaceFragment(fragment, fragmentName, fragmentName, true);
 		} else {
 			// We should not add to back stack because it's already in stack.

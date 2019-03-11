@@ -4,28 +4,31 @@ package kin.recovery.restore.presenter;
 import static kin.recovery.events.RestoreEventCode.RESTORE_PASSWORD_DONE_TAPPED;
 import static kin.recovery.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_BACK_TAPPED;
 import static kin.recovery.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_VIEWED;
+import static kin.recovery.exception.BackupException.CODE_RESTORE_FAILED;
+import static kin.recovery.exception.BackupException.CODE_RESTORE_INVALID_KEYSTORE_FORMAT;
 import static kin.recovery.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import kin.recovery.KeyStoreProvider;
+import kin.recovery.Validator;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.exception.BackupException;
 import kin.recovery.restore.view.RestoreEnterPasswordView;
 import kin.recovery.utils.Logger;
+import kin.sdk.KinAccount;
+import kin.sdk.exception.CorruptedDataException;
+import kin.sdk.exception.CreateAccountException;
+import kin.sdk.exception.CryptoException;
 
 public class RestoreEnterPasswordPresenterImpl extends BaseChildPresenterImpl<RestoreEnterPasswordView> implements
 	RestoreEnterPasswordPresenter {
 
 	private final String keystoreData;
 	private final CallbackManager callbackManager;
-	private final KeyStoreProvider keyStoreProvider;
 
-	public RestoreEnterPasswordPresenterImpl(@NonNull final CallbackManager callbackManager, String keystoreData,
-		@NonNull KeyStoreProvider keyStoreProvider) {
+	public RestoreEnterPasswordPresenterImpl(@NonNull final CallbackManager callbackManager, String keystoreData) {
 		this.callbackManager = callbackManager;
 		this.keystoreData = keystoreData;
-		this.keyStoreProvider = keyStoreProvider;
 		this.callbackManager.sendRestoreEvent(RESTORE_PASSWORD_ENTRY_PAGE_VIEWED);
 	}
 
@@ -42,16 +45,33 @@ public class RestoreEnterPasswordPresenterImpl extends BaseChildPresenterImpl<Re
 	public void restoreClicked(String password) {
 		callbackManager.sendRestoreEvent(RESTORE_PASSWORD_DONE_TAPPED);
 		try {
-			int accountIndex = keyStoreProvider.importAccount(keystoreData, password);
-			getParentPresenter().navigateToRestoreCompletedPage(accountIndex);
+			KinAccount kinAccount = importAccount(keystoreData, password);
+			getParentPresenter().navigateToRestoreCompletedPage(kinAccount);
 		} catch (BackupException e) {
 			Logger.e("RestoreEnterPasswordPresenterImpl - restore failed.", e);
-			if (e.getCode() == BackupException.CODE_RESTORE_INVALID_KEYSTORE_FORMAT) {
+			if (e.getCode() == CODE_RESTORE_INVALID_KEYSTORE_FORMAT) {
 				getView().invalidQrError();
 			} else {
 				getView().decodeError();
 			}
 		}
+	}
+
+	private KinAccount importAccount(@NonNull final String keystore, @NonNull final String password)
+		throws BackupException {
+		Validator.checkNotNull(keystore, "keystore");
+		Validator.checkNotNull(keystore, "password");
+		KinAccount importedAccount;
+		try {
+			importedAccount = getParentPresenter().getKinClient().importAccount(keystore, password);
+		} catch (CryptoException e) {
+			throw new BackupException(CODE_RESTORE_FAILED, "Could not import the account");
+		} catch (CreateAccountException e) {
+			throw new BackupException(CODE_RESTORE_FAILED, "Could not create the account");
+		} catch (CorruptedDataException e) {
+			throw new BackupException(CODE_RESTORE_INVALID_KEYSTORE_FORMAT, "The keystore is invalid - wrong format");
+		}
+		return importedAccount;
 	}
 
 	@Override

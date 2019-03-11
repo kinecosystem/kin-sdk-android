@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import kin.recovery.backup.view.BackupView;
 import kin.recovery.base.BasePresenterImpl;
 import kin.recovery.events.CallbackManager;
+import kin.sdk.KinAccount;
 
 public class BackupPresenterImpl extends BasePresenterImpl<BackupView> implements BackupPresenter {
 
@@ -20,13 +21,16 @@ public class BackupPresenterImpl extends BasePresenterImpl<BackupView> implement
 	private @Step
 	int step;
 	private final CallbackManager callbackManager;
+	private final KinAccount kinAccount;
 	private boolean isBackupSucceed = false;
 	private String accountKey;
 
 
-	public BackupPresenterImpl(CallbackManager callbackManager, @Nullable final Bundle savedInstanceState) {
+	public BackupPresenterImpl(@NonNull CallbackManager callbackManager, @NonNull KinAccount kinAccount,
+		@Nullable final Bundle savedInstanceState) {
 		this.callbackManager = callbackManager;
 		this.step = getStep(savedInstanceState);
+		this.kinAccount = kinAccount;
 		this.accountKey = getAccountKey(savedInstanceState);
 	}
 
@@ -129,6 +133,11 @@ public class BackupPresenterImpl extends BasePresenterImpl<BackupView> implement
 	@Override
 	public void setAccountKey(String accountKey) {
 		this.accountKey = accountKey;
+	}
+
+	@Override
+	public KinAccount getKinAccount() {
+		return kinAccount;
 	}
 
 	@Override
