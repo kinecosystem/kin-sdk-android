@@ -32,6 +32,8 @@ android:
   #  - android-$EMULATOR_API_LEVEL
   - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
 #  - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+  licenses:
+  - android-sdk-license-.+
 
 #before_script:
 #  # setup android emulator
