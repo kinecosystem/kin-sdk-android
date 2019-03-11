@@ -4,10 +4,6 @@ language: android
 services:
   - docker
 
-before_install:
-- yes | sdkmanager "platforms;android-26"
-- yes | sdkmanager "platforms;android-28"
-
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -24,22 +20,18 @@ cache:
 
 env:
   global:
-    - ANDROID_API_LEVEL=28
-#    - EMULATOR_API_LEVEL=16
+  - ANDROID_API_LEVEL=26
+  - EMULATOR_API_LEVEL=16
 
 android:
   components:
   - tools
   - platform-tools
-  - build-tools-28
+  - build-tools-26.0.2
   - android-$ANDROID_API_LEVEL
   #  - android-$EMULATOR_API_LEVEL
   - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
 #  - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
-  licenses:
-  - android-sdk-preview-license-52d11cd2
-  - android-sdk-license-.+
-  - google-gdk-license-.+
 
 before_script:
 #  # setup android emulator
@@ -47,9 +39,6 @@ before_script:
 #  - emulator -avd test -no-skin -no-audio -no-window -camera-back none -camera-front none -verbose -memory 2048 &
 #  - android-wait-for-emulator
 #  - adb shell input keyevent 82 &
-
-- mkdir -p "$ANDROID_HOME/licenses"
-- cp ./google-licenses/* "$ANDROID_HOME/licenses/"
 
 script:
   - ./gradlew assemble
