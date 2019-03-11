@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import kin.recovery.events.BroadcastManagerImpl;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
+import kin.recovery.events.InternalRestoreCallback;
 import kin.recovery.exception.BackupException;
-import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
 public final class BackupManager {
@@ -48,9 +48,9 @@ public final class BackupManager {
 //		this.callbackManager.setBackupEvents(backupEvents);
 //	}
 
-	public void registerRestoreCallback(@NonNull final RestoreCallback<KinAccount> restoreCallback) {
+	public void registerRestoreCallback(@NonNull final RestoreCallback restoreCallback) {
 		Validator.checkNotNull(restoreCallback, "restoreCallback");
-		this.callbackManager.setRestoreCallback(new RestoreCallback<String>() {
+		this.callbackManager.setRestoreCallback(new InternalRestoreCallback() {
 
 			@Override
 			public void onSuccess(String publicAddress) {
