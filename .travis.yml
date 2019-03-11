@@ -20,14 +20,14 @@ cache:
 
 env:
   global:
-    - ANDROID_API_LEVEL=26
+    - ANDROID_API_LEVEL=28
 #    - EMULATOR_API_LEVEL=16
 
 android:
   components:
   - tools
   - platform-tools
-  - build-tools-26.0.2
+  - build-tools-28
   - android-$ANDROID_API_LEVEL
   #  - android-$EMULATOR_API_LEVEL
   - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
