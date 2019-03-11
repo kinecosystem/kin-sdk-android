@@ -39,7 +39,7 @@ public class CallbackManager {
 		this.backupCallback = backupCallback;
 	}
 
-	public void setRestoreCallback(@Nullable InternalRestoreCallback internalRestoreCallback) {
+	public void setInternalRestoreCallback(@Nullable InternalRestoreCallback internalRestoreCallback) {
 		this.internalRestoreCallback = internalRestoreCallback;
 	}
 

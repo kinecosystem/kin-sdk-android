@@ -50,7 +50,7 @@ public final class BackupManager {
 
 	public void registerRestoreCallback(@NonNull final RestoreCallback restoreCallback) {
 		Validator.checkNotNull(restoreCallback, "restoreCallback");
-		this.callbackManager.setRestoreCallback(new InternalRestoreCallback() {
+		this.callbackManager.setInternalRestoreCallback(new InternalRestoreCallback() {
 
 			@Override
 			public void onSuccess(String publicAddress) {
