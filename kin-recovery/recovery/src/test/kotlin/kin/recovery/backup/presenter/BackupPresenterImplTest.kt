@@ -8,6 +8,7 @@ import kin.recovery.backup.view.BackupNavigator.*
 import kin.recovery.backup.view.BackupView
 import kin.recovery.events.BackupEventCode.*
 import kin.recovery.events.CallbackManager
+import kin.sdk.KinAccount
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

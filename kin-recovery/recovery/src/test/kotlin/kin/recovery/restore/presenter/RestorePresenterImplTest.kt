@@ -6,6 +6,8 @@ import com.nhaarman.mockitokotlin2.*
 import kin.recovery.events.CallbackManager
 import kin.recovery.restore.presenter.RestorePresenterImpl.*
 import kin.recovery.restore.view.RestoreView
+import kin.sdk.KinAccount
+import kin.sdk.KinClient
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,16 +57,16 @@ class RestorePresenterImplTest {
     }
 
     @Test
-    fun `initial step is STEP_RESTORE_COMPLETED and accountIndex is set, navigate to restore completed page`() {
+    fun `initial step is STEP_RESTORE_COMPLETED and kinAccount is set, navigate to restore completed page`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_RESTORE_COMPLETED)
-        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS, null)) doReturn (publicAddress)
+        mockKinAccountAtConstructor()
         createPresenter()
         verify(view).closeKeyboard()
         verify(view).navigateToRestoreCompleted()
     }
 
     @Test
-    fun `initial step is STEP_RESTORE_COMPLETED and accountIndex is not set, show error`() {
+    fun `initial step is STEP_RESTORE_COMPLETED and kinAccount is not set, show error`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_RESTORE_COMPLETED)
         createPresenter()
         verify(view).closeKeyboard()
@@ -72,16 +74,16 @@ class RestorePresenterImplTest {
     }
 
     @Test
-    fun `initial step is STEP_FINISH and accountIndex is set, set result success`() {
+    fun `initial step is STEP_FINISH and kinAccount is set, set result success`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_FINISH)
-        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS, null)) doReturn (publicAddress)
+        mockKinAccountAtConstructor()
         createPresenter()
         verify(callbackManager).sendRestoreSuccessResult(publicAddress)
         verify(view).close()
     }
 
     @Test
-    fun `initial step is STEP_FINISH and accountIndex is not set, show error`() {
+    fun `initial step is STEP_FINISH and kinAccount is not set, show error`() {
         whenever(savedInstanceState.getInt(KEY_RESTORE_STEP, STEP_UPLOAD)) doReturn (STEP_FINISH)
         createPresenter()
         verify(view).showError()
@@ -103,9 +105,20 @@ class RestorePresenterImplTest {
 
     @Test
     fun `close flow`() {
+        whenever(kinAccount.publicAddress) doReturn (publicAddress)
         createPresenter()
+        presenter.navigateToRestoreCompletedPage(kinAccount)
         presenter.closeFlow()
         verify(callbackManager).sendRestoreSuccessResult(publicAddress)
+        verify(view).close()
+    }
+
+    @Test
+    fun `close flow called not in the correct state`() {
+        whenever(kinAccount.publicAddress).doReturn(publicAddress)
+        createPresenter()
+        presenter.closeFlow()
+        verify(view).showError()
         verify(view).close()
     }
 
@@ -155,19 +168,28 @@ class RestorePresenterImplTest {
         outState.apply {
             assertEquals(STEP_ENTER_PASSWORD, getInt(KEY_RESTORE_STEP))
             assertEquals(accountKey, getString(KEY_ACCOUNT_KEY))
-            assertEquals(publicAddress, getString(publicAddress, null))
+            assertEquals(null, getString(publicAddress))
         }
 
         presenter.apply {
             navigateToRestoreCompletedPage(kinAccount)
+            whenever(kinAccount.publicAddress) doReturn (publicAddress)
             onSaveInstanceState(outState)
         }
 
         outState.apply {
             assertEquals(STEP_RESTORE_COMPLETED, getInt(KEY_RESTORE_STEP))
             assertEquals(accountKey, getString(KEY_ACCOUNT_KEY))
-            assertEquals(publicAddress, getString(publicAddress))
+            assertEquals(publicAddress, getString(KEY_PUBLIC_ADDRESS))
         }
+    }
+
+    // If you want to used it correctly then it should be called before 'createPresenter' method.
+    private fun mockKinAccountAtConstructor() {
+        whenever(savedInstanceState.getString(KEY_PUBLIC_ADDRESS)) doReturn (publicAddress)
+        whenever(kinClient.accountCount) doReturn (1)
+        whenever(kinClient.getAccount(0)) doReturn (kinAccount)
+        whenever(kinAccount.publicAddress) doReturn (publicAddress)
     }
 
     private fun createPresenter() {

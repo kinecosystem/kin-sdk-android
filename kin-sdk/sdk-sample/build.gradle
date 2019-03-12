@@ -15,7 +15,7 @@ android {
         kintest_keystore {
             keyAlias 'kintest'
             keyPassword 'kintest'
-            storeFile file('../kintest.keystore')
+            storeFile file('../../kintest.keystore')
             storePassword 'kintest'
         }
     }
