@@ -54,7 +54,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 			if (currentKinAccount == null) {
 				currentKinAccount = kinClient.getAccount(kinClient.getAccountCount() - 1);
 			}
-			backupManager.backup(currentKinAccount.getPublicAddress());
+			backupManager.backup(kinClient, currentKinAccount.getPublicAddress());
 		} else {
 			if (view != null) {
 				view.noAccountToBackupError();
@@ -64,7 +64,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 
 	@Override
 	public void restoreClicked() {
-		backupManager.restore();
+		backupManager.restore(kinClient);
 	}
 
 	@Override

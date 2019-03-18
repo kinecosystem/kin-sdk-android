@@ -19,22 +19,23 @@ public final class BackupManager {
 	public static final String PUBLIC_ADDRESS_EXTRA = "publicAddressExtra";
 
 	private final CallbackManager callbackManager;
-	private final KinClient kinClient;
+	private KinClient kinClient;
 	private Activity activity;
 
-	public BackupManager(@NonNull final Activity activity, @NonNull KinClient kinClient) {
+	public BackupManager(@NonNull final Activity activity) {
 		Validator.checkNotNull(activity, "activity");
 		this.activity = activity;
-		this.kinClient = kinClient;
 		this.callbackManager = new CallbackManager(
 			new EventDispatcherImpl(new BroadcastManagerImpl(activity)));
 	}
 
-	public void backup(String publicAddress) {
+	public void backup(KinClient kinClient, String publicAddress) {
+		this.kinClient = kinClient;
 		new Launcher(activity, kinClient).backupFlow(publicAddress);
 	}
 
-	public void restore() {
+	public void restore(KinClient kinClient) {
+		this.kinClient = kinClient;
 		new Launcher(activity, kinClient).restoreFlow();
 	}
 

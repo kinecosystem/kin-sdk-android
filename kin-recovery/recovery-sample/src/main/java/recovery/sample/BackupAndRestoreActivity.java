@@ -85,7 +85,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 
 	@Override
 	public BackupManager getBackupManager() {
-		return new BackupManager(this, getKinClient(NetWorkType.TEST));
+		return new BackupManager(this);
 	}
 
 	@Override
