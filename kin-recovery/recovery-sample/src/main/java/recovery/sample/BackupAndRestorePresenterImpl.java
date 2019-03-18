@@ -22,6 +22,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 	private BackupManager backupManager;
 	private Request<Balance> balanceRequest;
 	private KinClient kinClient;
+	private KinAccount currentKinAccount;
 
 	public enum NetWorkType {
 		MAIN,
@@ -50,7 +51,10 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 	@Override
 	public void backupClicked() {
 		if (kinClient.hasAccount()) {
-			backupManager.backup(kinClient.getAccount(kinClient.getAccountCount() - 1).getPublicAddress());
+			if (currentKinAccount == null) {
+				currentKinAccount = kinClient.getAccount(kinClient.getAccountCount() - 1);
+			}
+			backupManager.backup(currentKinAccount.getPublicAddress());
 		} else {
 			if (view != null) {
 				view.noAccountToBackupError();
@@ -65,9 +69,9 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 
 	@Override
 	public void createAccountClicked() {
-		KinAccount account = createAccountLocally();
-		if (account != null) {
-			onBoardAccount(account);
+		createAccountLocally();
+		if (currentKinAccount != null) {
+			onBoardAccount();
 		} else {
 			if (view != null) {
 				view.createAccountError();
@@ -75,26 +79,24 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 		}
 	}
 
-	private KinAccount createAccountLocally() {
-		KinAccount kinAccount = null;
+	private void createAccountLocally() {
 		try {
-			kinAccount = kinClient.addAccount();
+			currentKinAccount = kinClient.addAccount();
 		} catch (CreateAccountException e) {
 			Utils.logError(e, "createAccount");
 		}
-		return kinAccount;
 	}
 
-	private void onBoardAccount(KinAccount account) {
-		if (account != null) {
+	private void onBoardAccount() {
+		if (currentKinAccount != null) {
 			AccountCreator accountCreator = new AccountCreator();
-			accountCreator.onBoard(account, new Callbacks() {
+			accountCreator.onBoard(currentKinAccount, new Callbacks() {
 				@Override
 				public void onSuccess() {
 					if (view != null) {
-						view.updatePublicAddress(account.getPublicAddress());
+						view.updatePublicAddress(currentKinAccount.getPublicAddress());
 						view.enableCreateAccountButton();
-						updateAccountBalance(account);
+						updateAccountBalance();
 					}
 				}
 
@@ -160,10 +162,11 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 	private void handleRestoreSuccess(KinAccount kinAccount) {
 		Log.d(TAG, "BackupCallback - onSuccess");
 		if (kinAccount != null) {
+			currentKinAccount = kinAccount;
 			if (view != null) {
-				view.updatePublicAddress(kinAccount.getPublicAddress());
+				view.updatePublicAddress(currentKinAccount.getPublicAddress());
 			}
-			updateAccountBalance(kinAccount);
+			updateAccountBalance();
 		} else {
 			if (view != null) {
 				view.updateRestoreError();
@@ -171,8 +174,8 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 		}
 	}
 
-	private void updateAccountBalance(KinAccount kinAccount) {
-		balanceRequest = kinAccount.getBalance();
+	private void updateAccountBalance() {
+		balanceRequest = currentKinAccount.getBalance();
 		balanceRequest.run(new ResultCallback<Balance>() {
 			@Override
 			public void onResult(Balance balance) {

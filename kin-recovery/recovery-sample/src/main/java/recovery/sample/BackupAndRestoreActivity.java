@@ -79,6 +79,11 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	}
 
 	@Override
+	public void enableCreateAccountButton() {
+		createNewAccount.setEnabled(true);
+	}
+
+	@Override
 	public BackupManager getBackupManager() {
 		return new BackupManager(this, getKinClient(NetWorkType.TEST));
 	}
@@ -124,11 +129,6 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	@Override
 	public void onBoardAccountError() {
 		showError(R.string.on_board_error);
-	}
-
-	@Override
-	public void enableCreateAccountButton() {
-		createNewAccount.setEnabled(true);
 	}
 
 	private void showError(int errorId) {
