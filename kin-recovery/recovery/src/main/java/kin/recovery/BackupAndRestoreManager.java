@@ -10,7 +10,7 @@ import kin.recovery.events.InternalRestoreCallback;
 import kin.recovery.exception.BackupException;
 import kin.sdk.KinClient;
 
-public final class BackupManager {
+public final class BackupAndRestoreManager {
 
 	public static final String NETWORK_URL_EXTRA = "networkUrlExtra";
 	public static final String NETWORK_PASSPHRASE_EXTRA = "networkPassphraseExtra";
@@ -22,7 +22,7 @@ public final class BackupManager {
 	private KinClient kinClient;
 	private Activity activity;
 
-	public BackupManager(@NonNull final Activity activity) {
+	public BackupAndRestoreManager(@NonNull final Activity activity) {
 		Validator.checkNotNull(activity, "activity");
 		this.activity = activity;
 		this.callbackManager = new CallbackManager(
@@ -44,11 +44,6 @@ public final class BackupManager {
 		this.callbackManager.setBackupCallback(backupCallback);
 	}
 
-//	public void registerBackupEvents(@NonNull final BackupEvents backupEvents) {
-//		Validator.checkNotNull(backupEvents, "backupEvents");
-//		this.callbackManager.setBackupEvents(backupEvents);
-//	}
-
 	public void registerRestoreCallback(@NonNull final RestoreCallback restoreCallback) {
 		Validator.checkNotNull(restoreCallback, "restoreCallback");
 		this.callbackManager.setInternalRestoreCallback(new InternalRestoreCallback() {
@@ -69,6 +64,11 @@ public final class BackupManager {
 			}
 		});
 	}
+
+//	public void registerBackupEvents(@NonNull final BackupEvents backupEvents) {
+//		Validator.checkNotNull(backupEvents, "backupEvents");
+//		this.callbackManager.setBackupEvents(backupEvents);
+//	}
 
 //	public void registerRestoreEvents(@NonNull final RestoreEvents restoreEvents) {
 //		Validator.checkNotNull(restoreEvents, "restoreEvents");

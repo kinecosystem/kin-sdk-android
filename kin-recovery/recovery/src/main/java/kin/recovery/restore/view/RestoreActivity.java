@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
-import kin.recovery.BackupManager;
+import kin.recovery.BackupAndRestoreManager;
 import kin.recovery.R;
 import kin.recovery.base.BaseToolbarActivity;
 import kin.recovery.events.BroadcastManagerImpl;
@@ -36,10 +36,10 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 	@NonNull
 	private KinClient getKinClientFromIntent() {
 		Intent intent = getIntent();
-		String networkUrl = intent.getStringExtra(BackupManager.NETWORK_URL_EXTRA);
-		String networkPassphrase = intent.getStringExtra(BackupManager.NETWORK_PASSPHRASE_EXTRA);
-		String appId = intent.getStringExtra(BackupManager.APP_ID_EXTRA);
-		String storeKey = intent.getStringExtra(BackupManager.STORE_KEY_EXTRA);
+		String networkUrl = intent.getStringExtra(BackupAndRestoreManager.NETWORK_URL_EXTRA);
+		String networkPassphrase = intent.getStringExtra(BackupAndRestoreManager.NETWORK_PASSPHRASE_EXTRA);
+		String appId = intent.getStringExtra(BackupAndRestoreManager.APP_ID_EXTRA);
+		String storeKey = intent.getStringExtra(BackupAndRestoreManager.STORE_KEY_EXTRA);
 		return new KinClient(getApplicationContext(), new Environment(networkUrl,
 			networkPassphrase), appId, storeKey);
 	}

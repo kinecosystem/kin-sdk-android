@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import kin.recovery.BackupManager;
+import kin.recovery.BackupAndRestoreManager;
 import kin.sdk.Balance;
 import kin.sdk.Environment;
 import kin.sdk.KinClient;
@@ -84,8 +84,8 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	}
 
 	@Override
-	public BackupManager getBackupManager() {
-		return new BackupManager(this);
+	public BackupAndRestoreManager getBackupManager() {
+		return new BackupAndRestoreManager(this);
 	}
 
 	@Override

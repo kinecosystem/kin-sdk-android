@@ -2,8 +2,8 @@ package recovery.sample;
 
 import android.content.Intent;
 import android.util.Log;
+import kin.recovery.BackupAndRestoreManager;
 import kin.recovery.BackupCallback;
-import kin.recovery.BackupManager;
 import kin.recovery.RestoreCallback;
 import kin.recovery.exception.BackupException;
 import kin.sdk.Balance;
@@ -19,7 +19,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 	private static final String TAG = BackupAndRestorePresenterImpl.class.getSimpleName();
 
 	private IBackupAndRestoreView view;
-	private BackupManager backupManager;
+	private BackupAndRestoreManager backupAndRestoreManager;
 	private Request<Balance> balanceRequest;
 	private KinClient kinClient;
 	private KinAccount currentKinAccount;
@@ -29,8 +29,8 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 		TEST
 	}
 
-	BackupAndRestorePresenterImpl(BackupManager backupManager, KinClient kinClient) {
-		this.backupManager = backupManager;
+	BackupAndRestorePresenterImpl(BackupAndRestoreManager backupAndRestoreManager, KinClient kinClient) {
+		this.backupAndRestoreManager = backupAndRestoreManager;
 		this.kinClient = kinClient;
 		registerToCallbacks();
 	}
@@ -42,10 +42,10 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 
 	@Override
 	public void onDetach() {
-		backupManager.release();
+		backupAndRestoreManager.release();
 		view = null;
 		balanceRequest = null;
-		backupManager = null;
+		backupAndRestoreManager = null;
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 			if (currentKinAccount == null) {
 				currentKinAccount = kinClient.getAccount(kinClient.getAccountCount() - 1);
 			}
-			backupManager.backup(kinClient, currentKinAccount.getPublicAddress());
+			backupAndRestoreManager.backup(kinClient, currentKinAccount.getPublicAddress());
 		} else {
 			if (view != null) {
 				view.noAccountToBackupError();
@@ -64,7 +64,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 
 	@Override
 	public void restoreClicked() {
-		backupManager.restore(kinClient);
+		backupAndRestoreManager.restore(kinClient);
 	}
 
 	@Override
@@ -114,11 +114,11 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		backupManager.onActivityResult(requestCode, resultCode, data);
+		backupAndRestoreManager.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private void registerToCallbacks() {
-		backupManager.registerBackupCallback(new BackupCallback() {
+		backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
 			@Override
 			public void onSuccess() {
 				Log.d(TAG, "BackupCallback - onSuccess");
@@ -138,7 +138,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 			}
 		});
 
-		backupManager.registerRestoreCallback(new RestoreCallback() {
+		backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
 			@Override
 			public void onSuccess(KinAccount kinAccount) {
 				handleRestoreSuccess(kinAccount);

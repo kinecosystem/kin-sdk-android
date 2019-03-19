@@ -1,10 +1,10 @@
 package kin.recovery;
 
-import static kin.recovery.BackupManager.APP_ID_EXTRA;
-import static kin.recovery.BackupManager.NETWORK_PASSPHRASE_EXTRA;
-import static kin.recovery.BackupManager.NETWORK_URL_EXTRA;
-import static kin.recovery.BackupManager.PUBLIC_ADDRESS_EXTRA;
-import static kin.recovery.BackupManager.STORE_KEY_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.APP_ID_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.NETWORK_PASSPHRASE_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.NETWORK_URL_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.PUBLIC_ADDRESS_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.STORE_KEY_EXTRA;
 import static kin.recovery.events.CallbackManager.REQ_CODE_BACKUP;
 import static kin.recovery.events.CallbackManager.REQ_CODE_RESTORE;
 

@@ -1,12 +1,11 @@
 package recovery.sample;
 
-import kin.recovery.BackupManager;
+import kin.recovery.BackupAndRestoreManager;
 import kin.sdk.Balance;
 
 public interface IBackupAndRestoreView {
 
-	BackupManager getBackupManager();
-
+	BackupAndRestoreManager getBackupManager();
 
 	void updatePublicAddress(String publicAddress);
 

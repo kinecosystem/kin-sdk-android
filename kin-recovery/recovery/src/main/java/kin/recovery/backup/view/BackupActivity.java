@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 import kin.recovery.AccountExtractor;
-import kin.recovery.BackupManager;
+import kin.recovery.BackupAndRestoreManager;
 import kin.recovery.R;
 import kin.recovery.backup.presenter.BackupPresenter;
 import kin.recovery.backup.presenter.BackupPresenterImpl;
@@ -59,7 +59,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 		Intent intent = getIntent();
 		if (intent != null) {
 			KinClient kinClient = getKinClientFromIntent(intent);
-			String publicAddress = intent.getStringExtra(BackupManager.PUBLIC_ADDRESS_EXTRA);
+			String publicAddress = intent.getStringExtra(BackupAndRestoreManager.PUBLIC_ADDRESS_EXTRA);
 			kinAccount = AccountExtractor.getKinAccount(kinClient, publicAddress);
 		}
 		return kinAccount;
@@ -67,10 +67,10 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@NonNull
 	private KinClient getKinClientFromIntent(Intent intent) {
-		String networkUrl = intent.getStringExtra(BackupManager.NETWORK_URL_EXTRA);
-		String networkPassphrase = intent.getStringExtra(BackupManager.NETWORK_PASSPHRASE_EXTRA);
-		String appId = intent.getStringExtra(BackupManager.APP_ID_EXTRA);
-		String storeKey = intent.getStringExtra(BackupManager.STORE_KEY_EXTRA);
+		String networkUrl = intent.getStringExtra(BackupAndRestoreManager.NETWORK_URL_EXTRA);
+		String networkPassphrase = intent.getStringExtra(BackupAndRestoreManager.NETWORK_PASSPHRASE_EXTRA);
+		String appId = intent.getStringExtra(BackupAndRestoreManager.APP_ID_EXTRA);
+		String storeKey = intent.getStringExtra(BackupAndRestoreManager.STORE_KEY_EXTRA);
 		return new KinClient(getApplicationContext(), new Environment(networkUrl,
 			networkPassphrase), appId, storeKey);
 	}
