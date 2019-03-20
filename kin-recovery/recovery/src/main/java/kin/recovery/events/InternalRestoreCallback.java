@@ -1,6 +1,6 @@
 package kin.recovery.events;
 
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
 
 public interface InternalRestoreCallback {
 
@@ -8,6 +8,6 @@ public interface InternalRestoreCallback {
 
 	void onCancel();
 
-	void onFailure(BackupException throwable);
+	void onFailure(BackupAndRestoreException throwable);
 
 }

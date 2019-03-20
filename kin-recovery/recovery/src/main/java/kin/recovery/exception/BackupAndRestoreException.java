@@ -1,6 +1,6 @@
 package kin.recovery.exception;
 
-public class BackupException extends Exception {
+public class BackupAndRestoreException extends Exception {
 
 	public static final int CODE_UNEXPECTED = 501;
 
@@ -11,12 +11,12 @@ public class BackupException extends Exception {
 
 	private final int code;
 
-	public BackupException(int code, String message) {
+	public BackupAndRestoreException(int code, String message) {
 		super(message);
 		this.code = code;
 	}
 
-	public BackupException(int code, String message, Throwable cause) {
+	public BackupAndRestoreException(int code, String message, Throwable cause) {
 		super(message, cause);
 		this.code = code;
 	}

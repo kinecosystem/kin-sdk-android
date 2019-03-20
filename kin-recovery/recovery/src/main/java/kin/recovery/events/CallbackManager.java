@@ -1,6 +1,6 @@
 package kin.recovery.events;
 
-import static kin.recovery.exception.BackupException.CODE_UNEXPECTED;
+import static kin.recovery.exception.BackupAndRestoreException.CODE_UNEXPECTED;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import kin.recovery.BackupCallback;
 import kin.recovery.BackupEvents;
 import kin.recovery.RestoreEvents;
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
 
 public class CallbackManager {
 
@@ -85,7 +85,7 @@ public class CallbackManager {
 				case RES_CODE_SUCCESS:
 					final String publicAddress = data.getStringExtra(EXTRA_KEY_PUBLIC_ADDRESS);
 					if (publicAddress == null) {
-						internalRestoreCallback.onFailure(new BackupException(CODE_UNEXPECTED,
+						internalRestoreCallback.onFailure(new BackupAndRestoreException(CODE_UNEXPECTED,
 							"Unexpected error - imported account public address not found"));
 					}
 					internalRestoreCallback.onSuccess(publicAddress);
@@ -96,11 +96,12 @@ public class CallbackManager {
 				case RES_CODE_FAILED:
 					String errorMessage = data.getStringExtra(EXTRA_KEY_ERROR_MESSAGE);
 					int code = data.getIntExtra(EXTRA_KEY_ERROR_CODE, 0);
-					internalRestoreCallback.onFailure(new BackupException(code, errorMessage));
+					internalRestoreCallback.onFailure(new BackupAndRestoreException(code, errorMessage));
 					break;
 				default:
 					internalRestoreCallback.onFailure(
-						new BackupException(CODE_UNEXPECTED, "Unexpected error - unknown result code " + resultCode));
+						new BackupAndRestoreException(CODE_UNEXPECTED,
+							"Unexpected error - unknown result code " + resultCode));
 					break;
 			}
 		}
@@ -118,11 +119,12 @@ public class CallbackManager {
 				case RES_CODE_FAILED:
 					String errorMessage = data.getStringExtra(EXTRA_KEY_ERROR_MESSAGE);
 					int code = data.getIntExtra(EXTRA_KEY_ERROR_CODE, 0);
-					backupCallback.onFailure(new BackupException(code, errorMessage));
+					backupCallback.onFailure(new BackupAndRestoreException(code, errorMessage));
 					break;
 				default:
 					backupCallback.onFailure(
-						new BackupException(CODE_UNEXPECTED, "Unexpected error - unknown result code " + resultCode));
+						new BackupAndRestoreException(CODE_UNEXPECTED,
+							"Unexpected error - unknown result code " + resultCode));
 					break;
 			}
 		}

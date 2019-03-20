@@ -7,7 +7,7 @@ import kin.recovery.events.BroadcastManagerImpl;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
 import kin.recovery.events.InternalRestoreCallback;
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
 import kin.sdk.KinClient;
 
 public final class BackupAndRestoreManager {
@@ -59,7 +59,7 @@ public final class BackupAndRestoreManager {
 			}
 
 			@Override
-			public void onFailure(BackupException throwable) {
+			public void onFailure(BackupAndRestoreException throwable) {
 				restoreCallback.onFailure(throwable);
 			}
 		});

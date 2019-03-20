@@ -5,7 +5,7 @@ import android.util.Log;
 import kin.recovery.BackupAndRestoreManager;
 import kin.recovery.BackupCallback;
 import kin.recovery.RestoreCallback;
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
 import kin.sdk.Balance;
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
@@ -130,7 +130,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 			}
 
 			@Override
-			public void onFailure(BackupException throwable) {
+			public void onFailure(BackupAndRestoreException throwable) {
 				Log.d(TAG, "BackupCallback - onFailure");
 				if (view != null) {
 					view.updateBackupError();
@@ -150,7 +150,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 			}
 
 			@Override
-			public void onFailure(BackupException throwable) {
+			public void onFailure(BackupAndRestoreException throwable) {
 				Log.d(TAG, "BackupCallback - onFailure");
 				if (view != null) {
 					view.updateRestoreError();

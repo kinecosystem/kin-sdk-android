@@ -1,6 +1,6 @@
 package kin.recovery;
 
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
 import kin.sdk.KinAccount;
 
 public interface RestoreCallback {
@@ -9,5 +9,5 @@ public interface RestoreCallback {
 
 	void onCancel();
 
-	void onFailure(BackupException throwable);
+	void onFailure(BackupAndRestoreException throwable);
 }
