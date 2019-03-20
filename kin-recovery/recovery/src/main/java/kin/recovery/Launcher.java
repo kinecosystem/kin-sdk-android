@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import kin.recovery.backup.view.BackupActivity;
 import kin.recovery.restore.view.RestoreActivity;
+import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
 class Launcher {
@@ -25,10 +26,10 @@ class Launcher {
 		this.kinClient = kinClient;
 	}
 
-	void backupFlow(String publicAddress) {
+	void backupFlow(KinAccount kinAccount) {
 		Intent intent = new Intent(activity, BackupActivity.class);
 		addKinClientExtras(intent);
-		intent.putExtra(PUBLIC_ADDRESS_EXTRA, publicAddress);
+		intent.putExtra(PUBLIC_ADDRESS_EXTRA, kinAccount.getPublicAddress());
 		startForResult(intent, REQ_CODE_BACKUP);
 	}
 

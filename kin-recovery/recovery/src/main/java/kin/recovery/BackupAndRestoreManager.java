@@ -8,6 +8,7 @@ import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
 import kin.recovery.events.InternalRestoreCallback;
 import kin.recovery.exception.BackupAndRestoreException;
+import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
 public final class BackupAndRestoreManager {
@@ -29,9 +30,9 @@ public final class BackupAndRestoreManager {
 			new EventDispatcherImpl(new BroadcastManagerImpl(activity)));
 	}
 
-	public void backup(KinClient kinClient, String publicAddress) {
+	public void backup(KinClient kinClient, KinAccount kinAccount) {
 		this.kinClient = kinClient;
-		new Launcher(activity, kinClient).backupFlow(publicAddress);
+		new Launcher(activity, kinClient).backupFlow(kinAccount);
 	}
 
 	public void restore(KinClient kinClient) {

@@ -54,7 +54,7 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 			if (currentKinAccount == null) {
 				currentKinAccount = kinClient.getAccount(kinClient.getAccountCount() - 1);
 			}
-			backupAndRestoreManager.backup(kinClient, currentKinAccount.getPublicAddress());
+			backupAndRestoreManager.backup(kinClient, currentKinAccount);
 		} else {
 			if (view != null) {
 				view.noAccountToBackupError();
