@@ -159,7 +159,7 @@ backupAndRestoreManager.restore(kinClient)
 ```
 ### Error Handling
 
-onError(BackupAndRestoreException e) can be called if an error has occured while trying to back up or restore.
+`onError(BackupAndRestoreException e)` can be called if an error has occured while trying to back up or restore.
 
 ### Testing
 
