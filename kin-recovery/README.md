@@ -116,8 +116,8 @@ To unregister from the module and release all its resources, use this code:
 ```java 
 backupAndRestoreManager.release();
 ``` 
-We recommend to register/unregister the callbacks in a way that will “survive” an activity restart or similar situations.
-For example, you can register in Activity.onCreate and release in Activity.onDestroy.
+You should register/unregister the callbacks in a way that will “survive” an activity restart or similar situations.
+In order to achieve that you should register in `Activity.onCreate` and release in `Activity.onDestroy`.
 
 #### Step 3 - Passing the Result to the Backup and Restore module
 
