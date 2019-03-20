@@ -10,10 +10,10 @@ For more details on Kin SDK, go to [kin-sdk](https://github.com/kinecosystem/kin
 
 ## Installation
 
-The Kin Recovery module for Android is implemented as an Android library.
+The Kin backup-and-restore module for Android is implemented as an Android library.
 To include the library in your project, add these two statements to your `build.gradle` files.
 
-###### Snippet: Modifying project build file
+###### Modifying project build file
 
 ```gradle
 allprojects {
@@ -25,13 +25,13 @@ allprojects {
     }
 }
 ```
-###### Snippet: Modifying module build files
+###### Modifying module build files
 
 ```gradle
 ...
 dependencies {
     ...
-    implementation 'com.github.kinecosystem.kin-sdk-android:recovery:<latest release>'
+    implementation 'com.github.kinecosystem.kin-sdk-android:backup-and-restore:<latest release>'
 }
 ```
 
@@ -42,37 +42,33 @@ See the main repository at [github.com/kinecosystem/kin-sdk-android](https://git
 
 ## Overview
 
-Launching Backup and Restore flows requires the following steps:
+Launching the Backup and Restore flows requires the following steps:
 
-1. Creating the backup and restore manager
+1. Creating the Backup and Restore manager
 2. Adding callbacks
-3. Passing the result
+3. Passing the result to the Backup and Restore module
 4. Backup or Restore
 
 ### Step 1 - Creating the Backup and Restore Manager
 
-First you will need to have a KinClient object for later use when you will invoke backup and/or restore methods.
-Also you need to create the BackupAndRestoreManager object.
-###### Snippet: This is an example of how to create those objects:
+You need to create a BackupAndRestoreManager object.
+###### Example of how to create this object:
 
 ```java
-kinClient = new KinClient(context, Environment.TEST, "1acd")
-...
 backupAndRestoreManager = new BackupAndRestoreManager(context);
 ```
 
 
-For more details on KinClient, see https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk.
 
-### Step 2 - Adding Callbacks
 
-Both callbacks have 3 methods:
- - `onSuccess` is called when the operation in finished successfully and in restore it also have a `KinAccount` object which is the restored account.
-- `onCancel` is called when the user is going back from the backup and restore activty to your activity.
-- `onError()` is called if there was some error in the process of backup or restore.
+### Step 2 - Adding Backup and Restore callbacks
 
+Both callbacks have the same 3 methods:
+ - `onSuccess` is called when the operation is completed successfully. In the Restore callback, it has a `KinAccount` object, which is the restored account.
+- `onCancel` is called when the user leaves the backup or restore activity and returns to the previous activity .
+- `onError()` is called if there is an error in the backup or restore process.
+###### Creating Backup callbacks
 ```java
-// For backup
 backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
     @Override
     public void onSuccess() {
@@ -89,8 +85,11 @@ backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
         // here you can handle the failure.
     }
 });
-
-// For restore  
+}
+});
+```
+###### Creating Restore callbacks
+```java  
 backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
     @Override
     public void onSuccess(KinAccount kinAccount) {
@@ -108,22 +107,24 @@ backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
     }
 });
 ```
-##### NOTE:
-Be sure to unregister from the module when no longer needed.
-When you want to unregister then please use release:
-###### Snippet: unregister from the module and release all its resources
+
+NOTE:
+Be sure to unregister from the module when it is no longer needed.
+To unregister from the module and release all its resources, use this code:
+
+
 ```java 
 backupAndRestoreManager.release();
 ``` 
-We recommend to register/unregister the callbacks in a way that will “survive” activity restart or similar situations.
-For example, you can register in Activity.onCreate and release in Activity.onDestroy methods.
-(in MVP, for example, you can do it in the presenter Creation and Destruction).
+You should register/unregister the callbacks in a way that will “survive” an activity restart or similar situations.
+In order to achieve that you should register in `Activity.onCreate` and release in `Activity.onDestroy`.
 
-#### Step 3 - Passing the Result
+#### Step 3 - Passing the Result to the Backup and Restore module
 
-Because the module internally using `startActivityForResult` then in order for the module to work properly you need to implement `onActivityResult` in your activity and in that method you need to call
+Since the module internally uses `startActivityForResult`, for it to work properly, you have to implement `onActivityResult` in your activity. In that method, you need to call
 `backupAndRestore.onActivityResult(...);`
-for example:
+
+For example:
 ```java 
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -133,51 +134,60 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 #### Step 4 - Backup or Restore
+Before you start using the Backup and Restore flows, you need to create a kinClient object.
+###### Example of how to create a kinClient object:
 
-Finally you can now use backup or restore flow by simply calling:
+```java
+kinClient = new KinClient(context, Environment.TEST, "1acd")
+...
+backupAndRestoreManager = new BackupAndRestoreManager(context);
+```
+For more details on KinClient, see https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk.
 
+Now you can use the Backup and Restore flows by calling these functions:
+
+- For backup:
 ```java 
-// For backup
+
 backupAndRestoreManager.backup(kinClient, kinAccount.getPublicAddress());
 
-// For restore
+```
+- For restore:
+```java 
+
 backupAndRestoreManager.restore(kinClient)
 ```
-
 ### Error Handling
 
-onError(BackupAndRestoreException e) can be called in the case of an error that has occured while in the process of trying to backup or restore.
+`onError(BackupAndRestoreException e)` can be called if an error has occured while trying to back up or restore.
 
 ### Testing
 
 Both unit tests and instrumented tests are provided.
+For a full list of tests, see
 
-Android tests include integration and because they are time consuming (depending on network) they are marked as `@LargeTest`.
-
-For a full list of tests see
-
-- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-recovery/recovery/src/test
-- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-recovery/recovery/src/androidTest
+- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/backup-and-restore/src/test
+- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/backup-and-restore/src/androidTest
 
 
-### Running Tests
+#### Running Tests
 
-For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use this script
+For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use this script:
 ```bash
 $ ./run_integ_test.sh
 ```
 
 ### Building from Source
 
-To build from source clone the repo:
+To build from source, clone the repo:
 
 ```bash
 $ git clone https://github.com/kinecosystem/kin-sdk-android.git
 ```
-Now you can build the library using gradle, or open the project using Android Studio.
+Now you can build the library using gradle or open the project using Android Studio.
 
-## Sample Code
+## Sample App Code
 
-`recovery-sample` app covers the entire functionality of `kin-recovery`, and serves as a detailed example on how to use the library.
+The `backup-and-restore-sample` app covers the entire functionality of `kin-backup-and-restore` and serves as a detailed example of how to use the library.
 
-Sample app source code can be found [here](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-recovery/recovery-sample/).
+The sample app source code can be found [here](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/backup-and-restore-sample/).
