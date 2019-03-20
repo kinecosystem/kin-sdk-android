@@ -1,16 +1,16 @@
 # Backup and Restore Standalone Module
 
-This module is an optional way to back up and/or restore your account.
-The module wraps the Kin SDK Android import and export functionalities with a UI that includes two flows - backup and restore.
+This module is an optional way to back up and/or restore your account.  
+The module wraps the Kin SDK Android import and export functionalities with a UI that includes two flows - backup and restore.  
 The UI uses a password to create a QR code, which is then used to back up the account and to restore it.
 
-It is implemented as an Android library that can be incorporated into your code.
+It is implemented as an Android library that can be incorporated into your code.  
 This library is dependent on the kin-sdk library, and we assume that whoever needs to use it is already familiar with the kin-sdk library.
 For more details on Kin SDK, go to [kin-sdk](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk).
 
 ## Installation
 
-The Kin Recovery module for Android is implemented as an Android library.
+The Kin Recovery module for Android is implemented as an Android library.  
 To include the library in your project, add these two statements to your `build.gradle` files.
 
 ###### Snippet: Modifying project build file
@@ -51,7 +51,7 @@ Launching Backup and Restore flows requires the following steps:
 
 ### Step 1 - Creating the Backup and Restore Manager
 
-First you will need to have a KinClient object for later use when you will invoke backup and/or restore methods.
+First you will need to have a KinClient object for later use when you will invoke backup and/or restore methods.  
 Also you need to create the BackupAndRestoreManager object.
 ###### Snippet: This is an example of how to create those objects:
 
@@ -109,15 +109,15 @@ backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
 });
 ```
 ##### NOTE:
-Be sure to unregister from the module when no longer needed.
+Be sure to unregister from the module when no longer needed.  
 When you want to unregister then please use release:
 ###### Snippet: unregister from the module and release all its resources
 ```java 
 backupAndRestoreManager.release();
 ``` 
-We recommend to register/unregister the callbacks in a way that will “survive” activity restart or similar situations.
-For example, you can register in Activity.onCreate and release in Activity.onDestroy methods.
-(in MVP, for example, you can do it in the presenter Creation and Destruction).
+We recommend to register/unregister the callbacks in a way that will “survive” activity restart or similar situations.  
+For example, you can register in Activity.onCreate and release in Activity.onDestroy methods.  
+in MVP, for example, you can do it in the presenter Creation and Destruction.
 
 #### Step 3 - Passing the Result
 
@@ -151,9 +151,6 @@ onError(BackupAndRestoreException e) can be called in the case of an error that 
 ### Testing
 
 Both unit tests and instrumented tests are provided.
-
-Android tests include integration and because they are time consuming (depending on network) they are marked as `@LargeTest`.
-
 For a full list of tests see
 
 - https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-recovery/recovery/src/test
