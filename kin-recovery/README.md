@@ -6,7 +6,8 @@ The UI uses a password to create a QR code, which is then used to back up the ac
 
 It is implemented as an Android library that can be incorporated into your code.
 This library is dependent on the kin-sdk library, and we assume that whoever needs to use it is already familiar with the kin-sdk library.
-For more details on Kin SDK, go to [kin-sdk](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk).
+For more details on Kin SDK, go to [kin-sdk on github](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk)
+and/or to [kin-sdk docs](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk).
 
 ## Installation
 
