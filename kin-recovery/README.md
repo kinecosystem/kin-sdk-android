@@ -119,7 +119,7 @@ In order to achieve that you should register in `Activity.onCreate` and release 
 #### Step 3 - Passing the Result to the Backup and Restore module
 
 Since the module internally uses `startActivityForResult`, for it to work properly, you have to implement `onActivityResult` in your activity. In that method, you need to call
-`backupAndRestore.onActivityResult(...);`
+`backupAndRestoreManager.onActivityResult(...);`
 
 For example:
 ```java 
