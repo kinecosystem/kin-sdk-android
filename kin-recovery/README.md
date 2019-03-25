@@ -135,6 +135,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 #### Step 4 - Backup or Restore
 Before you start using the Backup and Restore flows, you need to create a kinClient object.
+If you want to back up, you need the KinAccount object, which represents the account that you want to back up.
 ###### Example of how to create a kinClient object:
 
 ```java
@@ -142,14 +143,14 @@ kinClient = new KinClient(context, Environment.TEST, "1acd")
 ...
 backupAndRestoreManager = new BackupAndRestoreManager(context);
 ```
-For more details on KinClient, see https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk.
+For more details on KinClient and KinAccount, see https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk.
 
 Now you can use the Backup and Restore flows by calling these functions:
 
 - For backup:
 ```java 
 
-backupAndRestoreManager.backup(kinClient, kinAccount.getPublicAddress());
+backupAndRestoreManager.backup(kinClient, kinAccount);
 
 ```
 - For restore:
