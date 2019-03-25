@@ -1,19 +1,29 @@
 package kin.sdk;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import kin.base.KeyPair;
+import kin.sdk.exception.AccountDeletedException;
+import kin.utils.MainHandler;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import kin.sdk.exception.AccountDeletedException;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import kin.base.KeyPair;
 
 public class KinAccountImplTest {
 
@@ -26,6 +36,29 @@ public class KinAccountImplTest {
     private KinAccountImpl kinAccount;
     private KeyPair expectedRandomAccount;
 
+    private MainHandler mainHandler = new MainHandler()
+    { // Fake main thread
+        private Timer timer = new Timer();
+
+        @Override
+        public void post(Runnable runnable)
+        {
+            timer.schedule(new TimerTask()
+            {
+                @Override
+                public void run()
+                {
+                    runnable.run();
+                }
+            }, 50);
+        }
+
+        @Override
+        public void removeCallbacksAndMessages(Object o)
+        {
+        }
+    };
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -34,7 +67,7 @@ public class KinAccountImplTest {
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
         kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator);
+            mockAccountInfoRetriever, mockBlockchainEventsCreator, mainHandler);
     }
 
     @Test

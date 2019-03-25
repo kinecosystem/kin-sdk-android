@@ -33,6 +33,9 @@ class KinAccountIntegrationTest {
 
     private lateinit var kinClient: KinClient
 
+    private val kinStorageFactory = KinStorageFactoryImpl(InstrumentationRegistry.getTargetContext())
+    private val mainHandler = AndroidMainHandler()
+
     @Rule
     @JvmField
     val expectedEx: ExpectedException = ExpectedException.none()
@@ -42,7 +45,7 @@ class KinAccountIntegrationTest {
     @Before
     @Throws(IOException::class)
     fun setup() {
-        kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, appId)
+        kinClient = KinClient(kinStorageFactory, mainHandler, environment, appId)
         kinClient.clearAllAccounts()
     }
 

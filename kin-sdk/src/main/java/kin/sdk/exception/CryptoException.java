@@ -1,7 +1,6 @@
 package kin.sdk.exception;
 
 import kin.sdk.KinAccount;
-import kin.sdk.KinClient;
 
 /**
  * Decryption/Encryption error when importing - {@link KinClient#importAccount(String, String)} or

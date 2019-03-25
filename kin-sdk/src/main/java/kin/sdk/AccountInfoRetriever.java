@@ -1,16 +1,17 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.OperationFailedException;
+import javax.annotation.Nonnull;
+
 import kin.base.KeyPair;
 import kin.base.Server;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
+import kin.sdk.exception.AccountNotFoundException;
+import kin.sdk.exception.OperationFailedException;
 
 class AccountInfoRetriever {
 
@@ -28,8 +29,8 @@ class AccountInfoRetriever {
      * @throws AccountNotFoundException if account not created yet
      * @throws OperationFailedException any other error
      */
-    Balance getBalance(@NonNull String accountId) throws OperationFailedException {
-        Utils.checkNotNull(accountId, "account");
+    Balance getBalance(@Nonnull String accountId) throws OperationFailedException {
+        Utils.checkNonnull(accountId, "account");
         Balance balance = null;
         try {
             AccountResponse accountResponse = server.accounts().account(KeyPair.fromAccountId(accountId));
@@ -59,7 +60,7 @@ class AccountInfoRetriever {
     }
 
     @AccountStatus
-    int getStatus(@NonNull String accountId) throws OperationFailedException {
+    int getStatus(@Nonnull String accountId) throws OperationFailedException {
         try {
             getBalance(accountId);
             return AccountStatus.CREATED;

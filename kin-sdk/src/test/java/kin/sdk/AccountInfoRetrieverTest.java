@@ -1,17 +1,5 @@
 package kin.sdk;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.OperationFailedException;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.SocketPolicy;
 import org.hamcrest.Matchers;
 import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Assert;
@@ -22,11 +10,24 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.io.IOException;
+
 import kin.base.Server;
 import kin.base.responses.HttpResponseException;
+import kin.sdk.exception.AccountNotFoundException;
+import kin.sdk.exception.OperationFailedException;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.SocketPolicy;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23, manifest = Config.NONE)
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isA;
+import static org.junit.Assert.assertThat;
+
+//@RunWith(RobolectricTestRunner.class)
+//@Config(sdk = 23, manifest = Config.NONE)
 public class AccountInfoRetrieverTest {
 
     private static final String ACCOUNT_ID = "GBQUCJ755LJBUFFKFZCTV7XFA6JUR5NAAEJF66SPCN3XROHVKSG3VVUY";

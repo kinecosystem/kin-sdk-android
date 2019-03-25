@@ -1,5 +1,20 @@
 package kin.sdk;
 
+import org.json.JSONException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+import java.util.List;
+
+import kin.base.KeyPair;
+import kin.sdk.exception.CreateAccountException;
+import kin.sdk.exception.DeleteAccountException;
+import kin.sdk.exception.LoadAccountException;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -12,22 +27,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-import kin.sdk.exception.CreateAccountException;
-import kin.sdk.exception.DeleteAccountException;
-import org.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import kin.base.KeyPair;
-import kin.sdk.exception.LoadAccountException;
 
-
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23, manifest = Config.NONE)
+//@RunWith(RobolectricTestRunner.class)
+//@Config(sdk = 23, manifest = Config.NONE)
 public class KeyStoreImplTest {
 
     @Rule

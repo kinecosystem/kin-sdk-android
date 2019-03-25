@@ -1,37 +1,47 @@
 package kin.sdk;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import kin.utils.MainHandler;
 import kin.utils.Request;
 
 abstract class AbstractKinAccount implements KinAccount {
 
-    @NonNull
+    private MainHandler mainHandler;
+
+    AbstractKinAccount(MainHandler mainHandler) {
+        this.mainHandler = mainHandler;
+    }
+
+    @Nonnull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress,
-                                                 @NonNull final BigDecimal amount, final int fee) {
+    public Request<Transaction> buildTransaction(@Nonnull final String publicAddress,
+                                                 @Nonnull final BigDecimal amount, final int fee) {
         return new Request<>(new Callable<Transaction>() {
             @Override
             public Transaction call() throws Exception {
                 return buildTransactionSync(publicAddress, amount, fee);
             }
-        });
-    }@NonNull
+        }, mainHandler);
+    }@Nonnull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
+    public Request<Transaction> buildTransaction(@Nonnull final String publicAddress, @Nonnull final BigDecimal amount,
                                                  final int fee, @Nullable final String memo) {
         return new Request<>(new Callable<Transaction>() {
             @Override
             public Transaction call() throws Exception {
                 return buildTransactionSync(publicAddress, amount, fee, memo); 
             }
-        });
+        }, mainHandler);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public Request<TransactionId> sendTransaction(final Transaction transaction) {
         return new Request<>(new Callable<TransactionId>() {
@@ -39,10 +49,10 @@ abstract class AbstractKinAccount implements KinAccount {
             public TransactionId call() throws Exception {
                 return sendTransactionSync(transaction);
             }
-        });
+        }, mainHandler);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public Request<TransactionId> sendWhitelistTransaction(final String whitelist) {
         return new Request<>(new Callable<TransactionId>() {
@@ -50,10 +60,10 @@ abstract class AbstractKinAccount implements KinAccount {
             public TransactionId call() throws Exception {
                 return sendWhitelistTransactionSync(whitelist);
             }
-        });
+        }, mainHandler);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public Request<Balance> getBalance() {
         return new Request<>(new Callable<Balance>() {
@@ -61,10 +71,10 @@ abstract class AbstractKinAccount implements KinAccount {
             public Balance call() throws Exception {
                 return getBalanceSync();
             }
-        });
+        }, mainHandler);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public Request<Integer> getStatus() {
         return new Request<>(new Callable<Integer>() {
@@ -72,7 +82,7 @@ abstract class AbstractKinAccount implements KinAccount {
             public Integer call() throws Exception {
                 return getStatusSync();
             }
-        });
+        }, mainHandler);
     }
 
     @SuppressWarnings("SimplifiableIfStatement")

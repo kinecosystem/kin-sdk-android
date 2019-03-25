@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
 import android.widget.TextView;
+
 import kin.sdk.KinClient;
 
 /**

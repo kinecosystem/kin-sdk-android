@@ -1,22 +1,16 @@
-apply plugin: 'com.android.library'
-
+apply plugin: 'java-library'
 
 // maven plugin and group definition
 // needed for jitpack support
 apply plugin: 'maven'
 group = 'com.github.kinecosystem'
 
-android {
-    compileSdkVersion 26
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-        consumerProguardFiles 'proguard-rules.pro'
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
+sourceSets {
+    test.java.srcDirs += 'src/test/java'
 }
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')

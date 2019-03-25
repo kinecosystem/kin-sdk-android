@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
 import java.io.IOException;
 import java.net.URI;
+
 import okhttp3.OkHttpClient;
 import kin.base.KeyPair;
 import kin.base.responses.Page;

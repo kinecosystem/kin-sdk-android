@@ -3,6 +3,8 @@ package kin.base.requests;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
+
 import okhttp3.OkHttpClient;
 import kin.base.Asset;
 import kin.base.AssetTypeCreditAlphaNum;
@@ -18,21 +20,21 @@ public class OrderBookRequestBuilder extends RequestBuilder {
   }
 
   public OrderBookRequestBuilder buyingAsset(Asset asset) {
-    uriBuilder.appendQueryParameter("buying_asset_type", asset.getType());
+    uriBuilder.addQueryParameter("buying_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.appendQueryParameter("buying_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.appendQueryParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.addQueryParameter("buying_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.addQueryParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }
   
   public OrderBookRequestBuilder sellingAsset(Asset asset) {
-    uriBuilder.appendQueryParameter("selling_asset_type", asset.getType());
+    uriBuilder.addQueryParameter("selling_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.appendQueryParameter("selling_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.appendQueryParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.addQueryParameter("selling_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.addQueryParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }

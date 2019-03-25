@@ -1,18 +1,20 @@
 package kin.sdk;
 
 
-import static org.hamcrest.CoreMatchers.isA;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
-
-import java.util.UUID;
-import kin.sdk.exception.CorruptedDataException;
-import kin.sdk.exception.CryptoException;
 import org.json.JSONException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.UUID;
+
 import kin.base.KeyPair;
+import kin.sdk.exception.CorruptedDataException;
+import kin.sdk.exception.CryptoException;
+
+import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class BackupRestoreTest {
 

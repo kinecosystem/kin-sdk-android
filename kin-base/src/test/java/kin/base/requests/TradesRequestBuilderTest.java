@@ -11,7 +11,6 @@ import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricTestRunner.class)
 public class TradesRequestBuilderTest {
     @Test
     public void testOrderBook() {

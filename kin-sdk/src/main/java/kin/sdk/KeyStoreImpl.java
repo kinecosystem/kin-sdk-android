@@ -1,17 +1,20 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.DeleteAccountException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import kin.base.KeyPair;
 import kin.sdk.exception.LoadAccountException;
 
 class KeyStoreImpl implements KeyStore {
@@ -26,12 +29,12 @@ class KeyStoreImpl implements KeyStore {
     private final Store store;
     private final BackupRestore backupRestore;
 
-    KeyStoreImpl(@NonNull Store store, @NonNull BackupRestore backupRestore) {
+    KeyStoreImpl(@Nonnull Store store, @Nonnull BackupRestore backupRestore) {
         this.store = store;
         this.backupRestore = backupRestore;
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public List<KeyPair> loadAccounts() throws LoadAccountException {
         ArrayList<KeyPair> accounts = new ArrayList<>();
@@ -104,13 +107,13 @@ class KeyStoreImpl implements KeyStore {
     }
 
     @Override
-    public KeyPair importAccount(@NonNull String json, @NonNull String passphrase)
+    public KeyPair importAccount(@Nonnull String json, @Nonnull String passphrase)
         throws CryptoException, CreateAccountException, CorruptedDataException {
         KeyPair keyPair = backupRestore.importWallet(json, passphrase);
         return addKeyPairToStorage(keyPair);
     }
 
-    private JSONObject addKeyPairToAccountsJson(@NonNull String encryptedSeed, @NonNull String accountId)
+    private JSONObject addKeyPairToAccountsJson(@Nonnull String encryptedSeed, @Nonnull String accountId)
         throws JSONException {
         JSONArray jsonArray = loadJsonArray();
         if (jsonArray == null) {

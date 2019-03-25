@@ -1,9 +1,10 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import java.util.HashMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class FakeStore implements Store {
 
@@ -13,18 +14,18 @@ class FakeStore implements Store {
     }
 
     @Override
-    public void saveString(@NonNull String key, @NonNull String value) {
+    public void saveString(@Nonnull String key, @Nonnull String value) {
         map.put(key, value);
     }
 
     @Nullable
     @Override
-    public String getString(@NonNull String key) {
+    public String getString(@Nonnull String key) {
         return map.get(key);
     }
 
     @Override
-    public void clear(@NonNull String key) {
+    public void clear(@Nonnull String key) {
         map.remove(key);
     }
 }

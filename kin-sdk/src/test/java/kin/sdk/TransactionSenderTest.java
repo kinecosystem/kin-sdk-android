@@ -1,30 +1,5 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeUnit;
-
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.InsufficientFeeException;
-import kin.sdk.exception.IllegalAmountException;
-import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.OperationFailedException;
-import kin.sdk.exception.TransactionFailedException;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.SocketPolicy;
 import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,14 +11,40 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
+
 import kin.base.FormatException;
 import kin.base.KeyPair;
 import kin.base.Network;
 import kin.base.Server;
 import kin.base.responses.HttpResponseException;
+import kin.sdk.exception.AccountNotFoundException;
+import kin.sdk.exception.IllegalAmountException;
+import kin.sdk.exception.InsufficientFeeException;
+import kin.sdk.exception.InsufficientKinException;
+import kin.sdk.exception.OperationFailedException;
+import kin.sdk.exception.TransactionFailedException;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.SocketPolicy;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23, manifest = Config.NONE)
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
+import static org.junit.Assert.assertThat;
+
+//@RunWith(RobolectricTestRunner.class)
+//@Config(sdk = 23, manifest = Config.NONE)
 public class TransactionSenderTest {
 
     private static final String ACCOUNT_ID_FROM = "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX";

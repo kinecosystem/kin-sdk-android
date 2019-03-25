@@ -11,7 +11,6 @@ import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricTestRunner.class)
 public class PathsRequestBuilderTest {
   @Test
   public void testAccounts() {

@@ -23,7 +23,6 @@ import okhttp3.ResponseBody;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricTestRunner.class)
 public class FederationTest extends TestCase {
 
   @Mock

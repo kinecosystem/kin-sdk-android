@@ -1,14 +1,19 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertNull;
 import android.support.test.InstrumentationRegistry;
-import java.math.BigDecimal;
-import kin.sdk.exception.AccountDeletedException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.math.BigDecimal;
+
+import kin.sdk.exception.AccountDeletedException;
+import kin.utils.MainHandler;
+
+import static junit.framework.Assert.assertNull;
 
 @SuppressWarnings({"deprecation", "ConstantConditions"})
 public class KinAccountTest {
@@ -18,12 +23,15 @@ public class KinAccountTest {
 
     private KinClient kinClient;
 
+    private KinStorageFactory kinStorageFactory = new KinStorageFactoryImpl(InstrumentationRegistry.getTargetContext());
+    private MainHandler mainHandler = new AndroidMainHandler();
+
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Before
     public void setup() {
-        kinClient = new KinClient(InstrumentationRegistry.getTargetContext(), Environment.TEST, APP_ID);
+        kinClient = new KinClient(kinStorageFactory, mainHandler, Environment.TEST, APP_ID);
         kinClient.clearAllAccounts();
     }
 

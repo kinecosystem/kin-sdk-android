@@ -1,17 +1,21 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
-import kin.sdk.exception.CryptoException;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.annotation.Nonnull;
+
 import kin.base.KeyPair;
+import kin.sdk.exception.CryptoException;
 
 public class FakeBackupRestore implements BackupRestore {
 
-    @NonNull
+    @NotNull
+    @Nonnull
     @Override
-    public String exportWallet(@NonNull KeyPair keyPair, @NonNull String passphrase) throws CryptoException {
+    public String exportWallet(@NotNull @Nonnull KeyPair keyPair, @NotNull @Nonnull String passphrase) throws CryptoException {
         JSONObject json = new JSONObject();
         try {
             json.put("seed", new String(keyPair.getSecretSeed()));
@@ -22,9 +26,10 @@ public class FakeBackupRestore implements BackupRestore {
         return json.toString();
     }
 
-    @NonNull
+    @NotNull
+    @Nonnull
     @Override
-    public KeyPair importWallet(@NonNull String exportedJson, @NonNull String passphrase) throws CryptoException {
+    public KeyPair importWallet(@Nonnull String exportedJson, @Nonnull String passphrase) throws CryptoException {
         JSONObject json = new JSONObject();
         try {
             String seed = json.getString("seed");

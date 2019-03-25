@@ -18,8 +18,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23)
 public class ServerTest extends TestCase {
 
   private OkHttpClient mockClient;

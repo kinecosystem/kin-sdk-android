@@ -10,7 +10,6 @@ import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricTestRunner.class)
 public class PaymentsRequestBuilderTest {
   @Test
   public void testPayments() {

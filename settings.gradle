@@ -1,2 +1,2 @@
-include ':sample', ':kin-sdk', 'kin-base'
+include ':sample', ':kin-sdk', ':kin-android', 'kin-base'
 project(":kin-base").projectDir = file("kin-base")

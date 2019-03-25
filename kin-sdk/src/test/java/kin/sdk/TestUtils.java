@@ -1,9 +1,11 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
+
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -16,7 +18,7 @@ final class TestUtils {
         return s.hasNext() ? s.next() : "";
     }
 
-    @NonNull
+    @Nonnull
     static MockResponse generateSuccessMockResponse(Class clazz, String res) {
         return new MockResponse()
             .setBody(loadResource(clazz, res))

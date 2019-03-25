@@ -1,15 +1,15 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 interface Store {
 
-    void saveString(@NonNull String key, @NonNull String value);
+    void saveString(@Nonnull String key, @Nonnull String value);
 
     @Nullable
-    String getString(@NonNull String key);
+    String getString(@Nonnull String key);
 
-    void clear(@NonNull String key);
+    void clear(@Nonnull String key);
 }

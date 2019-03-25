@@ -1,16 +1,12 @@
 package kin.base;
 
-import android.net.Uri;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+
 import kin.base.requests.AccountsRequestBuilder;
 import kin.base.requests.EffectsRequestBuilder;
 import kin.base.requests.LedgersRequestBuilder;
@@ -23,6 +19,13 @@ import kin.base.requests.TradesRequestBuilder;
 import kin.base.requests.TransactionsRequestBuilder;
 import kin.base.responses.GsonSingleton;
 import kin.base.responses.SubmitTransactionResponse;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Main class used to connect to Horizon server.
@@ -63,8 +66,8 @@ public class Server {
 
     private void createUri(String uri) {
         try {
-            serverURI = new URI(uri);
-        } catch (URISyntaxException e) {
+            serverURI = new URL(uri).toURI();
+        } catch (MalformedURLException | URISyntaxException e ) {
             throw new RuntimeException(e);
         }
     }
@@ -146,16 +149,14 @@ public class Server {
      * @return {@link SubmitTransactionResponse}
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
-        Uri transactionsUri = Uri.parse(serverURI.toString())
-            .buildUpon()
-            .appendPath("transactions")
-            .build();
+        URL transactionsUri = HttpUrl.get(serverURI).newBuilder()
+            .addPathSegment("transactions").build().url();
 
         RequestBody formBody = new FormBody.Builder()
             .add("tx", transaction.toEnvelopeXdrBase64())
             .build();
         Request request = new Request.Builder()
-            .url(transactionsUri.toString())
+            .url(transactionsUri)
             .post(formBody)
             .build();
 

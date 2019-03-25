@@ -1,7 +1,8 @@
 package kin.sdk
 
 import android.util.Log
-import kin.sdk.IntegConsts.*
+import kin.sdk.IntegConsts.URL_CREATE_ACCOUNT
+import kin.sdk.IntegConsts.URL_FUND
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException

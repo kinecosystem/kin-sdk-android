@@ -3,6 +3,8 @@ package kin.base.requests;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
+
 import okhttp3.OkHttpClient;
 import kin.base.Asset;
 import kin.base.AssetTypeCreditAlphaNum;
@@ -20,26 +22,26 @@ public class PathsRequestBuilder extends RequestBuilder {
   }
 
   public PathsRequestBuilder destinationAccount(KeyPair account) {
-    uriBuilder.appendQueryParameter("destination_account", account.getAccountId());
+    uriBuilder.addQueryParameter("destination_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder sourceAccount(KeyPair account) {
-    uriBuilder.appendQueryParameter("source_account", account.getAccountId());
+    uriBuilder.addQueryParameter("source_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder destinationAmount(String amount) {
-    uriBuilder.appendQueryParameter("destination_amount", amount);
+    uriBuilder.addQueryParameter("destination_amount", amount);
     return this;
   }
 
   public PathsRequestBuilder destinationAsset(Asset asset) {
-    uriBuilder.appendQueryParameter("destination_asset_type", asset.getType());
+    uriBuilder.addQueryParameter("destination_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.appendQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.appendQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.addQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.addQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }

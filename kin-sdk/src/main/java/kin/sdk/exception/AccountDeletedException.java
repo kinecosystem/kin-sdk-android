@@ -1,7 +1,5 @@
 package kin.sdk.exception;
 
-import kin.sdk.KinClient;
-
 /**
  * Account was deleted using {@link KinClient#deleteAccount(int)}, and cannot be used any more.
  */

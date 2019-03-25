@@ -1,12 +1,12 @@
 package kin.sdk;
 
 
-import static kin.sdk.Utils.checkNotNull;
-
-import android.support.annotation.NonNull;
 import com.here.oksse.ServerSentEvent;
+
 import java.math.BigDecimal;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import kin.base.AccountLedgerEntryChange;
 import kin.base.Asset;
@@ -19,6 +19,8 @@ import kin.base.Operation;
 import kin.base.PaymentOperation;
 import kin.base.Server;
 import kin.base.responses.TransactionResponse;
+
+import static kin.sdk.Utils.checkNonnull;
 
 /**
  * Provides listeners, for various events happens on the blockchain.
@@ -42,8 +44,8 @@ class BlockchainEvents {
      *
      * @param listener listener object for payment events
      */
-    ListenerRegistration addBalanceListener(@NonNull final EventListener<Balance> listener) {
-        checkNotNull(listener, "listener");
+    ListenerRegistration addBalanceListener(@Nonnull final EventListener<Balance> listener) {
+        checkNonnull(listener, "listener");
         ServerSentEvent serverSentEvent = server
                 .transactions()
                 .forAccount(accountKeyPair)
@@ -58,7 +60,7 @@ class BlockchainEvents {
     }
 
     private void extractBalanceChangeFromTransaction(TransactionResponse transactionResponse,
-                                                     @NonNull EventListener<Balance> listener) {
+                                                     @Nonnull EventListener<Balance> listener) {
         List<LedgerEntryChanges> ledgerChanges = transactionResponse.getLedgerChanges();
         if (ledgerChanges != null) {
             for (LedgerEntryChanges ledgerChange : ledgerChanges) {
@@ -72,7 +74,7 @@ class BlockchainEvents {
         }
     }
 
-    private void extractBalanceFromUpdate(@NonNull EventListener<Balance> listener,
+    private void extractBalanceFromUpdate(@Nonnull EventListener<Balance> listener,
                                           LedgerEntryChange ledgerEntryUpdate) {
         if (ledgerEntryUpdate instanceof AccountLedgerEntryChange) {
             AccountLedgerEntryChange accountLedgerEntryChange = (AccountLedgerEntryChange) ledgerEntryUpdate;
@@ -93,8 +95,8 @@ class BlockchainEvents {
      *
      * @param listener listener object for payment events
      */
-    ListenerRegistration addPaymentListener(@NonNull final EventListener<PaymentInfo> listener) {
-        checkNotNull(listener, "listener");
+    ListenerRegistration addPaymentListener(@Nonnull final EventListener<PaymentInfo> listener) {
+        checkNonnull(listener, "listener");
         ServerSentEvent serverSentEvent = server
                 .transactions()
                 .forAccount(accountKeyPair)
@@ -115,7 +117,7 @@ class BlockchainEvents {
      * @param listener listener object for payment events
      */
     ListenerRegistration addAccountCreationListener(final EventListener<Void> listener) {
-        checkNotNull(listener, "listener");
+        checkNonnull(listener, "listener");
         ServerSentEvent serverSentEvent = server.transactions()
                 .forAccount(accountKeyPair)
                 .stream(new kin.base.requests.EventListener<TransactionResponse>() {

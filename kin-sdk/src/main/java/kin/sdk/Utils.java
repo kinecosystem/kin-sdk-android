@@ -1,11 +1,13 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
 import java.util.ArrayList;
-import kin.sdk.exception.TransactionFailedException;
+
+import javax.annotation.Nonnull;
+
 import kin.base.responses.SubmitTransactionResponse;
 import kin.base.responses.SubmitTransactionResponse.Extras.ResultCodes;
+import kin.sdk.exception.TransactionFailedException;
 
 final class Utils {
 
@@ -13,7 +15,7 @@ final class Utils {
         //no instances
     }
 
-    static TransactionFailedException createTransactionException(@NonNull SubmitTransactionResponse response) {
+    static TransactionFailedException createTransactionException(@Nonnull SubmitTransactionResponse response) {
         ArrayList<String> operationsResultCodes = null;
         String transactionResultCode = null;
         if (response.getExtras() != null && response.getExtras().getResultCodes() != null) {
@@ -31,7 +33,7 @@ final class Utils {
         return sb.toString();
     }
 
-    static void checkNotNull(Object obj, String paramName) {
+    static void checkNonnull(Object obj, String paramName) {
         if (obj == null) {
             throw new IllegalArgumentException(paramName + " == null");
         }

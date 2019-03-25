@@ -1,8 +1,11 @@
 package kin.sdk;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
 import java.math.BigDecimal;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.InsufficientKinException;
@@ -29,7 +32,7 @@ public interface KinAccount {
      * @param fee the amount of fee(in stroops) for this transfer.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
+    Request<Transaction> buildTransaction(@Nonnull String publicAddress, @Nonnull BigDecimal amount, int fee);
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
@@ -40,7 +43,7 @@ public interface KinAccount {
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
+    Request<Transaction> buildTransaction(@Nonnull String publicAddress, @Nonnull BigDecimal amount, int fee, @Nullable String memo);
 
     /**
      * Create {@link Request} for signing and sending a transaction
@@ -48,7 +51,7 @@ public interface KinAccount {
      * @param transaction is the transaction object to send.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    @NonNull
+    @Nonnull
     Request<TransactionId> sendTransaction(Transaction transaction);
 
     /**
@@ -58,7 +61,7 @@ public interface KinAccount {
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    @NonNull
+    @Nonnull
     Request<TransactionId> sendWhitelistTransaction(String whitelist);
 
     /**
@@ -72,7 +75,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
+    Transaction buildTransactionSync(@Nonnull String publicAddress, @Nonnull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
@@ -86,7 +89,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+    Transaction buildTransactionSync(@Nonnull String publicAddress, @Nonnull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
 
     /**
      * send a transaction.
@@ -99,7 +102,7 @@ public interface KinAccount {
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
      * @throws OperationFailedException other error occurred.
      */
-    @NonNull
+    @Nonnull
     TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException;
 
     /**
@@ -114,7 +117,7 @@ public interface KinAccount {
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
      * @throws OperationFailedException other error occurred.
      */
-    @NonNull
+    @Nonnull
     TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException;
 
     /**
@@ -123,7 +126,7 @@ public interface KinAccount {
      *
      * @return {@code Request<Balance>} Balance - the balance in kin
      */
-    @NonNull
+    @Nonnull
     Request<Balance> getBalance();
 
     /**
@@ -134,7 +137,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if account was not created
      * @throws OperationFailedException any other error
      */
-    @NonNull
+    @Nonnull
     Balance getBalanceSync() throws OperationFailedException;
 
     /**
@@ -162,7 +165,7 @@ public interface KinAccount {
      *
      * @param listener listener object for payment events
      */
-    ListenerRegistration addBalanceListener(@NonNull final EventListener<Balance> listener);
+    ListenerRegistration addBalanceListener(@Nonnull final EventListener<Balance> listener);
 
     /**
      * Creates and adds listener for payments concerning this account, use returned {@link ListenerRegistration} to
@@ -170,7 +173,7 @@ public interface KinAccount {
      *
      * @param listener listener object for payment events
      */
-    ListenerRegistration addPaymentListener(@NonNull final EventListener<PaymentInfo> listener);
+    ListenerRegistration addPaymentListener(@Nonnull final EventListener<PaymentInfo> listener);
 
     /**
      * Creates and adds listener for account creation event, use returned {@link ListenerRegistration} to stop
@@ -186,5 +189,5 @@ public interface KinAccount {
      * @param passphrase The passphrase with which to encrypt the seed
      * @return A JSON representation of the data as a string
      */
-    String export(@NonNull String passphrase) throws CryptoException;
+    String export(@Nonnull String passphrase) throws CryptoException;
 }

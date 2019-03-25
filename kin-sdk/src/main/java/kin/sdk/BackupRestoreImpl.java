@@ -1,6 +1,6 @@
 package kin.sdk;
 
-import android.support.annotation.NonNull;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,6 +8,8 @@ import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
 
 import java.io.UnsupportedEncodingException;
+
+import javax.annotation.Nonnull;
 
 import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;
@@ -24,8 +26,8 @@ class BackupRestoreImpl implements BackupRestore {
     private boolean initialized = false;
 
     @Override
-    @NonNull
-    public String exportWallet(@NonNull KeyPair keyPair, @NonNull String passphrase)
+    @Nonnull
+    public String exportWallet(@Nonnull KeyPair keyPair, @Nonnull String passphrase)
             throws CryptoException {
         initIfNeeded();
         byte[] saltBytes = generateRandomBytes(SALT_LENGTH_BYTES);
@@ -49,8 +51,8 @@ class BackupRestoreImpl implements BackupRestore {
     }
 
     @Override
-    @NonNull
-    public KeyPair importWallet(@NonNull String exportedJson, @NonNull String passphrase)
+    @Nonnull
+    public KeyPair importWallet(@Nonnull String exportedJson, @Nonnull String passphrase)
             throws CryptoException, CorruptedDataException {
         initIfNeeded();
         AccountJson accountJson = stringify(exportedJson);

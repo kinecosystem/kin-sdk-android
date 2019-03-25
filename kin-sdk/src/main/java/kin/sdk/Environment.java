@@ -1,8 +1,8 @@
 package kin.sdk;
 
-import static kin.sdk.Utils.checkNotEmpty;
-
 import kin.base.Network;
+
+import static kin.sdk.Utils.checkNotEmpty;
 
 /**
  * Provides blockchain network details

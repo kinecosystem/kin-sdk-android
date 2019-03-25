@@ -1,8 +1,8 @@
 package kin.sdk;
 
-import kin.base.KeyPair;
-
 import java.math.BigDecimal;
+
+import kin.base.KeyPair;
 
 public class Transaction {
 

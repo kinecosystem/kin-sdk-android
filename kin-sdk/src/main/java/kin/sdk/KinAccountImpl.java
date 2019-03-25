@@ -1,12 +1,16 @@
 package kin.sdk;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
 import java.math.BigDecimal;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
-import kin.base.KeyPair;
+import kin.utils.MainHandler;
 
 
 final class KinAccountImpl extends AbstractKinAccount {
@@ -19,7 +23,9 @@ final class KinAccountImpl extends AbstractKinAccount {
     private boolean isDeleted = false;
 
     KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
-        AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
+        AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator, MainHandler mainHandler) {
+        super(mainHandler);
+
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;
@@ -36,34 +42,34 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public Transaction buildTransactionSync(@Nonnull String publicAddress, @Nonnull BigDecimal amount,
                                             int fee) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public Transaction buildTransactionSync(@Nonnull String publicAddress, @Nonnull BigDecimal amount,
                                             int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendTransaction(transaction);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendWhitelistTransaction(whitelist);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public Balance getBalanceSync() throws OperationFailedException {
         checkValidAccount();
@@ -77,12 +83,12 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public ListenerRegistration addBalanceListener(@NonNull EventListener<Balance> listener) {
+    public ListenerRegistration addBalanceListener(@Nonnull EventListener<Balance> listener) {
         return blockchainEvents.addBalanceListener(listener);
     }
 
     @Override
-    public ListenerRegistration addPaymentListener(@NonNull EventListener<PaymentInfo> listener) {
+    public ListenerRegistration addPaymentListener(@Nonnull EventListener<PaymentInfo> listener) {
         return blockchainEvents.addPaymentListener(listener);
     }
 
@@ -92,7 +98,7 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public String export(@NonNull String passphrase) throws CryptoException {
+    public String export(@Nonnull String passphrase) throws CryptoException {
         return backupRestore.exportWallet(account, passphrase);
     }
 

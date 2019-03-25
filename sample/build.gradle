@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "kin.sdk.sample"
         minSdkVersion 16
@@ -34,12 +33,16 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation project(':kin-android')
+    
+    implementation 'com.android.support:support-annotations:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.+'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+
+    testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:26.+'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    api project(':kin-sdk')
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
 }

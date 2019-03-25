@@ -1,6 +1,19 @@
 package kin.sdk;
 
 
+import android.support.test.InstrumentationRegistry;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.UUID;
+
+import kin.sdk.exception.CreateAccountException;
+import kin.utils.MainHandler;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -14,15 +27,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 
-import android.support.test.InstrumentationRegistry;
-import java.util.UUID;
-import kin.sdk.exception.CreateAccountException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 @SuppressWarnings("deprecation")
 public class KinClientIntegrationTest {
 
@@ -32,6 +36,9 @@ public class KinClientIntegrationTest {
     private Environment environment;
     private KinClient kinClient;
     private KinClient kinClient2;
+
+    private KinStorageFactory kinStorageFactory = new KinStorageFactoryImpl(InstrumentationRegistry.getTargetContext());
+    private MainHandler mainHandler = new AndroidMainHandler();
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -46,7 +53,7 @@ public class KinClientIntegrationTest {
     }
 
     private KinClient createNewKinClient(String storeKey) {
-        return new KinClient(InstrumentationRegistry.getTargetContext(), environment, APP_ID, storeKey);
+        return new KinClient(kinStorageFactory, mainHandler, environment, APP_ID, storeKey);
     }
 
     @After
@@ -184,7 +191,7 @@ public class KinClientIntegrationTest {
     }
 
     private void buildKinClient() {
-        kinClient = new KinClient(InstrumentationRegistry.getTargetContext(), environment, APP_ID, STORE_KEY_TEST);
+        kinClient = new KinClient(kinStorageFactory, mainHandler, environment, APP_ID, STORE_KEY_TEST);
     }
 
     @Test
@@ -270,7 +277,7 @@ public class KinClientIntegrationTest {
     public void getEnvironment() throws Exception {
         String url = "https://www.myawesomeserver.com";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
-        kinClient = new KinClient(InstrumentationRegistry.getTargetContext(), environment, APP_ID, STORE_KEY_TEST);
+        kinClient = new KinClient(kinStorageFactory, mainHandler, environment, APP_ID, STORE_KEY_TEST);
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);
