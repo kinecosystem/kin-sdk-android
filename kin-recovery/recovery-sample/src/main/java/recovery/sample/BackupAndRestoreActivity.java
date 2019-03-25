@@ -15,16 +15,16 @@ import recovery.sample.BackupAndRestorePresenterImpl.NetWorkType;
 
 public class BackupAndRestoreActivity extends AppCompatActivity implements IBackupAndRestoreView, View.OnClickListener {
 
-	private static final String TAG = BackupAndRestoreActivity.class.getSimpleName();
-
 	private IBackupAndRestorePresenter backupAndRestorePresenter;
 
 	private Button createNewAccount;
+
 	private Button backupCurrentAccount;
 	private Button recoverAccount;
 	private TextView restoredAccountBalance;
 	private TextView restoredAccountPublicAddress;
 	private View balanceProgress;
+	private View publicAddressProgressBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +35,16 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 		recoverAccount = findViewById(R.id.recover_account);
 		restoredAccountBalance = findViewById(R.id.balance_value);
 		restoredAccountPublicAddress = findViewById(R.id.public_address_value);
-//		balanceProgress = findViewById(R.id.balance_progress);
+		balanceProgress = findViewById(R.id.balance_value_progress);
+		publicAddressProgressBar = findViewById(R.id.public_address_value_progress);
 
 		createNewAccount.setOnClickListener(this);
 		backupCurrentAccount.setOnClickListener(this);
 		recoverAccount.setOnClickListener(this);
 
-		// TODO: 13/03/2019 should we support production?
-		backupAndRestorePresenter = new BackupAndRestorePresenterImpl(getBackupManager(),
-			getKinClient(NetWorkType.TEST));
+		KinClient kinClient = getKinClient(NetWorkType.TEST);
+		kinClient.clearAllAccounts();
+		backupAndRestorePresenter = new BackupAndRestorePresenterImpl(getBackupManager(), kinClient);
 		backupAndRestorePresenter.onAttach(this);
 
 	}
@@ -65,11 +66,24 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 		if (vId == R.id.backup_current_account) {
 			backupAndRestorePresenter.backupClicked();
 		} else if (vId == R.id.recover_account) {
+			setBalanceProgressBar(true);
 			backupAndRestorePresenter.restoreClicked();
 		} else if (vId == R.id.create_new_account) {
+			setBalanceProgressBar(true);
+			setPublicAddressProgressBar(true);
 			createNewAccount.setEnabled(false);
+			backupCurrentAccount.setEnabled(false);
+			recoverAccount.setEnabled(false);
 			backupAndRestorePresenter.createAccountClicked();
 		}
+	}
+
+	private void setBalanceProgressBar(boolean show) {
+		balanceProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	private void setPublicAddressProgressBar(boolean show) {
+		publicAddressProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -81,6 +95,8 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	@Override
 	public void enableCreateAccountButton() {
 		createNewAccount.setEnabled(true);
+		backupCurrentAccount.setEnabled(true);
+		recoverAccount.setEnabled(true);
 	}
 
 	@Override
@@ -89,49 +105,68 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	}
 
 	@Override
+	public void cancelBackup() {
+		setBalanceProgressBar(false);
+	}
+
+	@Override
+	public void cancelRestore() {
+		setBalanceProgressBar(false);
+	}
+
+	@Override
 	public void updatePublicAddress(String publicAddress) {
+		setPublicAddressProgressBar(false);
 		restoredAccountPublicAddress.setText(publicAddress);
 	}
 
 	@Override
 	public void updateBalance(Balance balance) {
-		restoredAccountBalance.setText(balance.value().toPlainString());
+		setBalanceProgressBar(false);
+		String balanceText = balance.value().stripTrailingZeros().toPlainString() + " " + getString(R.string.kin);
+		restoredAccountBalance.setText(balanceText);
 	}
 
 	@Override
 	public void updateBalanceError() {
+		setBalanceProgressBar(false);
 		restoredAccountBalance.setText(getString(R.string.balance_error));
-		showError(R.string.failed_to_retrieve_account_balance);
+		showMessage(R.string.failed_to_retrieve_account_balance);
 	}
 
 	@Override
 	public void updateRestoreError() {
 		updateBalanceError();
 		updatePublicAddress(getString(R.string.public_address_error));
-		showError(R.string.restoration_has_failed);
+		showMessage(R.string.restoration_has_failed);
+	}
+
+	@Override
+	public void backupSuccess() {
+		showMessage(R.string.backup_success_message);
 	}
 
 	@Override
 	public void updateBackupError() {
-		showError(R.string.backup_has_failed);
+		showMessage(R.string.backup_has_failed);
 	}
 
 	@Override
 	public void noAccountToBackupError() {
-		showError(R.string.no_account_to_backup_error);
+		showMessage(R.string.no_account_to_backup_error);
 	}
 
 	@Override
 	public void createAccountError() {
-		showError(R.string.account_creation_error);
+		showMessage(R.string.account_creation_error);
 	}
 
 	@Override
 	public void onBoardAccountError() {
-		showError(R.string.on_board_error);
+		showMessage(R.string.on_board_error);
 	}
 
-	private void showError(int errorId) {
+	private void showMessage(int errorId) {
 		Toast.makeText(this, getString(errorId), Toast.LENGTH_LONG).show();
 	}
 

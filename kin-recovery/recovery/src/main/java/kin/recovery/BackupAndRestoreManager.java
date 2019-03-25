@@ -51,7 +51,10 @@ public final class BackupAndRestoreManager {
 
 			@Override
 			public void onSuccess(String publicAddress) {
-				restoreCallback.onSuccess(AccountExtractor.getKinAccount(kinClient, publicAddress));
+				// Because we recovered a new account then we need to refresh the kinClient so we create a new one.
+				kinClient = new KinClient(activity, kinClient.getEnvironment(), kinClient.getAppId(),
+					kinClient.getStoreKey());
+				restoreCallback.onSuccess(kinClient, AccountExtractor.getKinAccount(kinClient, publicAddress));
 			}
 
 			@Override

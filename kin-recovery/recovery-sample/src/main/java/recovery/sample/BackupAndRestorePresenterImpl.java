@@ -122,11 +122,17 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 			@Override
 			public void onSuccess() {
 				Log.d(TAG, "BackupCallback - onSuccess");
+				if (view != null) {
+					view.backupSuccess();
+				}
 			}
 
 			@Override
 			public void onCancel() {
 				Log.d(TAG, "BackupCallback - onCancel");
+				if (view != null) {
+					view.cancelBackup();
+				}
 			}
 
 			@Override
@@ -140,13 +146,17 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
 
 		backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
 			@Override
-			public void onSuccess(KinAccount kinAccount) {
+			public void onSuccess(KinClient kinClient, KinAccount kinAccount) {
+				BackupAndRestorePresenterImpl.this.kinClient = kinClient;
 				handleRestoreSuccess(kinAccount);
 			}
 
 			@Override
 			public void onCancel() {
 				Log.d(TAG, "BackupCallback - onCancel");
+				if (view != null) {
+					view.cancelRestore();
+				}
 			}
 
 			@Override

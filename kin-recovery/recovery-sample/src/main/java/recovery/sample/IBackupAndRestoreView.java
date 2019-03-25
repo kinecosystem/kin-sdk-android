@@ -24,4 +24,10 @@ public interface IBackupAndRestoreView {
 	void onBoardAccountError();
 
 	void updateBackupError();
+
+	void backupSuccess();
+
+	void cancelBackup();
+
+	void cancelRestore();
 }

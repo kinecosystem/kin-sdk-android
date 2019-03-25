@@ -17,7 +17,7 @@ import okhttp3.Response;
 
 public class AccountCreator {
 
-	private static final int FUND_KIN_AMOUNT = 100;
+	private static final double FUND_KIN_AMOUNT = 100;
 	private static final String URL_CREATE_ACCOUNT =
 		"https://friendbot-testnet.kininfrastructure.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
 	private final OkHttpClient okHttpClient;

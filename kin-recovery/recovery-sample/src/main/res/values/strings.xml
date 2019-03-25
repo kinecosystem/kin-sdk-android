@@ -14,4 +14,6 @@
     <string name="no_account_to_backup_error">No Account To Backup Error</string>
     <string name="account_creation_error">Account Creation Error</string>
     <string name="on_board_error">On Board Error</string>
+    <string name="backup_success_message">Account has been backed up successfully</string>
+    <string name="kin">KIN</string>
 </resources>
