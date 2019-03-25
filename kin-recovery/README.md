@@ -6,7 +6,8 @@ The UI uses a password to create a QR code, which is then used to back up the ac
 
 It is implemented as an Android library that can be incorporated into your code.
 This library is dependent on the kin-sdk library, and we assume that whoever needs to use it is already familiar with the kin-sdk library.
-For more details on Kin SDK, go to [kin-sdk](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk).
+For more details on Kin SDK, go to [kin-sdk on github](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk)
+and/or to [kin-sdk docs](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk).
 
 ## Installation
 
@@ -63,7 +64,7 @@ backupAndRestoreManager = new BackupAndRestoreManager(context);
 Both callbacks have the same 3 methods:
  - `onSuccess` is called when the operation is completed successfully. In the Restore callback, it has a `KinAccount` object, which is the restored account.
 - `onCancel` is called when the user leaves the backup or restore activity and returns to the previous activity .
-- `onError()` is called if there is an error in the backup or restore process.
+- `onFailure()` is called if there is an error in the backup or restore process.
 ###### Creating Backup callbacks
 ```java
 backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
@@ -119,7 +120,7 @@ In order to achieve that you should register in `Activity.onCreate` and release 
 #### Step 3 - Passing the Result to the Backup and Restore module
 
 Since the module internally uses `startActivityForResult`, for it to work properly, you have to implement `onActivityResult` in your activity. In that method, you need to call
-`backupAndRestore.onActivityResult(...);`
+`backupAndRestoreManager.onActivityResult(...);`
 
 For example:
 ```java 
@@ -140,8 +141,8 @@ kinClient = new KinClient(context, Environment.TEST, "1acd")
 ...
 backupAndRestoreManager = new BackupAndRestoreManager(context);
 ```
-For more details on KinClient and KinAccount, see [KinClient](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk#Accessing-the-Kin-blockchain)
-and [KinAccount](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk#Creating-and-retrieving-a-Kin-account)
+For more details on KinClient and KinAccount, see [KinClient](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk#accessing-the-kin-blockchain)
+and [KinAccount](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk#creating-and-retrieving-a-kin-account)
 
 Now you can use the Backup and Restore flows by calling these functions:
 
@@ -158,7 +159,7 @@ backupAndRestoreManager.restore(kinClient)
 ```
 ### Error Handling
 
-`onError(BackupAndRestoreException e)` can be called if an error has occured while trying to back up or restore.
+`onFailure(BackupAndRestoreException e)` can be called if an error has occured while trying to back up or restore.
 
 ### Testing
 
