@@ -34,10 +34,13 @@ public class RestoreEnterPasswordPresenterImpl extends BaseChildPresenterImpl<Re
 
 	@Override
 	public void onPasswordChanged(String password) {
-		if (password.isEmpty()) {
-			getView().disableDoneButton();
-		} else {
-			getView().enableDoneButton();
+		RestoreEnterPasswordView view = getView();
+		if (view != null) {
+			if (password.isEmpty()) {
+				view.disableDoneButton();
+			} else {
+				view.enableDoneButton();
+			}
 		}
 	}
 
@@ -49,10 +52,13 @@ public class RestoreEnterPasswordPresenterImpl extends BaseChildPresenterImpl<Re
 			getParentPresenter().navigateToRestoreCompletedPage(kinAccount);
 		} catch (BackupAndRestoreException e) {
 			Logger.e("RestoreEnterPasswordPresenterImpl - restore failed.", e);
-			if (e.getCode() == CODE_RESTORE_INVALID_KEYSTORE_FORMAT) {
-				getView().invalidQrError();
-			} else {
-				getView().decodeError();
+			RestoreEnterPasswordView view = getView();
+			if (view != null) {
+				if (e.getCode() == CODE_RESTORE_INVALID_KEYSTORE_FORMAT) {
+					view.invalidQrError();
+				} else {
+					view.decodeError();
+				}
 			}
 		}
 	}

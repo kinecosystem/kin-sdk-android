@@ -5,8 +5,6 @@ import static kin.recovery.BackupAndRestoreManager.NETWORK_PASSPHRASE_EXTRA;
 import static kin.recovery.BackupAndRestoreManager.NETWORK_URL_EXTRA;
 import static kin.recovery.BackupAndRestoreManager.PUBLIC_ADDRESS_EXTRA;
 import static kin.recovery.BackupAndRestoreManager.STORE_KEY_EXTRA;
-import static kin.recovery.events.CallbackManager.REQ_CODE_BACKUP;
-import static kin.recovery.events.CallbackManager.REQ_CODE_RESTORE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,17 +24,17 @@ class Launcher {
 		this.kinClient = kinClient;
 	}
 
-	void backupFlow(KinAccount kinAccount) {
+	void backupFlow(KinAccount kinAccount, int reqCodeBackup) {
 		Intent intent = new Intent(activity, BackupActivity.class);
 		addKinClientExtras(intent);
 		intent.putExtra(PUBLIC_ADDRESS_EXTRA, kinAccount.getPublicAddress());
-		startForResult(intent, REQ_CODE_BACKUP);
+		startForResult(intent, reqCodeBackup);
 	}
 
-	void restoreFlow() {
+	void restoreFlow(int reqCodeRestore) {
 		Intent intent = new Intent(activity, RestoreActivity.class);
 		addKinClientExtras(intent);
-		startForResult(intent, REQ_CODE_RESTORE);
+		startForResult(intent, reqCodeRestore);
 	}
 
 	private void addKinClientExtras(Intent intent) {

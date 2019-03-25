@@ -20,24 +20,28 @@ public final class BackupAndRestoreManager {
 	public static final String PUBLIC_ADDRESS_EXTRA = "publicAddressExtra";
 
 	private final CallbackManager callbackManager;
+	private final int reqCodeBackup;
+	private final int reqCodeRestore;
 	private KinClient kinClient;
 	private Activity activity;
 
-	public BackupAndRestoreManager(@NonNull final Activity activity) {
+	public BackupAndRestoreManager(@NonNull final Activity activity, int reqCodeBackup, int reqCodeRestore) {
 		Validator.checkNotNull(activity, "activity");
 		this.activity = activity;
 		this.callbackManager = new CallbackManager(
-			new EventDispatcherImpl(new BroadcastManagerImpl(activity)));
+			new EventDispatcherImpl(new BroadcastManagerImpl(activity)), reqCodeBackup, reqCodeRestore);
+		this.reqCodeBackup = reqCodeBackup;
+		this.reqCodeRestore = reqCodeRestore;
 	}
 
 	public void backup(KinClient kinClient, KinAccount kinAccount) {
 		this.kinClient = kinClient;
-		new Launcher(activity, kinClient).backupFlow(kinAccount);
+		new Launcher(activity, kinClient).backupFlow(kinAccount, reqCodeBackup);
 	}
 
 	public void restore(KinClient kinClient) {
 		this.kinClient = kinClient;
-		new Launcher(activity, kinClient).restoreFlow();
+		new Launcher(activity, kinClient).restoreFlow(reqCodeRestore);
 	}
 
 	public void registerBackupCallback(@NonNull final BackupCallback backupCallback) {

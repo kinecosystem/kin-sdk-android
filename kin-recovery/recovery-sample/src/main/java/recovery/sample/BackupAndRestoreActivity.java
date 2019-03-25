@@ -15,6 +15,9 @@ import recovery.sample.BackupAndRestorePresenterImpl.NetWorkType;
 
 public class BackupAndRestoreActivity extends AppCompatActivity implements IBackupAndRestoreView, View.OnClickListener {
 
+	public static final int REQ_CODE_BACKUP = 9000;
+	public static final int REQ_CODE_RESTORE = 9001;
+
 	private IBackupAndRestorePresenter backupAndRestorePresenter;
 
 	private Button createNewAccount;
@@ -89,7 +92,10 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		backupAndRestorePresenter.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_CODE_BACKUP || requestCode == REQ_CODE_RESTORE) {
+//			if (resultCode == RESULT_OK) { // TODO is this ok with us? because it is not working because we return success(5000) or cancel(5001) or error(5002)
+			backupAndRestorePresenter.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	@Override
@@ -101,7 +107,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 
 	@Override
 	public BackupAndRestoreManager getBackupManager() {
-		return new BackupAndRestoreManager(this);
+		return new BackupAndRestoreManager(this, REQ_CODE_BACKUP, REQ_CODE_RESTORE);
 	}
 
 	@Override

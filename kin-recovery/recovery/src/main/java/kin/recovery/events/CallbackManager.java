@@ -12,17 +12,6 @@ import kin.recovery.exception.BackupAndRestoreException;
 
 public class CallbackManager {
 
-	@Nullable
-	private BackupCallback backupCallback;
-	@Nullable
-	private InternalRestoreCallback internalRestoreCallback;
-
-	private final EventDispatcher eventDispatcher;
-
-	// Request Code
-	public static final int REQ_CODE_BACKUP = 9000;
-	public static final int REQ_CODE_RESTORE = 9001;
-
 	// Result Code
 	static final int RES_CODE_SUCCESS = 5000;
 	static final int RES_CODE_CANCEL = 5001;
@@ -31,8 +20,25 @@ public class CallbackManager {
 	static final String EXTRA_KEY_ERROR_CODE = "EXTRA_KEY_ERROR_CODE";
 	static final String EXTRA_KEY_PUBLIC_ADDRESS = "EXTRA_KEY_PUBLIC_ADDRESS";
 
+	// Request Codes
+	private int reqCodeBackup;
+	private int reqCodeRestore;
+
+	@Nullable
+	private BackupCallback backupCallback;
+	@Nullable
+	private InternalRestoreCallback internalRestoreCallback;
+
+	private final EventDispatcher eventDispatcher;
+
 	public CallbackManager(@NonNull final EventDispatcher eventDispatcher) {
 		this.eventDispatcher = eventDispatcher;
+	}
+
+	public CallbackManager(@NonNull final EventDispatcher eventDispatcher, int reqCodeBackup, int reqCodeRestore) {
+		this.eventDispatcher = eventDispatcher;
+		this.reqCodeBackup = reqCodeBackup;
+		this.reqCodeRestore = reqCodeRestore;
 	}
 
 	public void setBackupCallback(@Nullable BackupCallback backupCallback) {
@@ -58,9 +64,9 @@ public class CallbackManager {
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQ_CODE_BACKUP) {
+		if (requestCode == reqCodeBackup) {
 			handleBackupResult(resultCode, data);
-		} else if (requestCode == REQ_CODE_RESTORE) {
+		} else if (requestCode == reqCodeRestore) {
 			handleRestoreResult(resultCode, data);
 		}
 	}
