@@ -140,8 +140,8 @@ kinClient = new KinClient(context, Environment.TEST, "1acd")
 ...
 backupAndRestoreManager = new BackupAndRestoreManager(context);
 ```
-For more details on KinClient and KinAccount, see [KinClient](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk#Accessing-the-Kin-blockchain)
-and [KinAccount](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk#Creating-and-retrieving-a-Kin-account)
+For more details on KinClient and KinAccount, see [KinClient](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk#accessing-the-kin-blockchain)
+and [KinAccount](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk#creating-and-retrieving-a-kin-account)
 
 Now you can use the Backup and Restore flows by calling these functions:
 
