@@ -58,9 +58,6 @@ You need to create a BackupAndRestoreManager object.
 backupAndRestoreManager = new BackupAndRestoreManager(context);
 ```
 
-
-
-
 ### Step 2 - Adding Backup and Restore callbacks
 
 Both callbacks have the same 3 methods:
@@ -176,8 +173,11 @@ For a full list of tests, see
 
 For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use this script:
 ```bash
-$ ./run_integ_test.sh
+$ ./gradlew :kin-recovery:recovery jacocoTestReport
 ```
+
+Generated report can be found at:
+kin-recovery/recovery/build/reports/jacoco/jacocoTestReport/html/index.html.
 
 ### Building from Source
 
