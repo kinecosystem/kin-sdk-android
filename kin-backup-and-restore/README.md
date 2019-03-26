@@ -5,7 +5,7 @@ The module wraps the Kin SDK Android import and export functionalities with a UI
 The UI uses a password to create a QR code, which is then used to back up the account and to restore it.
 
 It is implemented as an Android library that can be incorporated into your code.
-This library is dependent on the kin-sdk library, and we assume that whoever needs to use it is already familiar with the kin-sdk library.
+This library is dependent on the kin-sdk library, and we assume that whoever needs to use it is already familiar with the kin-sdk library.  
 For more details on Kin SDK, go to [kin-sdk on github](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk)
 and/or to our docs in the website - [kin-sdk docs](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk).
 
