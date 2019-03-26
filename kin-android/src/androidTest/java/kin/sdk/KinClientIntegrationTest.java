@@ -53,7 +53,7 @@ public class KinClientIntegrationTest {
     }
 
     private KinClient createNewKinClient(String storeKey) {
-        return new KinClient(kinStorageFactory, mainHandler, environment, APP_ID, storeKey);
+        return new KinClientImpl(kinStorageFactory, mainHandler, environment, APP_ID, storeKey);
     }
 
     @After
@@ -191,7 +191,7 @@ public class KinClientIntegrationTest {
     }
 
     private void buildKinClient() {
-        kinClient = new KinClient(kinStorageFactory, mainHandler, environment, APP_ID, STORE_KEY_TEST);
+        kinClient = new KinClientImpl(kinStorageFactory, mainHandler, environment, APP_ID, STORE_KEY_TEST);
     }
 
     @Test
@@ -277,7 +277,7 @@ public class KinClientIntegrationTest {
     public void getEnvironment() throws Exception {
         String url = "https://www.myawesomeserver.com";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
-        kinClient = new KinClient(kinStorageFactory, mainHandler, environment, APP_ID, STORE_KEY_TEST);
+        kinClient = new KinClientImpl(kinStorageFactory, mainHandler, environment, APP_ID, STORE_KEY_TEST);
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);

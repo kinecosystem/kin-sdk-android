@@ -31,7 +31,7 @@ public class KinAccountTest {
 
     @Before
     public void setup() {
-        kinClient = new KinClient(kinStorageFactory, mainHandler, Environment.TEST, APP_ID);
+        kinClient = new KinClientImpl(kinStorageFactory, mainHandler, Environment.TEST, APP_ID);
         kinClient.clearAllAccounts();
     }
 

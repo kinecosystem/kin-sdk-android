@@ -31,7 +31,7 @@ class KinAccountIntegrationTest {
     private val timeoutDurationSeconds : Long = 10
     private val timeoutDurationSecondsLong : Long = 15
 
-    private lateinit var kinClient: KinClient
+    private lateinit var kinClient: KinClientImpl
 
     private val kinStorageFactory = KinStorageFactoryImpl(InstrumentationRegistry.getTargetContext())
     private val mainHandler = AndroidMainHandler()
@@ -45,7 +45,7 @@ class KinAccountIntegrationTest {
     @Before
     @Throws(IOException::class)
     fun setup() {
-        kinClient = KinClient(kinStorageFactory, mainHandler, environment, appId)
+        kinClient = KinClientImpl(kinStorageFactory, mainHandler, environment, appId)
         kinClient.clearAllAccounts()
     }
 

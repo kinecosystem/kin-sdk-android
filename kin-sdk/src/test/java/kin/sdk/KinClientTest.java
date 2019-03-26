@@ -120,7 +120,7 @@ public class KinClientTest
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("environment");
 
-        new KinClient(kinStorageFactory, mainHandler, null, APP_ID, "test");
+        new KinClientImpl(kinStorageFactory, mainHandler, null, APP_ID, "test");
     }
 
     @Test
@@ -129,7 +129,7 @@ public class KinClientTest
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("storeKey");
 
-        new KinClient(kinStorageFactory, mainHandler, fakeEnvironment, APP_ID, null);
+        new KinClientImpl(kinStorageFactory, mainHandler, fakeEnvironment, APP_ID, null);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class KinClientTest
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("empty");
 
-        new KinClient(kinStorageFactory, mainHandler, fakeEnvironment, APP_ID, "test");
+        new KinClientImpl(kinStorageFactory, mainHandler, fakeEnvironment, APP_ID, "test");
     }
 
     @Test
@@ -412,7 +412,7 @@ public class KinClientTest
     {
         String url = "My awesome Horizon server";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
-        kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender,
+        kinClient = new KinClientImpl(environment, fakeKeyStore, mockTransactionSender,
                 mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
                 new FakeBackupRestore(), kinStorageFactory, mainHandler);
         Environment actualEnvironment = kinClient.getEnvironment();
@@ -472,7 +472,7 @@ public class KinClientTest
     @Nonnull
     private KinClient createNewKinClient()
     {
-        return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender,
+        return new KinClientImpl(fakeEnvironment, fakeKeyStore, mockTransactionSender,
                 mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
                 new FakeBackupRestore(), kinStorageFactory, mainHandler);
     }
