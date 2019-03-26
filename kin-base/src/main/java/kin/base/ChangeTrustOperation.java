@@ -1,10 +1,10 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import kin.base.xdr.ChangeTrustOp;
 import kin.base.xdr.Int64;
 import kin.base.xdr.OperationType;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#change-trust" target="_blank">ChangeTrust</a> operation.

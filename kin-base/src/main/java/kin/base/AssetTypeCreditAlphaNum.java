@@ -1,8 +1,8 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import java.util.Arrays;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Base class for AssetTypeCreditAlphaNum4 and AssetTypeCreditAlphaNum12 subclasses.

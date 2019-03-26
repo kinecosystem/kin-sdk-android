@@ -1,13 +1,14 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import java.math.BigDecimal;
+
 import kin.base.xdr.CreateAccountOp;
 import kin.base.xdr.Int64;
 import kin.base.xdr.ManageOfferOp;
 import kin.base.xdr.OperationType;
 import kin.base.xdr.Uint64;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-offer" target="_blank">ManageOffer</a> operation.

@@ -1,17 +1,18 @@
 package kin.base.requests;
 
 
-import static kin.base.Util.checkNotNull;
-
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
+
 import java.io.IOException;
 import java.net.URI;
 
-import okhttp3.OkHttpClient;
 import kin.base.KeyPair;
 import kin.base.responses.Page;
 import kin.base.responses.operations.OperationResponse;
+import okhttp3.OkHttpClient;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Builds requests connected to payments.

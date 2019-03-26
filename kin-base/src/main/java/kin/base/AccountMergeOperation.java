@@ -1,10 +1,10 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import kin.base.xdr.AccountID;
 import kin.base.xdr.Operation.OperationBody;
 import kin.base.xdr.OperationType;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#account-merge" target="_blank">AccountMerge</a> operation.

@@ -1,8 +1,5 @@
 package kin.base;
 
-import static kin.base.Util.checkArgument;
-import static kin.base.Util.checkNotNull;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,12 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import kin.base.codec.Base64;
 import kin.base.xdr.DecoratedSignature;
 import kin.base.xdr.EnvelopeType;
 import kin.base.xdr.SignatureHint;
 import kin.base.xdr.TransactionEnvelope;
 import kin.base.xdr.XdrDataOutputStream;
+
+import static kin.base.Util.checkArgument;
+import static kin.base.Util.checkNotNull;
 
 
 /**

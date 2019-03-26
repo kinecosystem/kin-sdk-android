@@ -2,11 +2,11 @@ package kin.base.responses;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 import kin.base.Asset;
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
-
-import java.util.ArrayList;
 import kin.base.Server;
 
 /**

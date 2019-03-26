@@ -1,12 +1,14 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+
 import kin.base.codec.Base64;
 import kin.base.xdr.AccountID;
 import kin.base.xdr.XdrDataOutputStream;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Abstract class for operations.

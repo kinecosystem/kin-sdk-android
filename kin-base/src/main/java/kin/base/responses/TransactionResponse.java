@@ -1,22 +1,24 @@
 package kin.base.responses;
 
-import static kin.base.Util.checkNotNull;
-
 import com.google.gson.annotations.SerializedName;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import kin.base.Server;
+
 import kin.base.KeyPair;
 import kin.base.LedgerEntryChanges;
 import kin.base.Memo;
 import kin.base.Operation;
+import kin.base.Server;
 import kin.base.Util;
 import kin.base.xdr.OperationMeta;
 import kin.base.xdr.Transaction;
 import kin.base.xdr.TransactionMeta;
 import kin.base.xdr.XdrDataInputStream;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents transaction response.

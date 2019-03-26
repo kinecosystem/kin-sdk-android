@@ -1,11 +1,12 @@
 package kin.base.responses;
 
-import static kin.base.Util.checkNotNull;
-
 import com.google.gson.annotations.SerializedName;
+
 import kin.base.Asset;
 import kin.base.Price;
 import kin.base.Server;
+
+import static kin.base.Util.checkNotNull;
 
 
 /**

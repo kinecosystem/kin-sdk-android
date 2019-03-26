@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+
 import kin.base.Asset;
 import kin.base.KeyPair;
 

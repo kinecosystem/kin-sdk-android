@@ -4,9 +4,9 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import kin.base.KeyPair;
-
 import java.io.IOException;
+
+import kin.base.KeyPair;
 
 class KeyPairTypeAdapter extends TypeAdapter<KeyPair> {
   @Override

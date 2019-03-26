@@ -1,14 +1,5 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.util.Arrays;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -17,6 +8,15 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.util.Arrays;
+
 import kin.base.xdr.DecoratedSignature;
 import kin.base.xdr.PublicKey;
 import kin.base.xdr.PublicKeyType;
@@ -25,6 +25,8 @@ import kin.base.xdr.SignerKey;
 import kin.base.xdr.SignerKeyType;
 import kin.base.xdr.Uint256;
 import kin.base.xdr.XdrDataOutputStream;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Holds a Stellar keypair.

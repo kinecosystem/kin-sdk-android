@@ -6,13 +6,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;

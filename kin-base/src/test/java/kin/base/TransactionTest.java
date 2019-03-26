@@ -3,13 +3,13 @@ package kin.base;
 import org.junit.Before;
 import org.junit.Test;
 
-import kin.base.codec.Base64;
-import kin.base.xdr.XdrDataInputStream;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+
+import kin.base.codec.Base64;
+import kin.base.xdr.XdrDataInputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -1,10 +1,11 @@
 package kin.base;
 
 import org.junit.Test;
-import kin.base.xdr.SignerKey;
 
 import java.io.IOException;
 import java.util.Arrays;
+
+import kin.base.xdr.SignerKey;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

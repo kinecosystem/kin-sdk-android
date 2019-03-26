@@ -1,16 +1,19 @@
 package kin.base.responses;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import okhttp3.OkHttpClient;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import kin.base.Asset;
 import kin.base.KeyPair;
+import okhttp3.OkHttpClient;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class PathsPageDeserializerTest {
 

@@ -1,7 +1,9 @@
 package kin.base.responses;
 
 import com.google.gson.reflect.TypeToken;
+
 import junit.framework.TestCase;
+
 import org.junit.Test;
 
 public class TradesPageDeserializerTest extends TestCase {

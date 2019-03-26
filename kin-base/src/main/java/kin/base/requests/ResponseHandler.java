@@ -1,15 +1,17 @@
 package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.net.URI;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
+
 import kin.base.responses.ClientProtocolException;
 import kin.base.responses.GsonSingleton;
 import kin.base.responses.HttpResponseException;
 import kin.base.responses.Response;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 
 public class ResponseHandler<T> {
 

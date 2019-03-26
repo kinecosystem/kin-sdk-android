@@ -1,12 +1,14 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 import kin.base.xdr.Int32;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents Price. Price in Stellar is represented as a fraction.

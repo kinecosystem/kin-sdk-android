@@ -1,11 +1,11 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import kin.base.xdr.AccountID;
 import kin.base.xdr.AllowTrustOp;
 import kin.base.xdr.AssetType;
 import kin.base.xdr.OperationType;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#allow-trust" target="_blank">AllowTrust</a> operation.

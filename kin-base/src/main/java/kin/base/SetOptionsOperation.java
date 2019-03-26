@@ -1,13 +1,13 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import kin.base.xdr.AccountID;
 import kin.base.xdr.OperationType;
 import kin.base.xdr.SetOptionsOp;
 import kin.base.xdr.SignerKey;
 import kin.base.xdr.String32;
 import kin.base.xdr.Uint32;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#set-options">SetOptions</a> operation.

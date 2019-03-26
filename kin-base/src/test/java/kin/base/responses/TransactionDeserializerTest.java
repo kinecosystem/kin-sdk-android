@@ -3,6 +3,9 @@ package kin.base.responses;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+
+import java.util.List;
+
 import kin.base.AssetTypeCreditAlphaNum4;
 import kin.base.CreateAccountOperation;
 import kin.base.LedgerEntryChange;
@@ -11,8 +14,6 @@ import kin.base.MemoHash;
 import kin.base.MemoNone;
 import kin.base.Operation;
 import kin.base.TrustLineLedgerEntryChange;
-
-import java.util.List;
 
 public class TransactionDeserializerTest extends TestCase {
   @Test

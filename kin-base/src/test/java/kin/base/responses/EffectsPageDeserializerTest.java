@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+
 import kin.base.responses.effects.AccountCreatedEffectResponse;
 import kin.base.responses.effects.EffectResponse;
 import kin.base.responses.effects.SignerCreatedEffectResponse;

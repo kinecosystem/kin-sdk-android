@@ -1,7 +1,9 @@
 package kin.base.responses;
 
 import junit.framework.TestCase;
+
 import org.junit.Test;
+
 import kin.base.Asset;
 import kin.base.AssetTypeCreditAlphaNum;
 

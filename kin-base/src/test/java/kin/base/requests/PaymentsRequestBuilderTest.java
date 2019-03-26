@@ -1,12 +1,11 @@
 package kin.base.requests;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import kin.base.KeyPair;
-import kin.base.Server;
 
 import java.net.URI;
+
+import kin.base.KeyPair;
+import kin.base.Server;
 
 import static org.junit.Assert.assertEquals;
 

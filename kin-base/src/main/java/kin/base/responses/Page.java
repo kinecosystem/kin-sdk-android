@@ -2,12 +2,14 @@ package kin.base.responses;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import okhttp3.OkHttpClient;
+
 import kin.base.requests.ResponseHandler;
+import okhttp3.OkHttpClient;
 
 /**
  * Represents page of objects.

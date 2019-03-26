@@ -2,16 +2,16 @@ package kin.base.responses;
 
 import com.google.gson.annotations.SerializedName;
 
-import kin.base.Transaction;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import kin.base.Server;
+import kin.base.Transaction;
 import kin.base.codec.Base64;
 import kin.base.xdr.OperationType;
 import kin.base.xdr.TransactionResult;
 import kin.base.xdr.XdrDataInputStream;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Represents server response after submitting transaction.

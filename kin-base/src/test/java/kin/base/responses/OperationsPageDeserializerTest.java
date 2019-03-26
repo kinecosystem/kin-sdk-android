@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+
 import kin.base.AssetTypeNative;
 import kin.base.responses.operations.CreateAccountOperationResponse;
 import kin.base.responses.operations.OperationResponse;

@@ -1,12 +1,12 @@
 package kin.base;
 
-import static kin.base.Util.checkArgument;
-import static kin.base.Util.checkNotNull;
-
 import kin.base.xdr.AccountID;
 import kin.base.xdr.Int64;
 import kin.base.xdr.OperationType;
 import kin.base.xdr.PathPaymentOp;
+
+import static kin.base.Util.checkArgument;
+import static kin.base.Util.checkNotNull;
 
 
 /**

@@ -6,10 +6,9 @@ import com.google.gson.reflect.TypeToken;
 import com.here.oksse.OkSse;
 import com.here.oksse.ServerSentEvent;
 
-import kin.base.responses.GsonSingleton;
-
 import java.net.URI;
 
+import kin.base.responses.GsonSingleton;
 import okhttp3.Request;
 
 public class StreamHandler<T> {

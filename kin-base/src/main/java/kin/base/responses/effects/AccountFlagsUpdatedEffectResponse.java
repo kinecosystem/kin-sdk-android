@@ -1,6 +1,7 @@
 package kin.base.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+
 import kin.base.Server;
 
 /**

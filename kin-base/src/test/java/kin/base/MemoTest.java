@@ -2,10 +2,10 @@ package kin.base;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import kin.base.codec.DecoderException;
 import kin.base.xdr.MemoType;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

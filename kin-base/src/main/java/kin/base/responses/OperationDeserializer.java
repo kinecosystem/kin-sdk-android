@@ -7,21 +7,21 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import kin.base.KeyPair;
-import kin.base.responses.operations.ManageDataOperationResponse;
-import kin.base.responses.operations.OperationResponse;
-import kin.base.responses.operations.CreateAccountOperationResponse;
-import kin.base.responses.operations.PaymentOperationResponse;
-import kin.base.responses.operations.PathPaymentOperationResponse;
-import kin.base.responses.operations.ManageOfferOperationResponse;
-import kin.base.responses.operations.CreatePassiveOfferOperationResponse;
-import kin.base.responses.operations.SetOptionsOperationResponse;
-import kin.base.responses.operations.ChangeTrustOperationResponse;
-import kin.base.responses.operations.AllowTrustOperationResponse;
-import kin.base.responses.operations.AccountMergeOperationResponse;
-import kin.base.responses.operations.InflationOperationResponse;
-
 import java.lang.reflect.Type;
+
+import kin.base.KeyPair;
+import kin.base.responses.operations.AccountMergeOperationResponse;
+import kin.base.responses.operations.AllowTrustOperationResponse;
+import kin.base.responses.operations.ChangeTrustOperationResponse;
+import kin.base.responses.operations.CreateAccountOperationResponse;
+import kin.base.responses.operations.CreatePassiveOfferOperationResponse;
+import kin.base.responses.operations.InflationOperationResponse;
+import kin.base.responses.operations.ManageDataOperationResponse;
+import kin.base.responses.operations.ManageOfferOperationResponse;
+import kin.base.responses.operations.OperationResponse;
+import kin.base.responses.operations.PathPaymentOperationResponse;
+import kin.base.responses.operations.PaymentOperationResponse;
+import kin.base.responses.operations.SetOptionsOperationResponse;
 
 class OperationDeserializer implements JsonDeserializer<OperationResponse> {
   @Override

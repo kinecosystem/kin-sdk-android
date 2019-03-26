@@ -1,10 +1,10 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import kin.base.xdr.SignerKey;
 import kin.base.xdr.SignerKeyType;
 import kin.base.xdr.Uint256;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Signer is a helper class that creates {@link kin.base.xdr.SignerKey} objects.

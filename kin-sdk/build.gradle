@@ -25,13 +25,8 @@ dependencies {
     testImplementation testingDependencies.junit
     testImplementation testingDependencies.mockito
     testImplementation testingDependencies.mockWebServer
-    testImplementation testingDependencies.robolectric
     testImplementation testingDependencies.gson
     testImplementation testingDependencies.kotlin
-
-    testImplementation testingDependencies.mockitoAndroid
-    testImplementation testingDependencies.androidTestRunner
-    testImplementation testingDependencies.androidTestRules
     testImplementation testingDependencies.hamcrest
     testImplementation testingDependencies.multidex
     testImplementation testingDependencies.kotlin

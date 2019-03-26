@@ -3,10 +3,27 @@ package kin.base.responses;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+
 import kin.base.Asset;
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
-import kin.base.responses.effects.*;
+import kin.base.responses.effects.AccountCreatedEffectResponse;
+import kin.base.responses.effects.AccountCreditedEffectResponse;
+import kin.base.responses.effects.AccountDebitedEffectResponse;
+import kin.base.responses.effects.AccountFlagsUpdatedEffectResponse;
+import kin.base.responses.effects.AccountHomeDomainUpdatedEffectResponse;
+import kin.base.responses.effects.AccountRemovedEffectResponse;
+import kin.base.responses.effects.AccountThresholdsUpdatedEffectResponse;
+import kin.base.responses.effects.EffectResponse;
+import kin.base.responses.effects.SignerCreatedEffectResponse;
+import kin.base.responses.effects.SignerRemovedEffectResponse;
+import kin.base.responses.effects.SignerUpdatedEffectResponse;
+import kin.base.responses.effects.TradeEffectResponse;
+import kin.base.responses.effects.TrustlineAuthorizedEffectResponse;
+import kin.base.responses.effects.TrustlineCreatedEffectResponse;
+import kin.base.responses.effects.TrustlineDeauthorizedEffectResponse;
+import kin.base.responses.effects.TrustlineRemovedEffectResponse;
+import kin.base.responses.effects.TrustlineUpdatedEffectResponse;
 
 public class EffectDeserializerTest extends TestCase {
   @Test

@@ -1,9 +1,9 @@
 package kin.base;
 
+import java.io.UnsupportedEncodingException;
+
 import static kin.base.Util.CHARSET_UTF8;
 import static kin.base.Util.checkNotNull;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Network class is used to specify which Stellar network you want to use.

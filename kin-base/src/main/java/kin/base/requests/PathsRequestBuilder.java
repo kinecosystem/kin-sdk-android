@@ -1,16 +1,16 @@
 package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 
-import okhttp3.OkHttpClient;
 import kin.base.Asset;
 import kin.base.AssetTypeCreditAlphaNum;
 import kin.base.KeyPair;
 import kin.base.responses.Page;
 import kin.base.responses.PathResponse;
+import okhttp3.OkHttpClient;
 
 /**
  * Builds requests connected to paths.

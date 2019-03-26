@@ -5,15 +5,12 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import kin.base.responses.SubmitTransactionResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import kin.base.responses.SubmitTransactionResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

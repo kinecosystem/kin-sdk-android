@@ -1,11 +1,12 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import java.math.BigDecimal;
+
 import kin.base.xdr.CreatePassiveOfferOp;
 import kin.base.xdr.Int64;
 import kin.base.xdr.OperationType;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#create-passive-offer" target="_blank">CreatePassiveOffer</a> operation.

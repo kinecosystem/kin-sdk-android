@@ -1,10 +1,11 @@
 package kin.base;
 
+import java.io.UnsupportedEncodingException;
+
+import kin.base.xdr.MemoType;
+
 import static kin.base.Util.CHARSET_UTF8;
 import static kin.base.Util.checkNotNull;
-
-import java.io.UnsupportedEncodingException;
-import kin.base.xdr.MemoType;
 
 /**
  * Represents MEMO_TEXT.

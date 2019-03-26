@@ -5,11 +5,11 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import java.lang.reflect.Type;
+
 import kin.base.Asset;
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
-
-import java.lang.reflect.Type;
 
 class AssetDeserializer implements JsonDeserializer<Asset> {
   @Override

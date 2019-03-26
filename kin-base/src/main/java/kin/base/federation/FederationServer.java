@@ -2,19 +2,20 @@ package kin.base.federation;
 
 import com.google.gson.reflect.TypeToken;
 import com.moandjiezana.toml.Toml;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import kin.base.requests.ResponseHandler;
+import kin.base.responses.HttpResponseException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import kin.base.requests.ResponseHandler;
-import kin.base.responses.HttpResponseException;
 
 /**
  * FederationServer handles a network connection to a

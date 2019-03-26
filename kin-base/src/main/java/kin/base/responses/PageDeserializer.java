@@ -9,12 +9,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+
 import kin.base.Asset;
 import kin.base.KeyPair;
 import kin.base.responses.effects.EffectResponse;
 import kin.base.responses.operations.OperationResponse;
-
-import java.lang.reflect.Type;
 
 class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
   private TypeToken<Page<E>> pageType;

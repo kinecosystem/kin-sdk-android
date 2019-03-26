@@ -1,13 +1,14 @@
 package kin.base.responses;
 
-import static kin.base.Util.checkNotNull;
-
 import com.google.gson.annotations.SerializedName;
+
 import kin.base.Asset;
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
 import kin.base.Server;
 import kin.base.TransactionBuilderAccount;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Represents account response.
