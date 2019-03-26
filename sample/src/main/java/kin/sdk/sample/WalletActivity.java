@@ -15,6 +15,8 @@ import kin.sdk.sample.OnBoarding.Callbacks;
 import kin.utils.Request;
 import kin.utils.ResultCallback;
 
+import static kin.sdk.AccountStatus.*;
+
 /**
  * Responsible for presenting details about the account
  * Public address, account balance, account balance
@@ -29,7 +31,7 @@ public class WalletActivity extends BaseActivity {
     private View onboardBtn;
     private View balanceProgress, statusProgress;
     private Request<Balance> balanceRequest;
-    private Request<Integer> statusRequest;
+    private Request<AccountStatus> statusRequest;
     private KinAccount account;
     private ListenerRegistration balanceListenerRegistration;
 
@@ -161,17 +163,17 @@ public class WalletActivity extends BaseActivity {
         if (account != null) {
             statusRequest = account.getStatus();
             if (showDialog) {
-                statusRequest.run(new DisplayCallback<Integer>(statusProgress, status) {
+                statusRequest.run(new DisplayCallback<AccountStatus>(statusProgress, status) {
                     @Override
-                    public void displayResult(Context context, View view, Integer result) {
-                        ((TextView) view).setText(accountStatusToString(result));
+                    public void displayResult(Context context, View view, AccountStatus result) {
+                        ((TextView) view).setText(result.toString());
                     }
                 });
             } else {
-                statusRequest.run(new ResultCallback<Integer>() {
+                statusRequest.run(new ResultCallback<AccountStatus>() {
                     @Override
-                    public void onResult(Integer result) {
-                        status.setText(accountStatusToString(result));
+                    public void onResult(AccountStatus result) {
+                        status.setText(result.toString());
                         statusProgress.setVisibility(View.GONE);
                     }
 
@@ -186,19 +188,6 @@ public class WalletActivity extends BaseActivity {
         } else {
             status.setText(R.string.balance_error);
         }
-    }
-
-    private String accountStatusToString(Integer result) {
-        String value = "";
-        switch (result) {
-            case AccountStatus.CREATED:
-                value = "Created";
-                break;
-            case AccountStatus.NOT_CREATED:
-                value = "Not Created";
-                break;
-        }
-        return value;
     }
 
     private void updateBalance(boolean showDialog) {

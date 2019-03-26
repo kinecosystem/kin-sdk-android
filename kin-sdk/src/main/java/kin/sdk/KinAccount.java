@@ -147,8 +147,7 @@ public interface KinAccount {
      * AccountStatus#CREATED}
      * @throws OperationFailedException any other error
      */
-    @AccountStatus
-    int getStatusSync() throws OperationFailedException;
+    AccountStatus getStatusSync() throws OperationFailedException;
 
     /**
      * Create {@link Request} for getting current account status on blockchain network.
@@ -157,7 +156,7 @@ public interface KinAccount {
      * @return account status, either {@link AccountStatus#NOT_CREATED}, or {@link
      * AccountStatus#CREATED}
      */
-    Request<Integer> getStatus();
+    Request<AccountStatus> getStatus();
 
     /**
      * Creates and adds listener for balance changes of this account, use returned {@link ListenerRegistration} to

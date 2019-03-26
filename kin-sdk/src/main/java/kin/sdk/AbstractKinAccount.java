@@ -76,10 +76,10 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @Nonnull
     @Override
-    public Request<Integer> getStatus() {
-        return new Request<>(new Callable<Integer>() {
+    public Request<AccountStatus> getStatus() {
+        return new Request<>(new Callable<AccountStatus>() {
             @Override
-            public Integer call() throws Exception {
+            public AccountStatus call() throws Exception {
                 return getStatusSync();
             }
         }, mainHandler);

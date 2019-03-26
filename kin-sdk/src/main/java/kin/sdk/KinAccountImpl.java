@@ -77,7 +77,7 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public int getStatusSync() throws OperationFailedException {
+    public AccountStatus getStatusSync() throws OperationFailedException {
         checkValidAccount();
         return accountInfoRetriever.getStatus(account.getAccountId());
     }

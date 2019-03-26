@@ -131,7 +131,7 @@ public class KinAccountImplTest {
 
         when(mockAccountInfoRetriever.getStatus(anyString())).thenReturn(AccountStatus.CREATED);
 
-        int status = kinAccount.getStatusSync();
+        AccountStatus status = kinAccount.getStatusSync();
 
         assertEquals(AccountStatus.CREATED, status);
         verify(mockAccountInfoRetriever).getStatus(expectedRandomAccount.getAccountId());

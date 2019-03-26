@@ -59,8 +59,7 @@ class AccountInfoRetriever {
         return balance;
     }
 
-    @AccountStatus
-    int getStatus(@Nonnull String accountId) throws OperationFailedException {
+    AccountStatus getStatus(@Nonnull String accountId) throws OperationFailedException {
         try {
             getBalance(accountId);
             return AccountStatus.CREATED;

@@ -60,7 +60,7 @@ public class AccountInfoRetrieverTest {
     public void getStatus_Created_StatusCreated() throws Exception {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "balance_res_success.json"));
 
-        int status = getStatus(ACCOUNT_ID);
+        AccountStatus status = getStatus(ACCOUNT_ID);
 
         assertThat(status, equalTo(AccountStatus.CREATED));
     }
@@ -131,7 +131,7 @@ public class AccountInfoRetrieverTest {
             .setResponseCode(404)
         );
 
-        int status = getStatus(ACCOUNT_ID);
+        AccountStatus status = getStatus(ACCOUNT_ID);
         assertThat(status, equalTo(AccountStatus.NOT_CREATED));
     }
 
@@ -184,7 +184,7 @@ public class AccountInfoRetrieverTest {
         return accountInfoRetriever.getBalance(accountId);
     }
 
-    private int getStatus(String accountId) throws OperationFailedException {
+    private AccountStatus getStatus(String accountId) throws OperationFailedException {
         AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
         return accountInfoRetriever.getStatus(accountId);
     }
