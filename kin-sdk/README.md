@@ -31,7 +31,7 @@ allprojects {
 dependencies {
     ...
 
-    implementation 'com.github.kinecosystem:kin-sdk-android:<latest release>'
+    implementation 'com.github.kinecosystem:kin-sdk-android:kin-sdk:<latest release>'
 }
 ```
 
