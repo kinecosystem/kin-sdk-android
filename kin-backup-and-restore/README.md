@@ -7,11 +7,11 @@ The UI uses a password to create a QR code, which is then used to back up the ac
 It is implemented as an Android library that can be incorporated into your code.
 This library is dependent on the kin-sdk library, and we assume that whoever needs to use it is already familiar with the kin-sdk library.
 For more details on Kin SDK, go to [kin-sdk on github](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk)
-and/or to [kin-sdk docs](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk).
+and/or to our docs in the website - [kin-sdk docs](https://kinecosystem.github.io/kin-website-docs/docs/documentation/android-sdk).
 
 ## Installation
 
-The Kin backup-and-restore module for Android is implemented as an Android library.
+The kin-backup-and-restore module for Android is implemented as an Android library.
 To include the library in your project, add these two statements to your `build.gradle` files.
 
 ###### Modifying project build file
@@ -32,7 +32,7 @@ allprojects {
 ...
 dependencies {
     ...
-    implementation 'com.github.kinecosystem.kin-sdk-android:backup-and-restore:<latest release>'
+    implementation 'com.github.kinecosystem.kin-sdk-android:kin-backup-and-restore:<latest release>'
 }
 ```
 
@@ -166,19 +166,19 @@ backupAndRestoreManager.restore(kinClient)
 Both unit tests and instrumented tests are provided.
 For a full list of tests, see
 
-- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/backup-and-restore/src/test
-- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/backup-and-restore/src/androidTest
+- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/kin-backup-and-restore/src/test
+- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/kin-backup-and-restore/src/androidTest
 
 
 #### Running Tests
 
 For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use this script:
 ```bash
-$ ./gradlew :kin-recovery:recovery jacocoTestReport
+$ ./gradlew :kin-backup-and-restore:kin-backup-and-restore jacocoTestReport
 ```
 
 Generated report can be found at:
-kin-recovery/recovery/build/reports/jacoco/jacocoTestReport/html/index.html.
+kin-backup-and-restore/kin-backup-and-restore/build/reports/jacoco/jacocoTestReport/html/index.html.
 
 ### Building from Source
 
@@ -191,6 +191,6 @@ Now you can build the library using gradle or open the project using Android Stu
 
 ## Sample App Code
 
-The `backup-and-restore-sample` app covers the entire functionality of `kin-backup-and-restore` and serves as a detailed example of how to use the library.
+The `kin-backup-and-restore-sample` app covers the entire functionality of `kin-backup-and-restore` and serves as a detailed example of how to use the library.
 
-The sample app source code can be found [here](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/backup-and-restore-sample/).
+The sample app source code can be found [here](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-backup-and-restore/kin-backup-and-restore-sample/).
