@@ -52,18 +52,25 @@ Launching the Backup and Restore flows requires the following steps:
 
 ### Step 1 - Creating the Backup and Restore Manager
 
-You need to create a BackupAndRestoreManager object.
+You need to create a BackupAndRestoreManager object.  
+This object needs a context and 2 request codes for later use in 'onActivityResult'.
 ###### Example of how to create this object:
 
 ```java
-backupAndRestoreManager = new BackupAndRestoreManager(context);
+...
+// This is only an example because you can use different values and names.
+private static final int REQ_CODE_BACKUP = 9000;
+private static final int REQ_CODE_RESTORE = 9001;
+...
+
+backupAndRestoreManager = new BackupAndRestoreManager(context, REQ_CODE_BACKUP, REQ_CODE_RESTORE);
 ```
 
 ### Step 2 - Adding Backup and Restore callbacks
 
 Both callbacks have the same 3 methods:
- - `onSuccess` is called when the operation is completed successfully. In the Restore callback, it has a `KinAccount` object, which is the restored account.
-- `onCancel` is called when the user leaves the backup or restore activity and returns to the previous activity .
+ - `onSuccess` is called when the operation is completed successfully. In the Restore callback, it has a `KinAccount` object, which is the restored account.  
+- `onCancel` is called when the user leaves the backup or restore activity and returns to the previous activity.  
 - `onFailure()` is called if there is an error in the backup or restore process.
 ###### Creating Backup callbacks
 ```java
@@ -127,7 +134,9 @@ For example:
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    backupAndRestore.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQ_CODE_BACKUP || requestCode == REQ_CODE_RESTORE) {
+        backupAndRestore.onActivityResult(requestCode, resultCode, data);
+    }
 }
 ```
 
