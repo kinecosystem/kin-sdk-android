@@ -46,7 +46,6 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 		recoverAccount.setOnClickListener(this);
 
 		KinClient kinClient = getKinClient(NetWorkType.TEST);
-		kinClient.clearAllAccounts();
 		backupAndRestorePresenter = new BackupAndRestorePresenterImpl(getBackupManager(), kinClient);
 		backupAndRestorePresenter.onAttach(this);
 
@@ -93,7 +92,6 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQ_CODE_BACKUP || requestCode == REQ_CODE_RESTORE) {
-//			if (resultCode == RESULT_OK) { // TODO is this ok with us? because it is not working because we return success(5000) or cancel(5001) or error(5002)
 			backupAndRestorePresenter.onActivityResult(requestCode, resultCode, data);
 		}
 	}
