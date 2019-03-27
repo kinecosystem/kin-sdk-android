@@ -46,7 +46,6 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 		recoverAccount.setOnClickListener(this);
 
 		KinClient kinClient = getKinClient(NetWorkType.TEST);
-		kinClient.clearAllAccounts();
 		backupAndRestorePresenter = new BackupAndRestorePresenterImpl(getBackupManager(), kinClient);
 		backupAndRestorePresenter.onAttach(this);
 
