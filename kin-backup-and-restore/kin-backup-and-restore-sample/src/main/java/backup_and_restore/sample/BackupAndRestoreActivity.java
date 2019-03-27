@@ -15,8 +15,8 @@ import kin.sdk.KinClient;
 
 public class BackupAndRestoreActivity extends AppCompatActivity implements IBackupAndRestoreView, View.OnClickListener {
 
-	public static final int REQ_CODE_BACKUP = 9000;
-	public static final int REQ_CODE_RESTORE = 9001;
+	private static final int REQ_CODE_BACKUP = 9000;
+	private static final int REQ_CODE_RESTORE = 9001;
 
 	private IBackupAndRestorePresenter backupAndRestorePresenter;
 
