@@ -7,10 +7,11 @@ import kin.recovery.events.BroadcastManagerImpl;
 import kin.recovery.events.CallbackManager;
 import kin.recovery.events.EventDispatcherImpl;
 import kin.recovery.events.InternalRestoreCallback;
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
+import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
-public final class BackupManager {
+public final class BackupAndRestoreManager {
 
 	public static final String NETWORK_URL_EXTRA = "networkUrlExtra";
 	public static final String NETWORK_PASSPHRASE_EXTRA = "networkPassphraseExtra";
@@ -19,23 +20,28 @@ public final class BackupManager {
 	public static final String PUBLIC_ADDRESS_EXTRA = "publicAddressExtra";
 
 	private final CallbackManager callbackManager;
-	private final KinClient kinClient;
+	private final int reqCodeBackup;
+	private final int reqCodeRestore;
+	private KinClient kinClient;
 	private Activity activity;
 
-	public BackupManager(@NonNull final Activity activity, @NonNull KinClient kinClient) {
+	public BackupAndRestoreManager(@NonNull final Activity activity, int reqCodeBackup, int reqCodeRestore) {
 		Validator.checkNotNull(activity, "activity");
 		this.activity = activity;
-		this.kinClient = kinClient;
 		this.callbackManager = new CallbackManager(
-			new EventDispatcherImpl(new BroadcastManagerImpl(activity)));
+			new EventDispatcherImpl(new BroadcastManagerImpl(activity)), reqCodeBackup, reqCodeRestore);
+		this.reqCodeBackup = reqCodeBackup;
+		this.reqCodeRestore = reqCodeRestore;
 	}
 
-	public void backup(String publicAddress) {
-		new Launcher(activity, kinClient).backupFlow(publicAddress);
+	public void backup(KinClient kinClient, KinAccount kinAccount) {
+		this.kinClient = kinClient;
+		new Launcher(activity, kinClient).backupFlow(kinAccount, reqCodeBackup);
 	}
 
-	public void restore() {
-		new Launcher(activity, kinClient).restoreFlow();
+	public void restore(KinClient kinClient) {
+		this.kinClient = kinClient;
+		new Launcher(activity, kinClient).restoreFlow(reqCodeRestore);
 	}
 
 	public void registerBackupCallback(@NonNull final BackupCallback backupCallback) {
@@ -43,18 +49,16 @@ public final class BackupManager {
 		this.callbackManager.setBackupCallback(backupCallback);
 	}
 
-//	public void registerBackupEvents(@NonNull final BackupEvents backupEvents) {
-//		Validator.checkNotNull(backupEvents, "backupEvents");
-//		this.callbackManager.setBackupEvents(backupEvents);
-//	}
-
 	public void registerRestoreCallback(@NonNull final RestoreCallback restoreCallback) {
 		Validator.checkNotNull(restoreCallback, "restoreCallback");
 		this.callbackManager.setInternalRestoreCallback(new InternalRestoreCallback() {
 
 			@Override
 			public void onSuccess(String publicAddress) {
-				restoreCallback.onSuccess(AccountExtractor.getKinAccount(kinClient, publicAddress));
+				// Because we recovered a new account then we need to refresh the kinClient so we create a new one.
+				kinClient = new KinClient(activity, kinClient.getEnvironment(), kinClient.getAppId(),
+					kinClient.getStoreKey());
+				restoreCallback.onSuccess(kinClient, AccountExtractor.getKinAccount(kinClient, publicAddress));
 			}
 
 			@Override
@@ -63,11 +67,16 @@ public final class BackupManager {
 			}
 
 			@Override
-			public void onFailure(BackupException throwable) {
+			public void onFailure(BackupAndRestoreException throwable) {
 				restoreCallback.onFailure(throwable);
 			}
 		});
 	}
+
+//	public void registerBackupEvents(@NonNull final BackupEvents backupEvents) {
+//		Validator.checkNotNull(backupEvents, "backupEvents");
+//		this.callbackManager.setBackupEvents(backupEvents);
+//	}
 
 //	public void registerRestoreEvents(@NonNull final RestoreEvents restoreEvents) {
 //		Validator.checkNotNull(restoreEvents, "restoreEvents");

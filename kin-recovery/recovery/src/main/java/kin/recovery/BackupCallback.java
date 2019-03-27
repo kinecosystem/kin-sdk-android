@@ -1,6 +1,6 @@
 package kin.recovery;
 
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
 
 public interface BackupCallback {
 
@@ -8,5 +8,5 @@ public interface BackupCallback {
 
 	void onCancel();
 
-	void onFailure(BackupException exception);
+	void onFailure(BackupAndRestoreException exception);
 }

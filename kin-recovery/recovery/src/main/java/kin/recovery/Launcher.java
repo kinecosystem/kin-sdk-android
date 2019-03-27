@@ -1,18 +1,17 @@
 package kin.recovery;
 
-import static kin.recovery.BackupManager.APP_ID_EXTRA;
-import static kin.recovery.BackupManager.NETWORK_PASSPHRASE_EXTRA;
-import static kin.recovery.BackupManager.NETWORK_URL_EXTRA;
-import static kin.recovery.BackupManager.PUBLIC_ADDRESS_EXTRA;
-import static kin.recovery.BackupManager.STORE_KEY_EXTRA;
-import static kin.recovery.events.CallbackManager.REQ_CODE_BACKUP;
-import static kin.recovery.events.CallbackManager.REQ_CODE_RESTORE;
+import static kin.recovery.BackupAndRestoreManager.APP_ID_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.NETWORK_PASSPHRASE_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.NETWORK_URL_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.PUBLIC_ADDRESS_EXTRA;
+import static kin.recovery.BackupAndRestoreManager.STORE_KEY_EXTRA;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import kin.recovery.backup.view.BackupActivity;
 import kin.recovery.restore.view.RestoreActivity;
+import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
 class Launcher {
@@ -25,17 +24,17 @@ class Launcher {
 		this.kinClient = kinClient;
 	}
 
-	void backupFlow(String publicAddress) {
+	void backupFlow(KinAccount kinAccount, int reqCodeBackup) {
 		Intent intent = new Intent(activity, BackupActivity.class);
 		addKinClientExtras(intent);
-		intent.putExtra(PUBLIC_ADDRESS_EXTRA, publicAddress);
-		startForResult(intent, REQ_CODE_BACKUP);
+		intent.putExtra(PUBLIC_ADDRESS_EXTRA, kinAccount.getPublicAddress());
+		startForResult(intent, reqCodeBackup);
 	}
 
-	void restoreFlow() {
+	void restoreFlow(int reqCodeRestore) {
 		Intent intent = new Intent(activity, RestoreActivity.class);
 		addKinClientExtras(intent);
-		startForResult(intent, REQ_CODE_RESTORE);
+		startForResult(intent, reqCodeRestore);
 	}
 
 	private void addKinClientExtras(Intent intent) {

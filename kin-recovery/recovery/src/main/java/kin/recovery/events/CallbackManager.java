@@ -1,6 +1,6 @@
 package kin.recovery.events;
 
-import static kin.recovery.exception.BackupException.CODE_UNEXPECTED;
+import static kin.recovery.exception.BackupAndRestoreException.CODE_UNEXPECTED;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,20 +8,9 @@ import android.support.annotation.Nullable;
 import kin.recovery.BackupCallback;
 import kin.recovery.BackupEvents;
 import kin.recovery.RestoreEvents;
-import kin.recovery.exception.BackupException;
+import kin.recovery.exception.BackupAndRestoreException;
 
 public class CallbackManager {
-
-	@Nullable
-	private BackupCallback backupCallback;
-	@Nullable
-	private InternalRestoreCallback internalRestoreCallback;
-
-	private final EventDispatcher eventDispatcher;
-
-	// Request Code
-	public static final int REQ_CODE_BACKUP = 9000;
-	public static final int REQ_CODE_RESTORE = 9001;
 
 	// Result Code
 	static final int RES_CODE_SUCCESS = 5000;
@@ -31,8 +20,25 @@ public class CallbackManager {
 	static final String EXTRA_KEY_ERROR_CODE = "EXTRA_KEY_ERROR_CODE";
 	static final String EXTRA_KEY_PUBLIC_ADDRESS = "EXTRA_KEY_PUBLIC_ADDRESS";
 
+	// Request Codes
+	private int reqCodeBackup;
+	private int reqCodeRestore;
+
+	@Nullable
+	private BackupCallback backupCallback;
+	@Nullable
+	private InternalRestoreCallback internalRestoreCallback;
+
+	private final EventDispatcher eventDispatcher;
+
 	public CallbackManager(@NonNull final EventDispatcher eventDispatcher) {
 		this.eventDispatcher = eventDispatcher;
+	}
+
+	public CallbackManager(@NonNull final EventDispatcher eventDispatcher, int reqCodeBackup, int reqCodeRestore) {
+		this.eventDispatcher = eventDispatcher;
+		this.reqCodeBackup = reqCodeBackup;
+		this.reqCodeRestore = reqCodeRestore;
 	}
 
 	public void setBackupCallback(@Nullable BackupCallback backupCallback) {
@@ -58,9 +64,9 @@ public class CallbackManager {
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQ_CODE_BACKUP) {
+		if (requestCode == reqCodeBackup) {
 			handleBackupResult(resultCode, data);
-		} else if (requestCode == REQ_CODE_RESTORE) {
+		} else if (requestCode == reqCodeRestore) {
 			handleRestoreResult(resultCode, data);
 		}
 	}
@@ -85,7 +91,7 @@ public class CallbackManager {
 				case RES_CODE_SUCCESS:
 					final String publicAddress = data.getStringExtra(EXTRA_KEY_PUBLIC_ADDRESS);
 					if (publicAddress == null) {
-						internalRestoreCallback.onFailure(new BackupException(CODE_UNEXPECTED,
+						internalRestoreCallback.onFailure(new BackupAndRestoreException(CODE_UNEXPECTED,
 							"Unexpected error - imported account public address not found"));
 					}
 					internalRestoreCallback.onSuccess(publicAddress);
@@ -96,11 +102,12 @@ public class CallbackManager {
 				case RES_CODE_FAILED:
 					String errorMessage = data.getStringExtra(EXTRA_KEY_ERROR_MESSAGE);
 					int code = data.getIntExtra(EXTRA_KEY_ERROR_CODE, 0);
-					internalRestoreCallback.onFailure(new BackupException(code, errorMessage));
+					internalRestoreCallback.onFailure(new BackupAndRestoreException(code, errorMessage));
 					break;
 				default:
 					internalRestoreCallback.onFailure(
-						new BackupException(CODE_UNEXPECTED, "Unexpected error - unknown result code " + resultCode));
+						new BackupAndRestoreException(CODE_UNEXPECTED,
+							"Unexpected error - unknown result code " + resultCode));
 					break;
 			}
 		}
@@ -118,11 +125,12 @@ public class CallbackManager {
 				case RES_CODE_FAILED:
 					String errorMessage = data.getStringExtra(EXTRA_KEY_ERROR_MESSAGE);
 					int code = data.getIntExtra(EXTRA_KEY_ERROR_CODE, 0);
-					backupCallback.onFailure(new BackupException(code, errorMessage));
+					backupCallback.onFailure(new BackupAndRestoreException(code, errorMessage));
 					break;
 				default:
 					backupCallback.onFailure(
-						new BackupException(CODE_UNEXPECTED, "Unexpected error - unknown result code " + resultCode));
+						new BackupAndRestoreException(CODE_UNEXPECTED,
+							"Unexpected error - unknown result code " + resultCode));
 					break;
 			}
 		}

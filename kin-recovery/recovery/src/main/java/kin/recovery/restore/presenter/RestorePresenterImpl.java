@@ -62,33 +62,44 @@ public class RestorePresenterImpl extends BasePresenterImpl<RestoreView> impleme
 	}
 
 	private void switchToStep(int step) {
+		RestoreView view = getView();
 		currentStep = step;
 		switch (step) {
 			case STEP_UPLOAD:
-				getView().navigateToUpload();
+				if (view != null) {
+					view.navigateToUpload();
+				}
 				break;
 			case STEP_ENTER_PASSWORD:
-				if (accountKey != null) {
-					getView().navigateToEnterPassword(accountKey);
-				} else {
-					getView().showError();
+				if (view != null) {
+					if (accountKey != null) {
+						view.navigateToEnterPassword(accountKey);
+					} else {
+						view.showError();
+					}
 				}
 				break;
 			case STEP_RESTORE_COMPLETED:
-				getView().closeKeyboard();
-				if (kinAccount != null) {
-					getView().navigateToRestoreCompleted();
-				} else {
-					getView().showError();
+				if (view != null) {
+					view.closeKeyboard();
+					if (kinAccount != null) {
+						view.navigateToRestoreCompleted();
+					} else {
+						view.showError();
+					}
 				}
 				break;
 			case STEP_FINISH:
 				if (kinAccount != null) {
 					callbackManager.sendRestoreSuccessResult(kinAccount.getPublicAddress());
 				} else {
-					getView().showError();
+					if (view != null) {
+						view.showError();
+					}
 				}
-				getView().close();
+				if (view != null) {
+					view.close();
+				}
 				break;
 		}
 	}
@@ -113,20 +124,23 @@ public class RestorePresenterImpl extends BasePresenterImpl<RestoreView> impleme
 
 	@Override
 	public void previousStep() {
-		switch (currentStep) {
-			case STEP_UPLOAD:
-				getView().close();
-				break;
-			case STEP_ENTER_PASSWORD:
-				getView().navigateBack();
-				getView().closeKeyboard();
-				break;
-			case STEP_RESTORE_COMPLETED:
-				getView().navigateBack();
-				break;
-			case STEP_FINISH:
-				getView().navigateBack();
-				break;
+		RestoreView view = getView();
+		if (view != null) {
+			switch (currentStep) {
+				case STEP_UPLOAD:
+					view.close();
+					break;
+				case STEP_ENTER_PASSWORD:
+					view.navigateBack();
+					view.closeKeyboard();
+					break;
+				case STEP_RESTORE_COMPLETED:
+					view.navigateBack();
+					break;
+				case STEP_FINISH:
+					view.navigateBack();
+					break;
+			}
 		}
 		currentStep--;
 	}

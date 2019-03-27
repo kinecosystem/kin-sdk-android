@@ -33,7 +33,10 @@ public class UploadQRPresenterImpl extends BaseChildPresenterImpl<UploadQRView> 
 
 	@Override
 	public void uploadClicked() {
-		getView().showConsentDialog();
+		UploadQRView view = getView();
+		if (view != null) {
+			view.showConsentDialog();
+		}
 		callbackManager.sendRestoreEvent(RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED);
 	}
 
