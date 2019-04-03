@@ -32,7 +32,7 @@ public class QRFileUriHandlerImplTest {
 		Bitmap bitmap = TestUtils.loadBitmapFromResource(this.getClass(), "qr_test.png");
 		Uri uri = fileUriHandler.saveFile(bitmap);
 		assertThat(uri, notNullValue());
-		assertThat(uri.toString(), equalTo("content://kin.recovery.test.KinRecoveryFileProvider/qr_codes/backup_qr.png"));
+		assertThat(uri.toString(), equalTo("content://kin.backupandrestore.test.KinRecoveryFileProvider/qr_codes/backup_qr.png"));
 	}
 
 }
