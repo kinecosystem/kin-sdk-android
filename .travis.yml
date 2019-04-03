@@ -37,8 +37,8 @@ android:
 
 script:
   #- ./gradlew assemble
-  - ./gradlew testDebugUnitTest
   - ./gradlew assembleDebug
+  - ./gradlew testDebugUnitTest
   - ./gradlew assembleAndroidTest
 #  - ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.sdk.KinAccountIntegrationTest --info
   - openssl aes-256-cbc -K $encrypted_ea088b084227_key -iv $encrypted_ea088b084227_iv -in firebase-test-lab-key.json.enc -out firebase-test-lab-key.json -d
