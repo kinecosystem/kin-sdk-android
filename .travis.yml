@@ -23,12 +23,11 @@ cache:
     - node_modules
 
 env:
-  - TEST_MATRIX=assemble
-  - TEST_MATRIX=units
-  - TEST_MATRIX=android_test_kin_sdk
-  - TEST_MATRIX=android_test_backup_restore
-  global:
-  - ANDROID_API_LEVEL=26
+- ANDROID_API_LEVEL=26
+- TEST_MATRIX=assemble
+- TEST_MATRIX=units
+- TEST_MATRIX=android_test_kin_sdk
+- TEST_MATRIX=android_test_backup_restore
 
 android:
   components:
