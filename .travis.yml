@@ -25,7 +25,6 @@ cache:
 env:
   global:
   - ANDROID_API_LEVEL=26
-  - EMULATOR_API_LEVEL=16
 
 android:
   components:
@@ -33,21 +32,31 @@ android:
   - platform-tools
   - build-tools-26.0.2
   - android-$ANDROID_API_LEVEL
-  #  - android-$EMULATOR_API_LEVEL
   - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
-#  - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 
-before_script:
-#  # setup android emulator
-#  - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi armeabi-v7a
-#  - emulator -avd test -no-skin -no-audio -no-window -camera-back none -camera-front none -verbose -memory 2048 &
-#  - android-wait-for-emulator
-#  - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew assemble
+  #- ./gradlew assemble
   - ./gradlew testDebugUnitTest
+  - ./gradlew assembleDebug
+  - ./gradlew assembleAndroidTest
 #  - ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.sdk.KinAccountIntegrationTest --info
-
+  - openssl aes-256-cbc -K $encrypted_ea088b084227_key -iv $encrypted_ea088b084227_iv -in firebase-test-lab-key.json.enc -out firebase-test-lab-key.json -d
+  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
+  - tar xf google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
+  - echo "y" | ./google-cloud-sdk/bin/gcloud components update beta
+  - ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
+  - ./google-cloud-sdk/bin/gcloud firebase test android run  \
+      --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk \
+      --test kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk  \
+      --device model=Nexus5X,version=25,locale=en --no-record-video --no-performance-metrics \
+      --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec \
+      --directories-to-pull=/sdcard/tmp
+  - ./google-cloud-sdk/bin/gcloud firebase test android run  \
+    --type instrumentation --app kin-backup-and-restore/kin-backup-and-restore-sample/build/outputs/apk/debug/kin-backup-and-restore-sample-debug.apk \
+    --test  kin-backup-and-restore/kin-backup-and-restore/build/outputs/apk/androidTest/debug/kin-backup-and-restore-debug-androidTest.apk \
+    --device model=Nexus5X,version=25,locale=en \
+    --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec \
+    --directories-to-pull=/sdcard/tmp
 after_success:
   - bash <(curl -s https://codecov.io/bash)
