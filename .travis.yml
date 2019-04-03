@@ -19,7 +19,7 @@ cache:
     - $HOME/.gradle/native
     - $HOME/.gradle/daemon
     - $HOME/.android/build-cache
-
+    - $HOME/google-cloud-sdk/
     - node_modules
 
 env:
@@ -32,8 +32,6 @@ android:
   - platform-tools
   - build-tools-26.0.2
   - android-$ANDROID_API_LEVEL
-  - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
-
 
 script:
   #- ./gradlew assemble
@@ -45,6 +43,7 @@ script:
   - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
   - tar xf google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
   - echo "y" | ./google-cloud-sdk/bin/gcloud components update beta
+  - ./google-cloud-sdk/bin/gcloud config set project remotedevicetest-e89f4
   - ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
   - ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp
   - ./google-cloud-sdk/bin/gcloud firebase test android run  \
