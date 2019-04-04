@@ -54,10 +54,10 @@ script:
         rm -rf $HOME/google-cloud-sdk;
         curl https://sdk.cloud.google.com | bash;
       fi
-      echo "y" | ./google-cloud-sdk/bin/gcloud components update beta
-      ./google-cloud-sdk/bin/gcloud config set project remotedevicetest-e89f4
-      ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
-      ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp
+      echo "y" | gcloud components update beta
+      gcloud config set project remotedevicetest-e89f4
+      gcloud auth activate-service-account --key-file firebase-test-lab-key.json
+      gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp
     elif [ $TEST_MATRIX == "android_test_backup_restore" ]; then
       ./gradlew :kin-backup-and-restore:kin-backup-and-restore-sample:assembleDebug
       ./gradlew :kin-backup-and-restore:kin-backup-and-restore:assembleAndroidTest
@@ -68,10 +68,10 @@ script:
         rm -rf $HOME/google-cloud-sdk;
         curl https://sdk.cloud.google.com | bash;
       fi
-      echo "y" | ./google-cloud-sdk/bin/gcloud components update beta
-      ./google-cloud-sdk/bin/gcloud config set project remotedevicetest-e89f4
-      ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
-      ./google-cloud-sdk/bin/gcloud firebase test android run --type instrumentation --app kin-backup-and-restore/kin-backup-and-restore-sample/build/outputs/apk/debug/kin-backup-and-restore-sample-debug.apk --test kin-backup-and-restore/kin-backup-and-restore/build/outputs/apk/androidTest/debug/kin-backup-and-restore-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp
+      echo "y" | gcloud components update beta
+      gcloud config set project remotedevicetest-e89f4
+      gcloud auth activate-service-account --key-file firebase-test-lab-key.json
+      gcloud firebase test android run --type instrumentation --app kin-backup-and-restore/kin-backup-and-restore-sample/build/outputs/apk/debug/kin-backup-and-restore-sample-debug.apk --test kin-backup-and-restore/kin-backup-and-restore/build/outputs/apk/androidTest/debug/kin-backup-and-restore-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp
     fi
 
 after_success:
