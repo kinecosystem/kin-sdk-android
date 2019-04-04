@@ -49,7 +49,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api(project(':kin-sdk')) {
-        exclude group:'com.github.joshjdevl.libsodiumjni', module:'libsodium-jni'
+        exclude group:'com.github.joshjdevl.libsodiumjni'
     }
     implementation project(':kin-base')
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
