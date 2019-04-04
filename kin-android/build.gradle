@@ -2,8 +2,18 @@ apply plugin: 'com.android.library'
 apply plugin: 'jacoco'
 apply plugin: 'kotlin-android'
 
-apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.kinecosystem'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+    }
+}
 
 android {
     compileSdkVersion 26
