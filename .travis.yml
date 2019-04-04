@@ -23,11 +23,13 @@ cache:
     - node_modules
 
 env:
-- CLOUDSDK_CORE_DISABLE_PROMPTS=1
-- TEST_MATRIX=assemble
-- TEST_MATRIX=units
-- TEST_MATRIX=android_test_kin_sdk
-- TEST_MATRIX=android_test_backup_restore
+  global:
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+  matrix:
+  - TEST_MATRIX=assemble
+  - TEST_MATRIX=units
+  - TEST_MATRIX=android_test_kin_sdk
+  - TEST_MATRIX=android_test_backup_restore
 
 android:
   components:
