@@ -6,12 +6,12 @@
         <item name="colorAccent">@color/kinBlue</item>
     </style>
 
-    <style name="RecoveryButtonStyle" parent="Widget.AppCompat.Button">
+    <style name="BackupAndRestoreButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:background">@drawable/recovery_button_bg</item>
+        <item name="android:background">@drawable/backup_and_restore_button_bg</item>
     </style>
 
 </resources>

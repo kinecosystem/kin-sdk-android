@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import kin.backupandrestore.sample.BackupAndRestorePresenterImpl.NetWorkType;
 import kin.backupandrestore.BackupAndRestoreManager;
+import kin.backupandrestore.sample.BackupAndRestorePresenterImpl.NetWorkType;
 import kin.sdk.Balance;
 import kin.sdk.Environment;
 import kin.sdk.KinClient;
@@ -23,7 +23,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	private Button createNewAccount;
 
 	private Button backupCurrentAccount;
-	private Button recoverAccount;
+	private Button restoreAccount;
 	private TextView restoredAccountBalance;
 	private TextView restoredAccountPublicAddress;
 	private View balanceProgress;
@@ -35,7 +35,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 		setContentView(R.layout.activity_backup_and_restore);
 		createNewAccount = findViewById(R.id.create_new_account);
 		backupCurrentAccount = findViewById(R.id.backup_current_account);
-		recoverAccount = findViewById(R.id.recover_account);
+		restoreAccount = findViewById(R.id.restore_account);
 		restoredAccountBalance = findViewById(R.id.balance_value);
 		restoredAccountPublicAddress = findViewById(R.id.public_address_value);
 		balanceProgress = findViewById(R.id.balance_value_progress);
@@ -43,7 +43,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 
 		createNewAccount.setOnClickListener(this);
 		backupCurrentAccount.setOnClickListener(this);
-		recoverAccount.setOnClickListener(this);
+		restoreAccount.setOnClickListener(this);
 
 		KinClient kinClient = getKinClient(NetWorkType.TEST);
 		backupAndRestorePresenter = new BackupAndRestorePresenterImpl(getBackupManager(), kinClient);
@@ -53,7 +53,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 
 	private KinClient getKinClient(NetWorkType type) {
 		return new KinClient(this, type == NetWorkType.MAIN ? Environment.PRODUCTION : Environment.TEST, "test",
-			"recovery_sample_app");
+			"backup_and_restore_sample_app");
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 		final int vId = v.getId();
 		if (vId == R.id.backup_current_account) {
 			backupAndRestorePresenter.backupClicked();
-		} else if (vId == R.id.recover_account) {
+		} else if (vId == R.id.restore_account) {
 			setBalanceProgressBar(true);
 			backupAndRestorePresenter.restoreClicked();
 		} else if (vId == R.id.create_new_account) {
@@ -75,7 +75,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 			setPublicAddressProgressBar(true);
 			createNewAccount.setEnabled(false);
 			backupCurrentAccount.setEnabled(false);
-			recoverAccount.setEnabled(false);
+			restoreAccount.setEnabled(false);
 			backupAndRestorePresenter.createAccountClicked();
 		}
 	}
@@ -100,7 +100,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 	public void enableCreateAccountButton() {
 		createNewAccount.setEnabled(true);
 		backupCurrentAccount.setEnabled(true);
-		recoverAccount.setEnabled(true);
+		restoreAccount.setEnabled(true);
 	}
 
 	@Override
