@@ -46,7 +46,7 @@ script:
       echo "PWD = "
       pwd
       echo "PWD end"
-      if [ ! -d ./google-cloud-sdk ]; then
+      if [ ! -d ./google-cloud-sdk/bin ]; then
         wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
         tar xf google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
       fi
