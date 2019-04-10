@@ -87,7 +87,9 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+task jacocoTestReport(type: JacocoReport) {
+    group = "Reporting"
+    description = "Combine code coverage to unified report."
 
     reports {
         xml.enabled = true
@@ -95,14 +97,20 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     }
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
+    def debugTree = fileTree(dir: "${project.buildDir}/intermediates/javac/debug/compileDebugJavaWithJavac/classes", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+    def ecSrc = fileTree(dir: "$project.buildDir", include: "**/*.ec")
+    def execSrc = fileTree(dir: "$project.buildDir", include: "**/*.exec")
+
+    doFirst {
+        def files = files([ecSrc, execSrc]).files
+        println "Creating Jacoco Report for ${files.size()} coverage files"
+        files.each { file -> println file }
+    }
 
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
-    executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-    ])
+    executionData = files([ecSrc, execSrc])
 }
 
 //remove all non test related from kotlin source set, to make sure no kotlin files included in build
