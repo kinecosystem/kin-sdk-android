@@ -53,7 +53,7 @@ script:
       ./google-cloud-sdk/bin/gcloud config set project remotedevicetest-e89f4
       ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
       coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
-      ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --results-dir ${coverageDir}
+      ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
       coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec" | tail -1`
       echo ${coverageFile}
       ./google-cloud-sdk/bin/gsutil cp $coverageFile kin-sdk/kin-sdk/build
