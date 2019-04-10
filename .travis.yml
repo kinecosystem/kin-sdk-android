@@ -36,45 +36,10 @@ android:
   - android-26
 
 script:
-  - |
-    if [ $TEST_MATRIX == "assemble" ]; then
-      ./gradlew assemble
-    elif [ $TEST_MATRIX == "units" ]; then
-      ./gradlew testDebugUnitTest
-      ./gradlew :kin-backup-and-restore:kin-backup-and-restore:jacocoTestReport
-    elif [ $TEST_MATRIX == "android_test_kin_sdk" ]; then
-      ./gradlew :kin-sdk:kin-sdk-sample:assembleDebug
-      ./gradlew :kin-sdk:kin-sdk:assembleAndroidTest
-      openssl aes-256-cbc -K $encrypted_ea088b084227_key -iv $encrypted_ea088b084227_iv -in firebase-test-lab-key.json.enc -out firebase-test-lab-key.json -d
-      if [ ! -f ./google-cloud-sdk/bin/gcloud ]; then
-        wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
-        tar xf google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
-      fi
-      ./google-cloud-sdk/bin/gcloud config set project remotedevicetest-e89f4
-      ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
-      coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
-      ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
-      coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec" | tail -1`
-      echo ${coverageFile}
-      ./google-cloud-sdk/bin/gsutil cp $coverageFile kin-sdk/kin-sdk/build
-      ./gradlew :kin-sdk:kin-sdk:jacocoTestReport
-    elif [ $TEST_MATRIX == "android_test_backup_restore" ]; then
-      ./gradlew :kin-backup-and-restore:kin-backup-and-restore-sample:assembleDebug
-      ./gradlew :kin-backup-and-restore:kin-backup-and-restore:assembleAndroidTest
-      openssl aes-256-cbc -K $encrypted_ea088b084227_key -iv $encrypted_ea088b084227_iv -in firebase-test-lab-key.json.enc -out firebase-test-lab-key.json -d
-      if [ ! -f ./google-cloud-sdk/bin/gcloud ]; then
-        wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
-        tar xf google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
-      fi
-      ./google-cloud-sdk/bin/gcloud config set project remotedevicetest-e89f4
-      ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
-      coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
-      ./google-cloud-sdk/bin/gcloud firebase test android run --type instrumentation --app kin-backup-and-restore/kin-backup-and-restore-sample/build/outputs/apk/debug/kin-backup-and-restore-sample-debug.apk --test kin-backup-and-restore/kin-backup-and-restore/build/outputs/apk/androidTest/debug/kin-backup-and-restore-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video --no-performance-metrics --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
-      coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec" | tail -1`
-      echo ${coverageFile}
-      ./google-cloud-sdk/bin/gsutil cp $coverageFile kin-backup-and-restore/kin-backup-and-restore/build
-      ./gradlew :kin-backup-and-restore:kin-backup-and-restore:jacocoTestReport
-    fi
+  - if [ $TEST_MATRIX == "assemble" ]; then ./scripts/ci_assemble.sh; fi
+  - if [ $TEST_MATRIX == "units" ]; then ./scripts/ci_unit_test.sh; fi
+  - if [ $TEST_MATRIX == "android_test_kin_sdk" ]; then ./scripts/ci_android_test_with_firebase.sh kin-sdk kin-sdk 2; fi
+  - if [ $TEST_MATRIX == "android_test_backup_restore" ]; then ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore 0; fi
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
