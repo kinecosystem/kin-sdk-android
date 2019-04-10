@@ -56,9 +56,7 @@ script:
       ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --results-dir ${coverageDir}
       coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec" | tail -1`
       echo ${coverageFile}
-      mkdir ./build
-      mkdir ./build/jacoco
-      ./google-cloud-sdk/bin/gsutil cp $coverageFile ./build/jacoco
+      ./google-cloud-sdk/bin/gsutil cp $coverageFile kin-sdk/kin-sdk/build
       ./gradlew :kin-sdk:kin-sdk:jacocoTestReport
     elif [ $TEST_MATRIX == "android_test_backup_restore" ]; then
       ./gradlew :kin-backup-and-restore:kin-backup-and-restore-sample:assembleDebug
@@ -74,9 +72,7 @@ script:
       ./google-cloud-sdk/bin/gcloud firebase test android run --type instrumentation --app kin-backup-and-restore/kin-backup-and-restore-sample/build/outputs/apk/debug/kin-backup-and-restore-sample-debug.apk --test kin-backup-and-restore/kin-backup-and-restore/build/outputs/apk/androidTest/debug/kin-backup-and-restore-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video --no-performance-metrics --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
       coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec" | tail -1`
       echo ${coverageFile}
-      mkdir ./build
-      mkdir ./build/jacoco
-      ./google-cloud-sdk/bin/gsutil cp $coverageFile ./build/jacoco
+      ./google-cloud-sdk/bin/gsutil cp $coverageFile kin-backup-and-restore/kin-backup-and-restore/build
       ./gradlew :kin-backup-and-restore:kin-backup-and-restore:jacocoTestReport
     fi
 
