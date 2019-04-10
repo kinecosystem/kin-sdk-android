@@ -41,6 +41,7 @@ script:
       ./gradlew assemble
     elif [ $TEST_MATRIX == "units" ]; then
       ./gradlew testDebugUnitTest
+      ./gradlew :kin-backup-and-restore:kin-backup-and-restore:jacocoTestReport
     elif [ $TEST_MATRIX == "android_test_kin_sdk" ]; then
       ./gradlew :kin-sdk:kin-sdk-sample:assembleDebug
       ./gradlew :kin-sdk:kin-sdk:assembleAndroidTest
@@ -53,7 +54,7 @@ script:
       ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
       coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
       ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app kin-sdk/kin-sdk-sample/build/outputs/apk/debug/kin-sdk-sample-debug.apk --test  kin-sdk/kin-sdk/build/outputs/apk/androidTest/debug/kin-sdk-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --results-dir ${coverageDir}
-      coverageFile=`gsutil ls gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec | tail -1`
+      coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec" | tail -1`
       mkdir ./build/jacoco
       ./google-cloud-sdk/bin/gsutil cp $coverageFile ./build/jacoco
       ./gradlew :kin-sdk:kin-sdk:jacocoTestReport
@@ -69,7 +70,7 @@ script:
       ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
       coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
       ./google-cloud-sdk/bin/gcloud firebase test android run --type instrumentation --app kin-backup-and-restore/kin-backup-and-restore-sample/build/outputs/apk/debug/kin-backup-and-restore-sample-debug.apk --test kin-backup-and-restore/kin-backup-and-restore/build/outputs/apk/androidTest/debug/kin-backup-and-restore-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video --no-performance-metrics --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
-      coverageFile=`gsutil ls gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec | tail -1`
+      coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://test-lab-inaujqqz4p0pm-ha62k9dmaid32/${coverageDir}/**/*.ec" | tail -1`
       mkdir ./build/jacoco
       ./google-cloud-sdk/bin/gsutil cp $coverageFile ./build/jacoco
       ./gradlew :kin-backup-and-restore:kin-backup-and-restore:jacocoTestReport
