@@ -6,8 +6,8 @@ set -e #exit on any command failure
 ./gradlew :$1:$2:assembleAndroidTest
 openssl aes-256-cbc -K $encrypted_ea088b084227_key -iv $encrypted_ea088b084227_iv -in firebase-test-lab-key.json.enc -out firebase-test-lab-key.json -d
 if [ ! -f ./google-cloud-sdk/bin/gcloud ]; then
-  wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
-  tar xf google-cloud-sdk-220.0.0-linux-x86_64.tar.gz
+  wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-241.0.0-linux-x86_64.tar.gz
+  tar xf google-cloud-sdk-241.0.0-linux-x86_64.tar.gz
 fi
 ./google-cloud-sdk/bin/gcloud config set project remotedevicetest-e89f4
 ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file firebase-test-lab-key.json
