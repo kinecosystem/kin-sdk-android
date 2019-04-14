@@ -34,8 +34,8 @@ class OnBoarding {
     OnBoarding() {
         handler = new Handler(Looper.getMainLooper());
         okHttpClient = new OkHttpClient.Builder()
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .build();
     }
 
@@ -49,7 +49,7 @@ class OnBoarding {
             handler.removeCallbacks(accountCreationListeningTimeout);
             fireOnSuccess(callbacks);
         });
-        handler.postDelayed(accountCreationListeningTimeout, 10 * DateUtils.SECOND_IN_MILLIS);
+        handler.postDelayed(accountCreationListeningTimeout, 20 * DateUtils.SECOND_IN_MILLIS);
         createAccount(account, callbacks);
     }
 
