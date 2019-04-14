@@ -26,6 +26,15 @@ allprojects {
         maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
         maven { url 'https://jitpack.io' }
     }
+
+    //print each test status to log
+    tasks.withType(Test) {
+        testLogging {
+            exceptionFormat "full"
+            events "started", "skipped", "passed", "failed"
+            showStandardStreams true
+        }
+    }
 }
 
 task clean(type: Delete) {
