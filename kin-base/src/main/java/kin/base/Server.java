@@ -1,16 +1,12 @@
 package kin.base;
 
 import android.net.Uri;
+import android.net.Uri.Builder;
+import android.text.TextUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import kin.base.requests.AccountsRequestBuilder;
 import kin.base.requests.EffectsRequestBuilder;
 import kin.base.requests.LedgersRequestBuilder;
@@ -23,6 +19,12 @@ import kin.base.requests.TradesRequestBuilder;
 import kin.base.requests.TransactionsRequestBuilder;
 import kin.base.responses.GsonSingleton;
 import kin.base.responses.SubmitTransactionResponse;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Main class used to connect to Horizon server.
@@ -143,13 +145,11 @@ public class Server {
      * Submits transaction to the network.
      *
      * @param transaction transaction to submit to the network.
+     * @param url if supplied then use this url instead of the serverURI member and don't append anything to it.
      * @return {@link SubmitTransactionResponse}
      */
-    public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
-        Uri transactionsUri = Uri.parse(serverURI.toString())
-            .buildUpon()
-            .appendPath("transactions")
-            .build();
+    private SubmitTransactionResponse submitTransaction(Transaction transaction, String url) throws IOException {
+        Uri transactionsUri = getUri(url);
 
         RequestBody formBody = new FormBody.Builder()
             .add("tx", transaction.toEnvelopeXdrBase64())
@@ -164,10 +164,15 @@ public class Server {
             response = httpClient.newCall(request).execute();
 
             if (response != null) {
-                ResponseBody body = response.body();
-                if (body != null) {
-                    String responseString = body.string();
-                    return GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
+                if (response.code() == 307) {
+                    String location = response.header("Location");
+                    return submitTransaction(transaction, location);
+                } else {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        String responseString = body.string();
+                        return GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
+                    }
                 }
             }
         } finally {
@@ -176,6 +181,26 @@ public class Server {
             }
         }
         return null;
+    }
+
+    /**
+     * Submits transaction to the network.
+     *
+     * @param transaction transaction to submit to the network.
+     * @return {@link SubmitTransactionResponse}
+     */
+    public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
+        return submitTransaction(transaction, null);
+    }
+
+    private Uri getUri(String url) {
+        boolean urlIsEmpty = TextUtils.isEmpty(url);
+        String serverUrl = urlIsEmpty ? serverURI.toString() : url;
+        Builder uriBuilder = Uri.parse(serverUrl).buildUpon();
+        if (urlIsEmpty) {
+            uriBuilder.appendPath("transactions");
+        }
+        return uriBuilder.build();
     }
 
     /**
