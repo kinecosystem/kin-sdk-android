@@ -42,4 +42,4 @@ script:
   - if [ $TEST_MATRIX == "android_test_backup_restore" ]; then ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore 0; fi
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - if [ $TEST_MATRIX != "assemble" ]; then bash <(curl -s https://codecov.io/bash); fi
