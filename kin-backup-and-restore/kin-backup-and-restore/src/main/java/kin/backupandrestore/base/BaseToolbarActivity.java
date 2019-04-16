@@ -12,6 +12,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -62,7 +63,7 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 	}
 
 	private int getColorFromBundle(Bundle savedInstanceState) {
-		final int defaultColor = ContextCompat.getColor(getApplicationContext(), R.color.kinrecovery_white);
+		final int defaultColor = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
 		return savedInstanceState != null ? savedInstanceState
 			.getInt(BACKGROUND_COLOR, defaultColor) : defaultColor;
 	}
@@ -79,6 +80,10 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 
 	public void setNavigationIcon(@DrawableRes int iconRes) {
 		topToolBar.setNavigationIcon(iconRes);
+	}
+
+	public void setNavigationIcon(VectorDrawableCompat vectorDrawable) {
+		topToolBar.setNavigationIcon(vectorDrawable);
 	}
 
 	public void setToolbarColor(@ColorRes int colorRes) {
@@ -109,7 +114,7 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 	}
 
 	public void setStep(int current, int total) {
-		stepsText.setText(getString(R.string.kinrecovery_steps_format, current, total));
+		stepsText.setText(getString(R.string.backup_and_restore_steps_format, current, total));
 	}
 
 	public void clearSteps() {

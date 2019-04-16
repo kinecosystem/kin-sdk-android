@@ -58,7 +58,7 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 
 	@Override
 	protected int getContentLayout() {
-		return R.layout.kinrecovery_frgment_activity;
+		return R.layout.backup_and_restore_frgment_activity;
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 
 	@Override
 	public void showError() {
-		Toast.makeText(this, R.string.kinrecovery_something_went_wrong_title, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.backup_and_restore_something_went_wrong_title, Toast.LENGTH_SHORT).show();
 	}
 
 	public RestorePresenter getPresenter() {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@android:color/transparent"/>
+
+    <stroke
+        android:color="@color/backupAndRestore_black"
+        android:width="@dimen/backupAndRestore_edittext_stroke_width"/>
+
+    <corners android:radius="@dimen/backupAndRestore_edittext_corners_radius"/>
+
+</shape>

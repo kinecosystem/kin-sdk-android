@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/work_sans_medium"
-        android:layout_marginRight="@dimen/backupAndRestore_margin_medium"
+        android:layout_marginRight="@dimen/backupAndRestore_margin_large"
         android:gravity="center"
         android:letterSpacing="-0.04"
         android:textColor="@color/backupAndRestore_black"

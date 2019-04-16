@@ -32,7 +32,7 @@ public class BackupInfoFragment extends Fragment implements BaseView {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 		@Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.kinrecovery_fragment_backup_info, container, false);
+		View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_info, container, false);
 		initViews(root);
 		backupInfoPresenter = new BackupInfoPresenterImpl(
 			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener);
