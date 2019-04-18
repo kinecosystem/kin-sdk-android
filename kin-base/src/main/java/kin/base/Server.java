@@ -31,6 +31,9 @@ import okhttp3.ResponseBody;
  */
 public class Server {
 
+	private static final int TEMPORARY_REDIRECT = 307;
+	private static final String LOCATION_HEADER = "Location";
+
     private URI serverURI;
 
     private OkHttpClient httpClient;
@@ -164,8 +167,8 @@ public class Server {
             response = httpClient.newCall(request).execute();
 
             if (response != null) {
-                if (response.code() == 307) {
-                    String location = response.header("Location");
+				String location = response.header(LOCATION_HEADER);
+				if (response.code() == TEMPORARY_REDIRECT && location != null) {
                     return submitTransaction(transaction, location);
                 } else {
                     ResponseBody body = response.body();

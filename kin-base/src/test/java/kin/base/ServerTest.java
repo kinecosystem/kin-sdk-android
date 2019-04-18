@@ -1,7 +1,12 @@
 package kin.base;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import junit.framework.TestCase;
-
+import kin.base.responses.SubmitTransactionResponse;
+import okhttp3.OkHttpClient;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,14 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import kin.base.responses.SubmitTransactionResponse;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import okhttp3.OkHttpClient;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23)
@@ -99,6 +96,22 @@ public class ServerTest extends TestCase {
     mockWebServer.enqueue(
         new MockResponse()
             .setResponseCode(200)
+            .setBody(successResponse)
+    );
+
+    SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
+    assertTrue(response.isSuccess());
+    assertEquals(response.getLedger(), new Long(826150L));
+    assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
+    assertNull(response.getExtras());
+  }
+
+  @Test
+
+  public void test_ResponseCodeHttp307_SubmitTransactionSuccess() throws IOException {
+    mockWebServer.enqueue(
+        new MockResponse()
+            .setResponseCode(307)
             .setBody(successResponse)
     );
 

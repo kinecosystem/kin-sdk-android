@@ -23,6 +23,14 @@ final class TestUtils {
             .setResponseCode(200);
     }
 
+    @NonNull
+    static MockResponse generateSuccessHttp307MockResponse(Class clazz, String res, String location) {
+        return new MockResponse()
+            .setBody(loadResource(clazz, res))
+            .setHeader("Location", location)
+            .setResponseCode(307);
+    }
+
     static void enqueueEmptyResponse(MockWebServer mockWebServer) {
         //simulate http 200 with no body, will cause to parse empty body and response will be null
         mockWebServer.enqueue(new MockResponse().setBodyDelay(1, TimeUnit.SECONDS));

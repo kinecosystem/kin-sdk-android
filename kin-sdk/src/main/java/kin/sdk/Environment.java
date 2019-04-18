@@ -14,7 +14,7 @@ public class Environment {
 			"Kin Mainnet ; December 2018");
 
     public static final Environment TEST =
-        new Environment("http://haproxy.kininfrastructure.com/",
+        new Environment("https://haproxy.kininfrastructure.com/",
             "Kin Testnet ; December 2018");
 
     private final String networkUrl;
