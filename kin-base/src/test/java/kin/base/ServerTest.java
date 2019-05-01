@@ -96,8 +96,8 @@ public class ServerTest extends TestCase {
     mockWebServer.enqueue(
         new MockResponse()
             .setResponseCode(200)
-            .setBody(successResponse)
     );
+
 
     SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
     assertTrue(response.isSuccess());
@@ -109,9 +109,18 @@ public class ServerTest extends TestCase {
   @Test
 
   public void test_ResponseCodeHttp307_SubmitTransactionSuccess() throws IOException {
+    MockWebServer mockWebServerHttp307 = new MockWebServer();
+    mockWebServerHttp307.start();
+    String location = mockWebServerHttp307.url("/").url().toString();
+
     mockWebServer.enqueue(
         new MockResponse()
             .setResponseCode(307)
+            .setHeader("Location", location)
+    );
+    mockWebServerHttp307.enqueue(
+        new MockResponse()
+            .setResponseCode(200)
             .setBody(successResponse)
     );
 

@@ -135,13 +135,18 @@ public class TransactionSenderTest {
 
 	@Test
 	public void sendTransaction_Http_307_Response_Success() throws Exception {
+        MockWebServer mockWebServerHttp307 = new MockWebServer();
+        mockWebServerHttp307.start();
+        String location = mockWebServerHttp307.url("").toString();
+
 		//send transaction fetch first to account details, then from account details, and finally perform tx which will return 307
 		// and then 200. here we mock all 4 responses from server to achieve success operation
 		mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
 		mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
 		// No need for a real location because any way it is local host
-		mockWebServer.enqueue(TestUtils.generateSuccessHttp307MockResponse(this.getClass(), "tx_success_res.json", ""));
-		mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
+        mockWebServer
+            .enqueue(TestUtils.generateSuccessHttp307MockResponse(this.getClass(), "tx_success_res.json", location));
+        mockWebServerHttp307.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
 
 		Transaction transaction = transactionSender
 			.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
@@ -153,6 +158,7 @@ public class TransactionSenderTest {
 		assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID_FROM));
 		assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID_TO));
 		assertThat(mockWebServer.takeRequest().getBody().readUtf8(), equalTo(TX_BODY));
+        assertThat(mockWebServerHttp307.takeRequest().getBody().readUtf8(), equalTo(TX_BODY));
 	}
 
     @Test

@@ -26,7 +26,6 @@ final class TestUtils {
     @NonNull
     static MockResponse generateSuccessHttp307MockResponse(Class clazz, String res, String location) {
         return new MockResponse()
-            .setBody(loadResource(clazz, res))
             .setHeader("Location", location)
             .setResponseCode(307);
     }
