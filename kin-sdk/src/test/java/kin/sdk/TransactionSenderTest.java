@@ -145,7 +145,7 @@ public class TransactionSenderTest {
 		mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
 		// No need for a real location because any way it is local host
         mockWebServer
-            .enqueue(TestUtils.generateSuccessHttp307MockResponse(this.getClass(), "tx_success_res.json", location));
+            .enqueue(TestUtils.generateSuccessHttp307MockResponse(location));
         mockWebServerHttp307.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
 
 		Transaction transaction = transactionSender
