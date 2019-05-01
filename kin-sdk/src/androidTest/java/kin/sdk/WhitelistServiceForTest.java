@@ -1,7 +1,5 @@
 package kin.sdk;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import okhttp3.MediaType;
@@ -9,10 +7,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class WhitelistServiceForTest {
 
-    private static final String URL_WHITELISTING_SERVICE = "http://10.4.59.1:3003/whitelist";
+	private static final String URL_WHITELISTING_SERVICE = "http://34.239.111.38:3000/whitelist";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final OkHttpClient okHttpClient;

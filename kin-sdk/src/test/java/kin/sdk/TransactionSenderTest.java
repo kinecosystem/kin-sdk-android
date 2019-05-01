@@ -15,10 +15,14 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
-
+import kin.base.FormatException;
+import kin.base.KeyPair;
+import kin.base.Network;
+import kin.base.Server;
+import kin.base.responses.HttpResponseException;
 import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.IllegalAmountException;
+import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
@@ -36,11 +40,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import kin.base.FormatException;
-import kin.base.KeyPair;
-import kin.base.Network;
-import kin.base.Server;
-import kin.base.responses.HttpResponseException;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23, manifest = Config.NONE)
@@ -133,6 +132,34 @@ public class TransactionSenderTest {
         Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         transactionSender.sendTransaction(transaction);
     }
+
+	@Test
+	public void sendTransaction_Http_307_Response_Success() throws Exception {
+        MockWebServer mockWebServerHttp307 = new MockWebServer();
+        mockWebServerHttp307.start();
+        String location = mockWebServerHttp307.url("").toString();
+
+		//send transaction fetch first to account details, then from account details, and finally perform tx which will return 307
+		// and then 200. here we mock all 4 responses from server to achieve success operation
+		mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
+		mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
+		// No need for a real location because any way it is local host
+        mockWebServer
+            .enqueue(TestUtils.generateSuccessHttp307MockResponse(location));
+        mockWebServerHttp307.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
+
+		Transaction transaction = transactionSender
+			.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
+		TransactionId transactionId = transactionSender.sendTransaction(transaction);
+
+		assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.id());
+
+		//verify sent requests data
+		assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID_FROM));
+		assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID_TO));
+		assertThat(mockWebServer.takeRequest().getBody().readUtf8(), equalTo(TX_BODY));
+        assertThat(mockWebServerHttp307.takeRequest().getBody().readUtf8(), equalTo(TX_BODY));
+	}
 
     @Test
     public void sendTransaction_FromAccountNotExist() throws Exception {
