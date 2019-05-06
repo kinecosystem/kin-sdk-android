@@ -160,10 +160,10 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	private void replaceFragment(Fragment backupFragment, @Nullable String backStackName, @NonNull String tag) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
 			.setCustomAnimations(
-				R.anim.kinrecovery_slide_in_right,
-				R.anim.kinrecovery_slide_out_left,
-				R.anim.kinrecovery_slide_in_left,
-				R.anim.kinrecovery_slide_out_right)
+                R.anim.backup_and_restore_slide_in_right,
+                R.anim.backup_and_restore_slide_out_left,
+                R.anim.backup_and_restore_slide_in_left,
+                R.anim.backup_and_restore_slide_out_right)
 			.replace(R.id.fragment_frame, backupFragment, tag);
 
 		if (backStackName != null) {
@@ -176,7 +176,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	public void close() {
 		closeKeyboard(); // Verify the keyboard is hidden
 		finish();
-		overridePendingTransition(0, R.anim.kinrecovery_slide_out_right);
+        overridePendingTransition(0, R.anim.backup_and_restore_slide_out_right);
 	}
 
 	@Override
@@ -212,7 +212,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 		super.onBackPressed();
 		if (count == 0) {
 			closeKeyboard(); // Verify the keyboard is hidden
-			overridePendingTransition(0, R.anim.kinrecovery_slide_out_right);
+            overridePendingTransition(0, R.anim.backup_and_restore_slide_out_right);
 		}
 	}
 

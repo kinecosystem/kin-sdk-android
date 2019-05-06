@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -51,6 +50,7 @@ public class PasswordEditText extends LinearLayout {
 	private boolean isRevealPressed;
 	private final int passInputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
 	private Typeface passwordTextTypeface;
+	private OnFocusChangeListener externalOnFocusChangedLister;
 
 	public PasswordEditText(Context context) {
 		super(context, null);
@@ -112,6 +112,11 @@ public class PasswordEditText extends LinearLayout {
 				if (hasFocus) {
 					openKeyboard();
 				}
+
+				if (externalOnFocusChangedLister != null) {
+					externalOnFocusChangedLister.onFocusChange(v, hasFocus);
+				}
+
 			}
 		});
 		passwordField.setGravity(Gravity.CENTER_VERTICAL);
@@ -204,7 +209,6 @@ public class PasswordEditText extends LinearLayout {
 	}
 
 	private void setInputAsPasswordDots() {
-		setRevealIconColor(R.color.backupAndRestore_gray);
 		passwordField.setInputType(passInputType);
 		passwordField.setTransformationMethod(LargePasswordDotsTransformationMethod.getInstance());
 		passwordField.setTypeface(passwordTextTypeface);
@@ -218,7 +222,6 @@ public class PasswordEditText extends LinearLayout {
 	}
 
 	private void setInputAsVisibleChars() {
-		setRevealIconColor(R.color.backupAndRestore_black);
 		passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_FILTER);
 		passwordField.setTransformationMethod(null);
 		passwordField.setTypeface(passwordTextTypeface);
@@ -240,7 +243,7 @@ public class PasswordEditText extends LinearLayout {
 		if (isVisible) {
 			isRevealIconVisible = true;
 			if (revealDrawable == null) {
-				revealDrawable = ContextCompat.getDrawable(getContext(), R.drawable.grey_reveal_icon);
+				revealDrawable = ContextCompat.getDrawable(getContext(), R.drawable.show_password);
 				passwordField.setCompoundDrawablesWithIntrinsicBounds(null, null, revealDrawable, null);
 			} else {
 				revealDrawable.setVisible(true, true);
@@ -254,16 +257,12 @@ public class PasswordEditText extends LinearLayout {
 		}
 	}
 
-	public void setRevealIconColor(@ColorRes final int colorRes) {
-		Drawable revealDrawable = passwordField.getCompoundDrawables()[DRAWABLE_RIGHT];
-		if (revealDrawable != null) {
-			final int color = ContextCompat.getColor(getContext(), colorRes);
-			revealDrawable.setColorFilter(color, Mode.SRC_ATOP);
-		}
-	}
-
 	public void addTextChangedListener(final TextWatcher textWatcher) {
 		passwordField.addTextChangedListener(textWatcher);
+	}
+
+	public void setOnFocusChangeListener(OnFocusChangeListener onFocusChangeListener) {
+		this.externalOnFocusChangedLister = onFocusChangeListener;
 	}
 
 	public String getText() {

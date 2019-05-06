@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -110,6 +111,14 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 	}
 
 	private void initEnterPasswordText() {
+		OnFocusChangeListener onFocusChangeListener = new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+//				if (hasFocus) {
+//					createPasswordPresenter.set(editable.toString(), confirmPassEditText.getText());
+//				}
+			}
+		};
 		enterPassTextWatcherAdapter = new TextWatcherAdapter(new TextChangeListener() {
 			@Override
 			public void afterTextChanged(Editable editable) {

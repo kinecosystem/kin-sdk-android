@@ -41,19 +41,18 @@ public class RestoreCompletedFragment extends Fragment implements RestoreComplet
 
 	private void initToolbar() {
 		BaseToolbarActivity toolbarActivity = (BaseToolbarActivity) getActivity();
-		toolbarActivity.setNavigationIcon(R.drawable.back);
+        toolbarActivity.hideNavigationIcon();
 		toolbarActivity.setToolbarColor(android.R.color.white);
 		toolbarActivity.setToolbarTitle(R.string.backup_and_restore_restore_completed_title);
 		toolbarActivity.setNavigationClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				presenter.onBackClicked();
 			}
 		});
 	}
 
 	private void initViews(View root) {
-		root.findViewById(R.id.kinrecovery_v_btn).setOnClickListener(new OnClickListener() {
+        root.findViewById(R.id.backup_and_restore_v_btn).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				presenter.close();

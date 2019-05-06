@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/backupAndRestore_margin_large"
-        android:src="@drawable/kinrecovery_password_recovery_qr_code_icon"
+        android:src="@drawable/backup_and_restore_password_recovery_qr_code_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -38,7 +38,7 @@
 
 
     <ImageView
-        android:id="@+id/kinrecovery_v_btn"
+        android:id="@+id/backup_and_restore_v_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/backupAndRestore_margin_extra_large"

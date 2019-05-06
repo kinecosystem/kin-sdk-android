@@ -13,7 +13,6 @@
     <string name="backup_and_restore_upload_qr_btn">Upload QR code</string>
     <string name="backup_and_restore_restore_consent_title">Are you sure you want to restore your previous balance?</string>
     <string name="backup_and_restore_consent_message">Restoring your old balance will replace your current Kin balance.</string>
-    <string name="backup_and_restore_password_restore_title">Enter Your Password</string>
     <string name="backup_and_restore_password_recovery_content">Now, enter your password</string>
     <string name="backup_and_restore_done">Done</string>
     <string name="backup_and_restore_all_set">All set!\n
@@ -48,12 +47,9 @@ It should have: at least 9 characters, including 1 uppercase, 1 special characte
         and keep your QR code handy</string>
     <string name="backup_and_restore_save_your_qr_code_description">Now, save your unique QR code by emailing it to yourself.
 You\'ll need it to load your Kin from a backup later on.</string>
-    <string name="backup_and_restore_save_your_qr_code">Save your QR Code</string>
     <string name="backup_and_restore_my_kin_wallet_qr_code">Save your QR code</string>
     <string name="backup_and_restore_backup_created_on">Backup created on:</string>
     <string name="backup_and_restore_send_email">Send email…</string>
-    <string name="backup_and_restore_to_load_your_kin_from_backup">To load your Kin from a backup later on,\n
-        you’ll need your password and QR code.</string>
     <string name="backup_and_restore_well_your_kin_is_safe_title">Your Kin is backed up and safe!</string>
     <string name="backup_and_restore_well_your_kin_is_safe_description">To load your Kin from a backup later on,
         you’ll need your password and QR code</string>

@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -84,6 +85,10 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 
 	public void setNavigationIcon(VectorDrawableCompat vectorDrawable) {
 		topToolBar.setNavigationIcon(vectorDrawable);
+	}
+
+	public void hideNavigationIcon() {
+		topToolBar.setNavigationIcon(new ColorDrawable(Color.TRANSPARENT));
 	}
 
 	public void setToolbarColor(@ColorRes int colorRes) {
