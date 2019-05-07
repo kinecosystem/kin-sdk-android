@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog.Builder;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +18,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import kin.backupandrestore.R;
 import kin.backupandrestore.backup.presenter.CreatePasswordPresenter;
 import kin.backupandrestore.backup.presenter.CreatePasswordPresenterImpl;
-import kin.backupandrestore.backup.view.TextWatcherAdapter.TextChangeListener;
 import kin.backupandrestore.base.KeyboardHandler;
 import kin.backupandrestore.events.BroadcastManagerImpl;
 import kin.backupandrestore.events.CallbackManager;
@@ -37,9 +35,6 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 		fragment.setKinAccount(kinAccount);
 		return fragment;
 	}
-
-	private TextWatcherAdapter confirmPassTextWatcherAdapter;
-	private TextWatcherAdapter enterPassTextWatcherAdapter;
 
 	private BackupNavigator nextStepListener;
 	private KeyboardHandler keyboardHandler;
@@ -105,7 +100,7 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 		nextButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				createPasswordPresenter.nextButtonClicked(enterPassEditText.getText());
+				createPasswordPresenter.nextButtonClicked(confirmPassEditText.getText(), enterPassEditText.getText());
 			}
 		});
 	}
@@ -114,33 +109,32 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 		OnFocusChangeListener onFocusChangeListener = new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-//				if (hasFocus) {
-//					createPasswordPresenter.set(editable.toString(), confirmPassEditText.getText());
-//				}
+				if (!hasFocus) {
+					if (createPasswordPresenter != null) {
+						createPasswordPresenter
+							.passwordChanged(enterPassEditText.getText(), confirmPassEditText.getText(), false);
+					}
+				}
 			}
 		};
-		enterPassTextWatcherAdapter = new TextWatcherAdapter(new TextChangeListener() {
-			@Override
-			public void afterTextChanged(Editable editable) {
-				createPasswordPresenter
-					.enterPasswordChanged(editable.toString(), confirmPassEditText.getText());
-			}
-		});
-		enterPassEditText.addTextChangedListener(enterPassTextWatcherAdapter);
+		enterPassEditText.setOnFocusChangeListener(onFocusChangeListener);
 		enterPassEditText.setFrameBackgroundColor(R.color.backupAndRestore_black);
 		openKeyboard(enterPassEditText);
 	}
 
 	private void initConfirmPassword() {
-		confirmPassTextWatcherAdapter = new TextWatcherAdapter(new TextChangeListener() {
+		OnFocusChangeListener onFocusChangeListener = new OnFocusChangeListener() {
 			@Override
-			public void afterTextChanged(Editable editable) {
-				createPasswordPresenter.confirmPasswordChanged(enterPassEditText.getText(),
-					editable.toString());
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					if (createPasswordPresenter != null) {
+						createPasswordPresenter
+							.passwordChanged(confirmPassEditText.getText(), enterPassEditText.getText(), true);
+					}
+				}
 			}
-		});
-		confirmPassEditText.addTextChangedListener(confirmPassTextWatcherAdapter);
-
+		};
+		confirmPassEditText.setOnFocusChangeListener(onFocusChangeListener);
 		confirmPassEditText.setFrameBackgroundColor(R.color.backupAndRestore_black);
 	}
 
@@ -195,8 +189,14 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 			confirmPassEditText.removeError();
 		} else {
 			confirmPassEditText.setFrameBackgroundColor(R.color.backupAndRestore_red);
-			confirmPassEditText.showError(R.string.backup_and_restore_password_does_not_match);
+			confirmPassEditText.showError(R.string.backup_and_restore_password_does_not_meet_req_above);
 		}
+	}
+
+	@Override
+	public void setPasswordDoesNotMatch() {
+		confirmPassEditText.setFrameBackgroundColor(R.color.backupAndRestore_red);
+		confirmPassEditText.showError(R.string.backup_and_restore_password_does_not_match);
 	}
 
 	@Override
@@ -228,11 +228,4 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 			.show();
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		confirmPassTextWatcherAdapter.release();
-		enterPassTextWatcherAdapter.release();
-	}
 }

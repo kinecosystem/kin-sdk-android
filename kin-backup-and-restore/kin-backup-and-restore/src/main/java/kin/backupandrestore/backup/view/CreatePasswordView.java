@@ -19,4 +19,6 @@ public interface CreatePasswordView extends BaseView {
 	void resetEnterPasswordField();
 
 	void resetConfirmPasswordField();
+
+	void setPasswordDoesNotMatch();
 }
