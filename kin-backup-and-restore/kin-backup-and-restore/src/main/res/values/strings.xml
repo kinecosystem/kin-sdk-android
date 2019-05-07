@@ -35,8 +35,8 @@ Your Kin balance is updated</string>
 To do this, you’ll first need to create a password and save your unique QR code somewhere you can access it later.</string>
     <string name="backup_and_restore_keep_your_kin_safe">Keep your Kin Safe</string>
     <string name="backup_and_restore_lets_go">Let\'s Go</string>
-    <string name="backup_and_restore_create_password_description">To back up your Kin, first create a strong password.\n
-It should have: at least 9 characters, including 1 uppercase, 1 special character (\"#, !, @\") and 1 number.</string>
+    <string name="backup_and_restore_create_password_description_part_a">To back up your Kin, first create a strong password. It should have:</string>
+    <string name="backup_and_restore_create_password_description_part_b">at least 9 characters, including 1 uppercase, 1 special character (\"#, !, @\") and 1 number.</string>
     <string name="backup_and_restore_confirm_password">Confirm password</string>
     <string name="backup_and_restore_next">Next</string>
     <string name="backup_and_restore_i_understand_password_description">I understand that I won\’t be able to restore my Kin without this password.</string>
