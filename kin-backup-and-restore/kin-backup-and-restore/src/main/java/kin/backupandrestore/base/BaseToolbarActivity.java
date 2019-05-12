@@ -5,7 +5,9 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -62,7 +64,7 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 	}
 
 	private int getColorFromBundle(Bundle savedInstanceState) {
-		final int defaultColor = ContextCompat.getColor(getApplicationContext(), R.color.kinrecovery_white);
+		final int defaultColor = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
 		return savedInstanceState != null ? savedInstanceState
 			.getInt(BACKGROUND_COLOR, defaultColor) : defaultColor;
 	}
@@ -79,6 +81,14 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 
 	public void setNavigationIcon(@DrawableRes int iconRes) {
 		topToolBar.setNavigationIcon(iconRes);
+	}
+
+    public void setNavigationIcon(Drawable drawable) {
+        topToolBar.setNavigationIcon(drawable);
+	}
+
+	public void hideNavigationIcon() {
+		topToolBar.setNavigationIcon(new ColorDrawable(Color.TRANSPARENT));
 	}
 
 	public void setToolbarColor(@ColorRes int colorRes) {
@@ -109,7 +119,7 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 	}
 
 	public void setStep(int current, int total) {
-		stepsText.setText(getString(R.string.kinrecovery_steps_format, current, total));
+		stepsText.setText(getString(R.string.backup_and_restore_steps_format, current, total));
 	}
 
 	public void clearSteps() {

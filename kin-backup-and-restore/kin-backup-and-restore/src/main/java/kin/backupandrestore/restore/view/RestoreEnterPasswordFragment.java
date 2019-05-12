@@ -59,7 +59,7 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 		@Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.kinrecovery_fragment_password_restore, container, false);
+		View root = inflater.inflate(R.layout.backup_and_restore_fragment_password_restore, container, false);
 		initToolbar();
 		initViews(root);
 
@@ -96,9 +96,10 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
 
 	private void initToolbar() {
 		BaseToolbarActivity toolbarActivity = (BaseToolbarActivity) getActivity();
-		toolbarActivity.setNavigationIcon(R.drawable.kinrecovery_ic_back_black);
-		toolbarActivity.setToolbarColor(R.color.kinrecovery_white);
-		toolbarActivity.setToolbarTitle(R.string.kinrecovery_password_restore_title);
+		toolbarActivity
+            .setNavigationIcon(R.drawable.back);
+		toolbarActivity.setToolbarColor(android.R.color.white);
+		toolbarActivity.setToolbarTitle(R.string.backup_and_restore_upload_qr_title);
 		toolbarActivity.setNavigationClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -125,6 +126,7 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
 		});
 
 		password.addTextChangedListener(textWatcherAdapter);
+        password.setFrameBackgroundColor(R.color.backup_and_restore_black);
 		password.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -147,21 +149,23 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
 	public void disableDoneButton() {
 		doneBtn.setEnabled(false);
 		doneBtn.setClickable(false);
-		password.setFrameBackgroundColor(R.color.kinrecovery_gray);
+        password.setFrameBackgroundColor(R.color.backup_and_restore_black);
 	}
 
 	@Override
 	public void decodeError() {
-		contentText.setText(R.string.kinrecovery_restore_password_error);
-		contentText.setTextColor(ContextCompat.getColor(getContext(), R.color.kinrecovery_red));
-		password.setFrameBackgroundColor(R.color.kinrecovery_red);
+		contentText.setText(R.string.backup_and_restore_restore_password_error);
+        contentText.setTextColor(ContextCompat.getColor(getContext(), R.color.backup_and_restore_red));
+        password.setFrameBackgroundColor(R.color.backup_and_restore_red);
+        password.setTextColor(R.color.backup_and_restore_gray);
 	}
 
 	@Override
 	public void invalidQrError() {
-		contentText.setText(R.string.kinrecovery_restore_invalid_qr);
-		contentText.setTextColor(ContextCompat.getColor(getContext(), R.color.kinrecovery_red));
-		password.setFrameBackgroundColor(R.color.kinrecovery_red);
+		contentText.setText(R.string.backup_and_restore_restore_invalid_qr);
+        contentText.setTextColor(ContextCompat.getColor(getContext(), R.color.backup_and_restore_red));
+        password.setFrameBackgroundColor(R.color.backup_and_restore_red);
+        password.setTextColor(R.color.backup_and_restore_gray);
 	}
 
 	@Override

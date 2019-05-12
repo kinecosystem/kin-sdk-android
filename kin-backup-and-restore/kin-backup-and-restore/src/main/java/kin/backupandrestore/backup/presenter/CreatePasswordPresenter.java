@@ -5,13 +5,13 @@ import kin.backupandrestore.base.BasePresenter;
 
 public interface CreatePasswordPresenter extends BasePresenter<CreatePasswordView> {
 
-	void enterPasswordChanged(String password, String confirmPassword);
+    void passwordCheck(String changedPassword, String otherPassword, boolean isConfirmPassword);
 
-	void confirmPasswordChanged(String mainPassword, String confirmPassword);
+    void iUnderstandChecked(boolean isChecked, String enterPassword, String confirmPassword);
 
-	void iUnderstandChecked(boolean isChecked);
+	void nextButtonClicked(String confirmPassword, String password);
 
-	void nextButtonClicked(String password);
+    void checkAllCompleted(String password, String otherPassword);
 
 	void onRetryClicked(String password);
 }

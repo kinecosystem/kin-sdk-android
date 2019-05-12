@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -53,7 +54,7 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 		@Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.kinrecovery_fragment_backup_create_password, container, false);
+		View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_create_password, container, false);
 		initViews(root);
 		createPasswordPresenter = new CreatePasswordPresenterImpl(
 			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener,
@@ -88,7 +89,11 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 		iUnderstandCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				createPasswordPresenter.iUnderstandChecked(isChecked);
+				createPasswordPresenter
+					.iUnderstandChecked(isChecked, enterPassEditText.getText(), confirmPassEditText.getText());
+				enterPassEditText.clearFocus();
+				confirmPassEditText.clearFocus();
+				closeKeyboard();
 			}
 		});
 
@@ -104,35 +109,51 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 		nextButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				createPasswordPresenter.nextButtonClicked(enterPassEditText.getText());
+				createPasswordPresenter.nextButtonClicked(confirmPassEditText.getText(), enterPassEditText.getText());
 			}
 		});
 	}
 
 	private void initEnterPasswordText() {
-		enterPassTextWatcherAdapter = new TextWatcherAdapter(new TextChangeListener() {
-			@Override
-			public void afterTextChanged(Editable editable) {
-				createPasswordPresenter
-					.enterPasswordChanged(editable.toString(), confirmPassEditText.getText());
-			}
-		});
-		enterPassEditText.addTextChangedListener(enterPassTextWatcherAdapter);
-		enterPassEditText.setFrameBackgroundColor(R.color.kinrecovery_gray);
+		enterPassTextWatcherAdapter = createTextWatcheListener(enterPassEditText, confirmPassEditText);
+		setOnFocusChangeListener(enterPassEditText, confirmPassEditText, false);
+		enterPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_black);
 		openKeyboard(enterPassEditText);
 	}
 
 	private void initConfirmPassword() {
-		confirmPassTextWatcherAdapter = new TextWatcherAdapter(new TextChangeListener() {
+		confirmPassTextWatcherAdapter = createTextWatcheListener(confirmPassEditText, enterPassEditText);
+		setOnFocusChangeListener(confirmPassEditText, enterPassEditText, true);
+		confirmPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_black);
+	}
+
+	private TextWatcherAdapter createTextWatcheListener(PasswordEditText watchedPassEditText,
+		final PasswordEditText otherPassEditText) {
+		TextWatcherAdapter textWatcherAdapter = new TextWatcherAdapter(new TextChangeListener() {
 			@Override
 			public void afterTextChanged(Editable editable) {
-				createPasswordPresenter.confirmPasswordChanged(enterPassEditText.getText(),
-					editable.toString());
+				createPasswordPresenter.checkAllCompleted(editable.toString(), otherPassEditText.getText());
 			}
 		});
-		confirmPassEditText.addTextChangedListener(confirmPassTextWatcherAdapter);
+		watchedPassEditText.addTextChangedListener(textWatcherAdapter);
+		return textWatcherAdapter;
+	}
 
-		confirmPassEditText.setFrameBackgroundColor(R.color.kinrecovery_gray);
+	private void setOnFocusChangeListener(final PasswordEditText checkedPassEditText,
+		final PasswordEditText otherPassEditText, final boolean isConfirmPassword) {
+		OnFocusChangeListener onFocusChangeListener = new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					if (createPasswordPresenter != null) {
+						createPasswordPresenter
+							.passwordCheck(checkedPassEditText.getText(), otherPassEditText.getText(),
+								isConfirmPassword);
+					}
+				}
+			}
+		};
+		checkedPassEditText.setOnFocusChangeListener(onFocusChangeListener);
 	}
 
 	public void setNextStepListener(@NonNull final BackupNavigator nextStepListener) {
@@ -158,36 +179,42 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 
 	@Override
 	public void resetEnterPasswordField() {
-		enterPassEditText.setFrameBackgroundColor(R.color.kinrecovery_gray);
+		enterPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_black);
 		enterPassEditText.removeError();
 	}
 
 	@Override
 	public void resetConfirmPasswordField() {
-		confirmPassEditText.setFrameBackgroundColor(R.color.kinrecovery_gray);
+		confirmPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_black);
 		confirmPassEditText.removeError();
 	}
 
 	@Override
 	public void setEnterPasswordIsCorrect(boolean isCorrect) {
 		if (isCorrect) {
-			enterPassEditText.setFrameBackgroundColor(R.color.kinrecovery_bluePrimary);
+			enterPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_purple_blue);
 			enterPassEditText.removeError();
 		} else {
-			enterPassEditText.setFrameBackgroundColor(R.color.kinrecovery_red);
-			enterPassEditText.showError(R.string.kinrecovery_password_does_not_meet_req_above);
+			enterPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_red);
+			enterPassEditText.showError(R.string.backup_and_restore_password_does_not_meet_req_above);
 		}
 	}
 
 	@Override
 	public void setConfirmPasswordIsCorrect(boolean isCorrect) {
 		if (isCorrect) {
-			confirmPassEditText.setFrameBackgroundColor(R.color.kinrecovery_bluePrimary);
+			confirmPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_purple_blue);
 			confirmPassEditText.removeError();
 		} else {
-			confirmPassEditText.setFrameBackgroundColor(R.color.kinrecovery_red);
-			confirmPassEditText.showError(R.string.kinrecovery_password_does_not_match);
+			confirmPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_red);
+			confirmPassEditText.showError(R.string.backup_and_restore_password_does_not_meet_req_above);
 		}
+	}
+
+	@Override
+	public void setPasswordDoesNotMatch() {
+		confirmPassEditText.setFrameBackgroundColor(R.color.backup_and_restore_red);
+		confirmPassEditText.showError(R.string.backup_and_restore_password_does_not_match);
 	}
 
 	@Override
@@ -205,16 +232,16 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
 
 	@Override
 	public void showBackupFailed() {
-		new Builder(getActivity(), R.style.KinrecoveryAlertDialogTheme)
-			.setTitle(R.string.kinrecovery_something_went_wrong_title)
-			.setMessage(R.string.kinrecovery_we_had_some_issues_to_create_backup)
-			.setPositiveButton(R.string.kinrecovery_try_again, new DialogInterface.OnClickListener() {
+		new Builder(getActivity(), R.style.BackupAndRestoreAlertDialogTheme)
+			.setTitle(R.string.backup_and_restore_something_went_wrong_title)
+			.setMessage(R.string.backup_and_restore_we_had_some_issues_to_create_backup)
+			.setPositiveButton(R.string.backup_and_restore_try_again, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					createPasswordPresenter.onRetryClicked(enterPassEditText.getText());
 				}
 			})
-			.setNegativeButton(R.string.kinrecovery_cancel, null)
+			.setNegativeButton(R.string.backup_and_restore_cancel, null)
 			.create()
 			.show();
 	}

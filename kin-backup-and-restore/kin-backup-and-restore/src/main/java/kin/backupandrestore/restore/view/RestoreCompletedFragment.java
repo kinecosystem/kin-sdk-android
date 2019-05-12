@@ -25,7 +25,7 @@ public class RestoreCompletedFragment extends Fragment implements RestoreComplet
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 		@Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.kinrecovery_fragment_restore_completed, container, false);
+		View root = inflater.inflate(R.layout.backup_and_restore_fragment_restore_completed, container, false);
 
 		injectPresenter();
 		presenter.onAttach(this, ((RestoreActivity) getActivity()).getPresenter());
@@ -41,19 +41,18 @@ public class RestoreCompletedFragment extends Fragment implements RestoreComplet
 
 	private void initToolbar() {
 		BaseToolbarActivity toolbarActivity = (BaseToolbarActivity) getActivity();
-		toolbarActivity.setNavigationIcon(R.drawable.kinrecovery_ic_back_black);
-		toolbarActivity.setToolbarColor(R.color.kinrecovery_white);
-		toolbarActivity.setToolbarTitle(R.string.kinrecovery_restore_completed_title);
+        toolbarActivity.hideNavigationIcon();
+		toolbarActivity.setToolbarColor(android.R.color.white);
+		toolbarActivity.setToolbarTitle(R.string.backup_and_restore_restore_completed_title);
 		toolbarActivity.setNavigationClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				presenter.onBackClicked();
 			}
 		});
 	}
 
 	private void initViews(View root) {
-		root.findViewById(R.id.kinrecovery_v_btn).setOnClickListener(new OnClickListener() {
+        root.findViewById(R.id.backup_and_restore_v_btn).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				presenter.close();

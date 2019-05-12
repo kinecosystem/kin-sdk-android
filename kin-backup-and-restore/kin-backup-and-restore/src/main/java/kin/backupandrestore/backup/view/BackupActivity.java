@@ -1,12 +1,14 @@
 package kin.backupandrestore.backup.view;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
@@ -34,7 +36,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@Override
 	protected int getContentLayout() {
-		return R.layout.kinrecovery_frgment_activity;
+		return R.layout.backup_and_restore_frgment_activity;
 	}
 
 	@Override
@@ -83,8 +85,9 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@Override
 	public void startBackupFlow() {
-		setToolbarColor(R.color.kinrecovery_bluePrimary);
-		setNavigationIcon(R.drawable.kinrecovery_ic_back);
+		setToolbarColor(android.R.color.white);
+		Drawable vectorDrawable = AppCompatResources.getDrawable(this, R.drawable.back);
+		setNavigationIcon(vectorDrawable);
 		setToolbarTitle(EMPTY_TITLE);
 		BackupInfoFragment backupInfoFragment = (BackupInfoFragment) getSupportFragmentManager()
 			.findFragmentByTag(BackupInfoFragment.class.getSimpleName());
@@ -102,9 +105,9 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@Override
 	public void moveToCreatePasswordPage() {
-		setToolbarColorWithAnim(R.color.kinrecovery_white, TOOLBAR_COLOR_ANIM_DURATION);
-		setNavigationIcon(R.drawable.kinrecovery_ic_back_black);
-		setToolbarTitle(R.string.kinrecovery_keep_your_kin_safe);
+		setToolbarColorWithAnim(android.R.color.white, TOOLBAR_COLOR_ANIM_DURATION);
+		setNavigationIcon(R.drawable.back);
+		setToolbarTitle(R.string.backup_and_restore_create_password);
 		setStep(1, 2);
 		CreatePasswordFragment createPasswordFragment = getSavedCreatePasswordFragment();
 
@@ -120,8 +123,8 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@Override
 	public void moveToSaveAndSharePage(String key) {
-		setNavigationIcon(R.drawable.kinrecovery_ic_back_black);
-		setToolbarTitle(R.string.kinrecovery_keep_your_kin_safe);
+		setNavigationIcon(R.drawable.back);
+		setToolbarTitle(R.string.backup_and_restore_my_kin_wallet_qr_code);
 		setStep(2, 2);
 		backupPresenter.setAccountKey(key);
 		SaveAndShareFragment saveAndShareFragment = (SaveAndShareFragment) getSupportFragmentManager()
@@ -139,8 +142,8 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@Override
 	public void moveToWellDonePage() {
-		setToolbarColorWithAnim(R.color.kinrecovery_bluePrimary, TOOLBAR_COLOR_ANIM_DURATION);
-		setNavigationIcon(R.drawable.kinrecovery_close_icon);
+		setToolbarColorWithAnim(android.R.color.white, TOOLBAR_COLOR_ANIM_DURATION);
+		setNavigationIcon(R.drawable.close);
 		setToolbarTitle(EMPTY_TITLE);
 		clearSteps();
 		WellDoneBackupFragment wellDoneFragment = (WellDoneBackupFragment) getSupportFragmentManager()
@@ -156,10 +159,10 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	private void replaceFragment(Fragment backupFragment, @Nullable String backStackName, @NonNull String tag) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
 			.setCustomAnimations(
-				R.anim.kinrecovery_slide_in_right,
-				R.anim.kinrecovery_slide_out_left,
-				R.anim.kinrecovery_slide_in_left,
-				R.anim.kinrecovery_slide_out_right)
+                R.anim.backup_and_restore_slide_in_right,
+                R.anim.backup_and_restore_slide_out_left,
+                R.anim.backup_and_restore_slide_in_left,
+                R.anim.backup_and_restore_slide_out_right)
 			.replace(R.id.fragment_frame, backupFragment, tag);
 
 		if (backStackName != null) {
@@ -172,12 +175,12 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	public void close() {
 		closeKeyboard(); // Verify the keyboard is hidden
 		finish();
-		overridePendingTransition(0, R.anim.kinrecovery_slide_out_right);
+        overridePendingTransition(0, R.anim.backup_and_restore_slide_out_right);
 	}
 
 	@Override
 	public void showError() {
-		Toast.makeText(this, R.string.kinrecovery_something_went_wrong_title, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.backup_and_restore_something_went_wrong_title, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -208,7 +211,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 		super.onBackPressed();
 		if (count == 0) {
 			closeKeyboard(); // Verify the keyboard is hidden
-			overridePendingTransition(0, R.anim.kinrecovery_slide_out_right);
+            overridePendingTransition(0, R.anim.backup_and_restore_slide_out_right);
 		}
 	}
 

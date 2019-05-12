@@ -58,7 +58,7 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 
 	@Override
 	protected int getContentLayout() {
-		return R.layout.kinrecovery_frgment_activity;
+		return R.layout.backup_and_restore_frgment_activity;
 	}
 
 	@Override
@@ -118,8 +118,8 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 			transaction.setCustomAnimations(
 				0,
 				0,
-				R.anim.kinrecovery_slide_in_left,
-				R.anim.kinrecovery_slide_out_right);
+				R.anim.backup_and_restore_slide_in_left,
+				R.anim.backup_and_restore_slide_out_right);
 		}
 
 		transaction.replace(R.id.fragment_frame, fragment, tag).commit();
@@ -137,6 +137,9 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 				if (enterPasswordFragment != null) {
 					enterPasswordFragment.setKeyboardHandler(this);
 				}
+			} else if (entry.getName().equals(RestoreCompletedFragment.class.getSimpleName())) {
+				presenter.closeFlow();
+				return;
 			}
 		}
 		super.onBackPressed();
@@ -151,12 +154,12 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 	public void close() {
 		closeKeyboard(); // Verify the keyboard is hidden
 		finish();
-		overridePendingTransition(0, R.anim.kinrecovery_slide_out_right);
+		overridePendingTransition(0, R.anim.backup_and_restore_slide_out_right);
 	}
 
 	@Override
 	public void showError() {
-		Toast.makeText(this, R.string.kinrecovery_something_went_wrong_title, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.backup_and_restore_something_went_wrong_title, Toast.LENGTH_SHORT).show();
 	}
 
 	public RestorePresenter getPresenter() {

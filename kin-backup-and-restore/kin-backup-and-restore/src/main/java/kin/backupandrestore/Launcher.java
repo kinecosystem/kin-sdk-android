@@ -46,6 +46,7 @@ class Launcher {
 
 	private void startForResult(@NonNull final Intent intent, final int reqCode) {
 		activity.startActivityForResult(intent, reqCode);
-		activity.overridePendingTransition(R.anim.kinrecovery_slide_in_right, R.anim.kinrecovery_slide_out_left);
+        activity.overridePendingTransition(R.anim.backup_and_restore_slide_in_right,
+            R.anim.backup_and_restore_slide_out_left);
 	}
 }

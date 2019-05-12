@@ -22,7 +22,6 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 	private KinAccount kinAccount;
 
 	private boolean isPasswordRulesOK = false;
-	private boolean isPasswordsMatches = false;
 	private boolean isIUnderstandChecked = false;
 	private final Pattern pattern;
 
@@ -41,67 +40,58 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 	}
 
 	@Override
-	public void enterPasswordChanged(String password, String confirmPassword) {
-		if (validatePassword(password)) {
+	public void passwordCheck(String changedPassword, String otherPassword, boolean isConfirmPassword) {
+		boolean changedPasswordIsEmpty = changedPassword.isEmpty();
+		if (validatePassword(changedPassword)) {
 			isPasswordRulesOK = true;
-			if (view != null) {
-				view.setEnterPasswordIsCorrect(true);
-			}
-			checkConfirmPassword(password, confirmPassword);
+			handlePasswordCorrectness(isConfirmPassword, true);
 		} else {
 			isPasswordRulesOK = false;
-			if (password.isEmpty()) {
-				if (view != null) {
-					view.resetEnterPasswordField();
-					view.resetConfirmPasswordField();
-				}
+			if (changedPasswordIsEmpty) {
+				handlePasswordIsEmpty(isConfirmPassword);
 			} else {
-				if (view != null) {
-					view.setEnterPasswordIsCorrect(false);
-				}
-				checkConfirmPassword(password, confirmPassword);
+				handlePasswordCorrectness(isConfirmPassword, false);
 			}
 		}
-		checkAllCompleted();
+		checkAllCompleted(otherPassword, changedPassword);
 	}
 
-	private void checkConfirmPassword(String password, String confirmPassword) {
-		if (!password.isEmpty() && !confirmPassword.isEmpty()) {
-			if (password.equals(confirmPassword)) {
-				isPasswordsMatches = true;
-				if (view != null) {
-					view.setConfirmPasswordIsCorrect(true);
-					view.closeKeyboard();
-				}
+	private void handlePasswordCorrectness(boolean isConfirmPassword, boolean isCorrect) {
+		if (view != null) {
+			if (isConfirmPassword) {
+				view.setConfirmPasswordIsCorrect(isCorrect);
 			} else {
-				isPasswordsMatches = false;
-				if (view != null) {
-					view.setConfirmPasswordIsCorrect(false);
-				}
+				view.setEnterPasswordIsCorrect(isCorrect);
 			}
+		}
+	}
+
+	private void handlePasswordIsEmpty(boolean isConfirmPassword) {
+		if (view != null) {
+			if (isConfirmPassword) {
+				view.resetConfirmPasswordField();
+			} else {
+				view.resetEnterPasswordField();
+			}
+		}
+	}
+
+	@Override
+	public void iUnderstandChecked(boolean isChecked, String enterPassword, String confirmPassword) {
+		isIUnderstandChecked = isChecked;
+		checkAllCompleted(enterPassword, confirmPassword);
+	}
+
+	@Override
+	public void nextButtonClicked(String confirmPassword, String password) {
+		if (confirmPassword.equals(password)) {
+			callbackManager.sendBackupEvent(BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED);
+			exportAccount(password);
 		} else {
 			if (view != null) {
-				view.resetConfirmPasswordField();
+				view.setPasswordDoesNotMatch();
 			}
 		}
-	}
-
-	@Override
-	public void confirmPasswordChanged(String mainPassword, String confirmPassword) {
-		checkConfirmPassword(mainPassword, confirmPassword);
-		checkAllCompleted();
-	}
-
-	@Override
-	public void iUnderstandChecked(boolean isChecked) {
-		isIUnderstandChecked = isChecked;
-		checkAllCompleted();
-	}
-
-	@Override
-	public void nextButtonClicked(String password) {
-		callbackManager.sendBackupEvent(BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED);
-		exportAccount(password);
 	}
 
 	private void exportAccount(String password) {
@@ -120,8 +110,9 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 		exportAccount(password);
 	}
 
-	private void checkAllCompleted() {
-		if (isPasswordRulesOK && isPasswordsMatches && isIUnderstandChecked) {
+	@Override
+	public void checkAllCompleted(String password, String otherPassword) {
+		if (isPasswordRulesOK && isIUnderstandChecked && !(password.isEmpty() || otherPassword.isEmpty())) {
 			enableNextButton();
 		} else {
 			disableNextButton();

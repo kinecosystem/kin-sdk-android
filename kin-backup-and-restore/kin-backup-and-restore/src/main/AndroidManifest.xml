@@ -10,22 +10,22 @@
 
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/kinrecovery_file_provider_paths"/>
+                android:resource="@xml/backup_and_restore_file_provider_paths"/>
 
         </provider>
 
         <activity
-            android:label="@string/kinrecovery_backup"
+            android:label="@string/backup_and_restore_backup"
             android:name="kin.backupandrestore.backup.view.BackupActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/KinrecoveryNoActionBar"/>
+            android:theme="@style/BackupAndRestoreNoActionBar"/>
 
         <activity
-            android:label="@string/kinrecovery_restore"
+            android:label="@string/backup_and_restore_restore"
             android:name="kin.backupandrestore.restore.view.RestoreActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/KinrecoveryNoActionBar"/>
+            android:theme="@style/BackupAndRestoreNoActionBar"/>
 
     </application>
 </manifest>

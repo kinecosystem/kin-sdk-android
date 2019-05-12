@@ -57,7 +57,7 @@ public class SaveAndShareFragment extends Fragment implements SaveAndShareView {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 		@Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.kinrecovery_fragment_save_and_share_qr, container, false);
+		View root = inflater.inflate(R.layout.backup_and_restore_fragment_save_and_share_qr, container, false);
 		initViews(root);
 		String key = getArguments().getString(KEY_ACCOUNT_KEY, null);
 		final QRBarcodeGenerator qrBarcodeGenerator = new QRBarcodeGeneratorImpl(
@@ -110,10 +110,10 @@ public class SaveAndShareFragment extends Fragment implements SaveAndShareView {
 
 	@Override
 	public void showErrorTryAgainLater() {
-		new Builder(getActivity(), R.style.KinrecoveryAlertDialogTheme)
-			.setTitle(R.string.kinrecovery_something_went_wrong_title)
-			.setMessage(R.string.kinrecovery_could_not_load_the_qr_please_try_again_later)
-			.setNegativeButton(R.string.kinrecovery_cancel, null)
+		new Builder(getActivity(), R.style.BackupAndRestoreAlertDialogTheme)
+			.setTitle(R.string.backup_and_restore_something_went_wrong_title)
+			.setMessage(R.string.backup_and_restore_could_not_load_the_qr_please_try_again_later)
+			.setNegativeButton(R.string.backup_and_restore_cancel, null)
 			.create()
 			.show();
 	}
@@ -135,8 +135,8 @@ public class SaveAndShareFragment extends Fragment implements SaveAndShareView {
 
 	@Override
 	public void showSendIntent(Uri qrURI) {
-		String myKinWallet = getString(R.string.kinrecovery_my_kin_wallet_qr_code);
-		String backupCreated = getString(R.string.kinrecovery_backup_created_on);
+		String myKinWallet = getString(R.string.backup_and_restore_my_kin_wallet_qr_code);
+		String backupCreated = getString(R.string.backup_and_restore_backup_created_on);
 		Date date = Calendar.getInstance(TimeZone.getDefault()).getTime();
 		String dateString = SimpleDateFormat.getDateInstance().format(date);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm");
@@ -151,6 +151,6 @@ public class SaveAndShareFragment extends Fragment implements SaveAndShareView {
 			.putExtra(Intent.EXTRA_STREAM, qrURI)
 			.putExtra(Intent.EXTRA_SUBJECT, myKinWallet)
 			.putExtra(Intent.EXTRA_TEXT, subjectBuilder.toString());
-		startActivity(Intent.createChooser(emailIntent, getString(R.string.kinrecovery_send_email)));
+		startActivity(Intent.createChooser(emailIntent, getString(R.string.backup_and_restore_send_email)));
 	}
 }
