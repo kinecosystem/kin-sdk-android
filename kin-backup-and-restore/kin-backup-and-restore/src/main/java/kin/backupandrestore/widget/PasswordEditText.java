@@ -35,7 +35,7 @@ import kin.backupandrestore.R;
 
 public class PasswordEditText extends LinearLayout {
 
-	private static final float LETTER_SPACING_PASSWORD = 0.02f;
+	private static final float LETTER_SPACING_PASSWORD = 0.2f;
 	private static final float NO_LETTER_SPACING = 0f;
 	private static final int DRAWABLE_RIGHT = 2;
 
