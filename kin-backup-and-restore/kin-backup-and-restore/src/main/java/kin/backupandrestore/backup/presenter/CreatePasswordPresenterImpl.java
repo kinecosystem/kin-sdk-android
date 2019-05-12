@@ -23,7 +23,6 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 
 	private boolean isPasswordRulesOK = false;
 	private boolean isIUnderstandChecked = false;
-	private boolean isOnOfPasswordsEmpty = true;
 	private final Pattern pattern;
 
 	public CreatePasswordPresenterImpl(@NonNull final CallbackManager callbackManager,
@@ -41,7 +40,7 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 	}
 
 	@Override
-	public void passwordChanged(String changedPassword, String otherPassword, boolean isConfirmPassword) {
+	public void passwordCheck(String changedPassword, String otherPassword, boolean isConfirmPassword) {
 		boolean changedPasswordIsEmpty = changedPassword.isEmpty();
 		if (validatePassword(changedPassword)) {
 			isPasswordRulesOK = true;
@@ -54,8 +53,7 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 				handlePasswordCorrectness(isConfirmPassword, false);
 			}
 		}
-		isOnOfPasswordsEmpty = otherPassword.isEmpty() || changedPasswordIsEmpty;
-		checkAllCompleted();
+		checkAllCompleted(otherPassword, changedPassword);
 	}
 
 	private void handlePasswordCorrectness(boolean isConfirmPassword, boolean isCorrect) {
@@ -79,9 +77,9 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 	}
 
 	@Override
-	public void iUnderstandChecked(boolean isChecked) {
+	public void iUnderstandChecked(boolean isChecked, String enterPassword, String confirmPassword) {
 		isIUnderstandChecked = isChecked;
-		checkAllCompleted();
+		checkAllCompleted(enterPassword, confirmPassword);
 	}
 
 	@Override
@@ -112,8 +110,9 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
 		exportAccount(password);
 	}
 
-	private void checkAllCompleted() {
-		if (isPasswordRulesOK && isIUnderstandChecked && !isOnOfPasswordsEmpty) {
+	@Override
+	public void checkAllCompleted(String password, String otherPassword) {
+		if (isPasswordRulesOK && isIUnderstandChecked && !(password.isEmpty() || otherPassword.isEmpty())) {
 			enableNextButton();
 		} else {
 			disableNextButton();

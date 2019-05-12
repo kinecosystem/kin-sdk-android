@@ -15,9 +15,9 @@
     </style>
     <!-- This configures the styles for the title within the Toolbar  -->
     <style name="BackupAndRestoreToolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">@dimen/backupAndRestore_toolbar_text_size</item>
+        <item name="android:textSize">@dimen/backup_and_restore_toolbar_text_size</item>
         <item name="android:fontFamily">@font/work_sans_medium</item>
-        <item name="android:textColor">@color/backupAndRestore_black</item>
+        <item name="android:textColor">@color/backup_and_restore_black</item>
     </style>
 
     <style name="BackupAndRestoreAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -26,51 +26,51 @@
     </style>
 
     <style name="BackupAndRestoreDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">@color/backupAndRestore_purple_blue</item>
+        <item name="android:textColor">@color/backup_and_restore_purple_blue</item>
     </style>
 
     <style name="BackupAndRestoreAlertDialogTitleText">
-        <item name="android:textColor">@color/backupAndRestore_black</item>
-        <item name="android:textSize">@dimen/backupAndRestore_large_size</item>
+        <item name="android:textColor">@color/backup_and_restore_black</item>
+        <item name="android:textSize">@dimen/backup_and_restore_large_size</item>
         <item name="android:fontFamily">@font/work_sans_semi_bold</item>
     </style>
 
     <style name="BackupAndRestoreAlertDialogMessageText">
-        <item name="android:textColor">@color/backupAndRestore_dialog_message_gray</item>
-        <item name="android:textSize">@dimen/backupAndRestore_regular_size</item>
+        <item name="android:textColor">@color/backup_and_restore_dialog_message_gray</item>
+        <item name="android:textSize">@dimen/backup_and_restore_regular_size</item>
         <item name="android:fontFamily">@font/work_sans_regular</item>
     </style>
 
     <style name="BackupAndRestoreTitleBase">
-        <item name="android:textColor">@color/backupAndRestore_black</item>
+        <item name="android:textColor">@color/backup_and_restore_black</item>
         <item name="android:ellipsize">end</item>
         <item name="android:fontFamily">@font/work_sans_regular</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="BackupAndRestoreTitle" parent="BackupAndRestoreTitleBase">
-        <item name="android:textSize">@dimen/backupAndRestore_regular_size</item>
+        <item name="android:textSize">@dimen/backup_and_restore_regular_size</item>
     </style>
 
     <style name="BackupAndRestoreTitleSmall" parent="BackupAndRestoreTitleBase">
-        <item name="android:textColor">@color/backupAndRestore_black</item>
-        <item name="android:textSize">@dimen/backupAndRestore_small_size</item>
+        <item name="android:textColor">@color/backup_and_restore_black</item>
+        <item name="android:textSize">@dimen/backup_and_restore_small_size</item>
     </style>
 
     <style name="BackupAndRestoreTitleLargeBold" parent="BackupAndRestoreTitleBase">
-        <item name="android:textSize">@dimen/backupAndRestore_large_size</item>
+        <item name="android:textSize">@dimen/backup_and_restore_large_size</item>
         <item name="android:fontFamily">@font/work_sans_semi_bold</item>
     </style>
 
     <style name="BackupAndRestoreButton" parent="BackupAndRestoreTitleBase">
-        <item name="android:textSize">@dimen/backupAndRestore_btn_text_size</item>
+        <item name="android:textSize">@dimen/backup_and_restore_btn_text_size</item>
         <item name="android:fontFamily">@font/work_sans_medium</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="BackupAndRestoreCheckBox" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/backupAndRestore_black</item>
-        <item name="colorControlActivated">@color/backupAndRestore_purple_blue</item>
+        <item name="colorControlNormal">@color/backup_and_restore_black</item>
+        <item name="colorControlActivated">@color/backup_and_restore_purple_blue</item>
     </style>
 
 </resources>

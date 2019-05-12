@@ -83,7 +83,7 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
 
 	@Override
 	public void showConsentDialog() {
-		int leftRightPadding = (int) getResources().getDimension(R.dimen.backupAndRestore_dialog_left_right_padding);
+		int leftRightPadding = (int) getResources().getDimension(R.dimen.backup_and_restore_dialog_left_right_padding);
 		AlertDialog alertDialog = new Builder(getActivity(), R.style.BackupAndRestoreAlertDialogTheme)
 			.setCustomTitle(getDialogTitle(leftRightPadding))
 			.setMessage(R.string.backup_and_restore_consent_message)
@@ -109,7 +109,7 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
 		TextView titleTxtView = new TextView(getActivity());
 		titleTxtView.setTextAppearance(getActivity(), R.style.BackupAndRestoreAlertDialogTitleText);
 		titleTxtView.setText(R.string.backup_and_restore_restore_consent_title);
-		int titleTopPadding = (int) getResources().getDimension(R.dimen.backupAndRestore_dialog_title_top_padding);
+		int titleTopPadding = (int) getResources().getDimension(R.dimen.backup_and_restore_dialog_title_top_padding);
 		titleTxtView.setPadding(leftRightPadding, titleTopPadding, leftRightPadding, 0);
 		return titleTxtView;
 	}
@@ -120,7 +120,7 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
 			messageTextView.setTextAppearance(getActivity(), R.style.BackupAndRestoreAlertDialogMessageText);
 			messageTextView.setText(R.string.backup_and_restore_consent_message);
 			int messageTopPadding = (int) getResources()
-				.getDimension(R.dimen.backupAndRestore_dialog_message_top_padding);
+				.getDimension(R.dimen.backup_and_restore_dialog_message_top_padding);
 			messageTextView.setPadding(leftRightPadding, messageTopPadding, leftRightPadding, 0);
 		}
 	}

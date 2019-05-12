@@ -7,13 +7,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -83,8 +83,8 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
 		topToolBar.setNavigationIcon(iconRes);
 	}
 
-	public void setNavigationIcon(VectorDrawableCompat vectorDrawable) {
-		topToolBar.setNavigationIcon(vectorDrawable);
+    public void setNavigationIcon(Drawable drawable) {
+        topToolBar.setNavigationIcon(drawable);
 	}
 
 	public void hideNavigationIcon() {

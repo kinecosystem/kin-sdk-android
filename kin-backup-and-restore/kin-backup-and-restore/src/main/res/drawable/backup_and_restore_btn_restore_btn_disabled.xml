@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="@color/backupAndRestore_disabled_button"/>
+    <solid android:color="@color/backup_and_restore_disabled_button"/>
 
-    <corners android:radius="@dimen/backupAndRestore_button_corners_radius"/>
+    <corners android:radius="@dimen/backup_and_restore_button_corners_radius"/>
 </shape>

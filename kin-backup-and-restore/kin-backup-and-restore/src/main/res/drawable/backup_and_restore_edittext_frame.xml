@@ -5,9 +5,9 @@
     <solid android:color="@android:color/transparent"/>
 
     <stroke
-        android:color="@color/backupAndRestore_black"
-        android:width="@dimen/backupAndRestore_edittext_stroke_width"/>
+        android:color="@color/backup_and_restore_black"
+        android:width="@dimen/backup_and_restore_edittext_stroke_width"/>
 
-    <corners android:radius="@dimen/backupAndRestore_edittext_corners_radius"/>
+    <corners android:radius="@dimen/backup_and_restore_edittext_corners_radius"/>
 
 </shape>

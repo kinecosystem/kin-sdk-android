@@ -1,13 +1,14 @@
 package kin.backupandrestore.backup.view;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
@@ -85,9 +86,8 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	@Override
 	public void startBackupFlow() {
 		setToolbarColor(android.R.color.white);
-		// TODO: 08/04/2019 check also if maybe we can just give the id
-		VectorDrawableCompat vectorDrawableCompat = VectorDrawableCompat.create(getResources(), R.drawable.back, null);
-		setNavigationIcon(vectorDrawableCompat);
+		Drawable vectorDrawable = AppCompatResources.getDrawable(this, R.drawable.back);
+		setNavigationIcon(vectorDrawable);
 		setToolbarTitle(EMPTY_TITLE);
 		BackupInfoFragment backupInfoFragment = (BackupInfoFragment) getSupportFragmentManager()
 			.findFragmentByTag(BackupInfoFragment.class.getSimpleName());
@@ -106,7 +106,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 	@Override
 	public void moveToCreatePasswordPage() {
 		setToolbarColorWithAnim(android.R.color.white, TOOLBAR_COLOR_ANIM_DURATION);
-		setNavigationIcon(R.drawable.back); // TODO: 10/04/2019  may need to handle vector drawable here
+		setNavigationIcon(R.drawable.back);
 		setToolbarTitle(R.string.backup_and_restore_create_password);
 		setStep(1, 2);
 		CreatePasswordFragment createPasswordFragment = getSavedCreatePasswordFragment();
@@ -123,7 +123,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@Override
 	public void moveToSaveAndSharePage(String key) {
-		setNavigationIcon(R.drawable.back); // TODO: 10/04/2019  may need to handle vector drawable here
+		setNavigationIcon(R.drawable.back);
 		setToolbarTitle(R.string.backup_and_restore_my_kin_wallet_qr_code);
 		setStep(2, 2);
 		backupPresenter.setAccountKey(key);
@@ -142,8 +142,7 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
 	@Override
 	public void moveToWellDonePage() {
-		setToolbarColorWithAnim(android.R.color.white,
-			TOOLBAR_COLOR_ANIM_DURATION); // TODO: 10/04/2019 checkif necessary and if not need to be white
+		setToolbarColorWithAnim(android.R.color.white, TOOLBAR_COLOR_ANIM_DURATION);
 		setNavigationIcon(R.drawable.close);
 		setToolbarTitle(EMPTY_TITLE);
 		clearSteps();
