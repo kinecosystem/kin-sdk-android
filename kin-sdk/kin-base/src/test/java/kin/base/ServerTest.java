@@ -93,18 +93,42 @@ public class ServerTest extends TestCase {
 
   @Test
   public void testSubmitTransactionSuccess() throws IOException {
-    mockWebServer.enqueue(
-        new MockResponse()
-            .setResponseCode(200)
-            .setBody(successResponse)
-    );
+      mockWebServer.enqueue(
+          new MockResponse()
+              .setResponseCode(200)
+      );
 
-    SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
-    assertTrue(response.isSuccess());
-    assertEquals(response.getLedger(), new Long(826150L));
-    assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
-    assertNull(response.getExtras());
+      SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
+      assertTrue(response.isSuccess());
+      assertEquals(response.getLedger(), new Long(826150L));
+      assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
+      assertNull(response.getExtras());
   }
+
+    @Test
+
+    public void test_ResponseCodeHttp307_SubmitTransactionSuccess() throws IOException {
+        MockWebServer mockWebServerHttp307 = new MockWebServer();
+        mockWebServerHttp307.start();
+        String location = mockWebServerHttp307.url("/").url().toString();
+
+        mockWebServer.enqueue(
+            new MockResponse()
+                .setResponseCode(307)
+                .setHeader("Location", location)
+        );
+        mockWebServerHttp307.enqueue(
+            new MockResponse()
+                .setResponseCode(200)
+                .setBody(successResponse)
+        );
+
+        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
+        assertTrue(response.isSuccess());
+        assertEquals(response.getLedger(), new Long(826150L));
+        assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
+        assertNull(response.getExtras());
+    }
 
   @Test
   public void testSubmitTransactionFail() throws IOException {

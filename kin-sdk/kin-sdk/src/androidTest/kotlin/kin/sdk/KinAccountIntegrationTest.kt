@@ -11,6 +11,7 @@ import kin.sdk.exception.InsufficientFeeException
 import kin.sdk.exception.InsufficientKinException
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.isEmptyString
 import org.junit.*
 import org.junit.rules.ExpectedException
 import java.io.IOException
@@ -18,6 +19,7 @@ import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -37,7 +39,7 @@ class KinAccountIntegrationTest {
     @JvmField
     val expectedEx: ExpectedException = ExpectedException.none()
 
-    private val environment: Environment = Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID)
+    private val environment: Environment = Environment(TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID)
 
     @Before
     @Throws(IOException::class)
@@ -295,6 +297,27 @@ class KinAccountIntegrationTest {
     @Test
     @LargeTest
     @Throws(Exception::class)
+    fun sendTransaction_Success() {
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
+
+        val latch = CountDownLatch(1)
+        val listenerRegistration = kinAccountReceiver.addPaymentListener { _ -> latch.countDown() }
+
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
+                BigDecimal("21.123"), fee)
+        val transactionId = kinAccountSender.sendTransactionSync(transaction)
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
+        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
+        assertNotNull(transactionId)
+        assertThat(transactionId.id(), not(isEmptyString()))
+
+        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
+        listenerRegistration.remove()
+    }
+
+    @Test
+    @LargeTest
+    @Throws(Exception::class)
     fun createPaymentListener_ListenToReceiver_PaymentEvent() {
         listenToPayments(false)
     }
@@ -409,7 +432,7 @@ class KinAccountIntegrationTest {
 
         fakeKinOnBoard.createAccount(account.publicAddress.orEmpty())
 
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
+        assertTrue(latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS))
     }
 
     private fun addAppIdToMemo(memo: String): String {
