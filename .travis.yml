@@ -8,9 +8,6 @@ before_install:
 - yes | sdkmanager "platforms;android-26"
 - yes | sdkmanager "platforms;android-28"
 
-install:
-  - echo y | sdkmanager --channel=4 "emulator" # Experiment with canary, specifying 28.0.3 (prior version) did not work
-
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/

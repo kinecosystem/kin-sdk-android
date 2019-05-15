@@ -28,8 +28,8 @@ class KinAccountIntegrationTest {
     private val fee: Int = 100
     private val feeInKin: BigDecimal = BigDecimal.valueOf(0.001)
     private val appIdVersionPrefix = "1"
-    private val timeoutDurationSeconds : Long = 10
-    private val timeoutDurationSecondsLong : Long = 15
+    private val timeoutDurationSeconds: Long = 15
+    private val timeoutDurationSecondsLong: Long = 20
 
     private lateinit var kinClient: KinClient
 
