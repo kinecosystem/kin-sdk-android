@@ -24,7 +24,7 @@ allprojects {
 }
 ```
 ###### Snippet: Modify module build files
-
+**because of directories and modules name changes then only from release 1.0.4 onwards use this:
 
 ```gradle
 ...
@@ -32,6 +32,17 @@ dependencies {
     ...
 
     implementation 'com.github.kinecosystem.kin-sdk-android:kin-sdk-lib:<latest release>'
+}
+```
+
+**use this only from release that is before 1.0.4:
+
+```gradle
+...
+dependencies {
+    ...
+
+    implementation 'com.github.kinecosystem:kin-sdk-android:<only before release 1.0.4>'
 }
 ```
 
