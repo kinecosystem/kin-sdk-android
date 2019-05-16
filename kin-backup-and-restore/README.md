@@ -27,6 +27,7 @@ allprojects {
 }
 ```
 ###### Modifying module build files
+**This module is available only from release 1.0.4**
 
 ```gradle
 ...
