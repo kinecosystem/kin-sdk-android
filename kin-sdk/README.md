@@ -35,7 +35,7 @@ dependencies {
 }
 ```
 
-**use this only from release that is before 1.0.4:**
+**Use this only from release that is before 1.0.4:**
 
 ```gradle
 ...
