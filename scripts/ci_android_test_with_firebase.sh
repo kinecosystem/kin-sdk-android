@@ -18,7 +18,7 @@ fi
 # use travis job number as an unique value, for the folder that firebase will save coverage files
 coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
 # run tests with firebase, generate coverage file (.ec) and upload it to "coverageDir" in google cloud storage
-./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app $1/$2-sample/build/outputs/apk/debug/$2-sample-debug.apk --test  $1/$2/build/outputs/apk/androidTest/debug/$2-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --num-flaky-test-attempts=$3 --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
+./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app $1/$1-sample/build/outputs/apk/debug/$1-sample-debug.apk --test  $1/$2/build/outputs/apk/androidTest/debug/$2-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --num-flaky-test-attempts=$3 --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
 # extract the .ec file name from google cloud
 coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://${FIREBASE_GOOGLE_CLOUD_FOLDER}/${coverageDir}/**/*.ec" | tail -1`
 echo ${coverageFile}
