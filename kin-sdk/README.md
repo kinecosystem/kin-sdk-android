@@ -24,7 +24,7 @@ allprojects {
 }
 ```
 ###### Snippet: Modify module build files
-**because of directories and modules name changes then only from release 1.0.4 onwards use this:**
+**From release 1.0.4 onwards use this:**
 
 ```gradle
 ...
@@ -35,7 +35,7 @@ dependencies {
 }
 ```
 
-**use this only from release that is before 1.0.4:**
+**Use this only from release that is before 1.0.4:**
 
 ```gradle
 ...
