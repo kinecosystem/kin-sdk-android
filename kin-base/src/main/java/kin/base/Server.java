@@ -34,7 +34,7 @@ public class Server {
 
     private static final int TEMPORARY_REDIRECT = 307;
     private static final String LOCATION_HEADER = "Location";
-    private static final String KIN_SDK_ANDROID_VERSION = "kin-sdk-android-version";
+    private static final String KIN_SDK_ANDROID_VERSION_HEADER = "kin-sdk-android-version";
 
     private URI serverURI;
 
@@ -222,7 +222,7 @@ public class Server {
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             request = request.newBuilder()
-                .addHeader(KIN_SDK_ANDROID_VERSION, BuildConfig.VERSION_NAME)
+                .addHeader(KIN_SDK_ANDROID_VERSION_HEADER, BuildConfig.VERSION_NAME)
                 .build();
             return chain.proceed(request);
         }
