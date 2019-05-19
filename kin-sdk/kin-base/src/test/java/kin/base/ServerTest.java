@@ -96,6 +96,7 @@ public class ServerTest extends TestCase {
       mockWebServer.enqueue(
           new MockResponse()
               .setResponseCode(200)
+              .setBody(successResponse)
       );
 
       SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
@@ -106,7 +107,6 @@ public class ServerTest extends TestCase {
   }
 
     @Test
-
     public void test_ResponseCodeHttp307_SubmitTransactionSuccess() throws IOException {
         MockWebServer mockWebServerHttp307 = new MockWebServer();
         mockWebServerHttp307.start();
