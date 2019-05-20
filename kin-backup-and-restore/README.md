@@ -192,8 +192,8 @@ $ ./gradlew :kin-backup-and-restore:kin-backup-and-restore-lib:connectedDebugAnd
 $ ./gradlew :kin-backup-and-restore:kin-backup-and-restore-lib:jacocoTestReport
 ```
 
-A report is generated and can be found at:
-kin-backup-and-restore/kin-backup-and-restore-lib/build/reports/jacoco/jacocoTestReport/html/index.html.
+A report is generated and can be found at:  
+`kin-backup-and-restore/kin-backup-and-restore-lib/build/reports/jacoco/jacocoTestReport/html/index.html`.
 
 ### Building from Source
 
