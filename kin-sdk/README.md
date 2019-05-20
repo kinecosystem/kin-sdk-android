@@ -24,14 +24,25 @@ allprojects {
 }
 ```
 ###### Snippet: Modify module build files
-
+**For release 1.0.4 and higher, use this:**
 
 ```gradle
 ...
 dependencies {
     ...
 
-    implementation 'com.github.kinecosystem:kin-sdk-android:kin-sdk:<latest release>'
+    implementation 'com.github.kinecosystem.kin-sdk-android:kin-sdk-lib:<latest release>'
+}
+```
+
+**For releases before 1.0.4, use this:**
+
+```gradle
+...
+dependencies {
+    ...
+
+    implementation 'com.github.kinecosystem:kin-sdk-android:<only before release 1.0.4>'
 }
 ```
 
@@ -64,7 +75,7 @@ Each environment variable includes:
 - `networkURL` the Kin blockchain node URL
 - `networkPassphrase` a network ID used to distinguish different blockchain networks; this is hashed into every transaction ID
 
-`1acd` in the example is an `appId`, a 4-character string which will be added automatically to each transaction to identify your application. `appId` must contain only digits and upper and/or lower case letters. String length must be exactly 4. `appID` is automatically added to transaction memos.
+`1acd` in the example is an `appId`, a 4(or 3)-character string which will be added automatically to each transaction to identify your application. `appId` must contain only digits and upper and/or lower case letters. String length must be 3 or 4. `appID` is automatically added to transaction memos.
 
 ### Managing accounts
 
@@ -107,7 +118,7 @@ kinClient.deleteAccount(int index);
 
 Before a new account can be used it must be added to the blockchain in a process called onboarding. The process of onboarding consists of two steps, first creating a keypair on the client as we did before, then creating the public address on the Kin blockchain, you normally do this by communicating to a server running the Python SDK. On the testnet this is done automatically for you. Also remember that new accounts are created with 0 Kin, so you will have fund them. On the Playgound you can fund accounts using the `friendbot`.
 
-For code details see the [Sample App](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk-sample)'s [OnBoarding](https://github.com/kinecosystem/kin-sdk-android/blob/master/kin-sdk/kin-sdk/sample/src/main/java/kin/sdk/sample/OnBoarding.java) class.
+For code details see the [Sample App](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk-sample)'s [OnBoarding](https://github.com/kinecosystem/kin-sdk-android/blob/master/kin-sdk/kin-sdk-sample/src/main/java/kin/sdk/sample/OnBoarding.java) class.
 
 #### Public Address
 
@@ -320,8 +331,8 @@ Remember that you will need a server to whitelist your transactions. You build t
 ```java
 String toAddress = "GDIRGGTBE3H4CUIHNIFZGUECGFQ5MBGIZTPWGUHPIEVOOHFHSCAGMEHO";
 BigDecimal amountInKin = new BigDecimal("20");
-// because it is white list no fee is needed.
-// even if the user enters an amount larger then zero it will not be deducted from her balance.
+// because it is whitelist no fee is needed.
+// even if the user enters an amount larger then zero it will not be deducted from their balance.
 int fee = 0
 
 buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
@@ -362,7 +373,7 @@ buildTransactionRequest.run(new ResultCallback<TransactionId>() {
 
 #### Memo
 
-Arbitrary data can be added to a transfer operation using the `memo` parameter containing a UTF-8 string up to 21 bytes in length. A typical usage is to include an order number that a service can use to verify payment.
+Arbitrary data that can be added to a transfer operation using the `memo` parameter containing a UTF-8 string up to 21 bytes in length. A typical usage is to include an order number that a service can use to verify payment.
 
 The value of `appID` is automatically added to transaction memo. This is required for the Kin Developer Program and in the future for KRE calculations.
 
@@ -458,7 +469,7 @@ To unregister any listener use the `listenerRegistration.remove()` method.
 
 ### Error Handling
 
-`kin-sdk` wraps errors with exceptions. Synchronous methods can throw exceptions and asynchronous requests have `onError(Exception e)` callbacks.
+`kin-sdk-lib` wraps errors with exceptions. Synchronous methods can throw exceptions and asynchronous requests have `onError(Exception e)` callbacks.
 
 #### Common Errors
 
@@ -466,7 +477,7 @@ To unregister any listener use the `listenerRegistration.remove()` method.
 `InsufficientKinException` - Account has not enough Kin funds to perform the transaction.  
 `InsufficientFeeException` - Transaction has not enough Fee to perform the transaction.
 
-Here's a link to [all exceptions.](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk/src/main/java/kin/sdk/exception/).
+Here's a link to [all exceptions.](https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk-lib/src/main/java/kin/sdk/exception/).
 
 ### Testing
 
@@ -476,25 +487,20 @@ Android tests include integration tests that run on a remote test network. Becau
 
 For a full list of tests see
 
-- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk/src/test
-- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk/src/androidTest
+- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk-lib/src/test
+- https://github.com/kinecosystem/kin-sdk-android/tree/master/kin-sdk/kin-sdk-lib/src/androidTest
 
 
 ### Running Tests
 
-For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use this script
+For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use those scripts one after another.
 ```bash
-$ $ ./gradlew :kin-sdk:kin-sdk jacocoTestReport
+$ ./gradlew :kin-sdk:kin-sdk-lib:connectedAndroidTest
+$ ./gradlew :kin-sdk:kin-sdk-lib:jacocoTestReport
 ```
 
-Running tests without integration tests
-
-```bash
-$ ./gradlew jacocoTestReport  -Pandroid.testInstrumentationRunnerArguments.notClass=kin.sdk.KinAccountIntegrationTest
-```
-
-Generated report can be found at:  
-`kin-sdk/kin-sdk/build/reports/jacoco/jacocoTestReport/html/index.html`.
+A report is generated and can be found at:
+`kin-sdk/kin-sdk-lib/build/reports/jacoco/jacocoTestReport/html/index.html`.
 
 ### Building from Source
 

@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation project(':kin-sdk:kin-sdk')
+    implementation project(':kin-sdk:kin-sdk-lib')
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:support-annotations:26.1.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
