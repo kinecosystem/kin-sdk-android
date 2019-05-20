@@ -493,7 +493,7 @@ For a full list of tests see
 
 ### Running Tests
 
-For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use this scripts one after another.
+For running both unit tests and instrumented tests and generating a code coverage report using Jacoco, use those scripts one after another.
 ```bash
 $ ./gradlew :kin-sdk:kin-sdk-lib:connectedAndroidTest
 $ ./gradlew :kin-sdk:kin-sdk-lib:jacocoTestReport
