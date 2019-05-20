@@ -499,7 +499,7 @@ $ ./gradlew :kin-sdk:kin-sdk-lib:connectedAndroidTest
 $ ./gradlew :kin-sdk:kin-sdk-lib:jacocoTestReport
 ```
 
-A report is generated and can be found at:
+A report is generated and can be found at:  
 `kin-sdk/kin-sdk-lib/build/reports/jacoco/jacocoTestReport/html/index.html`.
 
 ### Building from Source
