@@ -4,13 +4,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import android.util.Log;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
 
 import kin.base.AssetTypeNative;
+import kin.base.ManageDataOperation;
 import kin.base.Network;
+import kin.base.SetOptionsOperation;
+import kin.base.Signer;
+import kin.base.xdr.SignerKey;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.IllegalAmountException;
@@ -234,5 +239,28 @@ class TransactionSender {
         String transactionResultCode = transactionException.getTransactionResultCode();
         return !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_FEE_RESULT_CODE.equals(transactionResultCode);
     }
+
+    public String getLinkAccountsTransaction(@NonNull KeyPair account,
+        @NonNull String packageId,
+        @NonNull String childPublicAddress) throws OperationFailedException {
+        AccountResponse sourceAccount = loadAccount(account);
+        ManageDataOperation manageDataOperation = new ManageDataOperation
+            .Builder("link__" + childPublicAddress, packageId.getBytes())
+            .setSourceAccount(account)
+            .build();
+        SignerKey signer = Signer.ed25519PublicKey(account);
+        SetOptionsOperation setOptionsOperation = new SetOptionsOperation.Builder()
+            .setSigner(signer, 1)
+            .setSourceAccount(KeyPair.fromAccountId(childPublicAddress))
+            .build();
+        Builder transactionBuilder = new Builder(sourceAccount)
+            .addOperation(setOptionsOperation)
+            .addOperation(manageDataOperation);
+        kin.base.Transaction transaction = transactionBuilder.build();
+        transaction.sign(account);
+        Log.d("wallet", transaction.toEnvelopeXdrBase64());
+        return transaction.toEnvelopeXdrBase64();
+    }
+
 
 }

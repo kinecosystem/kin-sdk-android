@@ -187,4 +187,8 @@ public interface KinAccount {
      * @return A JSON representation of the data as a string
      */
     String export(@NonNull String passphrase) throws CryptoException;
+
+    // temporarily exposing this - this is not to be merged
+    String getLinkAccountsTransactionEnvelopeFor(String appPackageId, String appAccountPublicAddress)
+        throws OperationFailedException;
 }

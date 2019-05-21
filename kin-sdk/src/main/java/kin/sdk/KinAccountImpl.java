@@ -106,4 +106,9 @@ final class KinAccountImpl extends AbstractKinAccount {
         }
     }
 
+    public String getLinkAccountsTransactionEnvelopeFor(String appPackageId, String appAccountPublicAddress)
+        throws OperationFailedException {
+        return transactionSender.getLinkAccountsTransaction(account, appPackageId, appAccountPublicAddress);
+    }
+
 }
