@@ -20,6 +20,7 @@ import kin.base.requests.TransactionsRequestBuilder;
 import kin.base.responses.GsonSingleton;
 import kin.base.responses.SubmitTransactionResponse;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -33,6 +34,7 @@ public class Server {
 
     private static final int TEMPORARY_REDIRECT = 307;
     private static final String LOCATION_HEADER = "Location";
+    private static final String KIN_SDK_ANDROID_VERSION_HEADER = "kin-sdk-android-version";
 
     private URI serverURI;
 
@@ -63,6 +65,7 @@ public class Server {
             .connectTimeout(transactionsTimeout, timeUnit)
             .writeTimeout(transactionsTimeout, timeUnit)
             .readTimeout(transactionsTimeout, timeUnit)
+            .addInterceptor(new HeaderInterceptor())
             .build();
     }
 
@@ -211,5 +214,17 @@ public class Server {
      */
     void setHttpClient(OkHttpClient httpClient) {
         this.httpClient = httpClient;
+    }
+
+    private class HeaderInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            request = request.newBuilder()
+                .addHeader(KIN_SDK_ANDROID_VERSION_HEADER, BuildConfig.VERSION_NAME)
+                .build();
+            return chain.proceed(request);
+        }
     }
 }
