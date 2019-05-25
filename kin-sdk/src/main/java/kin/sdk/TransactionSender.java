@@ -13,6 +13,7 @@ import java.util.List;
 import kin.base.AssetTypeNative;
 import kin.base.ManageDataOperation;
 import kin.base.Network;
+import kin.base.Operation;
 import kin.base.SetOptionsOperation;
 import kin.base.Signer;
 import kin.base.xdr.SignerKey;
@@ -254,12 +255,25 @@ class TransactionSender {
             .setSourceAccount(KeyPair.fromAccountId(childPublicAddress))
             .build();
         Builder transactionBuilder = new Builder(sourceAccount)
+            .addFee(1000) // just making sure it works without whitelisting for now
             .addOperation(setOptionsOperation)
             .addOperation(manageDataOperation);
         kin.base.Transaction transaction = transactionBuilder.build();
         transaction.sign(account);
         Log.d("wallet", transaction.toEnvelopeXdrBase64());
         return transaction.toEnvelopeXdrBase64();
+    }
+
+    public TransactionId sendLinkAccountsTransaction(@NonNull KeyPair account, @NonNull String envelopeXDR)
+        throws OperationFailedException {
+        try {
+            kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(envelopeXDR);
+            transaction.sign(account);
+            Log.e("BERRY","###"+transaction.toEnvelopeXdrBase64()+"###");
+            return sendTransaction(transaction);
+        } catch (IOException e) {
+            throw new OperationFailedException(e);
+        }
     }
 
 

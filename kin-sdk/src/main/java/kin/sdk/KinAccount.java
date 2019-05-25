@@ -3,6 +3,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
+import kin.base.KeyPair;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.InsufficientKinException;
@@ -188,7 +189,10 @@ public interface KinAccount {
      */
     String export(@NonNull String passphrase) throws CryptoException;
 
-    // temporarily exposing this - this is not to be merged
+    // temporarily exposing the next 2 methods - this is not to be merged
     String getLinkAccountsTransactionEnvelopeFor(String appPackageId, String appAccountPublicAddress)
         throws OperationFailedException;
+
+    @NonNull
+    TransactionId sendLinkAccountsTransaction(@NonNull String envelopeXDR) throws OperationFailedException;
 }
