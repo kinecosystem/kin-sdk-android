@@ -250,7 +250,7 @@ public class Transaction {
       mOperations[i] = Operation.fromXdr(tx.getOperations()[i]);
     }
 
-    Transaction transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds);
+    Transaction transaction = new Transaction(mSourceAccount, mFee/mOperations.length, mSequenceNumber, mOperations, mMemo, mTimeBounds);
 
     for (DecoratedSignature signature : envelope.getSignatures()) {
       transaction.mSignatures.add(signature);
