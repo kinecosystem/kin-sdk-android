@@ -80,16 +80,7 @@ class KinAccountIntegrationTest {
     fun getBalanceSync_FundedAccount_GotBalance() {
         val kinAccount = kinClient.addAccount()
 
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration : ListenerRegistration? = null
-        listenerRegistration = kinAccount.addAccountCreationListener {
-            listenerRegistration?.remove()
-            latch.countDown()
-        }
         fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.00000")))
         fakeKinOnBoard.fundWithKin(kinAccount.publicAddress.orEmpty(), "3.14159")
@@ -103,16 +94,7 @@ class KinAccountIntegrationTest {
     fun getStatusSync_CreateAccount_StatusCreated() {
         val kinAccount = kinClient.addAccount()
 
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration : ListenerRegistration? = null
-        listenerRegistration = kinAccount.addAccountCreationListener {
-            listenerRegistration?.remove()
-            latch.countDown()
-        }
         fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.00000")))
         val status = kinAccount.statusSync
@@ -154,17 +136,7 @@ class KinAccountIntegrationTest {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
 
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration : ListenerRegistration? = null
-        listenerRegistration = kinAccountSender.addAccountCreationListener {
-            listenerRegistration?.remove()
-            latch.countDown()
-        }
-
         fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         expectedEx.expect(AccountNotFoundException::class.java)
         expectedEx.expectMessage(kinAccountReceiver.publicAddress)
@@ -180,17 +152,7 @@ class KinAccountIntegrationTest {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
 
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration : ListenerRegistration? = null
-        listenerRegistration = kinAccountReceiver.addAccountCreationListener {
-            listenerRegistration?.remove()
-            latch.countDown()
-        }
-
         fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         expectedEx.expect(AccountNotFoundException::class.java)
         expectedEx.expectMessage(kinAccountSender.publicAddress)
@@ -205,17 +167,7 @@ class KinAccountIntegrationTest {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
 
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration : ListenerRegistration? = null
-        listenerRegistration = kinAccountReceiver.addAccountCreationListener {
-            listenerRegistration?.remove()
-            latch.countDown()
-        }
-
         fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         expectedEx.expect(AccountNotFoundException::class.java)
         expectedEx.expectMessage(kinAccountSender.publicAddress)
@@ -232,17 +184,7 @@ class KinAccountIntegrationTest {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
 
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration : ListenerRegistration? = null
-        listenerRegistration = kinAccountSender.addAccountCreationListener {
-            listenerRegistration?.remove()
-            latch.countDown()
-        }
-
         fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
 
         expectedEx.expect(AccountNotFoundException::class.java)
         expectedEx.expectMessage(kinAccountReceiver.publicAddress)
@@ -260,7 +202,7 @@ class KinAccountIntegrationTest {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
 
         expectedEx.expect(InsufficientFeeException::class.java)
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), minFee - 1)
         kinAccountSender.sendTransactionSync(transaction)
     }
@@ -271,7 +213,7 @@ class KinAccountIntegrationTest {
     fun sendWhitelistTransaction_FeeNotReduce() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee + 100000)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
@@ -285,7 +227,7 @@ class KinAccountIntegrationTest {
     fun sendWhitelistTransaction_Success() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
@@ -393,7 +335,7 @@ class KinAccountIntegrationTest {
         }
         listenerRegistration.remove()
 
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee,null)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee, null)
         kinAccountSender.sendTransactionSync(transaction)
         latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS)
     }
@@ -413,30 +355,13 @@ class KinAccountIntegrationTest {
                                 receiverFundAmount: Int = 0): Pair<KinAccount, KinAccount> {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
-        onboardSingleAccount(kinAccountSender, senderFundAmount)
-        onboardSingleAccount(kinAccountReceiver, receiverFundAmount)
+        fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty(), senderFundAmount)
+        fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty(), receiverFundAmount)
         return Pair(kinAccountSender, kinAccountReceiver)
     }
 
-    private fun onboardSingleAccount(account: KinAccount, fundAmount: Int) {
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration : ListenerRegistration? = null
-        listenerRegistration = account.addAccountCreationListener {
-            listenerRegistration?.remove()
-            if (fundAmount > 0) {
-                fakeKinOnBoard.fundWithKin(account.publicAddress.orEmpty(), fundAmount.toString())
-            }
-            latch.countDown()
-        }
-
-        fakeKinOnBoard.createAccount(account.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS))
-    }
-
     private fun addAppIdToMemo(memo: String): String {
-        return appIdVersionPrefix.plus("-").plus(appId).plus("-").plus(memo);
+        return appIdVersionPrefix.plus("-").plus(appId).plus("-").plus(memo)
     }
 
     companion object {
