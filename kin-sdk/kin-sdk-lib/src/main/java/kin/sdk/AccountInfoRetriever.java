@@ -30,6 +30,7 @@ class AccountInfoRetriever {
     Balance getBalance(@NonNull String accountId) throws OperationFailedException {
         Utils.checkNotNull(accountId, "account");
         Balance balance = null;
+
         try {
             AccountResponse accountResponse = server.accounts().account(KeyPair.fromAccountId(accountId));
             if (accountResponse == null) {

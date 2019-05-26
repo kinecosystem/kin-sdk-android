@@ -43,59 +43,51 @@ class CreatePasswordPresenterImplTest {
 
     @Test
     fun `enter password changed, password is valid but did not complete all other requirements`() {
-        presenter.enterPasswordChanged(pass, otherPass)
+        presenter.passwordCheck(pass, otherPass, false)
         verify(view).disableNextButton()
     }
 
     @Test
     fun `enter password changed, password is valid and completed all other requirements`() {
         presenter.apply {
-            enterPasswordChanged(pass, "")
-            confirmPasswordChanged(pass, pass)
-            iUnderstandChecked(true)
+            passwordCheck(pass, "", false)
+            passwordCheck(pass, pass, true)
+            iUnderstandChecked(true, pass, pass)
         }
         verify(view).enableNextButton()
     }
 
     @Test
     fun `enter password changed, password is not empty but not valid`() {
-        presenter.enterPasswordChanged(otherPass, pass)
+        presenter.passwordCheck(otherPass, pass, false)
         verify(view).setEnterPasswordIsCorrect(false)
         verify(view).disableNextButton()
     }
 
     @Test
     fun `enter password changed, password is empty reset fields`() {
-        presenter.enterPasswordChanged("", otherPass)
+        presenter.passwordCheck("", otherPass, false)
         verify(view).resetEnterPasswordField()
-        verify(view).resetConfirmPasswordField()
-    }
-
-    @Test
-    fun `confirm password changed, some of the passwords is empty`() {
-        presenter.confirmPasswordChanged("", otherPass)
-        verify(view).resetConfirmPasswordField()
     }
 
     @Test
     fun `confirm password changed, password does not match`() {
-        presenter.confirmPasswordChanged(pass, otherPass)
+        presenter.passwordCheck(otherPass, pass, true)
         verify(view).setConfirmPasswordIsCorrect(false)
     }
 
     @Test
     fun `confirm password changed, password matches`() {
-        presenter.confirmPasswordChanged(pass, pass)
+        presenter.passwordCheck(pass, pass, true)
         verify(view).setConfirmPasswordIsCorrect(true)
-        verify(view).closeKeyboard()
     }
 
     @Test
     fun `i understand is checked and passwords are matches, next button should become enabled`() {
         presenter.apply {
-            enterPasswordChanged(pass, pass)
-            confirmPasswordChanged(pass, pass)
-            iUnderstandChecked(true)
+            passwordCheck(pass, pass, false)
+            passwordCheck(pass, pass, true)
+            iUnderstandChecked(true, pass, pass)
         }
         verify(view).enableNextButton()
     }
@@ -103,9 +95,9 @@ class CreatePasswordPresenterImplTest {
     @Test
     fun `i understand is unchecked`() {
         presenter.apply {
-            enterPasswordChanged(pass, pass)
-            confirmPasswordChanged(pass, otherPass)
-            iUnderstandChecked(false)
+            passwordCheck(pass, pass, false)
+            passwordCheck(otherPass, pass, true)
+            iUnderstandChecked(false, pass, otherPass)
         }
         verify(view, times(3)).disableNextButton()
     }
@@ -113,14 +105,14 @@ class CreatePasswordPresenterImplTest {
     @Test
     fun `next button clicked and export succeeded`() {
         whenever(kinAccount.export(pass)) doReturn (accountKey)
-        presenter.nextButtonClicked(pass)
+        presenter.nextButtonClicked(pass, pass)
         verify(backupNavigator).navigateToSaveAndSharePage(accountKey)
     }
 
     @Test
     fun `next button clicked and export failed`() {
         whenever(kinAccount.export(pass)) doThrow (CryptoException::class)
-        presenter.nextButtonClicked(pass)
+        presenter.nextButtonClicked(pass, pass)
         verify(view).showBackupFailed()
     }
 
