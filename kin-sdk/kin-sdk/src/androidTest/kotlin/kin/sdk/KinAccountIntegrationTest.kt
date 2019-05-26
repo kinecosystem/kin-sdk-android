@@ -202,7 +202,7 @@ class KinAccountIntegrationTest {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
 
         expectedEx.expect(InsufficientFeeException::class.java)
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), minFee - 1)
         kinAccountSender.sendTransactionSync(transaction)
     }
@@ -213,7 +213,7 @@ class KinAccountIntegrationTest {
     fun sendWhitelistTransaction_FeeNotReduce() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee + 100000)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
@@ -227,7 +227,7 @@ class KinAccountIntegrationTest {
     fun sendWhitelistTransaction_Success() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
@@ -335,7 +335,7 @@ class KinAccountIntegrationTest {
         }
         listenerRegistration.remove()
 
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee,null)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee, null)
         kinAccountSender.sendTransactionSync(transaction)
         latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS)
     }
