@@ -1,66 +1,60 @@
 package kin.sdk;
 
+import java.io.IOException;
 import kin.base.KeyPair;
-
-import java.math.BigDecimal;
+import kin.base.Network;
 
 public class Transaction {
-
-    private final KeyPair destination;
-    private final KeyPair source;
-    private final BigDecimal amount;
-    private final int fee;
-    private final String memo;
 
     /**
      * The transaction hash
      */
     private final TransactionId id;
 
-    private final kin.base.Transaction stellarTransaction;
-    private final WhitelistableTransaction whitelistableTransaction;
+    private final kin.base.Transaction baseTransaction;
 
-    Transaction(KeyPair destination, KeyPair source, BigDecimal amount, int fee, String memo,
-                TransactionId id, kin.base.Transaction stellarTransaction, WhitelistableTransaction whitelistableTransaction) {
-        this.destination = destination;
-        this.source = source;
-        this.amount = amount;
-        this.fee = fee;
-        this.memo = memo;
+    public Transaction(TransactionId id, kin.base.Transaction baseTransaction) {
         this.id = id;
-        this.stellarTransaction = stellarTransaction;
-        this.whitelistableTransaction = whitelistableTransaction;
+        this.baseTransaction = baseTransaction;
     }
 
-    public KeyPair getDestination() {
-        return destination;
+    public static Transaction decodeTransaction(String transactionEnvelope) throws IOException {
+        kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(transactionEnvelope);
+        TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(transaction.hash()));
+        return new Transaction(id, transaction);
     }
 
     public KeyPair getSource() {
-        return source;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
+        return baseTransaction.getSourceAccount();
     }
 
     public int getFee() {
-        return fee;
+        return baseTransaction.getFee();
     }
 
     public String getMemo() {
-        return memo;
-    }
+        return baseTransaction.getMemo().toString();
+    } // TODO: 2019-05-23 check if ok
 
     public TransactionId getId() {
         return id;
     }
 
-    kin.base.Transaction getStellarTransaction() {
-        return stellarTransaction;
+    kin.base.Transaction getBaseTransaction() {
+        return baseTransaction;
     }
 
     public WhitelistableTransaction getWhitelistableTransaction() {
-        return whitelistableTransaction;
+        return new WhitelistableTransaction(baseTransaction.toEnvelopeXdrBase64(),
+            Network.current().getNetworkPassphrase());
     }
+
+    public String getTransactionEnvelope() {
+        return baseTransaction.toEnvelopeXdrBase64();
+    }
+
+    public void addSignature(KinAccount account) {
+        baseTransaction.sign(((KinAccountImpl) account).getKeyPair());
+    }
+
 }

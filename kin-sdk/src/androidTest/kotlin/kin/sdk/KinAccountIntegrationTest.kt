@@ -2,9 +2,7 @@ package kin.sdk
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.filters.LargeTest
-import kin.base.Memo
-import kin.base.MemoText
-import kin.base.Server
+import kin.base.*
 import kin.sdk.IntegConsts.TEST_NETWORK_URL
 import kin.sdk.exception.AccountNotFoundException
 import kin.sdk.exception.InsufficientFeeException
@@ -82,7 +80,7 @@ class KinAccountIntegrationTest {
 
         val latch = CountDownLatch(1)
 
-        var listenerRegistration : ListenerRegistration? = null
+        var listenerRegistration: ListenerRegistration? = null
         listenerRegistration = kinAccount.addAccountCreationListener {
             listenerRegistration?.remove()
             latch.countDown()
@@ -105,7 +103,7 @@ class KinAccountIntegrationTest {
 
         val latch = CountDownLatch(1)
 
-        var listenerRegistration : ListenerRegistration? = null
+        var listenerRegistration: ListenerRegistration? = null
         listenerRegistration = kinAccount.addAccountCreationListener {
             listenerRegistration?.remove()
             latch.countDown()
@@ -156,7 +154,7 @@ class KinAccountIntegrationTest {
 
         val latch = CountDownLatch(1)
 
-        var listenerRegistration : ListenerRegistration? = null
+        var listenerRegistration: ListenerRegistration? = null
         listenerRegistration = kinAccountSender.addAccountCreationListener {
             listenerRegistration?.remove()
             latch.countDown()
@@ -182,7 +180,7 @@ class KinAccountIntegrationTest {
 
         val latch = CountDownLatch(1)
 
-        var listenerRegistration : ListenerRegistration? = null
+        var listenerRegistration: ListenerRegistration? = null
         listenerRegistration = kinAccountReceiver.addAccountCreationListener {
             listenerRegistration?.remove()
             latch.countDown()
@@ -207,7 +205,7 @@ class KinAccountIntegrationTest {
 
         val latch = CountDownLatch(1)
 
-        var listenerRegistration : ListenerRegistration? = null
+        var listenerRegistration: ListenerRegistration? = null
         listenerRegistration = kinAccountReceiver.addAccountCreationListener {
             listenerRegistration?.remove()
             latch.countDown()
@@ -234,7 +232,7 @@ class KinAccountIntegrationTest {
 
         val latch = CountDownLatch(1)
 
-        var listenerRegistration : ListenerRegistration? = null
+        var listenerRegistration: ListenerRegistration? = null
         listenerRegistration = kinAccountSender.addAccountCreationListener {
             listenerRegistration?.remove()
             latch.countDown()
@@ -260,7 +258,7 @@ class KinAccountIntegrationTest {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
 
         expectedEx.expect(InsufficientFeeException::class.java)
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), minFee - 1)
         kinAccountSender.sendTransactionSync(transaction)
     }
@@ -271,7 +269,7 @@ class KinAccountIntegrationTest {
     fun sendWhitelistTransaction_FeeNotReduce() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee + 100000)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
@@ -285,7 +283,7 @@ class KinAccountIntegrationTest {
     fun sendWhitelistTransaction_Success() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
-        val minFee : Int = Math.toIntExact(kinClient.minimumFeeSync)
+        val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
@@ -393,7 +391,7 @@ class KinAccountIntegrationTest {
         }
         listenerRegistration.remove()
 
-        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee,null)
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee, null)
         kinAccountSender.sendTransactionSync(transaction)
         latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS)
     }
@@ -409,6 +407,42 @@ class KinAccountIntegrationTest {
         kinAccountSender.sendTransactionSync(transaction)
     }
 
+    @Test
+    @Throws(Exception::class)
+    fun accountLinking_SendTransaction_TransactionSuccess() {
+        val controlledAccount = kinClient.addAccount()
+        val masterAccount = kinClient.addAccount()
+        val destinationAccount = kinClient.addAccount()
+        onboardSingleAccount(destinationAccount, 100)
+        Thread.sleep(15000) // sleep for 15 seconds in order to wait for all the account ot be created and funded
+        linkAccount(controlledAccount, masterAccount)
+        val transaction = masterAccount.buildTransactionSync(destinationAccount.publicAddress.orEmpty(),
+                BigDecimal("21.123"), fee)
+        val transactionId = kinAccountSender.sendTransactionSync(transaction)
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
+        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
+    }
+
+    private fun linkAccount(controlledAccount: KinAccount, masterAccount: KinAccount) {
+        onboardSingleAccount(controlledAccount, 100)
+        onboardSingleAccount(masterAccount, 100)
+
+        val transactionBuilder = controlledAccount.transactionBuilderSync
+        val signerKey = Signer.ed25519PublicKey(KeyPair.fromAccountId(masterAccount.publicAddress))
+        val managerDataKey = controlledAccount.publicAddress
+        val managerDataValue = "some package id"
+        val transaction = transactionBuilder.setFee(100)
+                .setMemo("test", "account linking")
+                .addOperation(SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
+                .addOperation(ManageDataOperation.Builder(managerDataKey, managerDataValue.toByteArray()).build())
+                .build()
+        // simulate transaction getting a transaction envelope and decode it.
+        val transactionEnvelope = transaction.transactionEnvelope
+        val externalTransaction = Transaction.decodeTransaction(transactionEnvelope)
+        // Sending the linking transaction from the master account
+        val transactionId = masterAccount.sendTransactionSync(externalTransaction)
+    }
+
     private fun onboardAccounts(senderFundAmount: Int = 0,
                                 receiverFundAmount: Int = 0): Pair<KinAccount, KinAccount> {
         val kinAccountSender = kinClient.addAccount()
@@ -421,7 +455,7 @@ class KinAccountIntegrationTest {
     private fun onboardSingleAccount(account: KinAccount, fundAmount: Int) {
         val latch = CountDownLatch(1)
 
-        var listenerRegistration : ListenerRegistration? = null
+        var listenerRegistration: ListenerRegistration? = null
         listenerRegistration = account.addAccountCreationListener {
             listenerRegistration?.remove()
             if (fundAmount > 0) {

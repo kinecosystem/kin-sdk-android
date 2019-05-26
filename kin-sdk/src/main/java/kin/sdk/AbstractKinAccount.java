@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
-
 import kin.utils.Request;
 
 abstract class AbstractKinAccount implements KinAccount {
@@ -19,7 +18,9 @@ abstract class AbstractKinAccount implements KinAccount {
                 return buildTransactionSync(publicAddress, amount, fee);
             }
         });
-    }@NonNull
+    }
+
+    @NonNull
     @Override
     public Request<Transaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
                                                  final int fee, @Nullable final String memo) {
@@ -27,6 +28,17 @@ abstract class AbstractKinAccount implements KinAccount {
             @Override
             public Transaction call() throws Exception {
                 return buildTransactionSync(publicAddress, amount, fee, memo); 
+            }
+        });
+    }
+
+    @NonNull
+    @Override
+    public Request<TransactionBuilder> getTransactionBuilder() {
+        return new Request<>(new Callable<TransactionBuilder>() {
+            @Override
+            public TransactionBuilder call() throws Exception {
+                return getTransactionBuilderSync();
             }
         });
     }

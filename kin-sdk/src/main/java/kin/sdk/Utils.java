@@ -2,12 +2,16 @@ package kin.sdk;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.util.ArrayList;
-import kin.sdk.exception.TransactionFailedException;
 import kin.base.responses.SubmitTransactionResponse;
 import kin.base.responses.SubmitTransactionResponse.Extras.ResultCodes;
+import kin.sdk.exception.TransactionFailedException;
 
 final class Utils {
+
+    private static String MEMO_APP_ID_VERSION_PREFIX = "1";
+    private static String MEMO_DELIMITER = "-";
 
     private Utils() {
         //no instances
@@ -41,5 +45,21 @@ final class Utils {
         if (string == null || string.isEmpty()) {
             throw new IllegalArgumentException(paramName + " cannot be null or empty.");
         }
+    }
+
+    @NonNull
+    static String addAppIdToMemo(String appId, @Nullable String memo) {
+        if (memo == null) {
+            memo = "";
+        } else {
+            memo = memo.trim(); // remove leading and trailing whitespaces.
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(MEMO_APP_ID_VERSION_PREFIX)
+            .append(MEMO_DELIMITER)
+            .append(appId)
+            .append(MEMO_DELIMITER)
+            .append(memo);
+        return sb.toString();
     }
 }

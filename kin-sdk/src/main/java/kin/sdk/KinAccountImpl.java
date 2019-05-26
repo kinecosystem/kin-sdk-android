@@ -3,10 +3,10 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
+import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
-import kin.base.KeyPair;
 
 
 final class KinAccountImpl extends AbstractKinAccount {
@@ -47,6 +47,12 @@ final class KinAccountImpl extends AbstractKinAccount {
                                             int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
+    }
+
+    @Override
+    public TransactionBuilder getTransactionBuilderSync() throws OperationFailedException {
+        checkValidAccount();
+        return transactionSender.getTransactionBuilder(account);
     }
 
     @NonNull
@@ -94,6 +100,10 @@ final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public String export(@NonNull String passphrase) throws CryptoException {
         return backupRestore.exportWallet(account, passphrase);
+    }
+
+    KeyPair getKeyPair() {
+        return account;
     }
 
     void markAsDeleted() {
