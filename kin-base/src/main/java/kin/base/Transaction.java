@@ -3,6 +3,7 @@ package kin.base;
 import static kin.base.Util.checkArgument;
 import static kin.base.Util.checkNotNull;
 
+import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -50,7 +51,17 @@ public class Transaction {
   public void sign(KeyPair signer) {
     checkNotNull(signer, "signer cannot be null");
     byte[] txHash = this.hash();
+    printSignatures("BEFORE adding:" + Arrays.toString(txHash));
     mSignatures.add(signer.signDecorated(txHash));
+    printSignatures("AFTER it was added:");
+  }
+
+  private void printSignatures(String msg) {
+    String printMssg = msg;
+    Log.e("BERRY", msg + "###########");
+    for (DecoratedSignature sig : mSignatures) {
+      Log.e("BERRY", "Sig:###" + Arrays.toString(sig.getSignature().getSignature()) + "###");
+    }
   }
 
   /**

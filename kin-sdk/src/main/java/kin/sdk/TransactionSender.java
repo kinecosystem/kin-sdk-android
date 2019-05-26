@@ -267,9 +267,11 @@ class TransactionSender {
     public TransactionId sendLinkAccountsTransaction(@NonNull KeyPair account, @NonNull String envelopeXDR)
         throws OperationFailedException {
         try {
+            Log.e("BERRY","Envelope before additional signature ###"+envelopeXDR+"###");
             kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(envelopeXDR);
+            Log.e("BERRY","Envelope back from transaction ###"+transaction.toEnvelopeXdrBase64()+"###");
             transaction.sign(account);
-            Log.e("BERRY","###"+transaction.toEnvelopeXdrBase64()+"###");
+            Log.e("BERRY","Envelope after additional signature ###"+transaction.toEnvelopeXdrBase64()+"###");
             return sendTransaction(transaction);
         } catch (IOException e) {
             throw new OperationFailedException(e);
