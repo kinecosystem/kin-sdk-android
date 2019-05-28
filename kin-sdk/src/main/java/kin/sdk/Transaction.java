@@ -2,6 +2,7 @@ package kin.sdk;
 
 import java.io.IOException;
 import kin.base.KeyPair;
+import kin.base.Memo;
 import kin.base.Network;
 
 public class Transaction {
@@ -32,9 +33,9 @@ public class Transaction {
         return baseTransaction.getFee();
     }
 
-    public String getMemo() {
-        return baseTransaction.getMemo().toString();
-    } // TODO: 2019-05-23 check if ok
+    public Memo getMemo() {
+        return baseTransaction.getMemo();
+    }
 
     public TransactionId getId() {
         return id;

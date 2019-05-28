@@ -45,8 +45,8 @@ public interface KinAccount {
 
     Request<TransactionBuilder> getTransactionBuilder();
 
+    // TODO: 2019-05-26 add java doc
     TransactionBuilder getTransactionBuilderSync() throws OperationFailedException;
-
 
     /**
      * Create {@link Request} for signing and sending a transaction
@@ -79,23 +79,6 @@ public interface KinAccount {
      * @throws OperationFailedException other error occurred.
      */
     Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
-
-    /**
-     * Build a Transaction object of the given amount in kin, from an account to the specified public address.
-     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
-     *
-     * @param sourceAccountAddress the account address from which you want to send from. You can use one of the other
-     * methods if you want to use the default account
-     * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
-     * @return a Transaction object which also includes the transaction id.
-     * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws OperationFailedException other error occurred.
-     */
-    Transaction buildTransactionSync(@NonNull String sourceAccountAddress, @NonNull String publicAddress,
-        @NonNull BigDecimal amount, int fee) throws OperationFailedException;
-
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).

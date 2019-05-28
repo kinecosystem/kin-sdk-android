@@ -228,7 +228,14 @@ public class Transaction {
    */
   public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
     kin.base.xdr.Transaction tx = envelope.getTx();
+    // Although currently there couldn't be a transaction with no operations we still check it.
     int mFee = tx.getFee().getUint32();
+    if (tx.getOperations().length > 1) {
+      // Because the fee was already multiplied by number of operation then divide by it because when reCreate this
+      // transaction then we will multiple it again.
+      mFee = mFee / tx.getOperations().length;
+    }
+
     KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
     Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getUint64();
     Memo mMemo = Memo.fromXdr(tx.getMemo());

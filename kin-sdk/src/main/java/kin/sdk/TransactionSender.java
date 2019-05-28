@@ -60,6 +60,7 @@ class TransactionSender {
     TransactionBuilder getTransactionBuilder(@NonNull KeyPair from) throws OperationFailedException {
         Utils.checkNotNull(from, "from");
         AccountResponse sourceAccount = loadSourceAccount(from);
+        // TODO: 2019-05-27 need to decide if we do use make the fee "must" in the constructor...
         return new TransactionBuilder(from, sourceAccount);
     }
 
@@ -78,7 +79,7 @@ class TransactionSender {
 
     private void checkParams(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee, @Nullable String memo) throws OperationFailedException {
-        Utils.checkNotNull(from, "from");
+        Utils.checkNotNull(from, "account");
         Utils.checkNotNull(amount, "amount");
         validateAmountDecimalPoint(amount);
         checkForNegativeFee(fee);

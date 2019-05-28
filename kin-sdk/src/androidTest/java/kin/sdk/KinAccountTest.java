@@ -34,6 +34,20 @@ public class KinAccountTest {
     }
 
     @Test(expected = AccountDeletedException.class)
+    public void buildTransactionSync_DeletedAccount_AccountDeletedException() throws Exception {
+        KinAccount kinAccount = kinClient.addAccount();
+        kinClient.deleteAccount(0);
+        kinAccount.buildTransactionSync(kinAccount.getPublicAddress(), new BigDecimal(200), 100);
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void getTransactionBuilderSync_DeletedAccount_AccountDeletedException() throws Exception {
+        KinAccount kinAccount = kinClient.addAccount();
+        kinClient.deleteAccount(0);
+        kinAccount.getTransactionBuilderSync();
+    }
+
+    @Test(expected = AccountDeletedException.class)
     public void getBalanceSync_DeletedAccount_AccountDeletedException() throws Exception {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);

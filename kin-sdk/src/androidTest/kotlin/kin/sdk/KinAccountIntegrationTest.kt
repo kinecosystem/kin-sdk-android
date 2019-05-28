@@ -9,6 +9,7 @@ import kin.sdk.exception.InsufficientFeeException
 import kin.sdk.exception.InsufficientKinException
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.isEmptyOrNullString
 import org.hamcrest.Matchers.isEmptyString
 import org.junit.*
 import org.junit.rules.ExpectedException
@@ -414,33 +415,43 @@ class KinAccountIntegrationTest {
         val masterAccount = kinClient.addAccount()
         val destinationAccount = kinClient.addAccount()
         onboardSingleAccount(destinationAccount, 100)
-        Thread.sleep(15000) // sleep for 15 seconds in order to wait for all the account ot be created and funded
         linkAccount(controlledAccount, masterAccount)
-        val transaction = masterAccount.buildTransactionSync(destinationAccount.publicAddress.orEmpty(),
-                BigDecimal("21.123"), fee)
-        val transactionId = kinAccountSender.sendTransactionSync(transaction)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
+        val transaction = masterAccount.transactionBuilderSync
+                .setFee(fee)
+                .setMemo(appId, "master to destination")
+                .addOperation(PaymentOperation.Builder(
+                        KeyPair.fromAccountId(destinationAccount.publicAddress), AssetTypeNative(), "21.12300")
+                        .setSourceAccount(KeyPair.fromAccountId(controlledAccount.publicAddress))
+                        .build())
+                .build()
+        //TODO add a check to see if indeed the manage data the same for master and 2 signatures in controlled
+        val transactionId = masterAccount.sendTransactionSync(transaction)
+        assertThat(transactionId.id(), not(isEmptyOrNullString()))
+        // The controlled account need to reduced the fee from the link account transaction.
+        assertThat(controlledAccount.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin.multiply(BigDecimal(2)))))
+        assertThat(masterAccount.balanceSync.value(), equalTo(BigDecimal("100.00000").subtract(feeInKin)))
+        assertThat(destinationAccount.balanceSync.value(), equalTo(BigDecimal("121.12300")))
+        masterAccount.statusSync
     }
 
     private fun linkAccount(controlledAccount: KinAccount, masterAccount: KinAccount) {
         onboardSingleAccount(controlledAccount, 100)
         onboardSingleAccount(masterAccount, 100)
-
         val transactionBuilder = controlledAccount.transactionBuilderSync
         val signerKey = Signer.ed25519PublicKey(KeyPair.fromAccountId(masterAccount.publicAddress))
         val managerDataKey = controlledAccount.publicAddress
-        val managerDataValue = "some package id"
-        val transaction = transactionBuilder.setFee(100)
+        val managerDataValue = "pId"
+        val transaction = transactionBuilder
+                .setFee(fee)//TODO should we pay twice the fee because 2 operations???
                 .setMemo("test", "account linking")
                 .addOperation(SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
-                .addOperation(ManageDataOperation.Builder(managerDataKey, managerDataValue.toByteArray()).build())
+                .addOperation(ManageDataOperation.Builder(managerDataKey, kin.base.codec.Base64().decode(managerDataValue)).build())
                 .build()
         // simulate transaction getting a transaction envelope and decode it.
         val transactionEnvelope = transaction.transactionEnvelope
         val externalTransaction = Transaction.decodeTransaction(transactionEnvelope)
         // Sending the linking transaction from the master account
-        val transactionId = masterAccount.sendTransactionSync(externalTransaction)
+        masterAccount.sendTransactionSync(externalTransaction)
     }
 
     private fun onboardAccounts(senderFundAmount: Int = 0,
@@ -453,20 +464,10 @@ class KinAccountIntegrationTest {
     }
 
     private fun onboardSingleAccount(account: KinAccount, fundAmount: Int) {
-        val latch = CountDownLatch(1)
-
-        var listenerRegistration: ListenerRegistration? = null
-        listenerRegistration = account.addAccountCreationListener {
-            listenerRegistration?.remove()
-            if (fundAmount > 0) {
-                fakeKinOnBoard.fundWithKin(account.publicAddress.orEmpty(), fundAmount.toString())
-            }
-            latch.countDown()
-        }
-
         fakeKinOnBoard.createAccount(account.publicAddress.orEmpty())
-
-        assertTrue(latch.await(timeoutDurationSecondsLong, TimeUnit.SECONDS))
+        Thread.sleep(5000) // sleep for 5 seconds in order to be sure that all the account were created and funded
+        fakeKinOnBoard.fundWithKin(account.publicAddress.orEmpty(), fundAmount.toString())
+        Thread.sleep(5000) // sleep for 5 seconds in order to be sure that all the account were created and funded
     }
 
     private fun addAppIdToMemo(memo: String): String {
