@@ -431,7 +431,6 @@ class KinAccountIntegrationTest {
         assertThat(controlledAccount.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin.multiply(BigDecimal(2)))))
         assertThat(masterAccount.balanceSync.value(), equalTo(BigDecimal("100.00000").subtract(feeInKin)))
         assertThat(destinationAccount.balanceSync.value(), equalTo(BigDecimal("121.12300")))
-        masterAccount.statusSync
     }
 
     private fun linkAccount(controlledAccount: KinAccount, masterAccount: KinAccount) {
@@ -440,17 +439,20 @@ class KinAccountIntegrationTest {
         val transactionBuilder = controlledAccount.transactionBuilderSync
         val signerKey = Signer.ed25519PublicKey(KeyPair.fromAccountId(masterAccount.publicAddress))
         val managerDataKey = controlledAccount.publicAddress
-        val managerDataValue = "pId"
+        val managerDataValue = "pIda"
         val transaction = transactionBuilder
-                .setFee(fee)//TODO should we pay twice the fee because 2 operations???
+                .setFee(fee)
                 .setMemo("test", "account linking")
                 .addOperation(SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
-                .addOperation(ManageDataOperation.Builder(managerDataKey, kin.base.codec.Base64().decode(managerDataValue)).build())
+                .addOperation(ManageDataOperation.Builder(managerDataKey, kin.base.codec.Base64().decode(managerDataValue))
+                        .setSourceAccount(KeyPair.fromAccountId(masterAccount.publicAddress))
+                        .build())
                 .build()
-        // simulate transaction getting a transaction envelope and decode it.
+        // simulate getting a transaction envelope and decode it.
         val transactionEnvelope = transaction.transactionEnvelope
         val externalTransaction = Transaction.decodeTransaction(transactionEnvelope)
-        // Sending the linking transaction from the master account
+        // Sign with the master and sending the linking transaction from the master account
+        externalTransaction.addSignature(masterAccount)
         masterAccount.sendTransactionSync(externalTransaction)
     }
 
