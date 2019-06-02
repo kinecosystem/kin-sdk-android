@@ -13,6 +13,7 @@ public class Environment {
 		new Environment("https://horizon.kinfederation.com",
 			"Kin Mainnet ; December 2018");
 
+    // TODO: 2019-06-02  change this and other test places to the regular test-net
     public static final Environment TEST =
         new Environment("http://horizon-testnet-one-wallet.kininfrastructure.com//",
             "Kin Testnet ; December 2018");
