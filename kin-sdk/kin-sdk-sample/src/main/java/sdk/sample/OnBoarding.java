@@ -19,7 +19,7 @@ import okhttp3.Response;
 class OnBoarding {
 
     private static final int FUND_KIN_AMOUNT = 6000;
-    private static final String URL_CREATE_ACCOUNT = "https://friendbot-testnet.kininfrastructure.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+    private static final String URL_CREATE_ACCOUNT = "https://friendbot.developers.kinecosystem.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
