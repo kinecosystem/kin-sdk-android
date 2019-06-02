@@ -10,7 +10,6 @@ import kin.base.Account;
 import kin.base.CreateAccountOperation;
 import kin.base.KeyPair;
 import kin.base.Network;
-import kin.base.Server;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +26,6 @@ public class TransactionTest {
     private static final String SECRET_SEED_FROM = "SB73L5FFTZMN6FHTOOWYEBVFTLUWQEWBLSCI4WLZADRJWENDBYL6QD6P";
 
     private MockWebServer mockWebServer;
-    private Server server;
     private Transaction transaction;
 
     @Before
@@ -57,8 +55,6 @@ public class TransactionTest {
     private void mockServer() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
-        String url = mockWebServer.url("").toString();
-        server = new Server(url);
     }
 
     @Test

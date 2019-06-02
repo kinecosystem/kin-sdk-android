@@ -11,17 +11,16 @@ import java.util.concurrent.TimeUnit
 /**
  * Fake on board for integration test, support creating and funding accounts on stellar test net
  */
-internal class FakeKinOnBoard @Throws(IOException::class)
-constructor() {
+internal class FakeKinOnBoard @Throws(IOException::class) constructor() {
 
     private val client: OkHttpClient = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(40, TimeUnit.SECONDS)
+            .readTimeout(40, TimeUnit.SECONDS)
+            .writeTimeout(40, TimeUnit.SECONDS)
             .build()
 
     @Throws(Exception::class)
-    fun createAccount(destinationAccount: String, amount: Int = 0) {
+    fun createAccount(destinationAccount: String, amount: String = "0") {
         val request = Request.Builder()
                 .url(String.format(URL_CREATE_ACCOUNT, destinationAccount, amount)).build()
         client.newCall(request).execute()?.let {

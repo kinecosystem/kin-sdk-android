@@ -3,6 +3,7 @@ package kin.base.responses;
 import static kin.base.Util.checkNotNull;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.Map;
 import kin.base.Asset;
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
@@ -38,6 +39,8 @@ public class AccountResponse extends Response implements TransactionBuilderAccou
   private Signer[] signers;
   @SerializedName("_links")
   private Links links;
+  @SerializedName("data")
+  private Map<String, String> data;
 
   AccountResponse(KeyPair keypair) {
     this.keypair = keypair;
@@ -100,6 +103,10 @@ public class AccountResponse extends Response implements TransactionBuilderAccou
     return signers;
   }
 
+  public Map<String, String> getData() {
+    return data;
+  }
+
   /**
    * Represents account thresholds.
    */
@@ -138,10 +145,13 @@ public class AccountResponse extends Response implements TransactionBuilderAccou
     private final boolean authRequired;
     @SerializedName("auth_revocable")
     private final boolean authRevocable;
+    @SerializedName("auth_immutable")
+    private final boolean authImmutable;
 
-    Flags(boolean authRequired, boolean authRevocable) {
+    Flags(boolean authRequired, boolean authRevocable, boolean authImmutable) {
       this.authRequired = authRequired;
       this.authRevocable = authRevocable;
+      this.authImmutable = authImmutable;
     }
 
     public boolean getAuthRequired() {
@@ -150,6 +160,10 @@ public class AccountResponse extends Response implements TransactionBuilderAccou
 
     public boolean getAuthRevocable() {
       return authRevocable;
+    }
+
+    public boolean getAuthImmutable() {
+      return authImmutable;
     }
   }
 

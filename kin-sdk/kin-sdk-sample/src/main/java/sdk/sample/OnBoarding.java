@@ -19,7 +19,8 @@ import okhttp3.Response;
 class OnBoarding {
 
     private static final int FUND_KIN_AMOUNT = 6000;
-    private static final String URL_CREATE_ACCOUNT = "https://friendbot-testnet.kininfrastructure.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+    private static final String URL_CREATE_ACCOUNT =
+        "https://friendbot.developers.kinecosystem.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
@@ -34,8 +35,8 @@ class OnBoarding {
     OnBoarding() {
         handler = new Handler(Looper.getMainLooper());
         okHttpClient = new OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(40, TimeUnit.SECONDS)
+            .readTimeout(40, TimeUnit.SECONDS)
             .build();
     }
 
@@ -49,7 +50,7 @@ class OnBoarding {
             handler.removeCallbacks(accountCreationListeningTimeout);
             fireOnSuccess(callbacks);
         });
-        handler.postDelayed(accountCreationListeningTimeout, 20 * DateUtils.SECOND_IN_MILLIS);
+        handler.postDelayed(accountCreationListeningTimeout, 40 * DateUtils.SECOND_IN_MILLIS);
         createAccount(account, callbacks);
     }
 

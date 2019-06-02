@@ -3,6 +3,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
+import java.util.List;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.InsufficientKinException;
@@ -42,10 +43,22 @@ public interface KinAccount {
      */
     Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
 
-
+    /**
+     * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
+     * <p> See {@link KinAccount#getTransactionBuilderSync()} for possibles errors</p>
+     *
+     * @return {@code TransactionBuilder}, TransactionBuilder - the builder for the transaction
+     */
     Request<TransactionBuilder> getTransactionBuilder();
 
-    // TODO: 2019-05-26 add java doc
+    /**
+     * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return a Transaction Builder object.
+     * @throws AccountNotFoundException if the sender or destination account was not created.
+     * @throws OperationFailedException other error occurred.
+     */
     TransactionBuilder getTransactionBuilderSync() throws OperationFailedException;
 
     /**
@@ -142,6 +155,66 @@ public interface KinAccount {
      */
     @NonNull
     Balance getBalanceSync() throws OperationFailedException;
+
+    /**
+     * Create {@link Request} for getting the current confirmed aggregated balance in kin
+     * <p> See {@link KinAccount#getAggregatedBalanceSync()} for possibles errors</p>
+     *
+     * @return {@code Request<Balance>} Balance - the aggregated balance in kin
+     */
+    @NonNull
+    Request<Balance> getAggregatedBalance();
+
+    /**
+     * Get the current confirmed aggregated balance in kin
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return the aggregated balance in kin
+     * @throws AccountNotFoundException if account was not created
+     * @throws OperationFailedException any other error
+     */
+    @NonNull
+    Balance getAggregatedBalanceSync() throws OperationFailedException;
+
+    /**
+     * Create {@link Request} for getting list of controlled accounts
+     * <p> See {@link KinAccount#getControlledAccountsSync()} for possibles errors</p>
+     *
+     * @return {@code Request<List<ControlledAccount>>} List<ControlledAccount> - the list of controlled accounts
+     */
+    @NonNull
+    Request<List<ControlledAccount>> getControlledAccounts();
+
+    /**
+     * Get the current list of controlled accounts
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return the list of controlled accounts
+     * @throws AccountNotFoundException if account was not created
+     * @throws OperationFailedException any other error
+     */
+    @NonNull
+    List<ControlledAccount> getControlledAccountsSync() throws OperationFailedException;
+
+    /**
+     * Create {@link Request} for getting the current account data
+     * <p> See {@link KinAccount#getAccountDataSync()} for possibles errors</p>
+     *
+     * @return {@code Request<AccountData>>} AccountData - the current account data
+     */
+    @NonNull
+    Request<AccountData> getAccountData() throws OperationFailedException;
+
+    /**
+     * Get the current account data
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return the current account data
+     * @throws AccountNotFoundException if account was not created
+     * @throws OperationFailedException any other error
+     */
+    @NonNull
+    AccountData getAccountDataSync() throws OperationFailedException;
 
     /**
      * Get current account status on blockchain network.

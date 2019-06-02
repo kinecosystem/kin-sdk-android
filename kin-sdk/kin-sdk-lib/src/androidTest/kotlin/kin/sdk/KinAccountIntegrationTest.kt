@@ -7,10 +7,9 @@ import kin.sdk.IntegConsts.TEST_NETWORK_URL
 import kin.sdk.exception.AccountNotFoundException
 import kin.sdk.exception.InsufficientFeeException
 import kin.sdk.exception.InsufficientKinException
-import org.hamcrest.CoreMatchers.*
+import kin.sdk.exception.TransactionFailedException
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.isEmptyOrNullString
-import org.hamcrest.Matchers.isEmptyString
+import org.hamcrest.Matchers.*
 import org.junit.*
 import org.junit.rules.ExpectedException
 import java.io.IOException
@@ -18,6 +17,7 @@ import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
@@ -85,6 +85,148 @@ class KinAccountIntegrationTest {
         fakeKinOnBoard.fundWithKin(kinAccount.publicAddress.orEmpty(), "3.14159")
         assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("3.14159")))
 
+    }
+
+    @Test
+    @LargeTest
+    fun getAggregatedBalance_FundAccounts_GotAggregatedBalance() {
+        val kinAccount1 = kinClient.addAccount()
+        val kinAccount2 = kinClient.addAccount()
+        val masterAccount = kinClient.addAccount()
+
+        fakeKinOnBoard.createAccount(kinAccount1.publicAddress.orEmpty(), "10.14159")
+        fakeKinOnBoard.createAccount(kinAccount2.publicAddress.orEmpty(), "100.00301")
+        fakeKinOnBoard.createAccount(masterAccount.publicAddress.orEmpty(), "20.02500")
+
+        linkAccount(kinAccount1, masterAccount, "some package id 1")
+        linkAccount(kinAccount2, masterAccount, "some package id 2")
+
+        // multiply the fee in 4 because there were 4 operations(2 in each linkAccount call)
+        assertThat(masterAccount.aggregatedBalanceSync.value(), equalTo(BigDecimal("130.16960")
+                .subtract(feeInKin.multiply(BigDecimal(4)))))
+    }
+
+    @Test
+    @LargeTest
+    fun getAggregatedBalance_OneOfTheAccountsWasNotCreated_AccountNotFoundException() {
+        val kinAccount1 = kinClient.addAccount()
+        val kinAccount2 = kinClient.addAccount()
+        val masterAccount = kinClient.addAccount()
+
+        fakeKinOnBoard.createAccount(kinAccount1.publicAddress.orEmpty(), "10.14159")
+        fakeKinOnBoard.createAccount(masterAccount.publicAddress.orEmpty(), "20.02500")
+
+
+        expectedEx.expect(AccountNotFoundException::class.java)
+        expectedEx.expectMessage(kinAccount2.publicAddress.orEmpty())
+
+        linkAccount(kinAccount1, masterAccount, "some package id 1")
+        linkAccount(kinAccount2, masterAccount, "some package id 2")
+    }
+
+    @Test
+    @LargeTest
+    fun linkAccount_MasterAccountNotCreated_OpNoSourceAccount() {
+        val exception = assertFailsWith<TransactionFailedException> {
+
+            val kinAccount = kinClient.addAccount()
+            val masterAccount = kinClient.addAccount()
+
+            onboardSingleAccount(kinAccount, 10.14159)
+
+            linkAccount(kinAccount, masterAccount, "some package id")
+        }
+
+        assertThat(exception.transactionResultCode, equalTo("tx_failed"))
+        assertThat(exception.operationsResultCodes?.get(1), equalTo("op_no_source_account"))
+    }
+
+    @Test
+    @LargeTest
+    fun getControlledAccounts_LinkAccounts_GotAllControlledAccounts() {
+        val kinAccount1 = kinClient.addAccount()
+        val kinAccount2 = kinClient.addAccount()
+        val kinAccount3 = kinClient.addAccount()
+        val masterAccount = kinClient.addAccount()
+
+        fakeKinOnBoard.createAccount(kinAccount1.publicAddress.orEmpty(), "10.14159")
+        fakeKinOnBoard.createAccount(kinAccount2.publicAddress.orEmpty(), "100.00301")
+        fakeKinOnBoard.createAccount(kinAccount3.publicAddress.orEmpty(), "5.00000")
+        fakeKinOnBoard.createAccount(masterAccount.publicAddress.orEmpty(), "20.02500")
+
+        linkAccount(kinAccount1, masterAccount, "some package id 1")
+        linkAccount(kinAccount2, masterAccount, "some package id 2")
+        linkAccount(kinAccount3, masterAccount, "some package id 3")
+
+        val controlledAccounts = masterAccount.controlledAccountsSync
+        assertThat(controlledAccounts, hasSize(4))
+        // sort the array because we don't know in what order we are getting it
+        controlledAccounts.sortBy { it.balance.value() }
+        assertThat(controlledAccounts[0].balance.value(), equalTo(BigDecimal("5.00000").subtract(feeInKin.multiply(BigDecimal(2)))))
+        assertThat(controlledAccounts[0].publicAddress, equalTo(kinAccount3.publicAddress.orEmpty()))
+        assertThat(controlledAccounts[1].balance.value(), equalTo(BigDecimal("10.14159").subtract(feeInKin.multiply(BigDecimal(2)))))
+        assertThat(controlledAccounts[1].publicAddress, equalTo(kinAccount1.publicAddress.orEmpty()))
+        assertThat(controlledAccounts[2].balance.value(), equalTo(BigDecimal("20.02500")))
+        assertThat(controlledAccounts[2].publicAddress, equalTo(masterAccount.publicAddress.orEmpty()))
+        assertThat(controlledAccounts[3].balance.value(), equalTo(BigDecimal("100.00301").subtract(feeInKin.multiply(BigDecimal(2)))))
+        assertThat(controlledAccounts[3].publicAddress, equalTo(kinAccount2.publicAddress.orEmpty()))
+    }
+
+    @Test
+    @LargeTest
+    fun getControlledAccounts_NoAccounts_EmptyListOfAccounts() {
+        val masterAccount = kinClient.addAccount()
+
+        fakeKinOnBoard.createAccount(masterAccount.publicAddress.orEmpty(), "20.02500")
+
+        val controlledAccounts = masterAccount.controlledAccountsSync
+        assertThat(controlledAccounts, hasSize(0))
+    }
+
+    @Test
+    @LargeTest
+    fun getControlledAccounts_NoAccounts_AccountNotFoundException() {
+        val masterAccount = kinClient.addAccount()
+
+        expectedEx.expect(AccountNotFoundException::class.java)
+        expectedEx.expectMessage(masterAccount.publicAddress.orEmpty())
+
+        masterAccount.controlledAccountsSync
+    }
+
+    @Test
+    @LargeTest
+    fun getAccountData_CreateAccount_DataCorrect() {
+        val kinAccount = kinClient.addAccount()
+
+        fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty(), "10.14159")
+        val accountData = kinAccount.accountDataSync
+        assertThat(accountData.publicAddress, equalTo(kinAccount.publicAddress))
+        assertThat(accountData.balances[0].balance, equalTo("10.14159"))
+    }
+
+    @Test
+    @LargeTest
+    fun getAccountData_NoAccount_AccountNotFoundException() {
+        val kinAccount = kinClient.addAccount()
+
+        expectedEx.expect(AccountNotFoundException::class.java)
+        expectedEx.expectMessage(kinAccount.publicAddress.orEmpty())
+        kinAccount.accountDataSync
+    }
+
+    @Test
+    @LargeTest
+    fun linkAccount_AccountNotCreated_AccountNotFoundException() {
+        val kinAccount = kinClient.addAccount()
+        val masterAccount = kinClient.addAccount()
+
+        onboardSingleAccount(masterAccount, 20.02500)
+
+        expectedEx.expect(AccountNotFoundException::class.java)
+        expectedEx.expectMessage(kinAccount.publicAddress.orEmpty())
+
+        linkAccount(kinAccount, masterAccount, "some package id")
     }
 
     @Test
@@ -356,8 +498,10 @@ class KinAccountIntegrationTest {
         val controlledAccount = kinClient.addAccount()
         val masterAccount = kinClient.addAccount()
         val destinationAccount = kinClient.addAccount()
-        onboardSingleAccount(destinationAccount, 100)
-        linkAccount(controlledAccount, masterAccount)
+        onboardSingleAccount(controlledAccount, 100.0)
+        onboardSingleAccount(masterAccount, 100.0)
+        onboardSingleAccount(destinationAccount, 100.0)
+        linkAccount(controlledAccount, masterAccount, "some package id ")
         val transaction = masterAccount.transactionBuilderSync
                 .setFee(fee)
                 .setMemo(appId, "master to destination")
@@ -373,24 +517,23 @@ class KinAccountIntegrationTest {
         assertThat(controlledAccount.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin.multiply(BigDecimal(2)))))
         assertThat(masterAccount.balanceSync.value(), equalTo(BigDecimal("100.00000").subtract(feeInKin)))
         assertThat(destinationAccount.balanceSync.value(), equalTo(BigDecimal("121.12300")))
+        val packageIdInBase64 = masterAccount.accountDataSync.data[controlledAccount.publicAddress]
+        assertThat(String(kin.base.codec.Base64.decodeBase64(packageIdInBase64)), containsString("some package id"))
     }
 
-    private fun linkAccount(controlledAccount: KinAccount, masterAccount: KinAccount) {
-        onboardSingleAccount(controlledAccount, 100)
-        onboardSingleAccount(masterAccount, 100)
+    private fun linkAccount(controlledAccount: KinAccount, masterAccount: KinAccount, managerDataValue: String) {
         val transactionBuilder = controlledAccount.transactionBuilderSync
         val signerKey = Signer.ed25519PublicKey(KeyPair.fromAccountId(masterAccount.publicAddress))
         val managerDataKey = controlledAccount.publicAddress
-        val managerDataValue = "pIda"
         val transaction = transactionBuilder
                 .setFee(fee)
                 .setMemo("test", "account linking")
                 .addOperation(SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
-                .addOperation(ManageDataOperation.Builder(managerDataKey, kin.base.codec.Base64().decode(managerDataValue))
+                .addOperation(ManageDataOperation.Builder(managerDataKey, managerDataValue.toByteArray())
                         .setSourceAccount(KeyPair.fromAccountId(masterAccount.publicAddress))
                         .build())
                 .build()
-        // simulate getting a transaction envelope and decode it.
+        // Simulate getting a transaction envelope and decode it.
         val transactionEnvelope = transaction.transactionEnvelope
         val externalTransaction = Transaction.decodeTransaction(transactionEnvelope)
         // Sign with the master and sending the linking transaction from the master account
@@ -402,12 +545,12 @@ class KinAccountIntegrationTest {
                                 receiverFundAmount: Int = 0): Pair<KinAccount, KinAccount> {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
-        fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty(), senderFundAmount)
-        fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty(), receiverFundAmount)
+        fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty(), senderFundAmount.toString())
+        fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty(), receiverFundAmount.toString())
         return Pair(kinAccountSender, kinAccountReceiver)
     }
 
-    private fun onboardSingleAccount(account: KinAccount, fundAmount: Int) {
+    private fun onboardSingleAccount(account: KinAccount, fundAmount: Double) {
         fakeKinOnBoard.createAccount(account.publicAddress.orEmpty())
         fakeKinOnBoard.fundWithKin(account.publicAddress.orEmpty(), fundAmount.toString())
     }

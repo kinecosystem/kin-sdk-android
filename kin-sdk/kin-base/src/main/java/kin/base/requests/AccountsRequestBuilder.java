@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URI;
 import kin.base.KeyPair;
 import kin.base.responses.AccountResponse;
+import kin.base.responses.AggregatedBalanceResponse;
+import kin.base.responses.ControlledAccountsResponse;
 import kin.base.responses.Page;
 import okhttp3.OkHttpClient;
 
@@ -38,6 +40,56 @@ public class AccountsRequestBuilder extends RequestBuilder {
   public AccountResponse account(KeyPair account) throws IOException {
     this.setSegments("accounts", account.getAccountId());
     return this.account(this.buildUri());
+  }
+
+  // TODO: 2019-05-29 maybe blockchain need to add the description in their docs.
+
+  /**
+   * Requests <code>GET /accounts/{account}/aggregate_balance</code>
+   *
+   * @param account Account to fetch
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/accounts-single.html">Account Details</a>
+   */
+  public AggregatedBalanceResponse aggregateBalance(KeyPair account) throws IOException {
+    this.setSegments("accounts", account.getAccountId(), "aggregate_balance");
+    return this.aggregateBalance(this.buildUri());
+  }
+
+  /**
+   * Requests specific <code>uri</code> and returns {@link AggregatedBalanceResponse}. This method is helpful for
+   * getting the links.
+   */
+  public AggregatedBalanceResponse aggregateBalance(URI uri) throws IOException {
+    TypeToken type = new TypeToken<AggregatedBalanceResponse>() {
+    };
+    ResponseHandler<AggregatedBalanceResponse> responseHandler = new ResponseHandler<AggregatedBalanceResponse>(
+        httpClient, type);
+    return responseHandler.handleGetRequest(uri);
+  }
+
+  // TODO: 2019-05-29 maybe blockchain need to add the description in their docs.
+
+  /**
+   * Requests <code>GET /accounts/{account}/controlled_balances</code>
+   *
+   * @param account Account to fetch
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/accounts-single.html">Account Details</a>
+   */
+  public ControlledAccountsResponse controlledAccounts(KeyPair account) throws IOException {
+    this.setSegments("accounts", account.getAccountId(), "controlled_balances");
+    return this.controlledAccounts(this.buildUri());
+  }
+
+  /**
+   * Requests specific <code>uri</code> and returns {@link ControlledAccountsResponse}. This method is helpful for
+   * getting the links.
+   */
+  public ControlledAccountsResponse controlledAccounts(URI uri) throws IOException {
+    TypeToken type = new TypeToken<ControlledAccountsResponse>() {
+    };
+    ResponseHandler<ControlledAccountsResponse> responseHandler = new ResponseHandler<ControlledAccountsResponse>(
+        httpClient, type);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**
@@ -97,4 +149,5 @@ public class AccountsRequestBuilder extends RequestBuilder {
     super.order(direction);
     return this;
   }
+
 }

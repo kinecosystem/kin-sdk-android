@@ -3,6 +3,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
+import java.util.List;
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
@@ -74,6 +75,27 @@ final class KinAccountImpl extends AbstractKinAccount {
     public Balance getBalanceSync() throws OperationFailedException {
         checkValidAccount();
         return accountInfoRetriever.getBalance(account.getAccountId());
+    }
+
+    @NonNull
+    @Override
+    public Balance getAggregatedBalanceSync() throws OperationFailedException {
+        checkValidAccount();
+        return accountInfoRetriever.getAggregatedBalance(account.getAccountId());
+    }
+
+    @NonNull
+    @Override
+    public List<ControlledAccount> getControlledAccountsSync() throws OperationFailedException {
+        checkValidAccount();
+        return accountInfoRetriever.getControlledAccounts(account.getAccountId());
+    }
+
+    @NonNull
+    @Override
+    public AccountData getAccountDataSync() throws OperationFailedException {
+        checkValidAccount();
+        return accountInfoRetriever.getAccountData(account.getAccountId());
     }
 
     @Override
