@@ -42,13 +42,10 @@ public class AccountsRequestBuilder extends RequestBuilder {
     return this.account(this.buildUri());
   }
 
-  // TODO: 2019-05-29 maybe blockchain need to add the description in their docs.
-
   /**
    * Requests <code>GET /accounts/{account}/aggregate_balance</code>
    *
-   * @param account Account to fetch
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/accounts-single.html">Account Details</a>
+   * @param account Account to fetch the aggregated balance for.
    */
   public AggregatedBalanceResponse aggregateBalance(KeyPair account) throws IOException {
     this.setSegments("accounts", account.getAccountId(), "aggregate_balance");
@@ -67,13 +64,11 @@ public class AccountsRequestBuilder extends RequestBuilder {
     return responseHandler.handleGetRequest(uri);
   }
 
-  // TODO: 2019-05-29 maybe blockchain need to add the description in their docs.
-
+    // TODO: 2019-05-29 we may need a url for the method description, need to check if blockchain team can even add it.
   /**
    * Requests <code>GET /accounts/{account}/controlled_balances</code>
    *
-   * @param account Account to fetch
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/accounts-single.html">Account Details</a>
+   * @param account the account in which we get all his controlled accounts
    */
   public ControlledAccountsResponse controlledAccounts(KeyPair account) throws IOException {
     this.setSegments("accounts", account.getAccountId(), "controlled_balances");
