@@ -60,7 +60,7 @@ class TransactionSender {
     TransactionBuilder getTransactionBuilder(@NonNull KeyPair from) throws OperationFailedException {
         Utils.checkNotNull(from, "from");
         AccountResponse sourceAccount = loadSourceAccount(from);
-        // TODO: 2019-05-27 need to decide if we do use make the fee "must" in the constructor...
+        // TODO: 2019-05-27 need to decide if we make the fee a "must" in the constructor...
         return new TransactionBuilder(from, sourceAccount);
     }
 

@@ -501,7 +501,9 @@ class KinAccountIntegrationTest {
         onboardSingleAccount(controlledAccount, 100.0)
         onboardSingleAccount(masterAccount, 100.0)
         onboardSingleAccount(destinationAccount, 100.0)
+
         linkAccount(controlledAccount, masterAccount, "some package id ")
+
         val transaction = masterAccount.transactionBuilderSync
                 .setFee(fee)
                 .setMemo(appId, "master to destination")
@@ -510,8 +512,8 @@ class KinAccountIntegrationTest {
                         .setSourceAccount(KeyPair.fromAccountId(controlledAccount.publicAddress))
                         .build())
                 .build()
-        //TODO add a check to see if indeed the manage data the same for master and 2 signatures in controlled
         val transactionId = masterAccount.sendTransactionSync(transaction)
+
         assertThat(transactionId.id(), not(isEmptyOrNullString()))
         // The controlled account need to reduced the fee from the link account transaction.
         assertThat(controlledAccount.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin.multiply(BigDecimal(2)))))
