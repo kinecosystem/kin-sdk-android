@@ -2,12 +2,18 @@ package kin.sdk;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import org.junit.Before;
@@ -93,6 +99,62 @@ public class KinAccountImplTest {
     }
 
     @Test
+    public void getAggregatedBalanceSync() throws Exception {
+        initWithRandomAccount();
+
+        Balance expectedAggregatedBalance = new BalanceImpl(new BigDecimal("150.0"));
+        when(mockAccountInfoRetriever.getAggregatedBalance(anyString())).thenReturn(expectedAggregatedBalance);
+
+        Balance balance = kinAccount.getAggregatedBalanceSync();
+
+        assertEquals(expectedAggregatedBalance, balance);
+        verify(mockAccountInfoRetriever).getAggregatedBalance(expectedRandomAccount.getAccountId());
+    }
+
+    @Test
+    public void getControlledAccountsSync() throws Exception {
+        initWithRandomAccount();
+
+        ControlledAccount controlledAccount1 = new ControlledAccount(new BalanceImpl(new BigDecimal("150.0")),
+            "first account public Address");
+        ControlledAccount controlledAccount2 = new ControlledAccount(new BalanceImpl(new BigDecimal("10.0")),
+            "second account public Address");
+        ControlledAccount controlledAccount3 = new ControlledAccount(new BalanceImpl(new BigDecimal("55.0")),
+            "third account public Address");
+        List<ControlledAccount> expectedControlledAccounts = new ArrayList<>();
+        expectedControlledAccounts.add(controlledAccount1);
+        expectedControlledAccounts.add(controlledAccount2);
+        expectedControlledAccounts.add(controlledAccount3);
+
+        when(mockAccountInfoRetriever.getControlledAccounts(anyString())).thenReturn(expectedControlledAccounts);
+
+        List<ControlledAccount> controlledAccounts = kinAccount.getControlledAccountsSync();
+
+        assertThat(expectedControlledAccounts, equalTo(controlledAccounts));
+        verify(mockAccountInfoRetriever).getControlledAccounts(expectedRandomAccount.getAccountId());
+    }
+
+    @Test
+    public void getAccountDataSync() throws Exception {
+        initWithRandomAccount();
+
+        Map<String, String> data = new HashMap<>();
+        data.put("public address 1", "package id 1");
+        data.put("public address 2", "package id 2");
+        data.put("public address 3", "package id 3");
+        AccountData expectedAccountData = new AccountData(expectedRandomAccount.getAccountId(),
+            123456789L, "paging token,", 1,
+            null, null, null, null, data);
+
+        when(mockAccountInfoRetriever.getAccountData(anyString())).thenReturn(expectedAccountData);
+
+        AccountData accountData = kinAccount.getAccountDataSync();
+
+        assertThat(expectedAccountData, equalTo(accountData));
+        verify(mockAccountInfoRetriever).getAccountData(expectedRandomAccount.getAccountId());
+    }
+
+    @Test
     public void getStatusSync() throws Exception {
         initWithRandomAccount();
 
@@ -109,7 +171,9 @@ public class KinAccountImplTest {
         initWithRandomAccount();
         kinAccount.markAsDeleted();
 
-        Transaction transaction = kinAccount.buildTransactionSync("GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"), 100);
+        Transaction transaction = kinAccount
+            .buildTransactionSync("GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"),
+                100);
         kinAccount.sendTransactionSync(transaction);
     }
 
@@ -136,6 +200,31 @@ public class KinAccountImplTest {
 
         kinAccount.markAsDeleted();
         kinAccount.getStatusSync();
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void getAggregatedBalanceSync_DeletedAccount_Exception() throws Exception {
+        initWithRandomAccount();
+        kinAccount.markAsDeleted();
+
+        kinAccount.getAggregatedBalanceSync();
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void getControlledAccountsSync_DeletedAccount_Exception() throws Exception {
+        initWithRandomAccount();
+        kinAccount.markAsDeleted();
+
+        kinAccount.getControlledAccountsSync();
+
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void getAccountDataSync_DeletedAccount_Exception() throws Exception {
+        initWithRandomAccount();
+        kinAccount.markAsDeleted();
+
+        kinAccount.getAccountDataSync();
     }
 
     @Test

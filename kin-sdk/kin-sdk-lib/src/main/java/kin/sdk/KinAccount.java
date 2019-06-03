@@ -47,19 +47,9 @@ public interface KinAccount {
      * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
      * <p> See {@link KinAccount#getTransactionBuilderSync()} for possibles errors</p>
      *
-     * @return {@code TransactionBuilder}, TransactionBuilder - the builder for the transaction
+     * @return {@code Request<TransactionBuilder>}, TransactionBuilder - the builder for the transaction
      */
     Request<TransactionBuilder> getTransactionBuilder();
-
-    /**
-     * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
-     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
-     *
-     * @return a Transaction Builder object.
-     * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws OperationFailedException other error occurred.
-     */
-    TransactionBuilder getTransactionBuilderSync() throws OperationFailedException;
 
     /**
      * Create {@link Request} for signing and sending a transaction
@@ -106,6 +96,16 @@ public interface KinAccount {
      * @throws OperationFailedException other error occurred.
      */
     Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+
+    /**
+     * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return a Transaction Builder object.
+     * @throws AccountNotFoundException if the sender or destination account was not created.
+     * @throws OperationFailedException other error occurred.
+     */
+    TransactionBuilder getTransactionBuilderSync() throws OperationFailedException;
 
     /**
      * send a transaction.
