@@ -473,6 +473,8 @@ The Kin SDK allows you to import and export accounts. This can be used, for inst
 This feature works as follows:  
 * Export: You can export an account using its corresponding `KinAccount` object. It will return the account data as a JSON string. You just need to pass a passphrase, which will be used to encrypt the the private key. This passphrase will be later needed to import the account.  
 
+###### Snippet: export account
+
 ```java
 String exportedAccount = account.export(passphrase);
 ```
@@ -480,11 +482,13 @@ String exportedAccount = account.export(passphrase);
 * Import: You can import an account using the `KinClient` object.  
 You need to pass the JSON string that was received when the account was exported and the passphrase that was used to export the account.
 
+###### Snippet: import account
+
 ```java
 KinAccount importedAccount = kinClient.importAccount(exportedJson, passphrase);
 ```
 Note that the encryption strength depends on the strength of the passphrase.  
-Also, we recommend to save the JSON string in a safe place. 
+Also, we recommend to save the JSON string in a private place. 
 
 ### Error Handling
 
