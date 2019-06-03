@@ -469,28 +469,26 @@ To unregister any listener use the `listenerRegistration.remove()` method.
 
 ### Import/Export
 
-`kin-sdk` let you Import and Export accounts, for example you can use it to Backup and/or Restore an account.  
-The way it works is:  
-Export - you can export the accoount using KinAccount object, it will return the account data as a JSON string.  
-You just need to pass a passphrase(some kind of password) which will be used to encrypt the the private key.  
-This passphrase is later needed in order to import the account.  
+The Kin SDK allows you to import and export accounts. This can be used, for instance, for backing up and/or restoring an account.  
+This feature works as follows:  
+* Export: You can export an account using its corresponding `KinAccount` object. It will return the account data as a JSON string. You just need to pass a passphrase, which will be used to encrypt the the private key. This passphrase will be later needed to import the account.  
 
 ```java
 String exportedAccount = account.export(passphrase);
 ```
 
-Import - You can import an account using the a KinClient object.  
-You need to pass the exported json and the passphrase(that was used to export the account).
+* Import: You can import an account using the `KinClient` object.  
+You need to pass the JSON string that was received when the account was exported and the passphrase that was used to export the account.
 
 ```java
 KinAccount importedAccount = kinClient.importAccount(exportedJson, passphrase);
 ```
-Notice that the encryption strength is dependent on the strength of the passphrase.  
-Also we recommend to save the json in a private place. 
+Note that the encryption strength depends on the strength of the passphrase.  
+Also, we recommend to save the JSON string in a safe place. 
 
 ### Error Handling
 
-`kin-sdk` wraps errors with exceptions. Synchronous methods can throw exceptions and asynchronous requests have `onError(Exception e)` callbacks.
+The Kin SDK wraps errors with exceptions. Synchronous methods can throw exceptions and asynchronous requests have `onError(Exception e)` callbacks.
 
 #### Common Errors
 
