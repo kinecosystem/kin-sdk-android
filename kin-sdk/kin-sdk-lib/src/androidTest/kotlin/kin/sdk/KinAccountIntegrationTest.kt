@@ -494,6 +494,38 @@ class KinAccountIntegrationTest {
 
     @Test
     @Throws(Exception::class)
+    fun accountLinkingUsingDifferentKinClients_SendTransaction_TransactionSuccess() {
+        var anotherKinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, "zxcv")
+        val masterAccount = anotherKinClient.addAccount()
+        val controlledAccount = kinClient.addAccount()
+        val destinationAccount = kinClient.addAccount()
+        onboardSingleAccount(controlledAccount, 100.0)
+        onboardSingleAccount(masterAccount, 100.0)
+        onboardSingleAccount(destinationAccount, 100.0)
+
+        linkAccount(controlledAccount, masterAccount, "some package id ")
+
+        val transaction = masterAccount.transactionBuilderSync
+                .setFee(fee)
+                .setMemo("zxcv", "master to destination")
+                .addOperation(PaymentOperation.Builder(
+                        KeyPair.fromAccountId(destinationAccount.publicAddress), AssetTypeNative(), "21.12300")
+                        .setSourceAccount(KeyPair.fromAccountId(controlledAccount.publicAddress))
+                        .build())
+                .build()
+        val transactionId = masterAccount.sendTransactionSync(transaction)
+
+        assertThat(transactionId.id(), not(isEmptyOrNullString()))
+        // The controlled account need to reduced the fee from the link account transaction.
+        assertThat(controlledAccount.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin.multiply(BigDecimal(2)))))
+        assertThat(masterAccount.balanceSync.value(), equalTo(BigDecimal("100.00000").subtract(feeInKin)))
+        assertThat(destinationAccount.balanceSync.value(), equalTo(BigDecimal("121.12300")))
+        val packageIdInBase64 = masterAccount.accountDataSync.data[controlledAccount.publicAddress]
+        assertThat(String(kin.base.codec.Base64.decodeBase64(packageIdInBase64)), containsString("some package id"))
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun accountLinking_SendTransaction_TransactionSuccess() {
         val controlledAccount = kinClient.addAccount()
         val masterAccount = kinClient.addAccount()
