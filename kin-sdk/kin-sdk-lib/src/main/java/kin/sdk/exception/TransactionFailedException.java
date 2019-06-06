@@ -23,9 +23,11 @@ public class TransactionFailedException extends OperationFailedException {
 
     @NonNull
     private static String getMessage(@Nullable String txResultCode, @Nullable List<String> opResultCode) {
-        return opResultCode != null && !opResultCode.isEmpty() ?
-            "Transaction failed with the error = " + txResultCode + ", operations = " + opResultCode :
-            "Transaction failed";
+        String opResultCodeErrorMessage =
+            opResultCode != null && !opResultCode.isEmpty() ? ", operations = " + opResultCode : "";
+        return "Transaction failed with the error = " + txResultCode + opResultCodeErrorMessage;
+
+
     }
 
     @Nullable
