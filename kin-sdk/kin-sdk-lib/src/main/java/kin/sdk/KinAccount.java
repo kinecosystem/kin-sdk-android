@@ -158,6 +158,9 @@ public interface KinAccount {
 
     /**
      * Create {@link Request} for getting the current confirmed aggregated balance in kin
+     * An aggregated balance is a sum of balances of all accounts controlled by the master account.
+     * This includes the balance of the master account.
+     * <p> See {@link ControlledAccount} for more information on a controlled account</p>
      * <p> See {@link KinAccount#getAggregatedBalanceSync()} for possibles errors</p>
      *
      * @return {@code Request<Balance>} Balance - the aggregated balance in kin
@@ -178,6 +181,8 @@ public interface KinAccount {
 
     /**
      * Create {@link Request} for getting list of controlled accounts
+     * It is a list of all accounts controlled by the master account.
+     * <p> See {@link ControlledAccount} for more information on a controlled account</p>
      * <p> See {@link KinAccount#getControlledAccountsSync()} for possibles errors</p>
      *
      * @return {@code Request<List<ControlledAccount>>} List<ControlledAccount> - the list of controlled accounts
