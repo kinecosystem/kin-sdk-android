@@ -42,8 +42,6 @@ public class KeyStoreImplTest {
         assertNotNull(account.getSecretSeed());
     }
 
-    // TODO: 2019-06-06 Add another test with 2 kin clients
-
     @Test
     public void newAccount_JsonException_CreateAccountException() throws Exception {
         Store mockStore = mock(Store.class);

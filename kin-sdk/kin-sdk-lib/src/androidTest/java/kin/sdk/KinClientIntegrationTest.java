@@ -316,6 +316,20 @@ public class KinClientIntegrationTest {
     }
 
     @Test
+    public void importAccount_CreateKinClientAgain_AddOnlyIfNotExists() throws Exception {
+        kinClient.addAccount();
+        kinClient.addAccount();
+        kinClient.addAccount();
+        KinAccount kinAccount = kinClient.addAccount();
+        String passphrase = UUID.randomUUID().toString();
+        String exported = kinAccount.export(passphrase);
+        kinClient.importAccount(exported, passphrase);
+        KinClient anotherKinClient = createNewKinClient(STORE_KEY_TEST);
+        assertEquals(4, anotherKinClient.getAccountCount());
+        assertEquals(4, kinClient.getAccountCount());
+    }
+
+    @Test
     public void importAccount_AddOnlyIfNotExists() throws Exception {
         kinClient.addAccount();
         kinClient.addAccount();
