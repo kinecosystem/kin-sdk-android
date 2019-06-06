@@ -2,6 +2,7 @@ package kin.sdk;
 
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 import kin.base.KeyPair;
@@ -95,8 +96,11 @@ class KeyStoreImpl implements KeyStore {
         try {
             String encryptedSeed = String.valueOf(newKeyPair.getSecretSeed());
             String publicKey = newKeyPair.getAccountId();
-            JSONObject accountsJson = addKeyPairToAccountsJson(encryptedSeed, publicKey);
-            store.saveString(STORE_KEY_ACCOUNTS, accountsJson.toString());
+            String accounts = store.getString(STORE_KEY_ACCOUNTS);
+            if (TextUtils.isEmpty(accounts) || !accounts.contains(publicKey)) {
+                JSONObject accountsJson = addKeyPairToAccountsJson(encryptedSeed, publicKey);
+                store.saveString(STORE_KEY_ACCOUNTS, accountsJson.toString());
+            }
             return newKeyPair;
         } catch (JSONException e) {
             throw new CreateAccountException(e);

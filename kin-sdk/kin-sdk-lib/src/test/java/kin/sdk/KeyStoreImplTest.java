@@ -42,10 +42,13 @@ public class KeyStoreImplTest {
         assertNotNull(account.getSecretSeed());
     }
 
+    // TODO: 2019-06-06 Add another test with 2 kin clients
+
     @Test
     public void newAccount_JsonException_CreateAccountException() throws Exception {
         Store mockStore = mock(Store.class);
         when(mockStore.getString(anyString()))
+            .thenReturn("")
             .thenReturn(KeyStoreImpl.ENCRYPTION_VERSION_NAME)
             .thenReturn("not a real json");
         KeyStoreImpl keyStore = new KeyStoreImpl(mockStore, new FakeBackupRestore());
@@ -109,6 +112,7 @@ public class KeyStoreImplTest {
     public void deleteAccount_JsonException_DeleteAccountException() throws Exception {
         Store stubStore = spy(FakeStore.class);
         when(stubStore.getString(anyString()))
+            .thenCallRealMethod()
             .thenCallRealMethod()
             .thenCallRealMethod()
             .thenReturn("not a real json");
