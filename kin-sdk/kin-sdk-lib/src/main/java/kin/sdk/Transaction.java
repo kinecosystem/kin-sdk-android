@@ -4,6 +4,7 @@ import java.io.IOException;
 import kin.base.KeyPair;
 import kin.base.Memo;
 import kin.base.Network;
+import kin.sdk.exception.DecodeTransactionException;
 
 public class Transaction {
 
@@ -19,10 +20,15 @@ public class Transaction {
         this.baseTransaction = baseTransaction;
     }
 
-    public static Transaction decodeTransaction(String transactionEnvelope) throws IOException {
-        kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(transactionEnvelope);
-        TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(transaction.hash()));
-        return new Transaction(id, transaction);
+    public static Transaction decodeTransaction(String transactionEnvelope) throws DecodeTransactionException {
+        try {
+            kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(transactionEnvelope);
+            TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(transaction.hash()));
+            return new Transaction(id, transaction);
+        } catch (IOException e) {
+            throw new DecodeTransactionException(e.getMessage(), e.getCause());
+        }
+
     }
 
     public KeyPair getSource() {
