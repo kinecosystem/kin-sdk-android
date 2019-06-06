@@ -189,7 +189,7 @@ public interface KinAccount {
      * Get the current list of controlled accounts
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
-     * @return the list of controlled accounts
+     * @return the list of controlled accounts. Could be empty if no controlled accounts.
      * @throws AccountNotFoundException if account was not created
      * @throws OperationFailedException any other error
      */
