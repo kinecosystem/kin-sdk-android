@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
 import kin.base.AssetTypeNative;
@@ -25,7 +24,6 @@ import kin.sdk.exception.TransactionFailedException;
 
 class TransactionSender {
 
-    private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
     private static final int MAX_NUM_OF_DECIMAL_PLACES = 4;
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
@@ -53,8 +51,7 @@ class TransactionSender {
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee,
             memo);
-        TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
-        return new Transaction(id, stellarTransaction);
+        return new Transaction(stellarTransaction);
     }
 
     TransactionBuilder getTransactionBuilder(@NonNull KeyPair from) throws OperationFailedException {
@@ -85,7 +82,7 @@ class TransactionSender {
         checkForNegativeFee(fee);
         checkAddressNotEmpty(publicAddress);
         checkForNegativeAmount(amount);
-        checkMemo(memo);
+        Utils.validateMemo(memo);
     }
 
 
@@ -113,17 +110,6 @@ class TransactionSender {
     private void checkForNegativeFee(int fee) {
         if (fee < 0) {
             throw new IllegalArgumentException("Fee can't be negative");
-        }
-    }
-
-    private void checkMemo(String memo) {
-        try {
-            if (memo != null && memo.getBytes("UTF-8").length > MEMO_BYTES_LENGTH_LIMIT) {
-                throw new IllegalArgumentException(
-                    "Memo cannot be longer that " + MEMO_BYTES_LENGTH_LIMIT + " bytes(UTF-8 characters)");
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("Memo text have unsupported characters encoding");
         }
     }
 

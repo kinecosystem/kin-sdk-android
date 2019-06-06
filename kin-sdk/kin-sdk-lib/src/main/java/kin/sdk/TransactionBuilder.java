@@ -2,6 +2,7 @@ package kin.sdk;
 
 import kin.base.KeyPair;
 import kin.base.Memo;
+import kin.base.MemoText;
 import kin.base.Operation;
 import kin.base.TimeBounds;
 import kin.base.Transaction;
@@ -61,7 +62,6 @@ public class TransactionBuilder {
      */
     public TransactionBuilder setMemo(String appId, String memo) {
         builder.addMemo(Memo.text(Utils.addAppIdToMemo(appId, memo)));
-        // TODO: 2019-05-23 should we validate memo like we are doing in transaction sender class?
         return this;
     }
 
@@ -82,9 +82,9 @@ public class TransactionBuilder {
      */
     public kin.sdk.Transaction build() {
         Transaction baseTransaction = builder.build();
-        TransactionIdImpl transactionId = new TransactionIdImpl(Utils.byteArrayToHex(baseTransaction.hash()));
+        Utils.validateMemo(((MemoText) baseTransaction.getMemo()).getText());
         baseTransaction.sign(account);
-        return new kin.sdk.Transaction(transactionId, baseTransaction);
+        return new kin.sdk.Transaction(baseTransaction);
     }
 
 }

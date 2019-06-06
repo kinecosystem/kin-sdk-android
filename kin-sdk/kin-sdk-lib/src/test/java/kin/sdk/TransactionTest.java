@@ -48,8 +48,7 @@ public class TransactionTest {
             .addFee(100)
             .build();
         baseTransaction.sign(source);
-        TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(baseTransaction.hash()));
-        transaction = new Transaction(id, baseTransaction);
+        transaction = new Transaction(baseTransaction);
     }
 
     private void mockServer() throws IOException {
