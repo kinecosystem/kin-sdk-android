@@ -43,6 +43,9 @@ public class TransactionBuilder {
     }
 
     /**
+     * Each transaction sets a fee that is paid by the source account.
+     * If this fee is below the network minimum the transaction will fail.
+     * The more operations in the transaction, the greater the required fee.
      * @param fee this transaction fee
      * @return Builder object so you can chain methods.
      */
@@ -52,8 +55,8 @@ public class TransactionBuilder {
     }
 
     /**
-     * Adds a <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">memo</a> to
-     * this transaction.
+     * Adds a memo to this transaction.
+     * It's an optional parameter and should contain extra information
      *
      * @param appId is a 3-4 character string which is added to each transaction memo to identify your application.
      * appId must contain only digits and upper and/or lower case letters. String length must be 3 or 4.
@@ -82,6 +85,9 @@ public class TransactionBuilder {
      */
     public kin.sdk.Transaction build() {
         Transaction baseTransaction = builder.build();
+        if (baseTransaction.getFee() < 0) {
+            throw new IllegalArgumentException("Fee can't be negative");
+        }
         Utils.validateMemo(((MemoText) baseTransaction.getMemo()).getText());
         baseTransaction.sign(account);
         return new kin.sdk.Transaction(baseTransaction);
