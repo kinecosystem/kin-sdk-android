@@ -13,6 +13,7 @@ public class TransactionBuilder {
 
     private final Builder builder;
     private final KeyPair account;
+    private final String appId;
 
     /**
      * Construct a new transaction builder.
@@ -20,10 +21,13 @@ public class TransactionBuilder {
      * @param account The source account for this transaction. This account is the account
      * @param sourceAccount The source account for this transaction. This account is the account who will use a sequence
      * number. When build() is called, the account object's sequence number will be incremented.
+     * @param appId is a 3-4 character string which is added to each transaction memo to identify your application.
+     *      * appId must contain only digits and upper and/or lower case letters. String length must be 3 or 4.
      */
-    TransactionBuilder(KeyPair account, TransactionBuilderAccount sourceAccount) {
+    TransactionBuilder(KeyPair account, TransactionBuilderAccount sourceAccount, String appId) {
         this.account = account;
         builder = new Builder(sourceAccount);
+        this.appId = appId;
     }
 
     public int getOperationsCount() {
@@ -56,14 +60,12 @@ public class TransactionBuilder {
 
     /**
      * Adds a memo to this transaction.
-     * It's an optional parameter and should contain extra information
+     * @param memo It's an optional parameter and should contain extra information
      *
-     * @param appId is a 3-4 character string which is added to each transaction memo to identify your application.
-     * appId must contain only digits and upper and/or lower case letters. String length must be 3 or 4.
      * @return Builder object so you can chain methods.
      * @see Memo
      */
-    public TransactionBuilder setMemo(String appId, String memo) {
+    public TransactionBuilder setMemo(String memo) {
         builder.addMemo(Memo.text(Utils.addAppIdToMemo(appId, memo)));
         return this;
     }

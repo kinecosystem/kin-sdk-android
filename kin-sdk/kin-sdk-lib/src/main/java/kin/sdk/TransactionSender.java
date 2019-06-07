@@ -58,7 +58,7 @@ class TransactionSender {
         Utils.checkNotNull(from, "from");
         AccountResponse sourceAccount = loadSourceAccount(from);
         // TODO: 2019-05-27 need to decide if we make the fee a "must" in the constructor...
-        return new TransactionBuilder(from, sourceAccount);
+        return new TransactionBuilder(from, sourceAccount, appId);
     }
 
     TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
@@ -200,9 +200,8 @@ class TransactionSender {
         String transactionResultCode = transactionException.getTransactionResultCode();
         return (
             (resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0)))
-                ||
-                !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE
-                    .equals(transactionResultCode));
+                || !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE
+                .equals(transactionResultCode));
     }
 
     private boolean isInsufficientFeeException(TransactionFailedException transactionException) {
