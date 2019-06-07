@@ -140,7 +140,7 @@ public class TransactionSenderTest {
             .addOperation(new Builder().setSigner(signerKey, 1).build())
             .addOperation(
                 new ManageDataOperation.Builder(managerDataKey, new Base64().decode(managerDataValue)).build())
-            .setMemo(APP_ID, "fake memo")
+            .setMemo("fake memo")
             .setFee(100)
             .setTimeBounds(timeBounds)
             .build();

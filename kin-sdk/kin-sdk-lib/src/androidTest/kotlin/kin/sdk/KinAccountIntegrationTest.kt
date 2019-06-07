@@ -108,20 +108,13 @@ class KinAccountIntegrationTest {
 
     @Test
     @LargeTest
-    fun getAggregatedBalance_OneOfTheAccountsWasNotCreated_AccountNotFoundException() {
-        val kinAccount1 = kinClient.addAccount()
-        val kinAccount2 = kinClient.addAccount()
+    fun getAggregatedBalance_AccountNotCreated_AccountNotFoundException() {
         val masterAccount = kinClient.addAccount()
 
-        fakeKinOnBoard.createAccount(kinAccount1.publicAddress.orEmpty(), "10.14159")
-        fakeKinOnBoard.createAccount(masterAccount.publicAddress.orEmpty(), "20.02500")
-
-
         expectedEx.expect(AccountNotFoundException::class.java)
-        expectedEx.expectMessage(kinAccount2.publicAddress.orEmpty())
+        expectedEx.expectMessage(masterAccount.publicAddress.orEmpty())
 
-        linkAccount(kinAccount1, masterAccount, "some package id 1")
-        linkAccount(kinAccount2, masterAccount, "some package id 2")
+        masterAccount.aggregatedBalanceSync
     }
 
     @Test
@@ -507,38 +500,7 @@ class KinAccountIntegrationTest {
 
         val transaction = masterAccount.transactionBuilderSync
                 .setFee(fee)
-                .setMemo("zxcv", "master to destination")
-                .addOperation(PaymentOperation.Builder(
-                        KeyPair.fromAccountId(destinationAccount.publicAddress), AssetTypeNative(), "21.12300")
-                        .setSourceAccount(KeyPair.fromAccountId(controlledAccount.publicAddress))
-                        .build())
-                .build()
-        val transactionId = masterAccount.sendTransactionSync(transaction)
-
-        assertThat(transactionId.id(), not(isEmptyOrNullString()))
-        // The controlled account need to reduced the fee from the link account transaction.
-        assertThat(controlledAccount.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin.multiply(BigDecimal(2)))))
-        assertThat(masterAccount.balanceSync.value(), equalTo(BigDecimal("100.00000").subtract(feeInKin)))
-        assertThat(destinationAccount.balanceSync.value(), equalTo(BigDecimal("121.12300")))
-        val packageIdInBase64 = masterAccount.accountDataSync.data[controlledAccount.publicAddress]
-        assertThat(String(kin.base.codec.Base64.decodeBase64(packageIdInBase64)), containsString("some package id"))
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun accountLinking_SendTransaction_TransactionSuccess() {
-        val controlledAccount = kinClient.addAccount()
-        val masterAccount = kinClient.addAccount()
-        val destinationAccount = kinClient.addAccount()
-        onboardSingleAccount(controlledAccount, 100.0)
-        onboardSingleAccount(masterAccount, 100.0)
-        onboardSingleAccount(destinationAccount, 100.0)
-
-        linkAccount(controlledAccount, masterAccount, "some package id ")
-
-        val transaction = masterAccount.transactionBuilderSync
-                .setFee(fee)
-                .setMemo(appId, "master to destination")
+                .setMemo("master to destination")
                 .addOperation(PaymentOperation.Builder(
                         KeyPair.fromAccountId(destinationAccount.publicAddress), AssetTypeNative(), "21.12300")
                         .setSourceAccount(KeyPair.fromAccountId(controlledAccount.publicAddress))
@@ -561,7 +523,7 @@ class KinAccountIntegrationTest {
         val managerDataKey = controlledAccount.publicAddress
         val transaction = transactionBuilder
                 .setFee(fee)
-                .setMemo("test", "account linking")
+                .setMemo("account linking")
                 .addOperation(SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
                 .addOperation(ManageDataOperation.Builder(managerDataKey, managerDataValue.toByteArray())
                         .setSourceAccount(KeyPair.fromAccountId(masterAccount.publicAddress))

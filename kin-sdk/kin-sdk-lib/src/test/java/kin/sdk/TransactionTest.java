@@ -56,19 +56,15 @@ public class TransactionTest {
         mockWebServer.start();
     }
 
+
     @Test
     public void getTransactionEnvelope_success() throws Exception {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
 
-        String transactionEnvelope = transaction.getTransactionEnvelope();
-        kin.base.Transaction transaction2 = kin.base.Transaction.fromEnvelopeXdr(transactionEnvelope);
-
-        assertThat(transaction.getBaseTransaction().getSourceAccount().getAccountId(),
-            equalTo(transaction2.getSourceAccount().getAccountId()));
-        assertThat(transaction.getBaseTransaction().getSequenceNumber(), equalTo(transaction2.getSequenceNumber()));
-        assertThat(transaction.getBaseTransaction().getFee(), equalTo(transaction2.getFee()));
-        assertThat(transaction.getTransactionEnvelope(), equalTo(transaction2.toEnvelopeXdrBase64()));
+        String transactionEnvelope = "AAAAANNVIxukFMnDJ7x37MKNLh3O3WzyD2d6eId2zqiXC1icAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA01UjG6QUycMnvHfswo0uHc7dbPIPZ3p4h3bOqJcLWJwAAAAAC+vCAAAAAAAAAAABlwtYnAAAAEBEIhSY0BYSMy5yrYkIYes9AmH0v729nVGZ1nH8CukJ5rfWoYf6Ebo4hismcjv51xlulVuTRYILuW67ENoHn1YB";
+        assertThat(kin.base.Transaction.fromEnvelopeXdr(transactionEnvelope).toEnvelopeXdrBase64(),
+            equalTo(transactionEnvelope));
     }
 
     @Test
@@ -76,13 +72,13 @@ public class TransactionTest {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
 
-        String transactionEnvelope = transaction.getTransactionEnvelope();
-        Transaction transaction2 = Transaction.decodeTransaction(transactionEnvelope);
-        assertThat(transaction.getSource().getAccountId(), equalTo(transaction2.getSource().getAccountId()));
-        assertThat(transaction.getBaseTransaction().getSequenceNumber(),
-            equalTo(transaction2.getBaseTransaction().getSequenceNumber()));
-        assertThat(transaction.getFee(), equalTo(transaction2.getFee()));
-        assertThat(transaction.getTransactionEnvelope(), equalTo(transaction2.getTransactionEnvelope()));
+        String transactionEnvelope = "AAAAANNVIxukFMnDJ7x37MKNLh3O3WzyD2d6eId2zqiXC1icAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA01UjG6QUycMnvHfswo0uHc7dbPIPZ3p4h3bOqJcLWJwAAAAAC+vCAAAAAAAAAAABlwtYnAAAAEBEIhSY0BYSMy5yrYkIYes9AmH0v729nVGZ1nH8CukJ5rfWoYf6Ebo4hismcjv51xlulVuTRYILuW67ENoHn1YB";
+        Transaction transaction = Transaction.decodeTransaction(transactionEnvelope);
+        assertThat("GDJVKIY3UQKMTQZHXR36ZQUNFYO45XLM6IHWO6TYQ53M5KEXBNMJYWVR",
+            equalTo(transaction.getSource().getAccountId()));
+        assertThat(2908908335136769L, equalTo(transaction.getBaseTransaction().getSequenceNumber()));
+        assertThat(100, equalTo(transaction.getFee()));
+        assertThat(transactionEnvelope, equalTo(transaction.getTransactionEnvelope()));
     }
 
     @Test
