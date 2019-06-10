@@ -32,39 +32,39 @@ public class AccountData {
         this.data = data;
     }
 
-    public String getPublicAddress() {
+    public String publicAddress() {
         return publicAddress;
     }
 
-    public long getSequenceNumber() {
+    public long sequenceNumber() {
         return sequenceNumber;
     }
 
-    public String getPagingToken() {
+    public String pagingToken() {
         return pagingToken;
     }
 
-    public Integer getSubentryCount() {
+    public Integer subentryCount() {
         return subentryCount;
     }
 
-    public AccountResponse.Thresholds getThresholds() {
+    public AccountResponse.Thresholds thresholds() {
         return thresholds;
     }
 
-    public Flags getFlags() {
+    public Flags flags() {
         return flags;
     }
 
-    public AccountResponse.Balance[] getBalances() {
+    public AccountResponse.Balance[] balances() {
         return balances;
     }
 
-    public Signer[] getSigners() {
+    public Signer[] signers() {
         return signers;
     }
 
-    public Map<String, String> getData() {
+    public Map<String, String> data() {
         return data;
     }
 
