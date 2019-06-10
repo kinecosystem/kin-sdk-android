@@ -62,7 +62,7 @@ class TransactionSender {
     }
 
     TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
-        return sendTransaction(transaction.getBaseTransaction());
+        return sendTransaction(transaction.baseTransaction());
     }
 
     TransactionId sendWhitelistTransaction(String whitelist) throws OperationFailedException {
