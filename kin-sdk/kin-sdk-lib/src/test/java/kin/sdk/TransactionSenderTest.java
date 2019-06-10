@@ -125,13 +125,13 @@ public class TransactionSenderTest {
             timeBounds);
 
         assertThat(transactionBuilder.getOperationsCount(), equalTo(2));
-        assertThat(transaction.getFee(), equalTo(200));
-        assertThat(((MemoText) transaction.getMemo()).getText(), equalTo(("1-" + APP_ID + "-fake memo")));
-        assertThat(transaction.getSource().getAccountId(), equalTo(account.getAccountId()));
-        assertThat(transaction.getBaseTransaction().getTimeBounds(), equalTo(timeBounds));
+        assertThat(transaction.fee(), equalTo(200));
+        assertThat(((MemoText) transaction.memo()).getText(), equalTo(("1-" + APP_ID + "-fake memo")));
+        assertThat(transaction.source().getAccountId(), equalTo(account.getAccountId()));
+        assertThat(transaction.baseTransaction().getTimeBounds(), equalTo(timeBounds));
         assertArrayEquals(account.getSignatureHint().getSignatureHint(),
-            transaction.getBaseTransaction().getSignatures().get(0).getHint().getSignatureHint());
-        assertThat(transaction.getBaseTransaction().getSignatures().size(), equalTo(1));
+            transaction.baseTransaction().getSignatures().get(0).getHint().getSignatureHint());
+        assertThat(transaction.baseTransaction().getSignatures().size(), equalTo(1));
     }
 
     private Transaction getLinkingTransaction(SignerKey signerKey, String managerDataKey, String managerDataValue,
