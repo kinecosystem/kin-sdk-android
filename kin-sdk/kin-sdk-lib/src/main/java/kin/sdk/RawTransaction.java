@@ -1,21 +1,16 @@
 package kin.sdk;
 
 import java.io.IOException;
-import java.util.List;
-import kin.base.KeyPair;
 import kin.base.Memo;
 import kin.base.Network;
 import kin.base.Operation;
 import kin.base.TimeBounds;
-import kin.base.xdr.DecoratedSignature;
 import kin.sdk.exception.DecodeTransactionException;
 
-public class Transaction {
+public class RawTransaction extends TransactionBase {
 
-    private final kin.base.Transaction baseTransaction;
-
-    public Transaction(kin.base.Transaction baseTransaction) {
-        this.baseTransaction = baseTransaction;
+    public RawTransaction(kin.base.Transaction baseTransaction) {
+        super(baseTransaction);
     }
 
     /**
@@ -23,46 +18,24 @@ public class Transaction {
      *
      * @param transactionEnvelope a Base-64 encoded <code>TransactionEnvelope</code>
      */
-    public static Transaction decodeTransaction(String transactionEnvelope) throws DecodeTransactionException {
+    public static RawTransaction decodeTransaction(String transactionEnvelope) throws DecodeTransactionException {
         try {
             kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(transactionEnvelope);
-            return new Transaction(transaction);
+            return new RawTransaction(transaction);
         } catch (IOException e) {
             throw new DecodeTransactionException(e.getMessage(), e.getCause());
         }
     }
 
-    public KeyPair source() {
-        return baseTransaction.getSourceAccount();
-    }
-
-    /**
-     * Returns fee paid for transaction in kin base unit (1 base unit = 0.00001 KIN).
-     */
-    public int fee() {
-        return baseTransaction.getFee();
-    }
-
     public Memo memo() {
-        return baseTransaction.getMemo();
-    }
-
-    /**
-     * return The transaction hash
-     */
-    public TransactionId id() {
-        return new TransactionIdImpl(Utils.byteArrayToHex(baseTransaction.hash()));
-    }
-
-    kin.base.Transaction baseTransaction() {
-        return baseTransaction;
+        return baseTransaction().getMemo();
     }
 
     /**
      * see {@link WhitelistableTransaction} for more information on a whitelistable transaction</p>
      */
     public WhitelistableTransaction whitelistableTransaction() {
-        return new WhitelistableTransaction(baseTransaction.toEnvelopeXdrBase64(),
+        return new WhitelistableTransaction(baseTransaction().toEnvelopeXdrBase64(),
             Network.current().getNetworkPassphrase());
     }
 
@@ -71,26 +44,18 @@ public class Transaction {
      * Transaction need to have at least one signature.
      */
     public String transactionEnvelope() {
-        return baseTransaction.toEnvelopeXdrBase64();
-    }
-
-    public long sequenceNumber() {
-        return baseTransaction.getSequenceNumber();
+        return baseTransaction().toEnvelopeXdrBase64();
     }
 
     public Operation[] operations() {
-        return baseTransaction.getOperations();
-    }
-
-    public List<DecoratedSignature> signatures() {
-        return baseTransaction.getSignatures();
+        return baseTransaction().getOperations();
     }
 
     /**
      * @return TimeBounds, or null (representing no time restrictions)
      */
     public TimeBounds timeBounds() {
-        return baseTransaction.getTimeBounds();
+        return baseTransaction().getTimeBounds();
     }
 
     /**
@@ -98,7 +63,7 @@ public class Transaction {
      * @param account {@link KinAccount} object which is the account who we add his signature.
      */
     public void addSignature(KinAccount account) {
-        baseTransaction.sign(((KinAccountImpl) account).getKeyPair());
+        baseTransaction().sign(((KinAccountImpl) account).getKeyPair());
     }
 
 }

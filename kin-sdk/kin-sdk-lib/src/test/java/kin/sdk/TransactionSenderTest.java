@@ -99,7 +99,7 @@ public class TransactionSenderTest {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         TransactionId transactionId = transactionSender.sendTransaction(transaction);
 
@@ -121,20 +121,20 @@ public class TransactionSenderTest {
 
         TransactionBuilder transactionBuilder = transactionSender.getTransactionBuilder(account);
         TimeBounds timeBounds = new TimeBounds(42, 1337);
-        Transaction transaction = getLinkingTransaction(signerKey, managerDataKey, managerDataValue, transactionBuilder,
+        RawTransaction transaction = getLinkingTransaction(signerKey, managerDataKey, managerDataValue, transactionBuilder,
             timeBounds);
 
         assertThat(transactionBuilder.getOperationsCount(), equalTo(2));
         assertThat(transaction.fee(), equalTo(200));
         assertThat(((MemoText) transaction.memo()).getText(), equalTo(("1-" + APP_ID + "-fake memo")));
-        assertThat(transaction.source().getAccountId(), equalTo(account.getAccountId()));
+        assertThat(transaction.source(), equalTo(account.getAccountId()));
         assertThat(transaction.baseTransaction().getTimeBounds(), equalTo(timeBounds));
         assertArrayEquals(account.getSignatureHint().getSignatureHint(),
             transaction.baseTransaction().getSignatures().get(0).getHint().getSignatureHint());
         assertThat(transaction.baseTransaction().getSignatures().size(), equalTo(1));
     }
 
-    private Transaction getLinkingTransaction(SignerKey signerKey, String managerDataKey, String managerDataValue,
+    private RawTransaction getLinkingTransaction(SignerKey signerKey, String managerDataKey, String managerDataValue,
         TransactionBuilder transactionBuilder, TimeBounds timeBounds) {
         return transactionBuilder
             .addOperation(new Builder().setSigner(signerKey, 1).build())
@@ -155,7 +155,7 @@ public class TransactionSenderTest {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
         String fakeMemo = "fake memo";
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE, fakeMemo);
         TransactionId transactionId = transactionSender.sendTransaction(transaction);
 
@@ -175,7 +175,7 @@ public class TransactionSenderTest {
         expectedEx.expect(AccountNotFoundException.class);
         expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID_TO)));
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -195,7 +195,7 @@ public class TransactionSenderTest {
             .enqueue(TestUtils.generateSuccessHttp307MockResponse(location));
         mockWebServerHttp307.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         TransactionId transactionId = transactionSender.sendTransaction(transaction);
 
@@ -215,7 +215,7 @@ public class TransactionSenderTest {
         expectedEx.expect(AccountNotFoundException.class);
         expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID_FROM)));
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -234,7 +234,7 @@ public class TransactionSenderTest {
         expectedEx.expect(new HasPropertyWithValue<>("operationsResultCodes", contains("op_malformed")));
         expectedEx.expect(new HasPropertyWithValue<>("operationsResultCodes", hasSize(1)));
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -251,7 +251,7 @@ public class TransactionSenderTest {
 
         expectedEx.expect(InsufficientKinException.class);
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -267,7 +267,7 @@ public class TransactionSenderTest {
 
         expectedEx.expect(InsufficientFeeException.class);
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -283,7 +283,7 @@ public class TransactionSenderTest {
 
         expectedEx.expect(InsufficientKinException.class);
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -312,7 +312,7 @@ public class TransactionSenderTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(isA(IOException.class));
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -324,7 +324,7 @@ public class TransactionSenderTest {
 
         expectedEx.expect(OperationFailedException.class);
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -337,7 +337,7 @@ public class TransactionSenderTest {
 
         expectedEx.expect(OperationFailedException.class);
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -354,7 +354,7 @@ public class TransactionSenderTest {
 
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(isA(SocketTimeoutException.class));
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -366,7 +366,7 @@ public class TransactionSenderTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectMessage(ACCOUNT_ID_FROM);
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -379,7 +379,7 @@ public class TransactionSenderTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectMessage(ACCOUNT_ID_TO);
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -393,7 +393,7 @@ public class TransactionSenderTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectMessage("transaction");
 
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -404,7 +404,7 @@ public class TransactionSenderTest {
         String tooLongMemo = "memo string can be only 21 characters";
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Memo cannot be longer that 21 bytes(UTF-8 characters)");
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE, tooLongMemo);
         transactionSender.sendTransaction(transaction);
         assertThat(mockWebServer.getRequestCount(), equalTo(0));
@@ -415,7 +415,7 @@ public class TransactionSenderTest {
     public void sendTransaction_NullAccount() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("account");
-        Transaction transaction = transactionSender.buildTransaction(null, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
+        RawTransaction transaction = transactionSender.buildTransaction(null, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
 
@@ -424,7 +424,7 @@ public class TransactionSenderTest {
     public void sendTransaction_NullPublicAddress() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("public address");
-        Transaction transaction = transactionSender.buildTransaction(account, null, new BigDecimal("200"), FEE);
+        RawTransaction transaction = transactionSender.buildTransaction(account, null, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
 
@@ -433,7 +433,7 @@ public class TransactionSenderTest {
     public void sendTransaction_NullAmount() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("amount");
-        Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, null, FEE);
+        RawTransaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, null, FEE);
         transactionSender.sendTransaction(transaction);
     }
 
@@ -441,7 +441,7 @@ public class TransactionSenderTest {
     public void sendTransaction_EmptyPublicAddress() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("public address");
-        Transaction transaction = transactionSender.buildTransaction(account, "", new BigDecimal("200"), FEE);
+        RawTransaction transaction = transactionSender.buildTransaction(account, "", new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
 
@@ -449,7 +449,7 @@ public class TransactionSenderTest {
     public void sendTransaction_NegativeAmount() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Amount");
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("-200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -458,7 +458,7 @@ public class TransactionSenderTest {
     public void sendTransaction_NegativeFee() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Fee");
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), -FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -467,7 +467,7 @@ public class TransactionSenderTest {
     public void sendTransaction_AmountExceedNumOfDecimalPlaces() throws Exception {
         expectedEx.expect(IllegalAmountException.class);
         expectedEx.expectMessage("amount can't have more then 5 digits after the decimal point");
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("20.012345"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -478,7 +478,7 @@ public class TransactionSenderTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(isA(FormatException.class));
         expectedEx.expectMessage("public address");
-        Transaction transaction = transactionSender.buildTransaction(account, "ABCDEF", new BigDecimal("200"), FEE);
+        RawTransaction transaction = transactionSender.buildTransaction(account, "ABCDEF", new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
 
@@ -488,7 +488,7 @@ public class TransactionSenderTest {
         expectedEx.expect(OperationFailedException.class);
         expectedEx.expectCause(isA(FormatException.class));
         expectedEx.expectMessage("public address");
-        Transaction transaction = transactionSender
+        RawTransaction transaction = transactionSender
             .buildTransaction(account, "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OG3",
                 new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
@@ -497,7 +497,7 @@ public class TransactionSenderTest {
     @SuppressWarnings("SameParameterValue")
     private void testHttpResponseCode(int resCode) {
         try {
-            Transaction transaction = transactionSender
+            RawTransaction transaction = transactionSender
                 .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
             transactionSender.sendTransaction(transaction);
             fail("Expected OperationFailedException");

@@ -2,7 +2,6 @@ package kin.sdk;
 
 import kin.base.KeyPair;
 import kin.base.Memo;
-import kin.base.MemoText;
 import kin.base.Operation;
 import kin.base.TimeBounds;
 import kin.base.Transaction;
@@ -14,6 +13,7 @@ public class TransactionBuilder {
     private final Builder builder;
     private final KeyPair account;
     private final String appId;
+    private String memo;
 
     /**
      * Construct a new transaction builder.
@@ -65,7 +65,7 @@ public class TransactionBuilder {
      * @see Memo
      */
     public TransactionBuilder setMemo(String memo) {
-        builder.addMemo(Memo.text(Utils.addAppIdToMemo(appId, memo)));
+        this.memo = memo;
         return this;
     }
 
@@ -83,14 +83,17 @@ public class TransactionBuilder {
     /**
      * Builds a transaction. It will increment sequence number of the source account.
      */
-    public kin.sdk.Transaction build() {
+    public RawTransaction build() {
+        Utils.validateMemo(memo);
+        builder.addMemo(Memo.text(Utils.addAppIdToMemo(appId, "")));
+
         Transaction baseTransaction = builder.build();
         if (baseTransaction.getFee() < 0) {
             throw new IllegalArgumentException("Fee can't be negative");
         }
-        Utils.validateMemo(((MemoText) baseTransaction.getMemo()).getText());
         baseTransaction.sign(account);
-        return new kin.sdk.Transaction(baseTransaction);
+        return new RawTransaction(baseTransaction);
     }
+
 
 }

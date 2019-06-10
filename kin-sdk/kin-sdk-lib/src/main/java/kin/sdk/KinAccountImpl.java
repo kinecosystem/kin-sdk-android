@@ -37,14 +37,14 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public RawTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                             int fee) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public RawTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                             int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
@@ -58,7 +58,7 @@ final class KinAccountImpl extends AbstractKinAccount {
 
     @NonNull
     @Override
-    public TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException {
+    public TransactionId sendTransactionSync(RawTransaction transaction) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendTransaction(transaction);
     }

@@ -11,11 +11,11 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress,
+    public Request<RawTransaction> buildTransaction(@NonNull final String publicAddress,
                                                  @NonNull final BigDecimal amount, final int fee) {
-        return new Request<>(new Callable<Transaction>() {
+        return new Request<>(new Callable<RawTransaction>() {
             @Override
-            public Transaction call() throws Exception {
+            public RawTransaction call() throws Exception {
                 return buildTransactionSync(publicAddress, amount, fee);
             }
         });
@@ -23,11 +23,11 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<Transaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
+    public Request<RawTransaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
                                                  final int fee, @Nullable final String memo) {
-        return new Request<>(new Callable<Transaction>() {
+        return new Request<>(new Callable<RawTransaction>() {
             @Override
-            public Transaction call() throws Exception {
+            public RawTransaction call() throws Exception {
                 return buildTransactionSync(publicAddress, amount, fee, memo); 
             }
         });
@@ -46,7 +46,7 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<TransactionId> sendTransaction(final Transaction transaction) {
+    public Request<TransactionId> sendTransaction(final RawTransaction transaction) {
         return new Request<>(new Callable<TransactionId>() {
             @Override
             public TransactionId call() throws Exception {

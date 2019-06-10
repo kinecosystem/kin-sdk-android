@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import java.math.BigDecimal;
 import kin.sdk.KinAccount;
-import kin.sdk.Transaction;
+import kin.sdk.RawTransaction;
 import kin.sdk.TransactionId;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.OperationFailedException;
@@ -37,7 +37,7 @@ public class TransactionActivity extends BaseActivity {
     private EditText toAddressInput, amountInput, feeInput, memoInput;
     private SwitchCompat switchButton;
     private Request<Long> gertMinimumFeeRequest;
-    private Request<Transaction> buildTransactionRequest;
+    private Request<RawTransaction> buildTransactionRequest;
     private Request<TransactionId> sendTransactionRequest;
     private WhitelistService whitelistService;
 
@@ -248,7 +248,7 @@ public class TransactionActivity extends BaseActivity {
         buildTransactionRequest.run(new BuildTransactionCallback());
     }
 
-    private void handleWhitelistTransaction(Transaction transaction) {
+    private void handleWhitelistTransaction(RawTransaction transaction) {
         try {
             whitelistService
                 .whitelistTransaction(transaction.whitelistableTransaction(), new WhitelistServiceListener());
@@ -258,7 +258,7 @@ public class TransactionActivity extends BaseActivity {
         }
     }
 
-    private void sendTransaction(Transaction transaction, KinAccount account, DisplayCallback<TransactionId> callback) {
+    private void sendTransaction(RawTransaction transaction, KinAccount account, DisplayCallback<TransactionId> callback) {
         sendTransactionRequest = account.sendTransaction(transaction);
         sendTransactionRequest.run(callback);
     }
@@ -276,10 +276,10 @@ public class TransactionActivity extends BaseActivity {
         }
     }
 
-    private class BuildTransactionCallback implements ResultCallback<Transaction> {
+    private class BuildTransactionCallback implements ResultCallback<RawTransaction> {
 
         @Override
-        public void onResult(Transaction transaction) {
+        public void onResult(RawTransaction transaction) {
             Log.d(TAG, "buildTransaction: build transaction " + transaction.id().id() + " succeeded");
 
             // This is just to differentiate between whitelist transaction and regular transaction

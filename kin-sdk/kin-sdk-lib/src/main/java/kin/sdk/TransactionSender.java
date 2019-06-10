@@ -36,12 +36,12 @@ class TransactionSender {
         this.appId = appId;
     }
 
-    Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+    RawTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee) throws OperationFailedException {
         return buildTransaction(from, publicAddress, amount, fee, null);
     }
 
-    Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+    RawTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee, @Nullable String memo) throws OperationFailedException {
         checkParams(from, publicAddress, amount, fee, memo);
         memo = Utils.addAppIdToMemo(appId, memo);
@@ -51,7 +51,7 @@ class TransactionSender {
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee,
             memo);
-        return new Transaction(stellarTransaction);
+        return new RawTransaction(stellarTransaction);
     }
 
     TransactionBuilder getTransactionBuilder(@NonNull KeyPair from) throws OperationFailedException {
@@ -61,7 +61,7 @@ class TransactionSender {
         return new TransactionBuilder(from, sourceAccount, appId);
     }
 
-    TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
+    TransactionId sendTransaction(RawTransaction transaction) throws OperationFailedException {
         return sendTransaction(transaction.baseTransaction());
     }
 
