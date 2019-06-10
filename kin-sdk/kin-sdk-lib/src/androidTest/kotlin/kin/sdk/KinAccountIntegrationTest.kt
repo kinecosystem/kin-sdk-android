@@ -194,8 +194,8 @@ class KinAccountIntegrationTest {
 
         fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty(), "10.14159")
         val accountData = kinAccount.accountDataSync
-        assertThat(accountData.publicAddress, equalTo(kinAccount.publicAddress))
-        assertThat(accountData.balances[0].balance, equalTo("10.14159"))
+        assertThat(accountData.publicAddress(), equalTo(kinAccount.publicAddress))
+        assertThat(accountData.balances()[0].balance, equalTo("10.14159"))
     }
 
     @Test
@@ -307,7 +307,7 @@ class KinAccountIntegrationTest {
         expectedEx.expectMessage(kinAccountSender.publicAddress)
 
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction())
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
     }
 
@@ -324,7 +324,7 @@ class KinAccountIntegrationTest {
         expectedEx.expectMessage(kinAccountReceiver.publicAddress)
 
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction())
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
 
     }
@@ -350,7 +350,7 @@ class KinAccountIntegrationTest {
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee + 100000)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction())
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
     }
@@ -364,7 +364,7 @@ class KinAccountIntegrationTest {
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction())
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
         assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20.00000")))
@@ -513,7 +513,7 @@ class KinAccountIntegrationTest {
         assertThat(controlledAccount.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin.multiply(BigDecimal(2)))))
         assertThat(masterAccount.balanceSync.value(), equalTo(BigDecimal("100.00000").subtract(feeInKin)))
         assertThat(destinationAccount.balanceSync.value(), equalTo(BigDecimal("121.12300")))
-        val packageIdInBase64 = masterAccount.accountDataSync.data[controlledAccount.publicAddress]
+        val packageIdInBase64 = masterAccount.accountDataSync.data()[controlledAccount.publicAddress]
         assertThat(String(kin.base.codec.Base64.decodeBase64(packageIdInBase64)), containsString("some package id"))
     }
 
@@ -530,7 +530,7 @@ class KinAccountIntegrationTest {
                         .build())
                 .build()
         // Simulate getting a transaction envelope and decode it.
-        val transactionEnvelope = transaction.transactionEnvelope
+        val transactionEnvelope = transaction.transactionEnvelope()
         val externalTransaction = Transaction.decodeTransaction(transactionEnvelope)
         // Sign with the master and sending the linking transaction from the master account
         externalTransaction.addSignature(masterAccount)
