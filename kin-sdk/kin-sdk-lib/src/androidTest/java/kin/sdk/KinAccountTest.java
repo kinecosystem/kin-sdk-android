@@ -77,7 +77,7 @@ public class KinAccountTest {
         Transaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
                 new BigDecimal(10), 0);
 
-        String whitelist = new WhitelistServiceForTest().whitelistTransaction(transaction.getWhitelistableTransaction());
+        String whitelist = new WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction());
         kinAccount.sendWhitelistTransactionSync(whitelist);
     }
 
