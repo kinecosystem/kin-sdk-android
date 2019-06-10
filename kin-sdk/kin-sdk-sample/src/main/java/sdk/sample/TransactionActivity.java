@@ -250,7 +250,8 @@ public class TransactionActivity extends BaseActivity {
 
     private void handleWhitelistTransaction(Transaction transaction) {
         try {
-            whitelistService.whitelistTransaction(transaction.getWhitelistableTransaction(), new WhitelistServiceListener());
+            whitelistService
+                .whitelistTransaction(transaction.whitelistableTransaction(), new WhitelistServiceListener());
         } catch (JSONException e) {
             Utils.logError(e, "handleWhitelistTransaction");
             KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
@@ -279,7 +280,7 @@ public class TransactionActivity extends BaseActivity {
 
         @Override
         public void onResult(Transaction transaction) {
-            Log.d(TAG, "buildTransaction: build transaction " + transaction.getId().id() + " succeeded");
+            Log.d(TAG, "buildTransaction: build transaction " + transaction.id().id() + " succeeded");
 
             // This is just to differentiate between whitelist transaction and regular transaction
             if (switchButton.isChecked()) {
