@@ -35,8 +35,7 @@ public class TransactionBuilder {
     }
 
     /**
-     * Adds a new <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html"
-     * target="_blank">operation</a> to this transaction.
+     * Adds a new operation to this transaction.
      *
      * @return Builder object so you can chain methods.
      * @see Operation
@@ -71,8 +70,7 @@ public class TransactionBuilder {
     }
 
     /**
-     * Adds a <a href="https://www.stellar.org/developers/learn/concepts/transactions.html"
-     * target="_blank">time-bounds</a> to this transaction.
+     * Adds a time-bounds to this transaction.
      *
      * @return Builder object so you can chain methods.
      * @see TimeBounds
