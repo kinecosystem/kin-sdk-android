@@ -126,7 +126,7 @@ public class TransactionSenderTest {
 
         assertThat(transactionBuilder.getOperationsCount(), equalTo(2));
         assertThat(transaction.fee(), equalTo(200));
-        assertThat(((MemoText) transaction.memo()).getText(), equalTo(("1-" + APP_ID + "-")));
+        assertThat(((MemoText) transaction.memo()).getText(), equalTo(("1-" + APP_ID + "-fake memo")));
         assertThat(transaction.source(), equalTo(account.getAccountId()));
         assertThat(transaction.baseTransaction().getTimeBounds(), equalTo(timeBounds));
         assertArrayEquals(account.getSignatureHint().getSignatureHint(),
