@@ -1,5 +1,6 @@
 package kin.sdk;
 
+import android.text.TextUtils;
 import kin.base.KeyPair;
 import kin.base.Memo;
 import kin.base.Operation;
@@ -85,7 +86,7 @@ public class TransactionBuilder {
      */
     public RawTransaction build() {
         Utils.validateMemo(memo);
-        builder.addMemo(Memo.text(Utils.addAppIdToMemo(appId, "")));
+        builder.addMemo(Memo.text(Utils.addAppIdToMemo(appId, TextUtils.isEmpty(memo) ? "" : memo)));
 
         Transaction baseTransaction = builder.build();
         if (baseTransaction.getFee() < 0) {

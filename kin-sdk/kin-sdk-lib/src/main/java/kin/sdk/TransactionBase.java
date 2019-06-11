@@ -117,6 +117,4 @@ public abstract class TransactionBase {
         baseTransaction().sign(((KinAccountImpl) account).getKeyPair());
     }
 
-
-
 }

@@ -1,6 +1,7 @@
 package kin.sdk;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,7 +14,9 @@ import kin.base.MemoText;
 import kin.base.Network;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
@@ -26,6 +29,9 @@ public class TransactionTest {
     private static final String ACCOUNT_ID_FROM = "GDJVKIY3UQKMTQZHXR36ZQUNFYO45XLM6IHWO6TYQ53M5KEXBNMJYWVR";
     private static final String SECRET_SEED_FROM = "SB73L5FFTZMN6FHTOOWYEBVFTLUWQEWBLSCI4WLZADRJWENDBYL6QD6P";
 
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+
     private MockWebServer mockWebServer;
 
     @Before
@@ -37,13 +43,7 @@ public class TransactionTest {
 
     private RawTransaction createTransaction() {
         KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
-        KeyPair destination = KeyPair.fromAccountId(ACCOUNT_ID_FROM);
-        long sequenceNumber = 2908908335136768L;
-        Account account = new Account(source, sequenceNumber);
-        RawTransaction transaction = new TransactionBuilder(source, account, "test")
-            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
-            .setFee(100)
-            .build();
+        RawTransaction transaction = buildTransaction(source, 100, "fake memo");
 
         KinAccountImpl mockKinAccountImpl = mock(KinAccountImpl.class);
         when(mockKinAccountImpl.getKeyPair()).thenReturn(source);
@@ -51,11 +51,22 @@ public class TransactionTest {
         return transaction;
     }
 
+    private RawTransaction buildTransaction(KeyPair source, int fee, String memo) {
+        KeyPair destination = KeyPair.fromAccountId(ACCOUNT_ID_FROM);
+        long sequenceNumber = 2908908335136768L;
+        Account account = new Account(source, sequenceNumber);
+        return new TransactionBuilder(source, account, "test")
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setFee(fee)
+            .setMemo(memo)
+            .build();
+    }
+
+
     private void mockServer() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
     }
-
 
     @Test
     public void getTransactionEnvelope_success() {
@@ -81,8 +92,6 @@ public class TransactionTest {
 
     }
 
-    // TODO: 2019-06-10 add builder tests
-
     @Test
     public void addSignature_success() {
         RawTransaction transaction = createTransaction();
@@ -94,5 +103,47 @@ public class TransactionTest {
         assertThat(transaction.signatures().size(), equalTo(2));
     }
 
+    @Test
+    public void getTransactionBuilder_buildSuccess() {
+        RawTransaction transaction = createTransaction();
+        assertThat(((MemoText) transaction.memo()).getText(), equalTo("1-test-fake memo"));
+        assertThat(transaction.fee(), equalTo(100));
+        assertThat(transaction.operations().length, equalTo(1));
+        assertThat(transaction.operations()[0], instanceOf(CreateAccountOperation.class));
+        assertThat(transaction.sequenceNumber(), equalTo(2908908335136769L));
+        assertThat(transaction.signatures().size(), equalTo(1));
+    }
+
+    @Test
+    public void getTransactionBuilder_memoNotValid_IllegalArgumentException() {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("Memo cannot be longer that 21 bytes(UTF-8 characters)");
+
+        KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
+        buildTransaction(source, 100, "memo is not valid because it is too long");
+    }
+
+    @Test
+    public void getTransactionBuilder_feeIsNotValid_IllegalArgumentException() {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("Fee can't be negative");
+
+        KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
+        buildTransaction(source,-10, "fake memo");
+    }
+
+    @Test
+    public void getTransactionBuilder_noOperations_IllegalArgumentException() {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("At least one operation required");
+
+        KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
+        long sequenceNumber = 2908908335136768L;
+        Account account = new Account(source, sequenceNumber);
+        new TransactionBuilder(source, account, "test")
+            .setFee(100)
+            .setMemo("fake memo")
+            .build();
+    }
 
 }
