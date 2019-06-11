@@ -531,7 +531,7 @@ class KinAccountIntegrationTest {
                 .build()
         // Simulate getting a transaction envelope and decode it.
         val transactionEnvelope = transaction.transactionEnvelope()
-        val externalTransaction = RawTransaction.decodeTransaction(transactionEnvelope)
+        val externalTransaction = RawTransaction.decodeRawTransaction(transactionEnvelope)
         // Sign with the master and sending the linking transaction from the master account
         externalTransaction.addSignature(masterAccount)
         masterAccount.sendTransactionSync(externalTransaction)

@@ -38,7 +38,7 @@ public class Transaction {
     mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
 
-        mFee = operations.length * feePerOperation;
+    mFee = operations.length * feePerOperation;
     mSignatures = new ArrayList<DecoratedSignature>();
     mMemo = memo != null ? memo : Memo.none();
     mTimeBounds = timeBounds;

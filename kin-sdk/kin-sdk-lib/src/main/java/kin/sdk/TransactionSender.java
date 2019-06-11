@@ -36,12 +36,12 @@ class TransactionSender {
         this.appId = appId;
     }
 
-    RawTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+    PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee) throws OperationFailedException {
         return buildTransaction(from, publicAddress, amount, fee, null);
     }
 
-    RawTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+    PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee, @Nullable String memo) throws OperationFailedException {
         checkParams(from, publicAddress, amount, fee, memo);
         memo = Utils.addAppIdToMemo(appId, memo);
@@ -49,19 +49,18 @@ class TransactionSender {
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
         AccountResponse sourceAccount = loadSourceAccount(from);
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
-        kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee,
+        kin.base.Transaction stellarTransaction = buildBaseTransaction(from, amount, addressee, sourceAccount, fee,
             memo);
-        return new RawTransaction(stellarTransaction);
+        return new PaymentTransaction(stellarTransaction, addressee.getAccountId(), amount, memo);
     }
 
     TransactionBuilder getTransactionBuilder(@NonNull KeyPair from) throws OperationFailedException {
         Utils.checkNotNull(from, "from");
         AccountResponse sourceAccount = loadSourceAccount(from);
-        // TODO: 2019-05-27 need to decide if we make the fee a "must" in the constructor...
         return new TransactionBuilder(from, sourceAccount, appId);
     }
 
-    TransactionId sendTransaction(RawTransaction transaction) throws OperationFailedException {
+    TransactionId sendTransaction(TransactionBase transaction) throws OperationFailedException {
         return sendTransaction(transaction.baseTransaction());
     }
 
@@ -123,7 +122,7 @@ class TransactionSender {
     }
 
     @NonNull
-    private kin.base.Transaction buildStellarTransaction(@NonNull KeyPair from, @NonNull BigDecimal amount,
+    private kin.base.Transaction buildBaseTransaction(@NonNull KeyPair from, @NonNull BigDecimal amount,
         KeyPair addressee,
         AccountResponse sourceAccount, int fee, @Nullable String memo) {
         Builder transactionBuilder = new Builder(sourceAccount)

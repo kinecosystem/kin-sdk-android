@@ -68,7 +68,7 @@ public class TransactionTest {
     @Test
     public void decodeTransaction_success() throws Exception {
         String transactionEnvelope = "AAAAANNVIxukFMnDJ7x37MKNLh3O3WzyD2d6eId2zqiXC1icAAAAZAAKVaMAAAABAAAAAAAAAAEAAAAHMS10ZXN0LQAAAAABAAAAAAAAAAAAAAAA01UjG6QUycMnvHfswo0uHc7dbPIPZ3p4h3bOqJcLWJwAAAAAC+vCAAAAAAAAAAABlwtYnAAAAEA639AzCBE9ROc1WEhKOPRilq4MJsgv+WWVB+EBTndDbUPM3v3FuKAMTVfQZA3amAclenBe04fW5xGBU6dqR3gE";
-        RawTransaction transaction = RawTransaction.decodeTransaction(transactionEnvelope);
+        RawTransaction transaction = RawTransaction.decodeRawTransaction(transactionEnvelope);
 
         assertThat("GDJVKIY3UQKMTQZHXR36ZQUNFYO45XLM6IHWO6TYQ53M5KEXBNMJYWVR", equalTo(transaction.source()));
         assertThat(2908908335136769L, equalTo(transaction.sequenceNumber()));
