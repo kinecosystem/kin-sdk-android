@@ -16,7 +16,7 @@ public abstract class TransactionBase {
 
     private final Transaction baseTransaction;
 
-    public TransactionBase(kin.base.Transaction baseTransaction) {
+    TransactionBase(kin.base.Transaction baseTransaction) {
         this.baseTransaction = baseTransaction;
     }
 
@@ -29,14 +29,20 @@ public abstract class TransactionBase {
         try {
             kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(transactionEnvelope);
             Operation[] operations = transaction.getOperations();
+            int paymentOperationCount = 0;
+            PaymentOperation paymentOperation = null;
             for (Operation operation : operations) {
                 if (operation instanceof PaymentOperation) {
-                    PaymentOperation paymentOperation = (PaymentOperation) operation;
-                    return new PaymentTransaction(transaction, paymentOperation.getDestination().getAccountId(),
-                        new BigDecimal(paymentOperation.getAmount()), ((MemoText) transaction.getMemo()).getText());
+                    paymentOperationCount ++;
+                    paymentOperation = (PaymentOperation) operation;
                 }
             }
-            return new RawTransaction(transaction);
+            if (paymentOperationCount == 1) {
+                return new PaymentTransaction(transaction, paymentOperation.getDestination().getAccountId(),
+                    new BigDecimal(paymentOperation.getAmount()), ((MemoText) transaction.getMemo()).getText());
+            } else {
+                return new RawTransaction(transaction);
+            }
         } catch (IOException e) {
             throw new DecodeTransactionException(e.getMessage(), e.getCause());
         }
@@ -74,21 +80,30 @@ public abstract class TransactionBase {
         return new TransactionIdImpl(Utils.byteArrayToHex(baseTransaction.hash()));
     }
 
+    /**
+     * @return the sequence number of this transaction.
+     */
     public long sequenceNumber() {
         return baseTransaction.getSequenceNumber();
     }
 
+    /**
+     * @return the source account public address
+     */
     public String source() {
         return baseTransaction.getSourceAccount().getAccountId();
     }
 
     /**
-     * @return TimeBounds, or null (representing no time restrictions)
+     * @return the time bounds of this transaction, or null (representing no time restrictions)
      */
     public TimeBounds timeBounds() {
         return baseTransaction.getTimeBounds();
     }
 
+    /**
+     * @return the list of signatures
+     */
     public List<DecoratedSignature> signatures() {
         return baseTransaction.getSignatures();
     }

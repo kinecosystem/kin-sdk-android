@@ -221,12 +221,12 @@ int fee = 100;
 
 Build the transaction and get a `Request<Transaction>` object.
 ```java
-buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
+buildPaymentTransactionRequest = account.buildPaymentTransaction(toAddress, amountInKin, fee);
 ```
 
 To keep the UI smooth we want to build and later send the transaction in background threads. To do that we also need to have some callbacks. First of all let's build the transaction and define the callback (the code below is incomplete, continue for the complete snippet):
 ```java
-buildTransactionRequest.run(new ResultCallback<TransactionId>() {
+buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
     public void onResult(Transaction transaction) {
@@ -282,9 +282,9 @@ BigDecimal amountInKin = new BigDecimal("20");
 int fee = 100;
 
 // Build the transaction and get a Request<Transaction> object.
-buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
+buildPaymentTransactionRequest = account.buildPaymentTransaction(toAddress, amountInKin, fee);
 // Actually run the build transaction code in a background thread
-buildTransactionRequest.run(new ResultCallback<TransactionId>() {
+buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
     public void onResult(Transaction transaction) {
@@ -335,8 +335,8 @@ BigDecimal amountInKin = new BigDecimal("20");
 // even if the user enters an amount larger then zero it will not be deducted from their balance.
 int fee = 0
 
-buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee);
-buildTransactionRequest.run(new ResultCallback<TransactionId>() {
+buildPaymentTransactionRequest = account.buildPaymentTransaction(toAddress, amountInKin, fee);
+buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
     public void onResult(Transaction transaction) {
@@ -382,8 +382,8 @@ The value of `appID` is automatically added to transaction memo. This is require
 ```java
 String memo = "arbitrary data";
 
-buildTransactionRequest = account.buildTransaction(toAddress, amountInKin, fee, memo);
-buildTransactionRequest.run(new ResultCallback<TransactionId>() {
+buildPaymentTransactionRequest = account.buildPaymentTransaction(toAddress, amountInKin, fee, memo);
+buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
     public void onResult(Transaction transaction) {

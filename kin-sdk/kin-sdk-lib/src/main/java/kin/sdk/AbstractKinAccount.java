@@ -11,24 +11,24 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @NonNull
     @Override
-    public Request<PaymentTransaction> buildTransaction(@NonNull final String publicAddress,
+    public Request<PaymentTransaction> buildPaymentTransaction(@NonNull final String publicAddress,
                                                  @NonNull final BigDecimal amount, final int fee) {
         return new Request<>(new Callable<PaymentTransaction>() {
             @Override
             public PaymentTransaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount, fee);
+                return buildPaymentTransactionSync(publicAddress, amount, fee);
             }
         });
     }
 
     @NonNull
     @Override
-    public Request<PaymentTransaction> buildTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
+    public Request<PaymentTransaction> buildPaymentTransaction(@NonNull final String publicAddress, @NonNull final BigDecimal amount,
                                                  final int fee, @Nullable final String memo) {
         return new Request<>(new Callable<PaymentTransaction>() {
             @Override
             public PaymentTransaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount, fee, memo); 
+                return buildPaymentTransactionSync(publicAddress, amount, fee, memo);
             }
         });
     }

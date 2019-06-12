@@ -8,10 +8,12 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import kin.base.Account;
+import kin.base.AssetTypeNative;
 import kin.base.CreateAccountOperation;
 import kin.base.KeyPair;
 import kin.base.MemoText;
 import kin.base.Network;
+import kin.base.PaymentOperation;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,15 +45,10 @@ public class TransactionTest {
 
     private RawTransaction createTransaction() {
         KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
-        RawTransaction transaction = buildTransaction(source, 100, "fake memo");
-
-        KinAccountImpl mockKinAccountImpl = mock(KinAccountImpl.class);
-        when(mockKinAccountImpl.getKeyPair()).thenReturn(source);
-
-        return transaction;
+        return buildRawTransaction(source, 100, "fake memo");
     }
 
-    private RawTransaction buildTransaction(KeyPair source, int fee, String memo) {
+    private RawTransaction buildRawTransaction(KeyPair source, int fee, String memo) {
         KeyPair destination = KeyPair.fromAccountId(ACCOUNT_ID_FROM);
         long sequenceNumber = 2908908335136768L;
         Account account = new Account(source, sequenceNumber);
@@ -93,6 +90,49 @@ public class TransactionTest {
     }
 
     @Test
+    public void decodeTransaction_OnePaymentOperation_getPaymentTransaction() throws Exception {
+        KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
+        KeyPair destination = KeyPair.fromAccountId(ACCOUNT_ID_FROM);
+        long sequenceNumber = 2908908335136768L;
+        Account account = new Account(source, sequenceNumber);
+        TransactionBase transactionBase = new TransactionBuilder(source, account, "test")
+            .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "1000").build())
+            .setFee(100)
+            .setMemo("fake memo")
+            .build();
+
+        TransactionBase decodedTransaction = TransactionBase.decodeTransaction(transactionBase.transactionEnvelope());
+        assertThat(decodedTransaction, instanceOf(PaymentTransaction.class));
+    }
+
+    @Test
+    public void decodeTransaction_moreThenOnePaymentOperation_getRawTransaction() throws Exception {
+        KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
+        KeyPair destination = KeyPair.fromAccountId(ACCOUNT_ID_FROM);
+        long sequenceNumber = 2908908335136768L;
+        Account account = new Account(source, sequenceNumber);
+        TransactionBase transactionBase = new TransactionBuilder(source, account, "test")
+            .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "1000").build())
+            .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "2000").build())
+            .setFee(100)
+            .setMemo("fake memo")
+            .build();
+
+        TransactionBase decodedTransaction = TransactionBase.decodeRawTransaction(transactionBase.transactionEnvelope());
+        assertThat(decodedTransaction, instanceOf(RawTransaction.class));
+    }
+
+    @Test
+    public void decodeTransaction_noPaymentOperation_getRawTransaction() throws Exception {
+        String transactionEnvelope = "AAAAANNVIxukFMnDJ7x37MKNLh3O3WzyD2d6eId2zqiXC1icAAAAZAAKVaMAAAABAAAAAAAAAAEAAAAQMS10ZXN0LWZha2UgbWVtbwAAAAEAAAAAAAAAAAAAAADTVSMbpBTJwye8d+zCjS4dzt1s8g9neniHds6olwtYnAAAAAAL68IAAAAAAAAAAAGXC1icAAAAQFUTzwPlsEzibdVe1wjk9Bcz4TOsvY8FAc66aCfusHBEUa7vDyxwiV/ia79PWqhr+0vlXmkMI4xS14JVYcQ3Dwg=";
+        RawTransaction transaction = TransactionBase.decodeRawTransaction(transactionEnvelope);
+
+        assertThat(transaction, instanceOf(RawTransaction.class));
+        assertThat(transactionEnvelope, equalTo(transaction.transactionEnvelope()));
+
+    }
+
+    @Test
     public void addSignature_success() {
         RawTransaction transaction = createTransaction();
         KinAccountImpl mockKinAccount = mock(KinAccountImpl.class);
@@ -120,7 +160,7 @@ public class TransactionTest {
         expectedEx.expectMessage("Memo cannot be longer that 21 bytes(UTF-8 characters)");
 
         KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
-        buildTransaction(source, 100, "memo is not valid because it is too long");
+        buildRawTransaction(source, 100, "memo is not valid because it is too long");
     }
 
     @Test
@@ -129,7 +169,7 @@ public class TransactionTest {
         expectedEx.expectMessage("Fee can't be negative");
 
         KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
-        buildTransaction(source,-10, "fake memo");
+        buildRawTransaction(source,-10, "fake memo");
     }
 
     @Test

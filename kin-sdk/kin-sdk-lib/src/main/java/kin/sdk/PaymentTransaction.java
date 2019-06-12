@@ -8,7 +8,7 @@ public class PaymentTransaction extends TransactionBase {
     private final BigDecimal amount;
     private final String memo;
 
-    public PaymentTransaction(kin.base.Transaction baseTransaction, String destination,
+    PaymentTransaction(kin.base.Transaction baseTransaction, String destination,
         BigDecimal amount, String memo) {
 
         super(baseTransaction);
@@ -17,14 +17,23 @@ public class PaymentTransaction extends TransactionBase {
         this.memo = memo;
     }
 
+    /**
+     * @return the destination of this transaction.
+     */
     public String destination() {
         return destination;
     }
 
+    /**
+     * @return the amount of this transaction.
+     */
     public BigDecimal amount() {
         return amount;
     }
 
+    /**
+     * @return the amount of this transaction.
+     */
     public String memo() {
         return memo;
     }

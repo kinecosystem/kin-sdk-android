@@ -36,12 +36,12 @@ class TransactionSender {
         this.appId = appId;
     }
 
-    PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+    PaymentTransaction buildPaymentTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee) throws OperationFailedException {
-        return buildTransaction(from, publicAddress, amount, fee, null);
+        return buildPaymentTransaction(from, publicAddress, amount, fee, null);
     }
 
-    PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+    PaymentTransaction buildPaymentTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee, @Nullable String memo) throws OperationFailedException {
         checkParams(from, publicAddress, amount, fee, memo);
         memo = Utils.addAppIdToMemo(appId, memo);

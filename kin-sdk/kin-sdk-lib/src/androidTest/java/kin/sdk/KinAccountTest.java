@@ -34,10 +34,10 @@ public class KinAccountTest {
     }
 
     @Test(expected = AccountDeletedException.class)
-    public void buildTransactionSync_DeletedAccount_AccountDeletedException() throws Exception {
+    public void buildPaymentTransactionSync_DeletedAccount_AccountDeletedException() throws Exception {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);
-        kinAccount.buildTransactionSync(kinAccount.getPublicAddress(), new BigDecimal(200), 100);
+        kinAccount.buildPaymentTransactionSync(kinAccount.getPublicAddress(), new BigDecimal(200), 100);
     }
 
     @Test(expected = AccountDeletedException.class)
@@ -65,7 +65,7 @@ public class KinAccountTest {
     public void sendTransactionSync_DeletedAccount_AccountDeletedException() throws Exception {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);
-        PaymentTransaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
+        PaymentTransaction transaction = kinAccount.buildPaymentTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
                 new BigDecimal(10), FEE);
         kinAccount.sendTransactionSync(transaction);
     }
@@ -74,7 +74,7 @@ public class KinAccountTest {
     public void sendWhitelistTransaction_DeletedAccount_AccountDeletedException() throws Exception {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);
-        PaymentTransaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
+        PaymentTransaction transaction = kinAccount.buildPaymentTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
                 new BigDecimal(10), 0);
 
         String whitelist = new WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction());

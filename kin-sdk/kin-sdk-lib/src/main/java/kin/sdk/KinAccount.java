@@ -24,24 +24,24 @@ public interface KinAccount {
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address.
-     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
+     * <p> See {@link KinAccount#buildPaymentTransactionSync(String, BigDecimal, int)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
      * @param fee the amount of fee(in stroops) for this transfer.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
+    Request<PaymentTransaction> buildPaymentTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
-     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
+     * <p> See {@link KinAccount#buildPaymentTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
      * @param fee the amount of fee(in stroops) for this transfer.
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
-    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
+    Request<PaymentTransaction> buildPaymentTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
 
     /**
      * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
@@ -81,7 +81,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
+    PaymentTransaction buildPaymentTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
@@ -95,7 +95,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+    PaymentTransaction buildPaymentTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
 
     /**
      * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
