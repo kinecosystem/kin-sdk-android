@@ -67,7 +67,7 @@ public abstract class TransactionBase {
     }
 
     /**
-     * Returns fee paid for transaction in kin base unit (1 base unit = 0.00001 KIN).
+     * Returns fee paid for transaction in kin base unit which is quark (1 quark = 0.00001 KIN).
      */
     public int fee() {
         return baseTransaction.getFee();
