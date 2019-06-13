@@ -59,7 +59,7 @@ Adding Kin features to your Android client requires three steps.
 - Managing Kin accounts
 - Executing transactions against Kin accounts.   
 
-### Accessing the Kin blockchain
+### Accessing the Kin Blockchain
 
 Android apps that allow users to earn, spend, and manage Kin are considered clients in the Kin architecture. The following statement creates `kinClient` which includes methods to manage accounts on the Kin blockchain.
 
@@ -77,9 +77,9 @@ Each environment variable includes:
 
 `1acd` in the example is an `appId`, a 4(or 3)-character string which will be added automatically to each transaction to identify your application. `appId` must contain only digits and upper and/or lower case letters. String length must be 3 or 4. `appID` is automatically added to transaction memos.
 
-### Managing accounts
+### Managing Accounts
 
-#### Creating and retrieving a Kin account
+#### Creating and Retrieving a Kin Account
 
 The first time you use `KinClient` you need to create a new Kin wallet and an associated Kin account. The Kin wallet is stored on the user's client device and holds a public/private keypair. The private key remains securely stored in the local wallet while the public key will become the address of the Kin account added to the Kin blockchain.
 
@@ -177,31 +177,121 @@ balanceRequest.run(new ResultCallback<Balance>() {
     }
 
     @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
-        }
+    public void onError(Exception e) {
+	e.printStackTrace();
+    }
 });
 ```
 
 By using `result.value(2)` in the example above we print the balance with a precision of 2 decimal points. This is a required parameter of `value()`.
 
+
+#### Retrieving Account Data
+
+The account data contains all the properties of the account.
+
+###### Snippet: Get Kin account data
+
+```java
+Request<AccountData> accountDataRequest = account.getAccountData();
+accountDataRequest.run(new ResultCallback<AccountData>() {
+
+    @Override
+    public void onResult(AccountData result) {
+    	// Those are just examples of some of the properties that the AccountData has.
+        Log.d("example", "account address = " + account.publicAddress());
+	Log.d("example", "account sequence number = " + account.sequenceNumber());
+	Log.d("example", "account data = " + account.data());
+    }
+
+    @Override
+    public void onError(Exception e) {
+        e.printStackTrace();
+    }
+});
+```
+
+### Linked Accounts
+
+Linked accounts are a pair of accounts, in which one of them (called the master account) can sign for the other.
+The SDK provides methods that a developer can use to link an account(s) to a master account provided by another app.
+For example, a master account can be in a wallet app, such as Kinit. 
+Once linked, the balances of all accounts controlled by the master account become accessible through the wallet app.  
+You can also retrieve the list of all controlled accounts.
+
+#### Retrieving Aggregated Balance
+
+The aggregated balance is the sum of the balances of all accounts controlled by the master account. 
+This includes the balance of the master account.
+
+###### Snippet: Get Kin Accounts' Aggregated Balance
+
+```java
+Request<Balance> aggregatedBalanceRequest = account.getAggregatedBalance();
+aggregatedBalanceRequest.run(new ResultCallback<Balance>() {
+
+    @Override
+    public void onResult(Balance result) {
+        Log.d("example", "The balance is: " + result.value(2));
+    }
+
+    @Override
+    public void onError(Exception e) {
+        e.printStackTrace();
+    }
+});
+```
+
+#### Retrieving the List of All Controlled Accounts
+
+It is a list of all accounts controlled by the master account. 
+It can be used, for example, for management of linked accounts by the app that controls the master account.  
+Note that the master account will be included in the list.
+When the given account is not a master account, an empty list will be returned. 
+
+###### Snippet: Get the list of all controlled accounts
+
+```java
+Request<List<ControlledAccount>> controlledAccountRequest = account.getControlledAccounts();
+controlledAccountRequest.run(new ResultCallback<List<ControlledAccount>>() {
+
+    @Override
+    public void onResult(List<ControlledAccount> controlledAccounts) {
+        for (ControlledAccount account : controlledAccounts) {
+            Log.d("example",  "account address = " + account.getPublicAddress() +
+                ", account balance = " + account.getBalance());
+        }
+    }
+
+    @Override
+    public void onError(Exception e) {
+        e.printStackTrace();
+    }
+});
+```
+
 ### Transactions
 
-Transactions are executed on the Kin blockchain in a two-step process.
+Currently, we have 2 types of transactions: 
+- `PaymentTransaction` (previously called `Transaction`) - used for sending a transaction of transferring Kin to another account 
+- `RawTransaction` - can be used any kind of transaction 
+Both types inherit from `TransactionBase`.
+
+Transactions are executed on the Kin blockchain in a two-step process:
 
 - **Build** the transaction, including calculation of the transaction hash. The hash is used as a transaction ID and is necessary to query the status of the transaction.
 - **Send** the transaction to servers for execution on the blockchain.
 
 Snippets [Transfer Kin](#snippet-transfer-kin) and [Whitelist service](#snippet-whitelist-service) illustrate this two-step process.
 
-#### Transaction fees
+#### Transaction Fees
 It is important to note that by default all transactions on the Kin blockchain are charged a fee. Fee for individual transactions are trivial (1 Kin = 10E5 Fee).
 
 Some apps can be added to the Kin whitelist, a set of pre-approved apps whose users will not be charged Fee to execute transactions. If your app is in the  whitelist then refer to [transferring Kin to another account using whitelist service](#transferring-kin-to-another-account-using-whitelist-service).
 
 Whitelisting a transaction is a function provided by the Python SDK and should be implemented by developers as a back-end service. Developers (you) are responsible of creating and maintaining their back-end services.
 
-#### Transferring Kin to another account
+#### Transferring Kin to Another Account
 
 To transfer Kin to another account, you need the public address of the account to which you want to transfer Kin.
 
@@ -316,6 +406,64 @@ buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 });
 
 ```
+
+#### Building a Customized Transaction
+
+You can create and build your own customized transaction (`RawTransaction`).
+
+###### Snippet: In the example below, a customized transaction is built and sent for linking an account to another account. For more information, see [Link Account](#linked-accounts).
+```java
+
+Request<TransactionBuilder> transactionBuilderRequest = controlledAccount.getTransactionBuilder();
+transactionBuilderRequest.run(new ResultCallback<TransactionBuilder>() {
+
+    @Override
+    public void onResult(TransactionBuilder transactionBuilder) {
+    	// Get a signerKey from the master account. This is necessary for adding the 
+	// master account as a signer for the controlled account later on.
+	SignerKey signerKey = Signer.ed25519PublicKey(KeyPair.fromAccountId(masterAccount.publicAddress));
+        // Getting a transactionBuilder from the controlled account
+	RawTransaction linkingTransaction = transactionBuilder
+	    .setFee(100)
+	    .setMemo("account linking")
+	    // We use SetOptionsOperation to add the master 
+	    // account as a signer for the controlled account.
+	    .addOperation(new SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
+	    // We use ManageDataOperation to add the controlled account and its app name to 
+	    // the data of the master account. This is optional because it is only meta data.
+	    .addOperation(new ManageDataOperation.Builder(controlledAccount.getPublicAddress(),
+		"our app id".getBytes(StandardCharsets.UTF_8.name())
+		.setSourceAccount(KeyPair.fromAccountId(masterAccount.publicAddress))
+		.build())
+	    .build();
+	// We simulate that the master account is the one who send this transaction on behalf 
+	// of the controlled account. For that we need to add the master account signature to the transaction
+	linkingTransaction.addSignature(masterAccount);
+	
+	// Sending the transaction
+	Request<TransactionId> sendTransactionRequest = masterAccount.sendTransaction(linkingTransaction);
+	sendTransactionRequest.run(new ResultCallback<TransactionId>() {
+
+            @Override
+            public void onResult(TransactionId id) {
+                Log.d("example", "The transaction id: " + id);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public void onError(Exception e) {
+	e.printStackTrace();
+    }
+});
+
+```
+
 #### Transferring Kin to another account using whitelist service
 
 The flow is very similar to [Transfer Kin](#snippet-transfer-kin) but adds a step in which you:
