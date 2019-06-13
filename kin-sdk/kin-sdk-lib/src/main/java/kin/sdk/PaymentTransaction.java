@@ -8,9 +8,7 @@ public class PaymentTransaction extends TransactionBase {
     private final BigDecimal amount;
     private final String memo;
 
-    PaymentTransaction(kin.base.Transaction baseTransaction, String destination,
-        BigDecimal amount, String memo) {
-
+    PaymentTransaction(kin.base.Transaction baseTransaction, String destination, BigDecimal amount, String memo) {
         super(baseTransaction);
         this.destination = destination;
         this.amount = amount;
