@@ -59,7 +59,7 @@ Adding Kin features to your Android client requires three steps.
 - Managing Kin accounts
 - Executing transactions against Kin accounts.   
 
-### Accessing the Kin blockchain
+### Accessing the Kin Blockchain
 
 Android apps that allow users to earn, spend, and manage Kin are considered clients in the Kin architecture. The following statement creates `kinClient` which includes methods to manage accounts on the Kin blockchain.
 
@@ -77,9 +77,9 @@ Each environment variable includes:
 
 `1acd` in the example is an `appId`, a 4(or 3)-character string which will be added automatically to each transaction to identify your application. `appId` must contain only digits and upper and/or lower case letters. String length must be 3 or 4. `appID` is automatically added to transaction memos.
 
-### Managing accounts
+### Managing Accounts
 
-#### Creating and retrieving a Kin account
+#### Creating and Retrieving a Kin Account
 
 The first time you use `KinClient` you need to create a new Kin wallet and an associated Kin account. The Kin wallet is stored on the user's client device and holds a public/private keypair. The private key remains securely stored in the local wallet while the public key will become the address of the Kin account added to the Kin blockchain.
 
@@ -188,7 +188,7 @@ By using `result.value(2)` in the example above we print the balance with a prec
 
 #### Retrieving Account Data
 
-The account data contains all the properties of an account.
+The account data contains all the properties of the account.
 
 ###### Snippet: Get Kin account data
 
@@ -213,18 +213,18 @@ accountDataRequest.run(new ResultCallback<AccountData>() {
 
 ### Linked Accounts
 
-Linked Accounts describes a pair of accounts in which one of the accounts(called the master account) can sign for another.
-The SDK presents methods which a developer can use to link an account(s) with a master account provided by another app.
-For example, a master account can be a wallet app, such as Kinit. 
-Once linked, the balance of all accounts controlled by the master account becomes accessible.  
+Linked accounts are a pair of accounts, in which one of them (called the master account) can sign for the other.
+The SDK provides methods that a developer can use to link an account(s) to a master account provided by another app.
+For example, a master account can be in a wallet app, such as Kinit. 
+Once linked, the balances of all accounts controlled by the master account become accessible through the wallet app.  
 You can also retrieve the list of all controlled accounts.
 
 #### Retrieving Aggregated Balance
 
-The aggregated balance is the sum of balances of all accounts controlled by the master account. 
+The aggregated balance is the sum of the balances of all accounts controlled by the master account. 
 This includes the balance of the master account.
 
-###### Snippet: Get Kin account Aggregated Balance
+###### Snippet: Get Kin Accounts' Aggregated Balance
 
 ```java
 Request<Balance> aggregatedBalanceRequest = account.getAggregatedBalance();
@@ -242,11 +242,11 @@ aggregatedBalanceRequest.run(new ResultCallback<Balance>() {
 });
 ```
 
-#### Retrieving the list of all controlled accounts
+#### Retrieving the List of All Controlled Accounts
 
 It is a list of all accounts controlled by the master account. 
-It can be used, for example, for management of linked accounts by the app which controls the master account.  
-Note that The master account will be included in the list.
+It can be used, for example, for management of linked accounts by the app that controls the master account.  
+Note that the master account will be included in the list.
 When the given account is not a master account, an empty list we be returned. 
 
 ###### Snippet: Get the list of all controlled accounts
@@ -272,25 +272,26 @@ controlledAccountRequest.run(new ResultCallback<List<ControlledAccount>>() {
 
 ### Transactions
 
-Transactions are executed on the Kin blockchain in a two-step process.
+Currently, we have 2 types of transactions: 
+- `PaymentTransaction` (previously called `Transaction`) - used for sending a transaction of transferring Kin to another account 
+- `RawTransaction` - can be used any kind of transaction 
+Both types inherit from `TransactionBase`.
+
+Transactions are executed on the Kin blockchain in a two-step process:
 
 - **Build** the transaction, including calculation of the transaction hash. The hash is used as a transaction ID and is necessary to query the status of the transaction.
 - **Send** the transaction to servers for execution on the blockchain.
 
-Currently we have 2 type of transactions, the one that was used until now which is called `PaymentTransaction` (previously called `Transaction`) which is used to send a transaction to transafer kin to another account.  
-The second type is `RawTransaction` which can be any kind of transaction.
-Both of them inherit from `TransactionBase`
-
 Snippets [Transfer Kin](#snippet-transfer-kin) and [Whitelist service](#snippet-whitelist-service) illustrate this two-step process.
 
-#### Transaction fees
+#### Transaction Fees
 It is important to note that by default all transactions on the Kin blockchain are charged a fee. Fee for individual transactions are trivial (1 Kin = 10E5 Fee).
 
 Some apps can be added to the Kin whitelist, a set of pre-approved apps whose users will not be charged Fee to execute transactions. If your app is in the  whitelist then refer to [transferring Kin to another account using whitelist service](#transferring-kin-to-another-account-using-whitelist-service).
 
 Whitelisting a transaction is a function provided by the Python SDK and should be implemented by developers as a back-end service. Developers (you) are responsible of creating and maintaining their back-end services.
 
-#### Transferring Kin to another account
+#### Transferring Kin to Another Account
 
 To transfer Kin to another account, you need the public address of the account to which you want to transfer Kin.
 
@@ -406,11 +407,11 @@ buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 
 ```
 
-#### Building a customize transaction
+#### Building a Customized Transaction
 
-You can create and build your own customize transaction(RawTransaction).
+You can create and build your own customized transaction (RawTransaction).
 
-###### Snippet: example of build and send customize transaction which will be used to link an account to another account.   you can look at [Link Account](#linked-accounts) for more information.
+###### Snippet: Example of building and sending a customized transaction for linking an account to another account. For more information, see [Link Account](#linked-accounts) .
 
 ```java
 
@@ -419,10 +420,10 @@ transactionBuilderRequest.run(new ResultCallback<TransactionBuilder>() {
 
     @Override
     public void onResult(TransactionBuilder transactionBuilder) {
-    	// Get a signerKey from the master account, this is necessary in order to later add the 
-	// master account as a signer in the controlled account
+    	// Get a signerKey from the master account. This is necessary for adding the 
+	// master account as a signer for the controlled account later on.
 	SignerKey signerKey = Signer.ed25519PublicKey(KeyPair.fromAccountId(masterAccount.publicAddress));
-        // getting a transactionBuilder from the controlled account
+        // Getting a transactionBuilder from the controlled account
 	RawTransaction linkingTransaction = transactionBuilder
 	    .setFee(100)
 	    .setMemo("account linking")
