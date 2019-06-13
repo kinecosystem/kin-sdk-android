@@ -1,10 +1,11 @@
 package kin.sdk;
 
-import java.util.Arrays;
-import java.util.Map;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.AccountResponse.Flags;
 import kin.base.responses.AccountResponse.Signer;
+
+import java.util.Arrays;
+import java.util.Map;
 
 public class AccountData {
 
@@ -19,8 +20,8 @@ public class AccountData {
     private Map<String, String> data;
 
     public AccountData(String publicAddress, long sequenceNumber, String pagingToken, Integer subentryCount,
-        AccountResponse.Thresholds thresholds, Flags flags, AccountResponse.Balance[] balances,
-        Signer[] signers, Map<String, String> data) {
+                       AccountResponse.Thresholds thresholds, Flags flags, AccountResponse.Balance[] balances,
+                       Signer[] signers, Map<String, String> data) {
         this.publicAddress = publicAddress;
         this.sequenceNumber = sequenceNumber;
         this.pagingToken = pagingToken;
@@ -78,14 +79,14 @@ public class AccountData {
         }
         AccountData that = (AccountData) o;
         return sequenceNumber == that.sequenceNumber &&
-            publicAddress.equals(that.publicAddress) &&
-            pagingToken.equals(that.pagingToken) &&
-            subentryCount.equals(that.subentryCount) &&
-            thresholds.equals(that.thresholds) &&
-            flags.equals(that.flags) &&
-            Arrays.equals(balances, that.balances) &&
-            Arrays.equals(signers, that.signers) &&
-            data.equals(that.data);
+                publicAddress.equals(that.publicAddress) &&
+                pagingToken.equals(that.pagingToken) &&
+                subentryCount.equals(that.subentryCount) &&
+                thresholds.equals(that.thresholds) &&
+                flags.equals(that.flags) &&
+                Arrays.equals(balances, that.balances) &&
+                Arrays.equals(signers, that.signers) &&
+                data.equals(that.data);
     }
 
     @Override
