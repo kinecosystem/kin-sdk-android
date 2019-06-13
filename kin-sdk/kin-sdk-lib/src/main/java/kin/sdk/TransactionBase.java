@@ -21,7 +21,8 @@ public abstract class TransactionBase {
     }
 
     /**
-     * Creates a <code>RawTransaction</code> or a <code>PaymentTransaction</code> instance from previously build <code>TransactionEnvelope</code>
+     * Creates a <code>RawTransaction</code> or a <code>PaymentTransaction</code> instance from previously build
+     * <code>TransactionEnvelope</code>
      *
      * @param transactionEnvelope a Base-64 encoded <code>TransactionEnvelope</code>
      */
@@ -33,7 +34,7 @@ public abstract class TransactionBase {
             PaymentOperation paymentOperation = null;
             for (Operation operation : operations) {
                 if (operation instanceof PaymentOperation) {
-                    paymentOperationCount ++;
+                    paymentOperationCount++;
                     paymentOperation = (PaymentOperation) operation;
                 }
             }
@@ -109,8 +110,7 @@ public abstract class TransactionBase {
     }
 
     /**
-     * Returns base64-encoded TransactionEnvelope object.
-     * Transaction need to have at least one signature.
+     * Returns base64-encoded TransactionEnvelope object. Transaction need to have at least one signature.
      */
     public String transactionEnvelope() {
         return baseTransaction.toEnvelopeXdrBase64();
@@ -126,6 +126,7 @@ public abstract class TransactionBase {
 
     /**
      * Adds a new signature to this transaction.
+     *
      * @param account {@link KinAccount} object which is the account who we add his signature.
      */
     public void addSignature(KinAccount account) {
