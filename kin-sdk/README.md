@@ -409,7 +409,7 @@ buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 
 #### Building a Customized Transaction
 
-You can create and build your own customized transaction (RawTransaction).
+You can create and build your own customized transaction (`RawTransaction`).
 
 ###### Snippet: Example of building and sending a customized transaction for linking an account to another account. For more information, see [Link Account](#linked-accounts) .
 
@@ -464,7 +464,6 @@ transactionBuilderRequest.run(new ResultCallback<TransactionBuilder>() {
 });
 
 ```
-
 
 #### Transferring Kin to another account using whitelist service
 
