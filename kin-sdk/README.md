@@ -247,7 +247,7 @@ aggregatedBalanceRequest.run(new ResultCallback<Balance>() {
 It is a list of all accounts controlled by the master account. 
 It can be used, for example, for management of linked accounts by the app that controls the master account.  
 Note that the master account will be included in the list.
-When the given account is not a master account, an empty list we be returned. 
+When the given account is not a master account, an empty list will be returned. 
 
 ###### Snippet: Get the list of all controlled accounts
 
