@@ -411,7 +411,7 @@ buildPaymentTransactionRequest.run(new ResultCallback<TransactionId>() {
 
 You can create and build your own customized transaction (`RawTransaction`).
 
-###### Snippet: Example of building and sending a customized transaction for linking an account to another account. For more information, see [Link Account](#linked-accounts) .
+###### Snippet: Example of building and sending a customized transaction for linking an account to another account. For more information, see [Link Account](#linked-accounts). Of course you can do many more different transactions.
 
 ```java
 
