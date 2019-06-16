@@ -89,7 +89,7 @@ backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
     }
     
     @Override
-    public void onFailure(BackupException throwable) {
+    public void onFailure(BackupAndRestoreException throwable) {
         // Here you can handle the failure.
     }
 });
@@ -109,7 +109,7 @@ backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
     }
     
     @Override
-    public void onFailure(BackupException throwable) {
+    public void onFailure(BackupAndRestoreException throwable) {
         // Here you can handle the failure.
     }
 });
