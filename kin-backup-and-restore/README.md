@@ -78,6 +78,7 @@ Both callbacks have the same 3 methods:
 
 ```java
 backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
+
     @Override
     public void onSuccess() {
         // Here you can handle the success.
@@ -98,6 +99,7 @@ backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
 ###### Creating Restore Callbacks
 ```java  
 backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
+
     @Override
     public void onSuccess(KinClient kinClient, KinAccount kinAccount) {
         // Here you can handle the success. 
