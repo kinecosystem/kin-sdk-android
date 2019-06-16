@@ -15,11 +15,11 @@ public class WhitelistableTransaction {
         this.networkPassphrase = networkPassphrase;
     }
 
-    public String getTransactionPayload() {
+    public String transactionPayload() {
         return transactionPayload;
     }
 
-    public String getNetworkPassphrase() {
+    public String networkPassphrase() {
         return networkPassphrase;
     }
 
