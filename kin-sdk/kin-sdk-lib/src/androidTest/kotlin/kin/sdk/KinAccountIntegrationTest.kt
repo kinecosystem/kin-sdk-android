@@ -500,7 +500,7 @@ class KinAccountIntegrationTest {
 
         val transaction = masterAccount.transactionBuilderSync
                 .setFee(fee)
-                .setMemo("master to destination")
+                .setMemo(MemoText.text("master to destination"))
                 .addOperation(PaymentOperation.Builder(
                         KeyPair.fromAccountId(destinationAccount.publicAddress), AssetTypeNative(), "21.12300")
                         .setSourceAccount(KeyPair.fromAccountId(controlledAccount.publicAddress))
@@ -523,7 +523,7 @@ class KinAccountIntegrationTest {
         val managerDataKey = controlledAccount.publicAddress
         val transaction = transactionBuilder
                 .setFee(fee)
-                .setMemo("account linking")
+                .setMemo(MemoText.text("account linking"))
                 .addOperation(SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
                 .addOperation(ManageDataOperation.Builder(managerDataKey, managerDataValue.toByteArray())
                         .setSourceAccount(KeyPair.fromAccountId(masterAccount.publicAddress))
