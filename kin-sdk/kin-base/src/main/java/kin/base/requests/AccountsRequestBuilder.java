@@ -65,7 +65,6 @@ public class AccountsRequestBuilder extends RequestBuilder {
     return responseHandler.handleGetRequest(uri);
   }
 
-    // TODO: 2019-05-29 we may need a url for the method description, need to check if blockchain team can even add it.
   /**
    * Requests <code>GET /accounts/{account}/controlled_accounts</code>
    *
