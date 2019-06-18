@@ -1,19 +1,6 @@
 package kin.sdk;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import kin.base.Account;
-import kin.base.AssetTypeNative;
-import kin.base.CreateAccountOperation;
-import kin.base.KeyPair;
-import kin.base.MemoText;
-import kin.base.Network;
-import kin.base.PaymentOperation;
+import kin.base.*;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,6 +10,14 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.io.IOException;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23, manifest = Config.NONE)
@@ -45,10 +40,10 @@ public class TransactionTest {
 
     private RawTransaction createTransaction() {
         KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
-        return buildRawTransaction(source, 100, "fake memo");
+        return buildRawTransaction(source, 100, MemoText.text("fake memo"));
     }
 
-    private RawTransaction buildRawTransaction(KeyPair source, int fee, String memo) {
+    private RawTransaction buildRawTransaction(KeyPair source, int fee, Memo memo) {
         KeyPair destination = KeyPair.fromAccountId(ACCOUNT_ID_FROM);
         long sequenceNumber = 2908908335136768L;
         Account account = new Account(source, sequenceNumber);
@@ -98,7 +93,7 @@ public class TransactionTest {
         TransactionBase transactionBase = new TransactionBuilder(source, account, "test")
             .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "1000").build())
             .setFee(100)
-            .setMemo("fake memo")
+            .setMemo(MemoText.text("fake memo"))
             .build();
 
         TransactionBase decodedTransaction = TransactionBase.decodeTransaction(transactionBase.transactionEnvelope());
@@ -115,7 +110,7 @@ public class TransactionTest {
             .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "1000").build())
             .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "2000").build())
             .setFee(100)
-            .setMemo("fake memo")
+            .setMemo(MemoText.text("fake memo"))
             .build();
 
         TransactionBase decodedTransaction = TransactionBase.decodeRawTransaction(transactionBase.transactionEnvelope());
@@ -160,7 +155,14 @@ public class TransactionTest {
         expectedEx.expectMessage("Memo cannot be longer that 21 bytes(UTF-8 characters)");
 
         KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
-        buildRawTransaction(source, 100, "memo is not valid because it is too long");
+        buildRawTransaction(source, 100, MemoText.text("memo is not valid, to long"));
+    }
+
+    @Test
+    public void getTransactionBuilder_noMemoText_buildSuccess() {
+        KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
+        RawTransaction rawTransaction = buildRawTransaction(source, 100, MemoNone.none());
+        assertThat(rawTransaction.memo(), instanceOf(MemoNone.class));
     }
 
     @Test
@@ -169,7 +171,7 @@ public class TransactionTest {
         expectedEx.expectMessage("Fee can't be negative");
 
         KeyPair source = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
-        buildRawTransaction(source,-10, "fake memo");
+        buildRawTransaction(source,-10, MemoText.text("fake memo"));
     }
 
     @Test
@@ -182,7 +184,7 @@ public class TransactionTest {
         Account account = new Account(source, sequenceNumber);
         new TransactionBuilder(source, account, "test")
             .setFee(100)
-            .setMemo("fake memo")
+            .setMemo(MemoText.text("fake memo"))
             .build();
     }
 

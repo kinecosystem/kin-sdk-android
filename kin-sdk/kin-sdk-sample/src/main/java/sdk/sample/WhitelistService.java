@@ -3,18 +3,13 @@ package sdk.sample;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import kin.sdk.WhitelistableTransaction;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 class WhitelistService {
 
@@ -72,8 +67,8 @@ class WhitelistService {
 
     private String toJson(WhitelistableTransaction whitelistableTransaction) throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("envelope", whitelistableTransaction.getTransactionPayload());
-        jo.put("network_id", whitelistableTransaction.getNetworkPassphrase());
+        jo.put("envelope", whitelistableTransaction.transactionPayload());
+        jo.put("network_id", whitelistableTransaction.networkPassphrase());
         return jo.toString();
     }
 

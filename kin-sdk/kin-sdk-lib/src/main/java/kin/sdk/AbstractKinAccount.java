@@ -2,10 +2,11 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import kin.utils.Request;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Callable;
-import kin.utils.Request;
 
 abstract class AbstractKinAccount implements KinAccount {
 
@@ -84,6 +85,17 @@ abstract class AbstractKinAccount implements KinAccount {
             @Override
             public Balance call() throws Exception {
                 return getAggregatedBalanceSync();
+            }
+        });
+    }
+
+    @NonNull
+    @Override
+    public Request<Balance> getAggregatedBalance(final String publicAddress) {
+        return new Request<>(new Callable<Balance>() {
+            @Override
+            public Balance call() throws Exception {
+                return getAggregatedBalanceSync(publicAddress);
             }
         });
     }

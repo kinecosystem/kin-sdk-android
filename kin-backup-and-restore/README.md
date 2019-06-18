@@ -73,9 +73,12 @@ Both callbacks have the same 3 methods:
  - `onSuccess` is called when the operation is completed successfully. In the Restore callback, it has a `KinClient`(the updated one) and `KinAccount` object, which is the restored account.  
 - `onCancel` is called when the user leaves the backup or restore activity and returns to the previous activity.  
 - `onFailure()` is called if there is an error in the backup or restore process.
+
 ###### Creating Backup Callbacks
+
 ```java
 backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
+
     @Override
     public void onSuccess() {
         // Here you can handle the success.
@@ -87,16 +90,16 @@ backupAndRestoreManager.registerBackupCallback(new BackupCallback() {
     }
     
     @Override
-    public void onFailure(BackupException throwable) {
+    public void onFailure(BackupAndRestoreException throwable) {
         // Here you can handle the failure.
     }
 });
-}
-});
 ```
+
 ###### Creating Restore Callbacks
 ```java  
 backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
+
     @Override
     public void onSuccess(KinClient kinClient, KinAccount kinAccount) {
         // Here you can handle the success. 
@@ -108,7 +111,7 @@ backupAndRestoreManager.registerRestoreCallback(new RestoreCallback() {
     }
     
     @Override
-    public void onFailure(BackupException throwable) {
+    public void onFailure(BackupAndRestoreException throwable) {
         // Here you can handle the failure.
     }
 });

@@ -1,39 +1,11 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeUnit;
-import kin.base.FormatException;
-import kin.base.KeyPair;
-import kin.base.ManageDataOperation;
-import kin.base.MemoText;
-import kin.base.Network;
-import kin.base.Server;
+import kin.base.*;
 import kin.base.SetOptionsOperation.Builder;
-import kin.base.Signer;
-import kin.base.TimeBounds;
 import kin.base.codec.Base64;
 import kin.base.responses.HttpResponseException;
 import kin.base.xdr.SignerKey;
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.IllegalAmountException;
-import kin.sdk.exception.InsufficientFeeException;
-import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.OperationFailedException;
-import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.exception.*;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
@@ -48,6 +20,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23, manifest = Config.NONE)
@@ -140,7 +123,7 @@ public class TransactionSenderTest {
             .addOperation(new Builder().setSigner(signerKey, 1).build())
             .addOperation(
                 new ManageDataOperation.Builder(managerDataKey, new Base64().decode(managerDataValue)).build())
-            .setMemo("fake memo")
+            .setMemo(MemoText.text("fake memo"))
             .setFee(100)
             .setTimeBounds(timeBounds)
             .build();

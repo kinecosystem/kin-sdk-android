@@ -16,21 +16,22 @@ public class PaymentTransaction extends TransactionBase {
     }
 
     /**
-     * @return the destination of this transaction.
+     * @return the account address that receives the payment.
      */
     public String destination() {
         return destination;
     }
 
     /**
-     * @return the amount of this transaction.
+     * @return the amount of kin that was sent in this transaction.
      */
     public BigDecimal amount() {
         return amount;
     }
 
     /**
-     * @return the amount of this transaction.
+     * @return the memo of this transaction.
+     * In this case you will get a string representation of a memo as opposed to {@link RawTransaction#memo()}
      */
     public String memo() {
         return memo;

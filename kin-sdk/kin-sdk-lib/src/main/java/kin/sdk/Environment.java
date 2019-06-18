@@ -1,8 +1,8 @@
 package kin.sdk;
 
-import static kin.sdk.Utils.checkNotEmpty;
-
 import kin.base.Network;
+
+import static kin.sdk.Utils.checkNotEmpty;
 
 /**
  * Provides blockchain network details
@@ -13,9 +13,8 @@ public class Environment {
 		new Environment("https://horizon.kinfederation.com",
 			"Kin Mainnet ; December 2018");
 
-    // TODO: 2019-06-02  change this and other test places to the regular test-net
     public static final Environment TEST =
-        new Environment("http://horizon-testnet-one-wallet.kininfrastructure.com//",
+		new Environment("https://horizon-testnet.kininfrastructure.com/",
             "Kin Testnet ; December 2018");
 
     private final String networkUrl;

@@ -2,14 +2,15 @@ package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
-import java.io.IOException;
-import java.net.URI;
 import kin.base.KeyPair;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.AggregatedBalanceResponse;
 import kin.base.responses.ControlledAccountsResponse;
 import kin.base.responses.Page;
 import okhttp3.OkHttpClient;
+
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * Builds requests connected to accounts.
@@ -64,14 +65,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
     return responseHandler.handleGetRequest(uri);
   }
 
-    // TODO: 2019-05-29 we may need a url for the method description, need to check if blockchain team can even add it.
   /**
-   * Requests <code>GET /accounts/{account}/controlled_balances</code>
+   * Requests <code>GET /accounts/{account}/controlled_accounts</code>
    *
    * @param account the account in which we get all his controlled accounts
    */
   public ControlledAccountsResponse controlledAccounts(KeyPair account) throws IOException {
-    this.setSegments("accounts", account.getAccountId(), "controlled_balances");
+    this.setSegments("accounts", account.getAccountId(), "controlled_accounts");
     return this.controlledAccounts(this.buildUri());
   }
 

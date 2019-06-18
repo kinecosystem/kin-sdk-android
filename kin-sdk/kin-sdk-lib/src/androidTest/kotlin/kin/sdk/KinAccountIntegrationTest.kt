@@ -108,6 +108,25 @@ class KinAccountIntegrationTest {
 
     @Test
     @LargeTest
+    fun getAggregatedBalance_UseAccountThatIsNotAMasterAccount_GotOnlyTheAccountBalance() {
+        val kinAccount1 = kinClient.addAccount()
+        val kinAccount2 = kinClient.addAccount()
+        val masterAccount = kinClient.addAccount()
+
+        fakeKinOnBoard.createAccount(kinAccount1.publicAddress.orEmpty(), "10.14159")
+        fakeKinOnBoard.createAccount(kinAccount2.publicAddress.orEmpty(), "100.00301")
+        fakeKinOnBoard.createAccount(masterAccount.publicAddress.orEmpty(), "20.02500")
+
+        linkAccount(kinAccount1, masterAccount, "some package id 1")
+        linkAccount(kinAccount2, masterAccount, "some package id 2")
+
+        // multiply the fee in 4 because there were 4 operations(2 in each linkAccount call)
+        assertThat(kinAccount1.aggregatedBalanceSync.value(), equalTo(BigDecimal("10.14159")
+                .subtract(feeInKin.multiply(BigDecimal(2)))))
+    }
+
+    @Test
+    @LargeTest
     fun getAggregatedBalance_AccountNotCreated_AccountNotFoundException() {
         val masterAccount = kinClient.addAccount()
 
@@ -115,6 +134,33 @@ class KinAccountIntegrationTest {
         expectedEx.expectMessage(masterAccount.publicAddress.orEmpty())
 
         masterAccount.aggregatedBalanceSync
+    }
+
+    @Test
+    @LargeTest
+    fun getAggregatedBalance_withExternalAccount_GotAggregatedBalance() {
+        val kinAccount = kinClient.addAccount()
+        val masterAccountPublicAddress = "GANSSGNRVNCFECSGMODO2BQGDMI5XND2NMTMOVYQFMDNB45UD7VDF2D5"
+
+        fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty(), "10.14159")
+
+        val aggregatedBalance= kinAccount.getAggregatedBalanceSync(masterAccountPublicAddress)
+        assertThat(aggregatedBalance.value(), equalTo(BigDecimal("130.16960")
+                .subtract(feeInKin.multiply(BigDecimal(4)))))
+    }
+
+    @Test
+    @LargeTest
+    fun getAggregatedBalance_withExternalAccountNotValid_GotAggregatedBalance() {
+        val kinAccount = kinClient.addAccount()
+        val masterAccountPublicAddress = ""
+
+        fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty(), "10.14159")
+
+        expectedEx.expect(IllegalArgumentException::class.java)
+        expectedEx.expectMessage("public address not valid")
+
+        kinAccount.getAggregatedBalanceSync(masterAccountPublicAddress)
     }
 
     @Test
@@ -500,7 +546,7 @@ class KinAccountIntegrationTest {
 
         val transaction = masterAccount.transactionBuilderSync
                 .setFee(fee)
-                .setMemo("master to destination")
+                .setMemo(MemoText.text("master to destination"))
                 .addOperation(PaymentOperation.Builder(
                         KeyPair.fromAccountId(destinationAccount.publicAddress), AssetTypeNative(), "21.12300")
                         .setSourceAccount(KeyPair.fromAccountId(controlledAccount.publicAddress))
@@ -523,7 +569,7 @@ class KinAccountIntegrationTest {
         val managerDataKey = controlledAccount.publicAddress
         val transaction = transactionBuilder
                 .setFee(fee)
-                .setMemo("account linking")
+                .setMemo(MemoText.text("account linking"))
                 .addOperation(SetOptionsOperation.Builder().setSigner(signerKey, 1).build())
                 .addOperation(ManageDataOperation.Builder(managerDataKey, managerDataValue.toByteArray())
                         .setSourceAccount(KeyPair.fromAccountId(masterAccount.publicAddress))

@@ -1,14 +1,11 @@
 package kin.sdk;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 
 public class WhitelistServiceForTest {
@@ -41,8 +38,8 @@ public class WhitelistServiceForTest {
 
     private String toJson(WhitelistableTransaction whitelistableTransaction) throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("envelop", whitelistableTransaction.getTransactionPayload());
-        jo.put("network_id", whitelistableTransaction.getNetworkPassphrase());
+        jo.put("envelop", whitelistableTransaction.transactionPayload());
+        jo.put("network_id", whitelistableTransaction.networkPassphrase());
         return jo.toString();
     }
 

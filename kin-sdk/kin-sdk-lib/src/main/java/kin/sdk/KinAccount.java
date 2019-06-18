@@ -2,14 +2,11 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import kin.sdk.exception.*;
+import kin.utils.Request;
+
 import java.math.BigDecimal;
 import java.util.List;
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.CryptoException;
-import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.OperationFailedException;
-import kin.sdk.exception.TransactionFailedException;
-import kin.utils.Request;
 
 /**
  * Represents an account which holds Kin.
@@ -157,7 +154,7 @@ public interface KinAccount {
     Balance getBalanceSync() throws OperationFailedException;
 
     /**
-     * Create {@link Request} for getting the current confirmed aggregated balance in kin
+     * Create {@link Request} for getting the current confirmed aggregated balance in kin of the current account.
      * An aggregated balance is a sum of balances of all accounts controlled by the master account.
      * This includes the balance of the master account.
      * <p> See {@link ControlledAccount} for more information on a controlled account</p>
@@ -169,7 +166,21 @@ public interface KinAccount {
     Request<Balance> getAggregatedBalance();
 
     /**
-     * Get the current confirmed aggregated balance in kin
+     * Create {@link Request} for getting the current confirmed aggregated balance in kin of a given account.
+     * See {@link KinAccount#getAggregatedBalance()} for more details.
+     *
+     * An aggregated balance is a sum of balances of all accounts controlled by the master account.
+     * This includes the balance of the master account.
+     * <p> See {@link ControlledAccount} for more information on a controlled account</p>
+     * <p> See {@link KinAccount#getAggregatedBalanceSync()} for possibles errors</p>
+     *
+     * @return {@code Request<Balance>} Balance - the aggregated balance in kin
+     */
+    @NonNull
+    Request<Balance> getAggregatedBalance(String publicAddress);
+
+    /**
+     * Get the current confirmed aggregated balance in kin of the current account.
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @return the aggregated balance in kin
@@ -178,6 +189,17 @@ public interface KinAccount {
      */
     @NonNull
     Balance getAggregatedBalanceSync() throws OperationFailedException;
+
+    /**
+     * Get the current confirmed aggregated balance in kin of a given account
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return the aggregated balance in kin
+     * @throws AccountNotFoundException if account was not created
+     * @throws OperationFailedException any other error
+     */
+    @NonNull
+    Balance getAggregatedBalanceSync(String publicAddress) throws OperationFailedException;
 
     /**
      * Create {@link Request} for getting list of controlled accounts
