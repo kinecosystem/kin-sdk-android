@@ -2,12 +2,13 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import java.math.BigDecimal;
-import java.util.List;
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 
 final class KinAccountImpl extends AbstractKinAccount {
@@ -82,6 +83,15 @@ final class KinAccountImpl extends AbstractKinAccount {
     public Balance getAggregatedBalanceSync() throws OperationFailedException {
         checkValidAccount();
         return accountInfoRetriever.getAggregatedBalance(account.getAccountId());
+    }
+
+    @NonNull
+    @Override
+    public Balance getAggregatedBalanceSync(String publicAddress) throws OperationFailedException {
+        if (publicAddress == null || publicAddress.length() == 0) {
+            throw new IllegalArgumentException("public address not valid");
+        }
+        return accountInfoRetriever.getAggregatedBalance(publicAddress);
     }
 
     @NonNull
