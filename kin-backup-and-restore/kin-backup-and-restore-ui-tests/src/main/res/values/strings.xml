@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">UI Tests</string>
+    <string name="public_address_error">Public Address Could Not Be Retrieved</string>
+    <string name="current_account_details_label">Current Account Details:</string>
+    <string name="backup_status">Backup Status:</string>
+    <string name="public_address_label">Public Address:</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="backup_current_account">Backup Current Account</string>
+    <string name="restore_account">Restore Account</string>
+    <string name="restoration_has_failed">Restoration has failed</string>
+    <string name="backup_has_failed">Backup has failed</string>
+    <string name="no_account_to_backup_error">No Account To Backup Error</string>
+    <string name="account_creation_error">Account Creation Error</string>
+    <string name="backup_success_message">Account has been backed up successfully</string>
+    <string name="kin">KIN</string>
+</resources>
