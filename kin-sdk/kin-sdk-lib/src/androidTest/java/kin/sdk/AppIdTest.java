@@ -9,9 +9,14 @@ import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class AppIdTest {
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     private static final String APP_ID = "1a2c";
     private static final String STORE_KEY_TEST = "test";
@@ -25,13 +30,7 @@ public class AppIdTest {
 
     @Test
     public void create_with_appId_is_valid() {
-        boolean failed = false;
-        try {
-            createNewKinClient(APP_ID);
-        } catch (IllegalArgumentException e) {
-            failed = true;
-        }
-        assertFalse(failed);
+        createNewKinClient(APP_ID);
     }
 
     @Test
@@ -59,12 +58,12 @@ public class AppIdTest {
     @Test
     public void create_with_invalid_appId_throws() {
 
-        String[] invalidIds = new String[] {"A", "AB", "1", "a2", "ab", "$#", "$#@"};
+        String[] invalidIds = new String[] {"A", "AB", "1", "a2", "ab", "$#", "$#@", "A?BC"};
 
-        for (int i = 0 ; i < invalidIds.length ; i++) {
+        for (String invalidId : invalidIds) {
             boolean failed = false;
             try {
-                createNewKinClient(invalidIds[i]);
+                createNewKinClient(invalidId);
             } catch (IllegalArgumentException e) {
                 failed = true;
             }

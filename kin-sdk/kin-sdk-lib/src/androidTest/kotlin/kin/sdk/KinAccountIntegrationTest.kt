@@ -116,7 +116,6 @@ class KinAccountIntegrationTest {
         val server = Server(TEST_NETWORK_URL)
         val transactionResponse = server.transactions().transaction(transactionId.id())
         val actualMemo = transactionResponse.memo
-        assertTrue { actualMemo is MemoText }
         assertThat((actualMemo as MemoText).text, equalTo(expectedMemo))
     }
 
@@ -130,7 +129,6 @@ class KinAccountIntegrationTest {
         val server = Server(TEST_NETWORK_URL)
         val transactionResponse = server.transactions().transaction(transactionId.id())
         val actualMemo = transactionResponse.memo
-        assertTrue { actualMemo is MemoText }
         assertThat((actualMemo as MemoText).text, equalTo(expectedMemo))
     }
 
