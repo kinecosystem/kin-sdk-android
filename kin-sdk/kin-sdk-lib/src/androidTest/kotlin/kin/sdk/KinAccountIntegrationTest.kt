@@ -602,7 +602,7 @@ class KinAccountIntegrationTest {
     }
 
     companion object {
-
+        //TODO why not to do just @BeforeClass and inside do fakeKinOnBoard = FakeKinOnBoard(), why companion object?
         private lateinit var fakeKinOnBoard: FakeKinOnBoard
 
         @BeforeClass
