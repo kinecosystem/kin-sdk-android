@@ -49,7 +49,9 @@ class TransactionSender {
     Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
                                  int fee, @Nullable String memo) throws OperationFailedException {
         checkParams(from, publicAddress, amount, fee, memo);
-        memo = addAppIdToMemo(memo);
+        if (appId != null && !appId.equals("")) {
+            memo = addAppIdToMemo(memo);
+        }
 
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
         AccountResponse sourceAccount = loadSourceAccount(from);
