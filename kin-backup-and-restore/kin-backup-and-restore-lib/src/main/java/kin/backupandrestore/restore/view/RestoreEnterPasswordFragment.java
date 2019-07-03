@@ -1,8 +1,6 @@
 package kin.backupandrestore.restore.view;
 
 
-import static kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +24,8 @@ import kin.backupandrestore.events.EventDispatcherImpl;
 import kin.backupandrestore.restore.presenter.RestoreEnterPasswordPresenter;
 import kin.backupandrestore.restore.presenter.RestoreEnterPasswordPresenterImpl;
 import kin.backupandrestore.widget.PasswordEditText;
+
+import static kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY;
 
 
 public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnterPasswordView {
@@ -111,7 +111,7 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
     private void initViews(View root) {
         password = root.findViewById(R.id.kinrecovery_password_edit);
         contentText = root.findViewById(R.id.kinrecovery_password_recovery_text);
-        doneBtn = root.findViewById(R.id.kinrecovery_password_recovery_btn);
+        doneBtn = root.findViewById(R.id.kinrecovery_password_done_btn);
         doneBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
