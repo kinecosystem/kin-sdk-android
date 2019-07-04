@@ -34,7 +34,6 @@ class RestoreActivityFullHappyPathTest {
 
     @After
     fun tearDown() {
-        closeSoftKeyboard()
     }
 
     @Test

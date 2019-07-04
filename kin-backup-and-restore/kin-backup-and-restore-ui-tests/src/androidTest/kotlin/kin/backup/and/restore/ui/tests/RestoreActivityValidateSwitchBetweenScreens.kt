@@ -59,8 +59,6 @@ class RestoreActivityValidateSwitchBetweenScreens {
         if (::kinClient.isInitialized) {
             kinClient.clearAllAccounts()
         }
-
-        closeSoftKeyboard()
     }
 
     @Test
