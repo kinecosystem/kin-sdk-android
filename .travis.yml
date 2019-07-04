@@ -37,11 +37,11 @@ android:
   - android-26
 
 script:
-  - if [ $TEST_MATRIX == "assemble" ]; then ./scripts/ci_assemble.sh; fi --no-record-video
-  - if [ $TEST_MATRIX == "units" ]; then ./scripts/ci_unit_test.sh; fi --no-record-video
-  - if [ $TEST_MATRIX == "android_test_kin_sdk" ]; then ./scripts/ci_android_test_with_firebase.sh kin-sdk kin-sdk-sample kin-sdk-lib 2; fi --no-record-video
-  - if [ $TEST_MATRIX == "android_test_backup_restore" ]; then ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-sample kin-backup-and-restore-lib 0; fi --no-record-video
-  - if [ $TEST_MATRIX == "android_test_backup_restore_ui" ]; then ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-ui-tests kin-backup-and-restore-ui-tests 0; fi --record-video
+  - if [ $TEST_MATRIX == "assemble" ]; then ./scripts/ci_assemble.sh; fi
+  - if [ $TEST_MATRIX == "units" ]; then ./scripts/ci_unit_test.sh; fi
+  - if [ $TEST_MATRIX == "android_test_kin_sdk" ]; then ./scripts/ci_android_test_with_firebase.sh kin-sdk kin-sdk-sample kin-sdk-lib 2 --no-record-video; fi
+  - if [ $TEST_MATRIX == "android_test_backup_restore" ]; then ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-sample kin-backup-and-restore-lib 0 --no-record-video; fi
+  - if [ $TEST_MATRIX == "android_test_backup_restore_ui" ]; then ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-ui-tests kin-backup-and-restore-ui-tests 0 --record-video; fi
 
 after_success:
   - if [ $TEST_MATRIX != "assemble" ]; then bash <(curl -s https://codecov.io/bash); fi
