@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # expected arguments:
-# $1 = dir name $2 = app name $3 = module name $4 = flaky test retry number $5 = record or not record video
+# $1 = dir name $2 = app name $3 = module name $4 = flaky test retry number
 set -e #exit on any command failure
 # Build lib sample app apk, firebase requires app apk, even when just android tests are running, can be replaced with empty APK in the future
 ./gradlew :$1:$2:assembleDebug
@@ -18,7 +18,7 @@ fi
 # use travis job number as an unique value, for the folder that firebase will save coverage files
 coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
 # run tests with firebase, generate coverage file (.ec) and upload it to "coverageDir" in google cloud storage
-./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app $1/$2/build/outputs/apk/debug/$2-debug.apk --test  $1/$3/build/outputs/apk/androidTest/debug/$3-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en $5  --no-performance-metrics --num-flaky-test-attempts=$4 --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
+./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app $1/$2/build/outputs/apk/debug/$2-debug.apk --test  $1/$3/build/outputs/apk/androidTest/debug/$3-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --num-flaky-test-attempts=$4 --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
 # extract the .ec file name from google cloud
 coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://${FIREBASE_GOOGLE_CLOUD_FOLDER}/${coverageDir}/**/*.ec" | tail -1`
 echo ${coverageFile}
