@@ -217,11 +217,8 @@ class BackupActivityValidateSwitchBetweenScreens {
         val device = UiDevice.getInstance(getInstrumentation())
         device.pressBack()
 
-        Thread.sleep(2000)
-
         val understandCheckbox2 = onView(withId(R.id.i_saved_my_qr_checkbox))
         understandCheckbox2.perform(click())
-
 
         val toolbarTitle2 = onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.toolbar))))
         toolbarTitle2.check(doesNotExist())
