@@ -64,7 +64,6 @@ class BackupActivityValidateSwitchBetweenScreens {
         if (::kinClient.isInitialized) {
             kinClient.clearAllAccounts()
         }
-        closeSoftKeyboard()
     }
 
     @Test
@@ -93,6 +92,8 @@ class BackupActivityValidateSwitchBetweenScreens {
                 allOf(withId(R.id.lets_go_button), withText(R.string.backup_and_restore_lets_go),
                         isDisplayed()))
         appCompatButton.perform(click())
+
+        closeSoftKeyboard()
 
         onView(allOf(instanceOf(TextView::class.java),
                 withParent(withId(R.id.toolbar))))

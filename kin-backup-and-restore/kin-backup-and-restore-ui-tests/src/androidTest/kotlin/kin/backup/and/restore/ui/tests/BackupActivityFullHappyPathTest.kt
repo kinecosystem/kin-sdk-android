@@ -30,7 +30,6 @@ class BackupActivityFullHappyPathTest {
 
     @After
     fun tearDown() {
-        closeSoftKeyboard()
     }
 
     @Test
