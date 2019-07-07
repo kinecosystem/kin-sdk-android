@@ -139,6 +139,7 @@ class BackupActivityValidateSwitchBetweenScreens {
                         0),
                         isDisplayed()))
         confirm.perform(replaceText("qwertyU1!"))
+
         closeSoftKeyboard()
 
         val understandCheckbox = onView(withId(R.id.understand_checkbox))
@@ -176,10 +177,10 @@ class BackupActivityValidateSwitchBetweenScreens {
     fun backupActivity_ThirdScreen_ToFourth_CorrectComponents() {
         launchActivity()
 
+
         val letsGoButton = onView(allOf(withId(R.id.lets_go_button), withText(R.string.backup_and_restore_lets_go)))
         letsGoButton.perform(click())
 
-        closeSoftKeyboard()
         val password = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.enter_pass_edittext),
@@ -199,6 +200,7 @@ class BackupActivityValidateSwitchBetweenScreens {
                         0),
                         isDisplayed()))
         confirm.perform(replaceText("qwertyU1!"))
+
         closeSoftKeyboard()
 
         val understandCheckbox = onView(withId(R.id.understand_checkbox))

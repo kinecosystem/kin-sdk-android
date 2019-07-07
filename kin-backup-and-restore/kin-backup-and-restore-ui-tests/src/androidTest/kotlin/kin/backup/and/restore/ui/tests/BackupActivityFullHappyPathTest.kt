@@ -14,7 +14,6 @@ import android.support.test.uiautomator.UiDevice
 import kin.backup.and.restore.ui.tests.UiTestUtils.childAtPosition
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,10 +26,6 @@ class BackupActivityFullHappyPathTest {
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(BackupAndRestoreDummyActivityForUITest::class.java)
-
-    @After
-    fun tearDown() {
-    }
 
     @Test
     fun backupActivityFullHappyPathTest() {
@@ -197,6 +192,8 @@ class BackupActivityFullHappyPathTest {
 
         onView(allOf(withText("qwertyU1!"),
                 isDisplayed()))
+
+        closeSoftKeyboard()
 
         val appCompatCheckBox = onView(
                 allOf(withId(R.id.understand_checkbox),
