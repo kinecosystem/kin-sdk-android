@@ -61,16 +61,6 @@ class BackupActivityFullHappyPathTest {
 
         pressBack()
 
-        val editText = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.enter_pass_edittext),
-                                childAtPosition(
-                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
-                                        2)),
-                        0),
-                        isDisplayed()))
-        editText.perform(click())
-
         val editText2 = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.enter_pass_edittext),
