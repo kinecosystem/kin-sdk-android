@@ -111,6 +111,8 @@ class BackupActivityThirdToFourthScreenTest {
         val device = UiDevice.getInstance(getInstrumentation())
         device.pressBack()
 
+        Thread.sleep(3000)
+
         val understandCheckbox2 = onView(withId(R.id.i_saved_my_qr_checkbox))
         understandCheckbox2.perform(click())
 
