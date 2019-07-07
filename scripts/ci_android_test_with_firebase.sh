@@ -20,6 +20,8 @@ coverageDir=kin-sdk-android-${TRAVIS_JOB_NUMBER}
 # run tests with firebase, generate coverage file (.ec) and upload it to "coverageDir" in google cloud storage
 ./google-cloud-sdk/bin/gcloud firebase test android run  --type instrumentation --app $1/$2/build/outputs/apk/debug/$2-debug.apk --test  $1/$3/build/outputs/apk/androidTest/debug/$3-debug-androidTest.apk --device model=Nexus5X,version=25,locale=en --no-record-video  --no-performance-metrics --num-flaky-test-attempts=$4 --environment-variables coverage=true,coverageFile="/sdcard/coverage.ec" --directories-to-pull /sdcard --results-dir ${coverageDir}
 # extract the .ec file name from google cloud
+echo ${FIREBASE_GOOGLE_CLOUD_FOLDER}
+echo ${coverageDir}
 coverageFile=`./google-cloud-sdk/bin/gsutil ls "gs://${FIREBASE_GOOGLE_CLOUD_FOLDER}/${coverageDir}/**/*.ec" | tail -1`
 echo ${coverageFile}
 # copy it locally to our lib build folder
