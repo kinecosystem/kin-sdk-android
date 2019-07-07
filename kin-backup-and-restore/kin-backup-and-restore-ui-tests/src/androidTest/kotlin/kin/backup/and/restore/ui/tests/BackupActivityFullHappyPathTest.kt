@@ -3,7 +3,6 @@ package kin.backup.and.restore.ui.tests
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.Espresso.pressBack
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
@@ -59,7 +58,7 @@ class BackupActivityFullHappyPathTest {
                         isDisplayed()))
         appCompatButton3.perform(click())
 
-        pressBack()
+        closeSoftKeyboard()
 
         val editText2 = onView(
                 allOf(childAtPosition(
