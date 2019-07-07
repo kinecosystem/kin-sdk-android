@@ -107,6 +107,8 @@ class RestoreActivityValidateSwitchBetweenScreens {
 
         Intents.release()
 
+        closeSoftKeyboard()
+
         val targetContext = InstrumentationRegistry.getTargetContext()
         onView(withId(R.id.kinrecovery_password_edit))
                 .check(matches(hasValueEqualTo(targetContext.resources.getString(R.string.backup_and_restore_enter_password))))
@@ -183,7 +185,6 @@ class RestoreActivityValidateSwitchBetweenScreens {
                                         0)),
                         0)))
         imageButton.check(matches(isTransparentDrawable(R.drawable.back)))
-
 
         val button = onView(
                 allOf(withId(R.id.backup_and_restore_v_btn), isDisplayed()))
