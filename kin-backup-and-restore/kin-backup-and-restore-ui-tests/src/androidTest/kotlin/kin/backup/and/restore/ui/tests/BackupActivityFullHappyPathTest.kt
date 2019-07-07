@@ -216,7 +216,6 @@ class BackupActivityFullHappyPathTest {
 
         Thread.sleep(3000)
 
-
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.pressBack()
 
