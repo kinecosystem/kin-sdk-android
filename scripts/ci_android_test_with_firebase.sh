@@ -2,6 +2,7 @@
 # expected arguments:
 # $1 = dir name $2 = app name $3 = module name $4 = flaky test retry number
 set -e #exit on any command failure
+set -x
 # Build lib sample app apk, firebase requires app apk, even when just android tests are running, can be replaced with empty APK in the future
 ./gradlew :$1:$2:assembleDebug
 # Build android tests apk
