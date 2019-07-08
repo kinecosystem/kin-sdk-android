@@ -5,6 +5,7 @@ package kin.sdk;
  * him, for example, to send transactions with a payment operation on behalf of him. The account that has the control is
  * often called the master account.
  * Master account can control more than one account and can sign for another.
+ * And account can have multiple masters.
  */
 public class ControlledAccount {
 

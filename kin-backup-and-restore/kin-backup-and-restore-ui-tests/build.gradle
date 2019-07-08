@@ -31,23 +31,6 @@ android {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
-    signingConfigs {
-        kintest_keystore {
-            keyAlias 'kintest'
-            keyPassword 'kintest'
-            storeFile file('../../kintest.keystore')
-            storePassword 'kintest'
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.kintest_keystore
-        }
-    }
-
 }
 
 dependencies {
