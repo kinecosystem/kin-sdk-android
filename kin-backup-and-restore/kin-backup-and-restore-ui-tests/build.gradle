@@ -69,10 +69,13 @@ task jacocoTestReport(type: JacocoReport) {
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def testedDebugTree = fileTree(dir: "$project.rootDir/kin-backup-and-restore/kin-backup-and-restore-lib/build" +
+            "/intermediates/classes/debug", excludes: fileFilter)
     def mainSrc = "$project.projectDir/src/main/java"
+    def testedSrc = "$project.rootDir/kin-backup-and-restore/kin-backup-and-restore-lib/src/main/java"
 
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
+    sourceDirectories = files([testedSrc, mainSrc])
+    classDirectories = files([debugTree, testedDebugTree])
     executionData = fileTree(dir: project.buildDir, includes: [
             'jacoco/testDebugUnitTest.exec', '**/*coverage.ec'
     ])
