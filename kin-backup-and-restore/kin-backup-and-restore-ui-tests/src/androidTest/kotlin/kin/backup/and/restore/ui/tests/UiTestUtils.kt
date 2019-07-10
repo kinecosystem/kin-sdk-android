@@ -36,11 +36,10 @@ object UiTestUtils {
     private val networkUrl = Environment.TEST.networkUrl
 
     private val networkPassphrase = Environment.TEST.networkPassphrase
-    private lateinit var intent: Intent
 
     fun createStubIntent(component: String, publicAddress: String? = null): Intent {
         // Setup the trigger Intent
-        intent = Intent()
+        var intent = Intent()
         intent.putExtra(BackupAndRestoreManager.NETWORK_URL_EXTRA, networkUrl)
         intent.putExtra(BackupAndRestoreManager.NETWORK_PASSPHRASE_EXTRA, networkPassphrase)
         intent.putExtra(BackupAndRestoreManager.APP_ID_EXTRA, appId)

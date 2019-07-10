@@ -7,6 +7,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.filters.LargeTest
 import android.support.test.runner.AndroidJUnit4
+import kin.backup.and.restore.ui.tests.RestoreActivityFullHappyPathTest.Constants.PUBLIC_ADDRESS
 import kin.backup.and.restore.ui.tests.UiTestUtils.childAtPosition
 import kin.backup.and.restore.ui.tests.UiTestUtils.intendingStubQRIntent
 import org.hamcrest.Matchers.`is`
@@ -22,6 +23,7 @@ import java.io.IOException
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class RestoreActivityFullHappyPathTest {
+
 
     @get:Rule
     var activityTestRule = IntentsTestRule(BackupAndRestoreDummyActivityForUITest::class.java)
@@ -49,7 +51,7 @@ class RestoreActivityFullHappyPathTest {
         appCompatButton.perform(click())
 
         val appCompatTextView = onView(
-                allOf(withId(R.id.upload_btn_text), withText("Upload QR code"),
+                allOf(withId(R.id.upload_btn_text), withText(R.string.backup_and_restore_upload_qr_btn),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.fragment_frame),
@@ -78,7 +80,7 @@ class RestoreActivityFullHappyPathTest {
         editText.perform(typeText("qwertyU1!"), closeSoftKeyboard())
 
         val appCompatButton3 = onView(
-                allOf(withId(R.id.kinrecovery_password_done_btn), withText("Done"),
+                allOf(withId(R.id.kinrecovery_password_done_btn), withText(R.string.backup_and_restore_done),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.fragment_frame),
@@ -98,14 +100,18 @@ class RestoreActivityFullHappyPathTest {
         appCompatImageView.perform(click())
 
         val textView = onView(
-                allOf(withId(R.id.public_address_value), withText("GDQG4RKOSETYI6JVL3ERNE3WSGFA56C5JLLR2MMNQZL7FD7BEJE2YRCT"),
+                allOf(withId(R.id.public_address_value), withText(PUBLIC_ADDRESS),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
                                 4),
                         isDisplayed()))
-        textView.check(matches(withText("GDQG4RKOSETYI6JVL3ERNE3WSGFA56C5JLLR2MMNQZL7FD7BEJE2YRCT")))
+        textView.check(matches(withText(PUBLIC_ADDRESS)))
+    }
+
+    object Constants {
+        const val PUBLIC_ADDRESS = "GDQG4RKOSETYI6JVL3ERNE3WSGFA56C5JLLR2MMNQZL7FD7BEJE2YRCT"
     }
 
 }

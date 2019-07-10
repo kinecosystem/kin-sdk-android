@@ -49,7 +49,7 @@ class BackupActivityFullHappyPathTest {
         appCompatButton2.perform(click())
 
         val appCompatButton3 = onView(
-                allOf(withId(R.id.lets_go_button), withText("Let's Go"),
+                allOf(withId(R.id.lets_go_button), withText(R.string.backup_and_restore_lets_go),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.fragment_frame),
@@ -195,7 +195,7 @@ class BackupActivityFullHappyPathTest {
         appCompatCheckBox.perform(click())
 
         val appCompatButton4 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_button), withText(R.string.backup_and_restore_next),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.fragment_frame),
@@ -205,7 +205,7 @@ class BackupActivityFullHappyPathTest {
         appCompatButton4.perform(click())
 
         val appCompatButton5 = onView(
-                allOf(withId(R.id.send_email_button), withText("Email QR code"),
+                allOf(withId(R.id.send_email_button), withText(R.string.backup_and_restore_email_qr_code),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.fragment_frame),
