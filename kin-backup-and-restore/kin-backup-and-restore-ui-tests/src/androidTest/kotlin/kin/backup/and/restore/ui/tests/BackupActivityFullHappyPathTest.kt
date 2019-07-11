@@ -29,7 +29,7 @@ class BackupActivityFullHappyPathTest {
     @Test
     fun backupActivityFullHappyPathTest() {
         val appCompatButton = onView(
-                allOf(withId(R.id.create_new_account), withText("Create New Account"),
+                allOf(withId(R.id.create_new_account), withText(R.string.create_new_account),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -39,7 +39,7 @@ class BackupActivityFullHappyPathTest {
         appCompatButton.perform(click())
 
         val appCompatButton2 = onView(
-                allOf(withId(R.id.backup_current_account), withText("Backup Current Account"),
+                allOf(withId(R.id.backup_current_account), withText(R.string.backup_current_account),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),

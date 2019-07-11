@@ -41,7 +41,7 @@ class RestoreActivityFullHappyPathTest {
     @Test
     fun restoreActivityFullHappyPathTest() {
         val appCompatButton = onView(
-                allOf(withId(R.id.restore_account), withText("Restore Account"),
+                allOf(withId(R.id.restore_account), withText(R.string.restore_account),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -61,7 +61,7 @@ class RestoreActivityFullHappyPathTest {
         appCompatTextView.perform(click())
 
         val appCompatButton2 = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
+                allOf(withId(android.R.id.button1), withText(R.string.ok),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.buttonPanel),

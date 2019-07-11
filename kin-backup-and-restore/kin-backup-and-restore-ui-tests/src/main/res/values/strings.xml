@@ -13,4 +13,8 @@
     <string name="account_creation_error">Account Creation Error</string>
     <string name="backup_success_message">Account has been backed up successfully</string>
     <string name="kin">KIN</string>
+    <string name="restore_account">Restore Account</string>
+    <string name="ok">OK</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="backup_current_account">Backup Current Account</string>
 </resources>
