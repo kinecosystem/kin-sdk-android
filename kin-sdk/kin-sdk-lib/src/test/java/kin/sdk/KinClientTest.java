@@ -1,21 +1,7 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
-import java.util.ArrayList;
-import java.util.Arrays;
 import kin.base.KeyPair;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,6 +9,17 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static junit.framework.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("deprecation")
 public class KinClientTest {
@@ -159,6 +156,39 @@ public class KinClientTest {
         assertNotNull(expectedAccount2);
         assertThat(account1.getAccountId(), equalTo(expectedAccount1.getPublicAddress()));
         assertThat(account2.getAccountId(), equalTo(expectedAccount2.getPublicAddress()));
+    }
+
+    @Test
+    public void createMultipleKinClients_SameAccounts() throws Exception {
+        KinClient kinClient1 = createNewKinClient();
+        kinClient1.addAccount();
+        kinClient1.addAccount();
+
+        assertThat(kinClient1.getAccountCount(), equalTo(2));
+
+        KinClient kinClient2 = createNewKinClient();
+        assertTrue(kinClient2.hasAccount());
+        assertThat(kinClient2.getAccountCount(), equalTo(2));
+
+        kinClient2.addAccount();
+        kinClient2.addAccount();
+
+        assertThat(kinClient1.getAccountCount(), equalTo(4));
+        assertThat(kinClient2.getAccountCount(), equalTo(4));
+
+        KinAccount expectedAccount1 = kinClient1.getAccount(0);
+        KinAccount expectedAccount2 = kinClient1.getAccount(1);
+        KinAccount expectedAccount3 = kinClient1.getAccount(2);
+        KinAccount expectedAccount4 = kinClient1.getAccount(3);
+
+        assertNotNull(expectedAccount1);
+        assertNotNull(expectedAccount2);
+        assertNotNull(expectedAccount3);
+        assertNotNull(expectedAccount4);
+        assertThat(kinClient2.getAccount(0).getPublicAddress(), equalTo(expectedAccount1.getPublicAddress()));
+        assertThat(kinClient2.getAccount(1).getPublicAddress(), equalTo(expectedAccount2.getPublicAddress()));
+        assertThat(kinClient2.getAccount(2).getPublicAddress(), equalTo(expectedAccount3.getPublicAddress()));
+        assertThat(kinClient2.getAccount(3).getPublicAddress(), equalTo(expectedAccount4.getPublicAddress()));
     }
 
     @Test
