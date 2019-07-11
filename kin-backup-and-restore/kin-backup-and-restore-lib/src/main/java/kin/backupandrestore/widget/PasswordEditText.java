@@ -269,11 +269,15 @@ public class PasswordEditText extends LinearLayout {
 		return passwordField.getText().toString();
 	}
 
-	public void showError(@StringRes final int stringRes) {
-		errorText.setText(stringRes);
-		passwordField.setTextColor(ContextCompat.getColor(getContext(), R.color.backup_and_restore_gray));
-		errorText.setVisibility(VISIBLE);
-	}
+    public String getHint() {
+        return passwordField.getHint().toString();
+    }
+
+    public void showError(@StringRes final int stringRes) {
+        errorText.setText(stringRes);
+        passwordField.setTextColor(ContextCompat.getColor(getContext(), R.color.backup_and_restore_gray));
+        errorText.setVisibility(VISIBLE);
+    }
 
 	public void removeError() {
 		if (errorText.getVisibility() == VISIBLE) {

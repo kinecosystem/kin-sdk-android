@@ -399,7 +399,6 @@ class KinAccountIntegrationTest {
     }
 
     companion object {
-
         private lateinit var fakeKinOnBoard: FakeKinOnBoard
 
         @BeforeClass
