@@ -107,4 +107,9 @@ class BackupAndRestoreDummyActivityForUITest : AppCompatActivity(), View.OnClick
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        backupAndRestoreManager?.release()
+    }
+
 }
