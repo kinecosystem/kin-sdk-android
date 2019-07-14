@@ -192,6 +192,39 @@ public class KinClientTest {
     }
 
     @Test
+    public void createMultipleKinClients_DeleteFormFirstAddFromSecond_SameAccounts() throws Exception {
+        KinClient kinClient1 = createNewKinClient();
+        KinAccount kinAccount1 = kinClient1.addAccount();
+        kinClient1.addAccount();
+
+        KinClient kinClient2 = createNewKinClient();
+
+        KinAccount kinAccount3 = kinClient2.addAccount();
+        KinAccount kinAccount4 = kinClient2.addAccount();
+
+        kinClient1.deleteAccount(1);
+        KinAccount kinAccount5 = kinClient2.addAccount();
+
+        String expectedAccount1 = kinAccount1.getPublicAddress();
+        String expectedAccount3 = kinAccount3.getPublicAddress();
+        String expectedAccount4 = kinAccount4.getPublicAddress();
+        String expectedAccount5 = kinAccount5.getPublicAddress();
+
+        assertNotNull(expectedAccount1);
+        assertNotNull(expectedAccount3);
+        assertNotNull(expectedAccount4);
+        assertNotNull(expectedAccount5);
+
+        assertThat(kinClient1.getAccountCount(), equalTo(4));
+        assertThat(kinClient2.getAccountCount(), equalTo(4));
+
+        assertThat(kinClient2.getAccount(0).getPublicAddress(), equalTo(expectedAccount1));
+        assertThat(kinClient2.getAccount(1).getPublicAddress(), equalTo(expectedAccount3));
+        assertThat(kinClient2.getAccount(2).getPublicAddress(), equalTo(expectedAccount4));
+        assertThat(kinClient2.getAccount(3).getPublicAddress(), equalTo(expectedAccount5));
+    }
+
+    @Test
     public void getAccount_NegativeIndex() throws Exception {
         createKeyStoreWithRandomAccount();
 
