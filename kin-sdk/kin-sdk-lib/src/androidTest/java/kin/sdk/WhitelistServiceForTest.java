@@ -1,14 +1,11 @@
 package kin.sdk;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import android.util.Log;
+import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class WhitelistServiceForTest {
@@ -24,16 +21,21 @@ public class WhitelistServiceForTest {
                 .build();
     }
 
-    String whitelistTransaction(WhitelistableTransaction whitelistableTransaction) throws JSONException, IOException {
+    String whitelistTransaction(WhitelistableTransaction whitelistableTransaction) throws Exception {
         RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistableTransaction));
         okhttp3.Request request = new Request.Builder()
                 .url(IntegConsts.URL_WHITELISTING_SERVICE)
                 .post(requestBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        String whitelist = null;
-        if (response.body() != null) {
+        String whitelist;
+        if (response.code() == 200 && response.body() != null) {
             whitelist = response.body().string();
+        } else {
+            String msg =
+                    "whitelistTransaction error, error code = " + response.code() + " message = " + response.body();
+            Log.d("test", msg);
+            throw new Exception(msg);
         }
         return whitelist;
     }
