@@ -2,11 +2,12 @@ package kin.sdk;
 
 
 import android.support.annotation.NonNull;
-import java.util.ArrayList;
-import java.util.List;
 import kin.base.KeyPair;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fake KeyStore for testing, implementing naive in memory store
@@ -24,8 +25,13 @@ class FakeKeyStore implements KeyStore {
     }
 
     @Override
-    public void deleteAccount(int index) {
-        accounts.remove(index);
+    public void deleteAccount(String publicAddress) {
+        for (int i = 0; i < accounts.size(); i++) {
+            if (accounts.get(i).getAccountId().equals(publicAddress)) {
+                accounts.remove(i);
+                break;
+            }
+        }
     }
 
     @NonNull

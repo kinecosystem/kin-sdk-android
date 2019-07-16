@@ -3,17 +3,14 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import java.util.ArrayList;
-import java.util.List;
 import kin.base.KeyPair;
-import kin.sdk.exception.CorruptedDataException;
-import kin.sdk.exception.CreateAccountException;
-import kin.sdk.exception.CryptoException;
-import kin.sdk.exception.DeleteAccountException;
-import kin.sdk.exception.LoadAccountException;
+import kin.sdk.exception.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class KeyStoreImpl implements KeyStore {
 
@@ -68,15 +65,16 @@ class KeyStoreImpl implements KeyStore {
     }
 
     @Override
-    public void deleteAccount(int index) throws DeleteAccountException {
+    public void deleteAccount(String publicAddress) throws DeleteAccountException {
         JSONObject json = new JSONObject();
         try {
             JSONArray jsonArray = loadJsonArray();
             if (jsonArray != null) {
                 JSONArray newJsonArray = new JSONArray();
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    if (i != index) {
-                        newJsonArray.put(jsonArray.get(i));
+                    Object account = jsonArray.get(i);
+                    if (!((JSONObject) account).get(JSON_KEY_PUBLIC_KEY).equals(publicAddress)) {
+                        newJsonArray.put(account);
                     }
                 }
                 json.put(JSON_KEY_ACCOUNTS_ARRAY, newJsonArray);

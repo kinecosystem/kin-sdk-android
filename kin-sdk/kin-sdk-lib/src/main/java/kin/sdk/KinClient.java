@@ -189,6 +189,7 @@ public class KinClient {
     }
 
     /**
+     * @deprecated please muse getAccount(String publicAdderss) will be remove is cersion 2.2.3
      * Returns an account at input index.
      *
      * @return the account at the input index or null if there is no such account
@@ -218,13 +219,19 @@ public class KinClient {
 
     /**
      * Deletes the account at input index (if it exists)
+     * @return true if the delete was successful or false otherwise
+     * @throws DeleteAccountException in case of a delete account exception while trying to delete the account
      */
-    public void deleteAccount(int index) throws DeleteAccountException {
+    public boolean deleteAccount(int index) throws DeleteAccountException {
+        boolean deleteSuccess = false;
         if (index >= 0 && getAccountCount() > index) {
-            keyStore.deleteAccount(index);
+            String accountToDelete = kinAccounts.get(index).getPublicAddress();
+            keyStore.deleteAccount(accountToDelete);
             KinAccountImpl removedAccount = kinAccounts.remove(index);
             removedAccount.markAsDeleted();
+            deleteSuccess = true;
         }
+        return deleteSuccess;
     }
 
     /**
