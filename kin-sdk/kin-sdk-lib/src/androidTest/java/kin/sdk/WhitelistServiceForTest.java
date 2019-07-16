@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 public class WhitelistServiceForTest {
 
-    private static final String URL_WHITELISTING_SERVICE = "http://34.239.111.38:3000/whitelist";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final OkHttpClient okHttpClient;
@@ -28,7 +27,7 @@ public class WhitelistServiceForTest {
     String whitelistTransaction(WhitelistableTransaction whitelistableTransaction) throws JSONException, IOException {
         RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistableTransaction));
         okhttp3.Request request = new Request.Builder()
-                .url(URL_WHITELISTING_SERVICE)
+                .url(IntegConsts.URL_WHITELISTING_SERVICE)
                 .post(requestBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
