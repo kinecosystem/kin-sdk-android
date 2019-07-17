@@ -1,6 +1,8 @@
 package kin.backupandrestore.utils;
 
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.support.constraint.Group;
 import android.view.View;
 
@@ -18,5 +20,11 @@ public class ViewUtils {
 		for (int id : refIds) {
 			root.findViewById(id).setEnabled(enable);
 		}
+	}
+
+	public static String getApplicationName(Context context) {
+		ApplicationInfo applicationInfo = context.getApplicationInfo();
+		int stringId = applicationInfo.labelRes;
+		return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
 	}
 }
