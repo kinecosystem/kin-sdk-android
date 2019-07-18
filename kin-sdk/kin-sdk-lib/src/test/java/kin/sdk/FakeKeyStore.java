@@ -7,6 +7,7 @@ import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,9 +27,11 @@ class FakeKeyStore implements KeyStore {
 
     @Override
     public void deleteAccount(String publicAddress) {
-        for (int i = 0; i < accounts.size(); i++) {
-            if (accounts.get(i).getAccountId().equals(publicAddress)) {
-                accounts.remove(i);
+        Iterator<KeyPair> iterator = accounts.iterator();
+        while (iterator.hasNext()) {
+            KeyPair keyPair = iterator.next();
+            if (keyPair.getAccountId().equals(publicAddress)) {
+                iterator.remove();
                 break;
             }
         }

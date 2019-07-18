@@ -189,7 +189,6 @@ public class KinClient {
     }
 
     /**
-     * @deprecated please muse getAccount(String publicAdderss) will be remove is cersion 2.2.3
      * Returns an account at input index.
      *
      * @return the account at the input index or null if there is no such account
