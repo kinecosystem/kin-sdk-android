@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#303F9F</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="kinBlueSelected">#1392C9</color>
+    <color name="kinBlue">#26BEFF</color>
+    <color name="disable">#D1D1D1</color>
+
+</resources>

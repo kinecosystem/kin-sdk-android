@@ -24,6 +24,9 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
+            buildConfigField "String", "INTEG_TESTS_NETWORK_FRIENDBOT", "\"${System.getenv('INTEG_TESTS_NETWORK_FRIENDBOT') ?: ""}\""
+            buildConfigField "String", "INTEG_TESTS_NETWORK_PASSPHRASE", "\"${System.getenv('INTEG_TESTS_NETWORK_PASSPHRASE') ?: ""}\""
+            buildConfigField "String", "INTEG_TESTS_NETWORK_URL", "\"${System.getenv('INTEG_TESTS_NETWORK_URL') ?: ""}\""
         }
     }
 
@@ -101,7 +104,7 @@ task jacocoTestReport(type: JacocoReport) {
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
     executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+            'jacoco/testDebugUnitTest.exec', '**/*coverage.ec'
     ])
 }
 

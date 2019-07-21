@@ -3,24 +3,16 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.List;
-import kin.base.AssetTypeNative;
-import kin.base.KeyPair;
-import kin.base.Memo;
-import kin.base.PaymentOperation;
-import kin.base.Server;
+import kin.base.*;
 import kin.base.Transaction.Builder;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
 import kin.base.responses.SubmitTransactionResponse;
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.IllegalAmountException;
-import kin.sdk.exception.InsufficientFeeException;
-import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.OperationFailedException;
-import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.exception.*;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 class TransactionSender {
 
@@ -44,13 +36,15 @@ class TransactionSender {
     PaymentTransaction buildPaymentTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
         int fee, @Nullable String memo) throws OperationFailedException {
         checkParams(from, publicAddress, amount, fee, memo);
-        memo = Utils.addAppIdToMemo(appId, memo);
+        if (appId != null && !appId.equals("")) {
+            memo = Utils.addAppIdToMemo(appId, memo);
+        }
 
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
         AccountResponse sourceAccount = loadSourceAccount(from);
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         kin.base.Transaction stellarTransaction = buildBaseTransaction(from, amount, addressee, sourceAccount, fee,
-            memo);
+                memo);
         return new PaymentTransaction(stellarTransaction, addressee.getAccountId(), amount, memo);
     }
 

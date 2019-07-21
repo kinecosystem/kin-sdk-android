@@ -161,23 +161,57 @@ class KinAccountIntegrationTest {
         val memo = "fake memo"
         val expectedMemo = addAppIdToMemo(memo)
 
-        val latch = CountDownLatch(1)
-        val listenerRegistration = kinAccountReceiver.addPaymentListener { _ -> latch.countDown() }
-
-        val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
-                BigDecimal("21.123"), fee, memo)
-        val transactionId = kinAccountSender.sendTransactionSync(transaction)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
-        listenerRegistration.remove()
+        val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, memo)
 
         val server = Server(TEST_NETWORK_URL)
         val transactionResponse = server.transactions().transaction(transactionId.id())
         val actualMemo = transactionResponse.memo
-        assertThat<Memo>(actualMemo, `is`<Memo>(instanceOf<Memo>(MemoText::class.java)))
         assertThat((actualMemo as MemoText).text, equalTo(expectedMemo))
+    }
+
+    @Test
+    @LargeTest
+    @Throws(Exception::class)
+    fun sendTransaction_WithoutMemoJustPrefix() {
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
+        val expectedMemo = addAppIdToMemo("")
+        val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, null)
+        val server = Server(TEST_NETWORK_URL)
+        val transactionResponse = server.transactions().transaction(transactionId.id())
+        val actualMemo = transactionResponse.memo
+        assertThat((actualMemo as MemoText).text, equalTo(expectedMemo))
+    }
+
+    @Test
+    @LargeTest
+    @Throws(Exception::class)
+    fun sendTransaction_WithoutMemo() {
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(
+                senderFundAmount = 100,
+                kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, null))
+
+        val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, null)
+        val server = Server(TEST_NETWORK_URL)
+        val transactionResponse = server.transactions().transaction(transactionId.id())
+        val actualMemo = transactionResponse.memo
+        assertTrue { actualMemo is MemoNone }
+    }
+
+    @Test
+    @LargeTest
+    @Throws(Exception::class)
+    fun sendTransaction_WithoutMemoPrefix() {
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(
+                senderFundAmount = 100,
+                kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, null))
+
+        val memo = "fake memo"
+        val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, memo)
+        val server = Server(TEST_NETWORK_URL)
+        val transactionResponse = server.transactions().transaction(transactionId.id())
+        val actualMemo = transactionResponse.memo
+        assertThat<Memo>(actualMemo, `is`<Memo>(instanceOf<Memo>(MemoText::class.java)))
+        assertThat((actualMemo as MemoText).text, equalTo(memo))
     }
 
     @Test
@@ -292,20 +326,9 @@ class KinAccountIntegrationTest {
     @Throws(Exception::class)
     fun sendTransaction_Success() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
-
-        val latch = CountDownLatch(1)
-        val listenerRegistration = kinAccountReceiver.addPaymentListener { _ -> latch.countDown() }
-
-        val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
-                BigDecimal("21.123"), fee)
-        val transactionId = kinAccountSender.sendTransactionSync(transaction)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
+        val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, "fake memo")
         assertNotNull(transactionId)
         assertThat(transactionId.id(), not(isEmptyString()))
-
-        assertTrue(latch.await(timeoutDurationSeconds, TimeUnit.SECONDS))
-        listenerRegistration.remove()
     }
 
     @Test
@@ -455,7 +478,8 @@ class KinAccountIntegrationTest {
     }
 
     private fun onboardAccounts(senderFundAmount: Int = 0,
-                                receiverFundAmount: Int = 0): Pair<KinAccount, KinAccount> {
+                                receiverFundAmount: Int = 0,
+                                kinClient: KinClient = this.kinClient): Pair<KinAccount, KinAccount> {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
         fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty(), senderFundAmount.toString())
@@ -472,8 +496,16 @@ class KinAccountIntegrationTest {
         return appIdVersionPrefix.plus("-").plus(appId).plus("-").plus(memo)
     }
 
-    companion object {
+    private fun sendTransactionAndAssert(kinAccountSender: KinAccount, kinAccountReceiver: KinAccount, memo: String?): TransactionId {
+        val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
+                BigDecimal("21.123"), fee, memo)
+        val transactionId = kinAccountSender.sendTransactionSync(transaction)
+        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
+        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
+        return transactionId
+    }
 
+    companion object {
         private lateinit var fakeKinOnBoard: FakeKinOnBoard
 
         @BeforeClass

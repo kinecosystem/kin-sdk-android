@@ -1,26 +1,24 @@
 package kin.sdk;
 
-import static kin.sdk.Utils.checkNotEmpty;
-import static kin.sdk.Utils.checkNotNull;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
+import android.util.Log;
 import kin.base.KeyPair;
 import kin.base.Network;
 import kin.base.Server;
-import kin.sdk.exception.CorruptedDataException;
-import kin.sdk.exception.CreateAccountException;
-import kin.sdk.exception.CryptoException;
-import kin.sdk.exception.DeleteAccountException;
-import kin.sdk.exception.LoadAccountException;
-import kin.sdk.exception.OperationFailedException;
+import kin.sdk.exception.*;
 import kin.utils.Request;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+import static kin.sdk.Utils.checkNotNull;
 
 /**
  * An account manager for a {@link KinAccount}.
@@ -39,10 +37,11 @@ public class KinClient {
     private final String appId;
     private final String storeKey;
     @NonNull
-    private final List<KinAccountImpl> kinAccounts = new ArrayList<>(1);
+    private List<KinAccountImpl> kinAccounts = new ArrayList<>(1);
 
     /**
-     * For more details please look at {@link #KinClient(Context context,Environment environment,String appId, String storeKey)}
+     * For more details please look at
+     * {@link #KinClient(Context context, Environment environment, String appId, String storeKey)}
      */
     public KinClient(@NonNull Context context, @NonNull Environment environment, String appId) {
         this(context, environment, appId,"");
@@ -110,15 +109,33 @@ public class KinClient {
             e.printStackTrace();
         }
         if (accounts != null && !accounts.isEmpty()) {
-            for (KeyPair account : accounts) {
-                kinAccounts.add(createNewKinAccount(account));
-            }
+            updateKinAccounts(accounts);
         }
     }
 
+    private void updateKinAccounts(List<KeyPair> storageAccounts) {
+        Map<String, KinAccountImpl> accountsMap = new HashMap<>();
+        for (KinAccountImpl kinAccountImpl : kinAccounts) {
+            accountsMap.put(kinAccountImpl.getPublicAddress(), kinAccountImpl);
+        }
+
+        List<KinAccountImpl> newKinAccountsList = new ArrayList<>();
+        for (KeyPair account : storageAccounts) {
+            KinAccountImpl inMemoryKinAccount = accountsMap.get(account.getAccountId());
+            if (inMemoryKinAccount != null) {
+                newKinAccountsList.add(inMemoryKinAccount);
+            } else {
+                newKinAccountsList.add(createNewKinAccount(account));
+            }
+        }
+        kinAccounts = newKinAccountsList;
+    }
+
     private void validateAppId(String appId) {
-        checkNotEmpty(appId, "appId");
-        if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
+        if (appId == null || appId.equals("")) {
+            Log.w("KinClient", "WARNING: KinClient instance was created without a proper application ID. Is this what" +
+                    " you intended to do?");
+        } else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
             throw new IllegalArgumentException("appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.\n" +
                     "for example 1234 or 2ab3 or cd2 or fqa, etc.");
         }
@@ -153,7 +170,8 @@ public class KinClient {
     }
 
     @Nullable
-    private KinAccount getAccountByPublicAddress(String accountId) {
+    private KinAccount getAccountByPublicAddress(String accountId) { //TODO we should make this method public
+        loadAccounts();
         KinAccount kinAccount = null;
         for (int i = 0; i < kinAccounts.size(); i++) {
             final KinAccount account = kinAccounts.get(i);
@@ -177,6 +195,7 @@ public class KinClient {
      * @return the account at the input index or null if there is no such account
      */
     public KinAccount getAccount(int index) {
+        loadAccounts();
         if (index >= 0 && kinAccounts.size() > index) {
             return kinAccounts.get(index);
         }
@@ -193,26 +212,31 @@ public class KinClient {
     /**
      * Returns the number of existing accounts
      */
-    @SuppressWarnings("WeakerAccess")
     public int getAccountCount() {
+        loadAccounts();
         return kinAccounts.size();
     }
 
     /**
      * Deletes the account at input index (if it exists)
+     * @return true if the delete was successful or false otherwise
+     * @throws DeleteAccountException in case of a delete account exception while trying to delete the account
      */
-    public void deleteAccount(int index) throws DeleteAccountException {
+    public boolean deleteAccount(int index) throws DeleteAccountException {
+        boolean deleteSuccess = false;
         if (index >= 0 && getAccountCount() > index) {
-            keyStore.deleteAccount(index);
+            String accountToDelete = kinAccounts.get(index).getPublicAddress();
+            keyStore.deleteAccount(accountToDelete);
             KinAccountImpl removedAccount = kinAccounts.remove(index);
             removedAccount.markAsDeleted();
+            deleteSuccess = true;
         }
+        return deleteSuccess;
     }
 
     /**
      * Deletes all accounts.
      */
-    @SuppressWarnings("WeakerAccess")
     public void clearAllAccounts() {
         keyStore.clearAllAccounts();
         for (KinAccountImpl kinAccount : kinAccounts) {

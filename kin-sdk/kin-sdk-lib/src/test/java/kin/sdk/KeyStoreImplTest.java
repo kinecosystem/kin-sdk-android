@@ -1,18 +1,5 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.isA;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
 import kin.base.KeyPair;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.DeleteAccountException;
@@ -24,6 +11,16 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.List;
+
+import static junit.framework.Assert.*;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.isA;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -98,8 +95,8 @@ public class KeyStoreImplTest {
     public void deleteAccount() throws Exception {
         KeyStoreImpl keyStore = new KeyStoreImpl(new FakeStore(), new FakeBackupRestore());
         KeyPair account1 = keyStore.newAccount();
-        keyStore.newAccount();
-        keyStore.deleteAccount(1);
+        KeyPair keyPair = keyStore.newAccount();
+        keyStore.deleteAccount(keyPair.getAccountId());
 
         List<KeyPair> accounts = keyStore.loadAccounts();
         assertEquals(1, accounts.size());
@@ -116,10 +113,10 @@ public class KeyStoreImplTest {
             .thenReturn("not a real json");
         KeyStoreImpl keyStore = new KeyStoreImpl(stubStore, new FakeBackupRestore());
 
-        keyStore.newAccount();
+        KeyPair keyPair = keyStore.newAccount();
         expectedEx.expect(DeleteAccountException.class);
         expectedEx.expectCause(isA(JSONException.class));
-        keyStore.deleteAccount(0);
+        keyStore.deleteAccount(keyPair.getAccountId());
     }
 
     @Test

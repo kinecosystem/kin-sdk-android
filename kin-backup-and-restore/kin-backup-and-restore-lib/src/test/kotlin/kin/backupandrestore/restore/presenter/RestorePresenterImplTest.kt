@@ -21,12 +21,6 @@ class RestorePresenterImplTest {
     private val callbackManager: CallbackManager = mock()
     private val kinAccount: KinAccount = mock()
     private val kinClient: KinClient = mock()
-    //    private val savedInstanceState: Bundle = mock {
-//        // a bug does not return the default as it should be, it returns 0 and not -1 as we wrote.
-//        // so we will force it :)
-//        val defaultReturnValue : String? = null
-//        on { getString(KEY_PUBLIC_ADDRESS, null) } doReturn (defaultReturnValue)
-//    }
     private val savedInstanceState: Bundle = mock()
     private val view: RestoreView = mock()
 

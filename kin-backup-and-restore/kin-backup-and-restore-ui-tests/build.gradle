@@ -1,0 +1,83 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'jacoco'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "kin.backup.and.restore.ui.tests"
+        minSdkVersion 18
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    sourceSets {
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':kin-backup-and-restore:kin-backup-and-restore-lib')
+    api project(':kin-sdk:kin-sdk-lib')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.30"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.jetbrains.kotlin:kotlin-stdlib:1.2.71'
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+    androidTestImplementation 'org.jetbrains.kotlin:kotlin-test-junit:1.2.30'
+    androidTestImplementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.30'
+}
+
+//jacoco unified code coverage
+jacoco {
+    toolVersion = '0.8.1'
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task jacocoTestReport(type: JacocoReport) {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def testedDebugTree = fileTree(dir: "$project.rootDir/kin-backup-and-restore/kin-backup-and-restore-lib/build" +
+            "/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+    def testedSrc = "$project.rootDir/kin-backup-and-restore/kin-backup-and-restore-lib/src/main/java"
+
+    sourceDirectories = files([testedSrc, mainSrc])
+    classDirectories = files([debugTree, testedDebugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', '**/*coverage.ec'
+    ])
+}
+
