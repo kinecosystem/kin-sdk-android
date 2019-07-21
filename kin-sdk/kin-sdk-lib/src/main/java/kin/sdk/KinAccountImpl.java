@@ -8,7 +8,6 @@ import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 
 final class KinAccountImpl extends AbstractKinAccount {
@@ -76,29 +75,6 @@ final class KinAccountImpl extends AbstractKinAccount {
     public Balance getBalanceSync() throws OperationFailedException {
         checkValidAccount();
         return accountInfoRetriever.getBalance(account.getAccountId());
-    }
-
-    @NonNull
-    @Override
-    public Balance getAggregatedBalanceSync() throws OperationFailedException {
-        checkValidAccount();
-        return accountInfoRetriever.getAggregatedBalance(account.getAccountId());
-    }
-
-    @NonNull
-    @Override
-    public Balance getAggregatedBalanceSync(String publicAddress) throws OperationFailedException {
-        if (publicAddress == null || publicAddress.length() == 0) {
-            throw new IllegalArgumentException("public address not valid");
-        }
-        return accountInfoRetriever.getAggregatedBalance(publicAddress);
-    }
-
-    @NonNull
-    @Override
-    public List<ControlledAccount> getControlledAccountsSync() throws OperationFailedException {
-        checkValidAccount();
-        return accountInfoRetriever.getControlledAccounts(account.getAccountId());
     }
 
     @NonNull

@@ -8,9 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
@@ -100,56 +98,6 @@ public class KinAccountImplTest {
     }
 
     @Test
-    public void getAggregatedBalanceSync() throws Exception {
-        initWithRandomAccount();
-        String externalAccount = "external account";
-
-        Balance expectedAggregatedBalance = new BalanceImpl(new BigDecimal("150.0"));
-        when(mockAccountInfoRetriever.getAggregatedBalance(externalAccount)).thenReturn(expectedAggregatedBalance);
-
-        Balance balance = kinAccount.getAggregatedBalanceSync(externalAccount);
-
-        assertEquals(expectedAggregatedBalance, balance);
-        verify(mockAccountInfoRetriever).getAggregatedBalance(externalAccount);
-    }
-
-    @Test
-    public void getAggregatedBalanceSync_WithExternalAccount() throws Exception {
-        initWithRandomAccount();
-
-        Balance expectedAggregatedBalance = new BalanceImpl(new BigDecimal("150.0"));
-        when(mockAccountInfoRetriever.getAggregatedBalance(anyString())).thenReturn(expectedAggregatedBalance);
-
-        Balance balance = kinAccount.getAggregatedBalanceSync();
-
-        assertEquals(expectedAggregatedBalance, balance);
-        verify(mockAccountInfoRetriever).getAggregatedBalance(expectedRandomAccount.getAccountId());
-    }
-
-    @Test
-    public void getControlledAccountsSync() throws Exception {
-        initWithRandomAccount();
-
-        ControlledAccount controlledAccount1 = new ControlledAccount(new BalanceImpl(new BigDecimal("150.0")),
-            "first account public Address");
-        ControlledAccount controlledAccount2 = new ControlledAccount(new BalanceImpl(new BigDecimal("10.0")),
-            "second account public Address");
-        ControlledAccount controlledAccount3 = new ControlledAccount(new BalanceImpl(new BigDecimal("55.0")),
-            "third account public Address");
-        List<ControlledAccount> expectedControlledAccounts = new ArrayList<>();
-        expectedControlledAccounts.add(controlledAccount1);
-        expectedControlledAccounts.add(controlledAccount2);
-        expectedControlledAccounts.add(controlledAccount3);
-
-        when(mockAccountInfoRetriever.getControlledAccounts(anyString())).thenReturn(expectedControlledAccounts);
-
-        List<ControlledAccount> controlledAccounts = kinAccount.getControlledAccountsSync();
-
-        assertThat(expectedControlledAccounts, equalTo(controlledAccounts));
-        verify(mockAccountInfoRetriever).getControlledAccounts(expectedRandomAccount.getAccountId());
-    }
-
-    @Test
     public void getAccountDataSync() throws Exception {
         initWithRandomAccount();
 
@@ -215,31 +163,6 @@ public class KinAccountImplTest {
 
         kinAccount.markAsDeleted();
         kinAccount.getStatusSync();
-    }
-
-    @Test(expected = AccountDeletedException.class)
-    public void getAggregatedBalanceSync_DeletedAccount_Exception() throws Exception {
-        initWithRandomAccount();
-        kinAccount.markAsDeleted();
-
-        kinAccount.getAggregatedBalanceSync();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getAggregatedBalanceSync_WithExternalAccount_IllegalArgumentException() throws Exception {
-        initWithRandomAccount();
-        String masterAccountPublicAddress = "";
-
-        kinAccount.getAggregatedBalanceSync(masterAccountPublicAddress);
-    }
-
-    @Test(expected = AccountDeletedException.class)
-    public void getControlledAccountsSync_DeletedAccount_Exception() throws Exception {
-        initWithRandomAccount();
-        kinAccount.markAsDeleted();
-
-        kinAccount.getControlledAccountsSync();
-
     }
 
     @Test(expected = AccountDeletedException.class)
