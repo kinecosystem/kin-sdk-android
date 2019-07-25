@@ -5,17 +5,17 @@ import kin.backupandrestore.base.BaseView;
 
 public interface RestoreView extends BaseView {
 
-	void navigateToUpload();
+    void navigateToUpload();
 
-	void navigateToEnterPassword(String keystoreData);
+    void navigateToEnterPassword(String keystoreData);
 
-	void navigateToRestoreCompleted();
+    void navigateToRestoreCompleted();
 
-	void navigateBack();
+    void navigateBack();
 
-	void close();
+    void close();
 
-	void closeKeyboard();
+    void closeKeyboard();
 
-	void showError();
+    void showError();
 }

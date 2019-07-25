@@ -17,71 +17,71 @@ import okhttp3.Response;
 
 public class AccountCreator {
 
-	private static final double FUND_KIN_AMOUNT = 100;
-	private static final String URL_CREATE_ACCOUNT =
-		"https://friendbot.developers.kinecosystem.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
-	private final OkHttpClient okHttpClient;
-	private final Handler handler;
-	private ListenerRegistration listenerRegistration;
+    private static final double FUND_KIN_AMOUNT = 100;
+    private static final String URL_CREATE_ACCOUNT =
+        "https://friendbot.developers.kinecosystem.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+    private final OkHttpClient okHttpClient;
+    private final Handler handler;
+    private ListenerRegistration listenerRegistration;
 
-	public interface Callbacks {
+    public interface Callbacks {
 
-		void onSuccess();
+        void onSuccess();
 
-		void onFailure(Exception e);
+        void onFailure(Exception e);
 
-	}
+    }
 
-	AccountCreator() {
-		handler = new Handler(Looper.getMainLooper());
-		okHttpClient = new OkHttpClient.Builder()
-			.connectTimeout(20, TimeUnit.SECONDS)
-			.readTimeout(20, TimeUnit.SECONDS)
-			.build();
-	}
+    AccountCreator() {
+        handler = new Handler(Looper.getMainLooper());
+        okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .build();
+    }
 
-	void onBoard(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
-		Runnable accountCreationListeningTimeout = () -> {
-			listenerRegistration.remove();
-			fireOnFailure(callbacks, new TimeoutException("Waiting for account creation event time out"));
-		};
-		listenerRegistration = account.addAccountCreationListener(data -> {
-			listenerRegistration.remove();
-			handler.removeCallbacks(accountCreationListeningTimeout);
-			fireOnSuccess(callbacks);
-		});
-		handler.postDelayed(accountCreationListeningTimeout, 10 * DateUtils.SECOND_IN_MILLIS);
-		createAccount(account, callbacks);
-	}
+    void onBoard(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
+        Runnable accountCreationListeningTimeout = () -> {
+            listenerRegistration.remove();
+            fireOnFailure(callbacks, new TimeoutException("Waiting for account creation event time out"));
+        };
+        listenerRegistration = account.addAccountCreationListener(data -> {
+            listenerRegistration.remove();
+            handler.removeCallbacks(accountCreationListeningTimeout);
+            fireOnSuccess(callbacks);
+        });
+        handler.postDelayed(accountCreationListeningTimeout, 10 * DateUtils.SECOND_IN_MILLIS);
+        createAccount(account, callbacks);
+    }
 
-	private void createAccount(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
-		Request request = new Request.Builder()
-			.url(String.format(URL_CREATE_ACCOUNT, account.getPublicAddress()))
-			.get()
-			.build();
-		okHttpClient.newCall(request)
-			.enqueue(new Callback() {
-				@Override
-				public void onFailure(@NonNull Call call, @NonNull IOException e) {
-					fireOnFailure(callbacks, e);
-				}
+    private void createAccount(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
+        Request request = new Request.Builder()
+            .url(String.format(URL_CREATE_ACCOUNT, account.getPublicAddress()))
+            .get()
+            .build();
+        okHttpClient.newCall(request)
+            .enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    fireOnFailure(callbacks, e);
+                }
 
-				@Override
-				public void onResponse(@NonNull Call call, @NonNull Response response) {
-					int code = response.code();
-					response.close();
-					if (code != 200) {
-						fireOnFailure(callbacks, new Exception("Create account - response code is " + response.code()));
-					}
-				}
-			});
-	}
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    int code = response.code();
+                    response.close();
+                    if (code != 200) {
+                        fireOnFailure(callbacks, new Exception("Create account - response code is " + response.code()));
+                    }
+                }
+            });
+    }
 
-	private void fireOnFailure(@NonNull Callbacks callbacks, Exception ex) {
-		handler.post(() -> callbacks.onFailure(ex));
-	}
+    private void fireOnFailure(@NonNull Callbacks callbacks, Exception ex) {
+        handler.post(() -> callbacks.onFailure(ex));
+    }
 
-	private void fireOnSuccess(@NonNull Callbacks callbacks) {
-		handler.post(callbacks::onSuccess);
-	}
+    private void fireOnSuccess(@NonNull Callbacks callbacks) {
+        handler.post(callbacks::onSuccess);
+    }
 }

@@ -8,9 +8,9 @@ import java.io.IOException;
 
 interface QRFileUriHandler {
 
-	@NonNull
-	Bitmap loadFile(@NonNull Uri uri) throws IOException;
+    @NonNull
+    Bitmap loadFile(@NonNull Uri uri) throws IOException;
 
-	@NonNull
-	Uri saveFile(@NonNull Bitmap image) throws IOException;
+    @NonNull
+    Uri saveFile(@NonNull Bitmap image) throws IOException;
 }

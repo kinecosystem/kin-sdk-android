@@ -40,7 +40,8 @@ public class KinClient {
     private List<KinAccountImpl> kinAccounts = new ArrayList<>(1);
 
     /**
-     * For more details please look at {@link #KinClient(Context context,Environment environment, String appId, String storeKey)}
+     * For more details please look at
+     * {@link #KinClient(Context context, Environment environment, String appId, String storeKey)}
      */
     public KinClient(@NonNull Context context, @NonNull Environment environment, String appId) {
         this(context, environment, appId,"");
@@ -132,9 +133,9 @@ public class KinClient {
 
     private void validateAppId(String appId) {
         if (appId == null || appId.equals("")) {
-            Log.w("KinClient","WARNING: KinClient instance was created without a proper application ID. Is this what you intended to do?");
-        }
-        else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
+            Log.w("KinClient", "WARNING: KinClient instance was created without a proper application ID. Is this what" +
+                    " you intended to do?");
+        } else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
             throw new IllegalArgumentException("appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.\n" +
                     "for example 1234 or 2ab3 or cd2 or fqa, etc.");
         }

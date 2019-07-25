@@ -9,9 +9,9 @@ public interface CreatePasswordPresenter extends BasePresenter<CreatePasswordVie
 
     void iUnderstandChecked(boolean isChecked, String enterPassword, String confirmPassword);
 
-	void nextButtonClicked(String confirmPassword, String password);
+    void nextButtonClicked(String confirmPassword, String password);
 
     void checkAllCompleted(String password, String otherPassword);
 
-	void onRetryClicked(String password);
+    void onRetryClicked(String password);
 }

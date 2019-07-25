@@ -5,29 +5,29 @@ import kin.sdk.Balance;
 
 public interface IBackupAndRestoreView {
 
-	BackupAndRestoreManager getBackupManager();
+    BackupAndRestoreManager getBackupManager();
 
-	void updatePublicAddress(String publicAddress);
+    void updatePublicAddress(String publicAddress);
 
-	void updateBalance(Balance balance);
+    void updateBalance(Balance balance);
 
-	void updateBalanceError();
+    void updateBalanceError();
 
-	void updateRestoreError();
+    void updateRestoreError();
 
-	void noAccountToBackupError();
+    void noAccountToBackupError();
 
-	void createAccountError();
+    void createAccountError();
 
-	void enableCreateAccountButton();
+    void enableCreateAccountButton();
 
-	void onBoardAccountError();
+    void onBoardAccountError();
 
-	void updateBackupError();
+    void updateBackupError();
 
-	void backupSuccess();
+    void backupSuccess();
 
-	void cancelBackup();
+    void cancelBackup();
 
-	void cancelRestore();
+    void cancelRestore();
 }

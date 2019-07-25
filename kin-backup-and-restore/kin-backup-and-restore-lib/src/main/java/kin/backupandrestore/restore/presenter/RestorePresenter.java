@@ -10,17 +10,17 @@ import kin.sdk.KinClient;
 
 public interface RestorePresenter extends BasePresenter<RestoreView> {
 
-	void navigateToEnterPasswordPage(final String accountKey);
+    void navigateToEnterPasswordPage(final String accountKey);
 
-	void navigateToRestoreCompletedPage(final KinAccount kinAccount);
+    void navigateToRestoreCompletedPage(final KinAccount kinAccount);
 
-	void closeFlow();
+    void closeFlow();
 
-	void previousStep();
+    void previousStep();
 
-	void onActivityResult(int requestCode, int resultCode, Intent data);
+    void onActivityResult(int requestCode, int resultCode, Intent data);
 
-	void onSaveInstanceState(Bundle outState);
+    void onSaveInstanceState(Bundle outState);
 
-	KinClient getKinClient();
+    KinClient getKinClient();
 }

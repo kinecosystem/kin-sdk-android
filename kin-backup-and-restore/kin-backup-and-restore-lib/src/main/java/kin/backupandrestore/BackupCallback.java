@@ -4,9 +4,9 @@ import kin.backupandrestore.exception.BackupAndRestoreException;
 
 public interface BackupCallback {
 
-	void onSuccess();
+    void onSuccess();
 
-	void onCancel();
+    void onCancel();
 
-	void onFailure(BackupAndRestoreException exception);
+    void onFailure(BackupAndRestoreException exception);
 }

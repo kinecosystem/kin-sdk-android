@@ -16,37 +16,37 @@ import kin.sdk.KinClient;
 
 class Launcher {
 
-	private final Activity activity;
-	private final KinClient kinClient;
+    private final Activity activity;
+    private final KinClient kinClient;
 
-	Launcher(@NonNull final Activity activity, @NonNull final KinClient kinClient) {
-		this.activity = activity;
-		this.kinClient = kinClient;
-	}
+    Launcher(@NonNull final Activity activity, @NonNull final KinClient kinClient) {
+        this.activity = activity;
+        this.kinClient = kinClient;
+    }
 
-	void backupFlow(KinAccount kinAccount, int reqCodeBackup) {
-		Intent intent = new Intent(activity, BackupActivity.class);
-		addKinClientExtras(intent);
-		intent.putExtra(PUBLIC_ADDRESS_EXTRA, kinAccount.getPublicAddress());
-		startForResult(intent, reqCodeBackup);
-	}
+    void backupFlow(KinAccount kinAccount, int reqCodeBackup) {
+        Intent intent = new Intent(activity, BackupActivity.class);
+        addKinClientExtras(intent);
+        intent.putExtra(PUBLIC_ADDRESS_EXTRA, kinAccount.getPublicAddress());
+        startForResult(intent, reqCodeBackup);
+    }
 
-	void restoreFlow(int reqCodeRestore) {
-		Intent intent = new Intent(activity, RestoreActivity.class);
-		addKinClientExtras(intent);
-		startForResult(intent, reqCodeRestore);
-	}
+    void restoreFlow(int reqCodeRestore) {
+        Intent intent = new Intent(activity, RestoreActivity.class);
+        addKinClientExtras(intent);
+        startForResult(intent, reqCodeRestore);
+    }
 
-	private void addKinClientExtras(Intent intent) {
-		intent.putExtra(NETWORK_URL_EXTRA, kinClient.getEnvironment().getNetworkUrl());
-		intent.putExtra(NETWORK_PASSPHRASE_EXTRA, kinClient.getEnvironment().getNetworkPassphrase());
-		intent.putExtra(APP_ID_EXTRA, kinClient.getAppId());
-		intent.putExtra(STORE_KEY_EXTRA, kinClient.getStoreKey());
-	}
+    private void addKinClientExtras(Intent intent) {
+        intent.putExtra(NETWORK_URL_EXTRA, kinClient.getEnvironment().getNetworkUrl());
+        intent.putExtra(NETWORK_PASSPHRASE_EXTRA, kinClient.getEnvironment().getNetworkPassphrase());
+        intent.putExtra(APP_ID_EXTRA, kinClient.getAppId());
+        intent.putExtra(STORE_KEY_EXTRA, kinClient.getStoreKey());
+    }
 
-	private void startForResult(@NonNull final Intent intent, final int reqCode) {
-		activity.startActivityForResult(intent, reqCode);
+    private void startForResult(@NonNull final Intent intent, final int reqCode) {
+        activity.startActivityForResult(intent, reqCode);
         activity.overridePendingTransition(R.anim.backup_and_restore_slide_in_right,
             R.anim.backup_and_restore_slide_out_left);
-	}
+    }
 }

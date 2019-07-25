@@ -9,9 +9,8 @@ final class IntegConsts {
             Environment.TEST.getNetworkPassphrase() : BuildConfig.INTEG_TESTS_NETWORK_PASSPHRASE;
     static final String FRIENDBOT_URL = BuildConfig.INTEG_TESTS_NETWORK_FRIENDBOT.isEmpty() ?
             "https://friendbot-testnet.kininfrastructure.com" : BuildConfig.INTEG_TESTS_NETWORK_FRIENDBOT;
-    static final String URL_CREATE_ACCOUNT = FRIENDBOT_URL + "?addr=%s&amount=%d";
+    static final String URL_CREATE_ACCOUNT = FRIENDBOT_URL + "?addr=%s&amount=%s";
     static final String URL_FUND = FRIENDBOT_URL + "/fund?addr=%s&amount="; // faucet
     static final String URL_WHITELISTING_SERVICE = (BuildConfig.INTEG_TESTS_NETWORK_FRIENDBOT.isEmpty() ?
-            "http://34.239.111.38:3000" : BuildConfig.INTEG_TESTS_NETWORK_FRIENDBOT)
-            + "/whitelist";
+            "http://34.239.111.38:3000" : BuildConfig.INTEG_TESTS_NETWORK_FRIENDBOT) + "/whitelist";
 }

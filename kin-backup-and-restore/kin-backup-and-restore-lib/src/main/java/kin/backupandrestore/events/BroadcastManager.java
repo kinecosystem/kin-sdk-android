@@ -6,17 +6,17 @@ import kin.backupandrestore.events.BroadcastManagerImpl.ActionName;
 
 public interface BroadcastManager {
 
-	interface Listener {
+    interface Listener {
 
-		void onReceive(Intent data);
-	}
+        void onReceive(Intent data);
+    }
 
-	void register(@NonNull final Listener listener, @ActionName final String actionName);
+    void register(@NonNull final Listener listener, @ActionName final String actionName);
 
-	void unregisterAll();
+    void unregisterAll();
 
-	void sendEvent(Intent data, @ActionName final String actionName);
+    void sendEvent(Intent data, @ActionName final String actionName);
 
-	void setActivityResult(int resultCode, Intent data);
+    void setActivityResult(int resultCode, Intent data);
 
 }

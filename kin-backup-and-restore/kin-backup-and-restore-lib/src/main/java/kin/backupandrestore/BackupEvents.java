@@ -2,31 +2,31 @@ package kin.backupandrestore;
 
 public interface BackupEvents {
 
-	void onBackupWelcomePageViewed();
+    void onBackupWelcomePageViewed();
 
-	void onBackupWelcomePageBackButtonTapped();
+    void onBackupWelcomePageBackButtonTapped();
 
-	void onBackupStartButtonTapped();
+    void onBackupStartButtonTapped();
 
-	void onBackupCreatePasswordPageViewed();
+    void onBackupCreatePasswordPageViewed();
 
-	void onBackupCreatePasswordBackButtonTapped();
+    void onBackupCreatePasswordBackButtonTapped();
 
-	void onBackupCreatePasswordNextButtonTapped();
+    void onBackupCreatePasswordNextButtonTapped();
 
-	void onBackupQrCodePageViewed();
+    void onBackupQrCodePageViewed();
 
-	void onBackupQrCodeBackButtonTapped();
+    void onBackupQrCodeBackButtonTapped();
 
-	void onBackupQrCodeSendButtonTapped();
+    void onBackupQrCodeSendButtonTapped();
 
-	void onBackupQrCodeMyQrCodeButtonTapped();
+    void onBackupQrCodeMyQrCodeButtonTapped();
 
-	void onBackupCompletedPageViewed();
+    void onBackupCompletedPageViewed();
 
-	void onBackupPopupPageViewed();
+    void onBackupPopupPageViewed();
 
-	void onBackupPopupButtonTapped();
+    void onBackupPopupButtonTapped();
 
-	void onBackupPopupLaterButtonTapped();
+    void onBackupPopupLaterButtonTapped();
 }

@@ -4,10 +4,10 @@ import kin.backupandrestore.exception.BackupAndRestoreException;
 
 public interface InternalRestoreCallback {
 
-	void onSuccess(String publicAddress);
+    void onSuccess(String publicAddress);
 
-	void onCancel();
+    void onCancel();
 
-	void onFailure(BackupAndRestoreException throwable);
+    void onFailure(BackupAndRestoreException throwable);
 
 }

@@ -6,11 +6,11 @@ import kin.backupandrestore.base.BasePresenter;
 
 public interface SaveAndSharePresenter extends BasePresenter<SaveAndShareView> {
 
-	void iHaveSavedChecked(boolean isChecked);
+    void iHaveSavedChecked(boolean isChecked);
 
-	void sendQREmailClicked();
+    void sendQREmailClicked();
 
-	void couldNotLoadQRImage();
+    void couldNotLoadQRImage();
 
-	void onSaveInstanceState(Bundle outState);
+    void onSaveInstanceState(Bundle outState);
 }

@@ -4,21 +4,21 @@ import kin.backupandrestore.base.BaseView;
 
 public interface CreatePasswordView extends BaseView {
 
-	void setEnterPasswordIsCorrect(boolean isCorrect);
+    void setEnterPasswordIsCorrect(boolean isCorrect);
 
-	void setConfirmPasswordIsCorrect(boolean isCorrect);
+    void setConfirmPasswordIsCorrect(boolean isCorrect);
 
-	void enableNextButton();
+    void enableNextButton();
 
-	void disableNextButton();
+    void disableNextButton();
 
-	void showBackupFailed();
+    void showBackupFailed();
 
-	void closeKeyboard();
+    void closeKeyboard();
 
-	void resetEnterPasswordField();
+    void resetEnterPasswordField();
 
-	void resetConfirmPasswordField();
+    void resetConfirmPasswordField();
 
-	void setPasswordDoesNotMatch();
+    void setPasswordDoesNotMatch();
 }

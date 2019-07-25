@@ -15,17 +15,19 @@ public class TransactionFailedException extends OperationFailedException {
 
     public TransactionFailedException(@Nullable String txResultCode,
         @Nullable List<String> opResultCode) {
-        super(getMessage(opResultCode));
+        super(getMessage(txResultCode, opResultCode));
 
         this.txResultCode = txResultCode;
         this.opResultCode = opResultCode;
     }
 
     @NonNull
-    private static String getMessage(@Nullable List<String> opResultCode) {
-        return opResultCode != null && !opResultCode.isEmpty() ?
-            "Transaction failed with the error = " + opResultCode.get(0) :
-            "Transaction failed";
+    private static String getMessage(@Nullable String txResultCode, @Nullable List<String> opResultCode) {
+        String opResultCodeErrorMessage =
+            opResultCode != null && !opResultCode.isEmpty() ? ", operations = " + opResultCode : "";
+        return "Transaction failed with the error = " + txResultCode + opResultCodeErrorMessage;
+
+
     }
 
     @Nullable

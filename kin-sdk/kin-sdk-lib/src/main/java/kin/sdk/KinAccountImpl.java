@@ -2,11 +2,12 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import java.math.BigDecimal;
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
+
+import java.math.BigDecimal;
 
 
 final class KinAccountImpl extends AbstractKinAccount {
@@ -36,22 +37,28 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public PaymentTransaction buildPaymentTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                             int fee) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildTransaction(account, publicAddress, amount, fee);
+        return transactionSender.buildPaymentTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public PaymentTransaction buildPaymentTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                             int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
+        return transactionSender.buildPaymentTransaction(account, publicAddress, amount, fee, memo);
+    }
+
+    @Override
+    public TransactionBuilder getTransactionBuilderSync() throws OperationFailedException {
+        checkValidAccount();
+        return transactionSender.getTransactionBuilder(account);
     }
 
     @NonNull
     @Override
-    public TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException {
+    public TransactionId sendTransactionSync(TransactionBase transaction) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendTransaction(transaction);
     }
@@ -68,6 +75,13 @@ final class KinAccountImpl extends AbstractKinAccount {
     public Balance getBalanceSync() throws OperationFailedException {
         checkValidAccount();
         return accountInfoRetriever.getBalance(account.getAccountId());
+    }
+
+    @NonNull
+    @Override
+    public AccountData getAccountDataSync() throws OperationFailedException {
+        checkValidAccount();
+        return accountInfoRetriever.getAccountData(account.getAccountId());
     }
 
     @Override
@@ -94,6 +108,10 @@ final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public String export(@NonNull String passphrase) throws CryptoException {
         return backupRestore.exportWallet(account, passphrase);
+    }
+
+    KeyPair getKeyPair() {
+        return account;
     }
 
     void markAsDeleted() {

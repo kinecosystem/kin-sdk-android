@@ -2,12 +2,15 @@ package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
-import java.io.IOException;
-import java.net.URI;
 import kin.base.KeyPair;
 import kin.base.responses.AccountResponse;
+import kin.base.responses.AggregatedBalanceResponse;
+import kin.base.responses.ControlledAccountsResponse;
 import kin.base.responses.Page;
 import okhttp3.OkHttpClient;
+
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * Builds requests connected to accounts.
@@ -38,6 +41,50 @@ public class AccountsRequestBuilder extends RequestBuilder {
   public AccountResponse account(KeyPair account) throws IOException {
     this.setSegments("accounts", account.getAccountId());
     return this.account(this.buildUri());
+  }
+
+  /**
+   * Requests <code>GET /accounts/{account}/aggregate_balance</code>
+   *
+   * @param account Account to fetch the aggregated balance for.
+   */
+  public AggregatedBalanceResponse aggregateBalance(KeyPair account) throws IOException {
+    this.setSegments("accounts", account.getAccountId(), "aggregate_balance");
+    return this.aggregateBalance(this.buildUri());
+  }
+
+  /**
+   * Requests specific <code>uri</code> and returns {@link AggregatedBalanceResponse}. This method is helpful for
+   * getting the links.
+   */
+  public AggregatedBalanceResponse aggregateBalance(URI uri) throws IOException {
+    TypeToken type = new TypeToken<AggregatedBalanceResponse>() {
+    };
+    ResponseHandler<AggregatedBalanceResponse> responseHandler = new ResponseHandler<AggregatedBalanceResponse>(
+        httpClient, type);
+    return responseHandler.handleGetRequest(uri);
+  }
+
+  /**
+   * Requests <code>GET /accounts/{account}/controlled_accounts</code>
+   *
+   * @param account the account in which we get all his controlled accounts
+   */
+  public ControlledAccountsResponse controlledAccounts(KeyPair account) throws IOException {
+    this.setSegments("accounts", account.getAccountId(), "controlled_accounts");
+    return this.controlledAccounts(this.buildUri());
+  }
+
+  /**
+   * Requests specific <code>uri</code> and returns {@link ControlledAccountsResponse}. This method is helpful for
+   * getting the links.
+   */
+  public ControlledAccountsResponse controlledAccounts(URI uri) throws IOException {
+    TypeToken type = new TypeToken<ControlledAccountsResponse>() {
+    };
+    ResponseHandler<ControlledAccountsResponse> responseHandler = new ResponseHandler<ControlledAccountsResponse>(
+        httpClient, type);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**
@@ -97,4 +144,5 @@ public class AccountsRequestBuilder extends RequestBuilder {
     super.order(direction);
     return this;
   }
+
 }

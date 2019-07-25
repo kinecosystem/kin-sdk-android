@@ -5,11 +5,11 @@ import kin.backupandrestore.base.BaseView;
 
 public interface RestoreEnterPasswordView extends BaseView {
 
-	void enableDoneButton();
+    void enableDoneButton();
 
-	void disableDoneButton();
+    void disableDoneButton();
 
-	void decodeError();
+    void decodeError();
 
-	void invalidQrError();
+    void invalidQrError();
 }

@@ -361,7 +361,7 @@ public class KinClientTest {
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
         kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender,
             mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
-			new FakeBackupRestore(), APP_ID, "");
+            new FakeBackupRestore(), APP_ID, "");
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);
@@ -415,6 +415,6 @@ public class KinClientTest {
     private KinClient createNewKinClient() {
         return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender,
             mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
-			new FakeBackupRestore(), APP_ID, "");
+            new FakeBackupRestore(), APP_ID, "");
     }
 }

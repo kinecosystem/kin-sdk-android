@@ -4,16 +4,16 @@ import android.content.Intent;
 
 public interface IBackupAndRestorePresenter {
 
-	void backupClicked();
+    void backupClicked();
 
-	void restoreClicked();
+    void restoreClicked();
 
-	void createAccountClicked();
+    void createAccountClicked();
 
-	void onActivityResult(int requestCode, int resultCode, Intent data);
+    void onActivityResult(int requestCode, int resultCode, Intent data);
 
-	void onAttach(IBackupAndRestoreView view);
+    void onAttach(IBackupAndRestoreView view);
 
-	void onDetach();
+    void onDetach();
 
 }

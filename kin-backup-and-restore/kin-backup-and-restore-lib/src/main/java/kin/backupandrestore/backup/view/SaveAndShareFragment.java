@@ -37,120 +37,120 @@ import kin.backupandrestore.qr.QRFileUriHandlerImpl;
 
 public class SaveAndShareFragment extends Fragment implements SaveAndShareView {
 
-	public static SaveAndShareFragment newInstance(BackupNavigator listener, String key) {
-		SaveAndShareFragment fragment = new SaveAndShareFragment();
-		fragment.setNextStepListener(listener);
-		Bundle bundle = new Bundle();
-		bundle.putString(KEY_ACCOUNT_KEY, key);
-		fragment.setArguments(bundle);
-		return fragment;
-	}
+    public static SaveAndShareFragment newInstance(BackupNavigator listener, String key) {
+        SaveAndShareFragment fragment = new SaveAndShareFragment();
+        fragment.setNextStepListener(listener);
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_ACCOUNT_KEY, key);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
-	private BackupNavigator nextStepListener;
-	private SaveAndSharePresenter saveAndSharePresenter;
+    private BackupNavigator nextStepListener;
+    private SaveAndSharePresenter saveAndSharePresenter;
 
-	private CheckBox iHaveSavedCheckbox;
-	private TextView iHaveSavedText;
-	private ImageView qrImageView;
+    private CheckBox iHaveSavedCheckbox;
+    private TextView iHaveSavedText;
+    private ImageView qrImageView;
 
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-		@Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.backup_and_restore_fragment_save_and_share_qr, container, false);
-		initViews(root);
-		String key = getArguments().getString(KEY_ACCOUNT_KEY, null);
-		final QRBarcodeGenerator qrBarcodeGenerator = new QRBarcodeGeneratorImpl(
-			new QRFileUriHandlerImpl(getContext()));
-		saveAndSharePresenter = new SaveAndSharePresenterImpl(
-			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener,
-			qrBarcodeGenerator, key, savedInstanceState);
-		saveAndSharePresenter.onAttach(this);
-		return root;
-	}
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.backup_and_restore_fragment_save_and_share_qr, container, false);
+        initViews(root);
+        String key = getArguments().getString(KEY_ACCOUNT_KEY, null);
+        final QRBarcodeGenerator qrBarcodeGenerator = new QRBarcodeGeneratorImpl(
+            new QRFileUriHandlerImpl(getContext()));
+        saveAndSharePresenter = new SaveAndSharePresenterImpl(
+            new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener,
+            qrBarcodeGenerator, key, savedInstanceState);
+        saveAndSharePresenter.onAttach(this);
+        return root;
+    }
 
-	private void initViews(View root) {
-		iHaveSavedCheckbox = root.findViewById(R.id.i_saved_my_qr_checkbox);
-		iHaveSavedText = root.findViewById(R.id.i_saved_my_qr_text);
-		qrImageView = root.findViewById(R.id.qr_image);
+    private void initViews(View root) {
+        iHaveSavedCheckbox = root.findViewById(R.id.i_saved_my_qr_checkbox);
+        iHaveSavedText = root.findViewById(R.id.i_saved_my_qr_text);
+        qrImageView = root.findViewById(R.id.qr_image);
 
-		iHaveSavedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				saveAndSharePresenter.iHaveSavedChecked(isChecked);
-			}
-		});
-		iHaveSavedText.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				iHaveSavedCheckbox.performClick();
-			}
-		});
+        iHaveSavedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                saveAndSharePresenter.iHaveSavedChecked(isChecked);
+            }
+        });
+        iHaveSavedText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iHaveSavedCheckbox.performClick();
+            }
+        });
 
-		root.findViewById(R.id.send_email_button).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				saveAndSharePresenter.sendQREmailClicked();
-			}
-		});
+        root.findViewById(R.id.send_email_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveAndSharePresenter.sendQREmailClicked();
+            }
+        });
 
-	}
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		saveAndSharePresenter.onSaveInstanceState(outState);
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        saveAndSharePresenter.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
 
-	@Override
-	public void showIHaveSavedCheckBox() {
-		iHaveSavedCheckbox.setVisibility(View.VISIBLE);
-		iHaveSavedText.setVisibility(View.VISIBLE);
-	}
+    @Override
+    public void showIHaveSavedCheckBox() {
+        iHaveSavedCheckbox.setVisibility(View.VISIBLE);
+        iHaveSavedText.setVisibility(View.VISIBLE);
+    }
 
-	@Override
-	public void showErrorTryAgainLater() {
-		new Builder(getActivity(), R.style.BackupAndRestoreAlertDialogTheme)
-			.setTitle(R.string.backup_and_restore_something_went_wrong_title)
-			.setMessage(R.string.backup_and_restore_could_not_load_the_qr_please_try_again_later)
-			.setNegativeButton(R.string.backup_and_restore_cancel, null)
-			.create()
-			.show();
-	}
+    @Override
+    public void showErrorTryAgainLater() {
+        new Builder(getActivity(), R.style.BackupAndRestoreAlertDialogTheme)
+            .setTitle(R.string.backup_and_restore_something_went_wrong_title)
+            .setMessage(R.string.backup_and_restore_could_not_load_the_qr_please_try_again_later)
+            .setNegativeButton(R.string.backup_and_restore_cancel, null)
+            .create()
+            .show();
+    }
 
-	public void setNextStepListener(@NonNull final BackupNavigator nextStepListener) {
-		this.nextStepListener = nextStepListener;
-	}
+    public void setNextStepListener(@NonNull final BackupNavigator nextStepListener) {
+        this.nextStepListener = nextStepListener;
+    }
 
-	@Override
-	public void setQRImage(Uri qrURI) {
-		Bitmap qrBitmap;
-		try {
-			qrBitmap = Media.getBitmap(getContext().getContentResolver(), qrURI);
-			qrImageView.setImageBitmap(qrBitmap);
-		} catch (IOException e) {
-			saveAndSharePresenter.couldNotLoadQRImage();
-		}
-	}
+    @Override
+    public void setQRImage(Uri qrURI) {
+        Bitmap qrBitmap;
+        try {
+            qrBitmap = Media.getBitmap(getContext().getContentResolver(), qrURI);
+            qrImageView.setImageBitmap(qrBitmap);
+        } catch (IOException e) {
+            saveAndSharePresenter.couldNotLoadQRImage();
+        }
+    }
 
-	@Override
-	public void showSendIntent(Uri qrURI) {
-		String myKinWallet = getString(R.string.backup_and_restore_my_kin_wallet_qr_code);
-		String backupCreated = getString(R.string.backup_and_restore_backup_created_on);
-		Date date = Calendar.getInstance(TimeZone.getDefault()).getTime();
-		String dateString = SimpleDateFormat.getDateInstance().format(date);
-		SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm");
-		String time = timeFormat.format(date);
+    @Override
+    public void showSendIntent(Uri qrURI) {
+        String myKinWallet = getString(R.string.backup_and_restore_my_kin_wallet_qr_code);
+        String backupCreated = getString(R.string.backup_and_restore_backup_created_on);
+        Date date = Calendar.getInstance(TimeZone.getDefault()).getTime();
+        String dateString = SimpleDateFormat.getDateInstance().format(date);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm");
+        String time = timeFormat.format(date);
 
-		StringBuilder subjectBuilder = new StringBuilder(myKinWallet).append("\n")
-			.append(backupCreated).append(" ").append(dateString).append(" | ").append(time);
+        StringBuilder subjectBuilder = new StringBuilder(myKinWallet).append("\n")
+            .append(backupCreated).append(" ").append(dateString).append(" | ").append(time);
 
-		Intent emailIntent = new Intent(Intent.ACTION_SEND)
-			.setType("Image/*")
-			.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-			.putExtra(Intent.EXTRA_STREAM, qrURI)
-			.putExtra(Intent.EXTRA_SUBJECT, myKinWallet)
-			.putExtra(Intent.EXTRA_TEXT, subjectBuilder.toString());
-		startActivity(Intent.createChooser(emailIntent, getString(R.string.backup_and_restore_send_email)));
-	}
+        Intent emailIntent = new Intent(Intent.ACTION_SEND)
+            .setType("Image/*")
+            .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            .putExtra(Intent.EXTRA_STREAM, qrURI)
+            .putExtra(Intent.EXTRA_SUBJECT, myKinWallet)
+            .putExtra(Intent.EXTRA_TEXT, subjectBuilder.toString());
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.backup_and_restore_send_email)));
+    }
 }

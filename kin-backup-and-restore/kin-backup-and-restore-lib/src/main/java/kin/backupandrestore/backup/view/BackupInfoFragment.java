@@ -18,38 +18,38 @@ import kin.backupandrestore.events.EventDispatcherImpl;
 
 public class BackupInfoFragment extends Fragment implements BaseView {
 
-	public static BackupInfoFragment newInstance(@NonNull final BackupNavigator nextStepListener) {
-		BackupInfoFragment fragment = new BackupInfoFragment();
-		fragment.setNextStepListener(nextStepListener);
-		return fragment;
-	}
+    public static BackupInfoFragment newInstance(@NonNull final BackupNavigator nextStepListener) {
+        BackupInfoFragment fragment = new BackupInfoFragment();
+        fragment.setNextStepListener(nextStepListener);
+        return fragment;
+    }
 
-	private BackupNavigator nextStepListener;
-	private BackupInfoPresenter backupInfoPresenter;
+    private BackupNavigator nextStepListener;
+    private BackupInfoPresenter backupInfoPresenter;
 
 
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-		@Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_info, container, false);
-		initViews(root);
-		backupInfoPresenter = new BackupInfoPresenterImpl(
-			new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener);
-		backupInfoPresenter.onAttach(this);
-		return root;
-	}
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_info, container, false);
+        initViews(root);
+        backupInfoPresenter = new BackupInfoPresenterImpl(
+            new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener);
+        backupInfoPresenter.onAttach(this);
+        return root;
+    }
 
-	private void initViews(View root) {
-		root.findViewById(R.id.lets_go_button).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				backupInfoPresenter.letsGoButtonClicked();
-			}
-		});
-	}
+    private void initViews(View root) {
+        root.findViewById(R.id.lets_go_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backupInfoPresenter.letsGoButtonClicked();
+            }
+        });
+    }
 
-	public void setNextStepListener(@NonNull final BackupNavigator nextStepListener) {
-		this.nextStepListener = nextStepListener;
-	}
+    public void setNextStepListener(@NonNull final BackupNavigator nextStepListener) {
+        this.nextStepListener = nextStepListener;
+    }
 }

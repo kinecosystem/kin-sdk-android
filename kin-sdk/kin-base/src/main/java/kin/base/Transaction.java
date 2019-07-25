@@ -31,13 +31,14 @@ public class Transaction {
   private final TimeBounds mTimeBounds;
   private List<DecoratedSignature> mSignatures;
 
-  Transaction(KeyPair sourceAccount, int fee, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
+    Transaction(KeyPair sourceAccount, int feePerOperation, long sequenceNumber, Operation[] operations, Memo memo,
+        TimeBounds timeBounds) {
     mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
     mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
     mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
 
-    mFee = operations.length * fee ;
+    mFee = operations.length * feePerOperation;
     mSignatures = new ArrayList<DecoratedSignature>();
     mMemo = memo != null ? memo : Memo.none();
     mTimeBounds = timeBounds;
@@ -228,7 +229,14 @@ public class Transaction {
    */
   public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
     kin.base.xdr.Transaction tx = envelope.getTx();
-    int mFee = tx.getFee().getUint32();
+    // Although currently there couldn't be a transaction with no operations we still check it.
+      int feePerOperation = tx.getFee().getUint32();
+    if (tx.getOperations().length > 1) {
+      // Because the fee was already multiplied by number of operation then divide by it because when reCreate this
+      // transaction then we will multiple it again.
+        feePerOperation = feePerOperation / tx.getOperations().length;
+    }
+
     KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
     Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getUint64();
     Memo mMemo = Memo.fromXdr(tx.getMemo());
@@ -239,7 +247,8 @@ public class Transaction {
       mOperations[i] = Operation.fromXdr(tx.getOperations()[i]);
     }
 
-    Transaction transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds);
+      Transaction transaction = new Transaction(mSourceAccount, feePerOperation, mSequenceNumber, mOperations, mMemo,
+          mTimeBounds);
 
     for (DecoratedSignature signature : envelope.getSignatures()) {
       transaction.mSignatures.add(signature);

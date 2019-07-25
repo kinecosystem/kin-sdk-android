@@ -2,13 +2,10 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import java.math.BigDecimal;
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.CryptoException;
-import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.OperationFailedException;
-import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.exception.*;
 import kin.utils.Request;
+
+import java.math.BigDecimal;
 
 /**
  * Represents an account which holds Kin.
@@ -23,33 +20,41 @@ public interface KinAccount {
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address.
-     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
+     * <p> See {@link KinAccount#buildPaymentTransactionSync(String, BigDecimal, int)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
      * @param fee the amount of fee(in stroops) for this transfer.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
+    Request<PaymentTransaction> buildPaymentTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
-     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
+     * <p> See {@link KinAccount#buildPaymentTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
      * @param fee the amount of fee(in stroops) for this transfer.
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
+    Request<PaymentTransaction> buildPaymentTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
+
+    /**
+     * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
+     * <p> See {@link KinAccount#getTransactionBuilderSync()} for possibles errors</p>
+     *
+     * @return {@code Request<TransactionBuilder>}, TransactionBuilder - the builder for the transaction
+     */
+    Request<TransactionBuilder> getTransactionBuilder();
 
     /**
      * Create {@link Request} for signing and sending a transaction
-     * <p> See {@link KinAccount#sendTransactionSync(Transaction)} for possibles errors</p>
+     * <p> See {@link KinAccount#sendTransactionSync(TransactionBase)} for possibles errors</p>
      * @param transaction is the transaction object to send.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     @NonNull
-    Request<TransactionId> sendTransaction(Transaction transaction);
+    Request<TransactionId> sendTransaction(TransactionBase transaction);
 
     /**
      * Create {@link Request} for signing and sending a transaction from a whitelist.
@@ -72,7 +77,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
+    PaymentTransaction buildPaymentTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
@@ -86,7 +91,17 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+    PaymentTransaction buildPaymentTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+
+    /**
+     * Get a {@code TransactionBuilder} object, which let you fully customize your transaction before you send it.
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return a Transaction Builder object.
+     * @throws AccountNotFoundException if the sender or destination account was not created.
+     * @throws OperationFailedException other error occurred.
+     */
+    TransactionBuilder getTransactionBuilderSync() throws OperationFailedException;
 
     /**
      * send a transaction.
@@ -100,7 +115,7 @@ public interface KinAccount {
      * @throws OperationFailedException other error occurred.
      */
     @NonNull
-    TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException;
+    TransactionId sendTransactionSync(TransactionBase transaction) throws OperationFailedException;
 
     /**
      * send a whitelist transaction.
@@ -136,6 +151,26 @@ public interface KinAccount {
      */
     @NonNull
     Balance getBalanceSync() throws OperationFailedException;
+
+    /**
+     * Create {@link Request} for getting the current account data
+     * <p> See {@link KinAccount#getAccountDataSync()} for possibles errors</p>
+     *
+     * @return {@code Request<AccountData>>} AccountData - the current account data
+     */
+    @NonNull
+    Request<AccountData> getAccountData() throws OperationFailedException;
+
+    /**
+     * Get the current account data
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return the current account data
+     * @throws AccountNotFoundException if account was not created
+     * @throws OperationFailedException any other error
+     */
+    @NonNull
+    AccountData getAccountDataSync() throws OperationFailedException;
 
     /**
      * Get current account status on blockchain network.
@@ -187,4 +222,5 @@ public interface KinAccount {
      * @return A JSON representation of the data as a string
      */
     String export(@NonNull String passphrase) throws CryptoException;
+
 }

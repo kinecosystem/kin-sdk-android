@@ -5,9 +5,9 @@ import kin.backupandrestore.base.BaseView;
 
 public interface UploadQRView extends BaseView {
 
-	void showConsentDialog();
+    void showConsentDialog();
 
-	void showErrorLoadingFileDialog();
+    void showErrorLoadingFileDialog();
 
-	void showErrorDecodingQRDialog();
+    void showErrorDecodingQRDialog();
 }

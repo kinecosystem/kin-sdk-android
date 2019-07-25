@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import java.math.BigDecimal;
 import kin.sdk.KinAccount;
-import kin.sdk.Transaction;
+import kin.sdk.PaymentTransaction;
 import kin.sdk.TransactionId;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.OperationFailedException;
@@ -37,7 +37,7 @@ public class TransactionActivity extends BaseActivity {
     private EditText toAddressInput, amountInput, feeInput, memoInput;
     private SwitchCompat switchButton;
     private Request<Long> gertMinimumFeeRequest;
-    private Request<Transaction> buildTransactionRequest;
+    private Request<PaymentTransaction> buildPaymentTransactionRequest;
     private Request<TransactionId> sendTransactionRequest;
     private WhitelistService whitelistService;
 
@@ -60,8 +60,8 @@ public class TransactionActivity extends BaseActivity {
         if (gertMinimumFeeRequest != null) {
             gertMinimumFeeRequest.cancel(false);
         }
-        if (buildTransactionRequest != null) {
-            buildTransactionRequest.cancel(false);
+        if (buildPaymentTransactionRequest != null) {
+            buildPaymentTransactionRequest.cancel(false);
         }
         if (sendTransactionRequest != null) {
             sendTransactionRequest.cancel(false);
@@ -232,32 +232,33 @@ public class TransactionActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
         KinAccount account = getKinClient().getAccount(0);
         if (account != null) {
-            buildTransaction(toAddress, amount, fee, memo, account);
+            buildPaymentTransaction(toAddress, amount, fee, memo, account);
         } else {
             progressBar.setVisibility(View.GONE);
             throw new AccountDeletedException();
         }
     }
 
-    private void buildTransaction(String toAddress, BigDecimal amount, int fee, String memo, KinAccount account) {
+    private void buildPaymentTransaction(String toAddress, BigDecimal amount, int fee, String memo, KinAccount account) {
         if (memo == null) {
-            buildTransactionRequest = account.buildTransaction(toAddress, amount, fee);
+            buildPaymentTransactionRequest = account.buildPaymentTransaction(toAddress, amount, fee);
         } else {
-            buildTransactionRequest = account.buildTransaction(toAddress, amount, fee, memo);
+            buildPaymentTransactionRequest = account.buildPaymentTransaction(toAddress, amount, fee, memo);
         }
-        buildTransactionRequest.run(new BuildTransactionCallback());
+        buildPaymentTransactionRequest.run(new BuildPaymentTransactionCallback());
     }
 
-    private void handleWhitelistTransaction(Transaction transaction) {
+    private void handleWhitelistTransaction(PaymentTransaction transaction) {
         try {
-            whitelistService.whitelistTransaction(transaction.getWhitelistableTransaction(), new WhitelistServiceListener());
+            whitelistService
+                .whitelistTransaction(transaction.whitelistableTransaction(), new WhitelistServiceListener());
         } catch (JSONException e) {
             Utils.logError(e, "handleWhitelistTransaction");
             KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
         }
     }
 
-    private void sendTransaction(Transaction transaction, KinAccount account, DisplayCallback<TransactionId> callback) {
+    private void sendTransaction(PaymentTransaction transaction, KinAccount account, DisplayCallback<TransactionId> callback) {
         sendTransactionRequest = account.sendTransaction(transaction);
         sendTransactionRequest.run(callback);
     }
@@ -275,11 +276,11 @@ public class TransactionActivity extends BaseActivity {
         }
     }
 
-    private class BuildTransactionCallback implements ResultCallback<Transaction> {
+    private class BuildPaymentTransactionCallback implements ResultCallback<PaymentTransaction> {
 
         @Override
-        public void onResult(Transaction transaction) {
-            Log.d(TAG, "buildTransaction: build transaction " + transaction.getId().id() + " succeeded");
+        public void onResult(PaymentTransaction transaction) {
+            Log.d(TAG, "buildPaymentTransaction: build transaction " + transaction.id().id() + " succeeded");
 
             // This is just to differentiate between whitelist transaction and regular transaction
             if (switchButton.isChecked()) {
@@ -294,7 +295,7 @@ public class TransactionActivity extends BaseActivity {
 
         @Override
         public void onError(Exception e) {
-            Utils.logError(e, "buildTransaction");
+            Utils.logError(e, "buildPaymentTransaction");
             KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
         }
     }
