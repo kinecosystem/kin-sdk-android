@@ -150,10 +150,10 @@ public abstract class TransactionBase {
     }
 
     /**
-     * see {@link WhitelistableTransaction} for more information on a whitelistable transaction</p>
+     * see {@link WhitelistPayload} for more information on a whitelistable transaction</p>
      */
-    public WhitelistableTransaction whitelistableTransaction() {
-        return new WhitelistableTransaction(baseTransaction.toEnvelopeXdrBase64(),
+    public WhitelistPayload whitelistableTransaction() {
+        return new WhitelistPayload(baseTransaction.toEnvelopeXdrBase64(),
             Network.current().getNetworkPassphrase());
     }
 

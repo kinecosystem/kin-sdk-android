@@ -21,8 +21,8 @@ public class WhitelistServiceForTest {
                 .build();
     }
 
-    String whitelistTransaction(WhitelistableTransaction whitelistableTransaction) throws Exception {
-        RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistableTransaction));
+    String whitelistTransaction(WhitelistPayload whitelistPayload) throws Exception {
+        RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistPayload));
         okhttp3.Request request = new Request.Builder()
                 .url(IntegConsts.URL_WHITELISTING_SERVICE)
                 .post(requestBody)
@@ -40,10 +40,10 @@ public class WhitelistServiceForTest {
         return whitelist;
     }
 
-    private String toJson(WhitelistableTransaction whitelistableTransaction) throws JSONException {
+    private String toJson(WhitelistPayload whitelistPayload) throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("envelop", whitelistableTransaction.transactionPayload());
-        jo.put("network_id", whitelistableTransaction.networkPassphrase());
+        jo.put("envelop", whitelistPayload.transactionPayload());
+        jo.put("network_id", whitelistPayload.networkPassphrase());
         return jo.toString();
     }
 

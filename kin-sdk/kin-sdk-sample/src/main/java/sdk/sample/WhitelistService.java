@@ -3,7 +3,7 @@ package sdk.sample;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import kin.sdk.WhitelistableTransaction;
+import kin.sdk.WhitelistPayload;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,9 +27,9 @@ class WhitelistService {
                 .build();
     }
 
-    void whitelistTransaction(WhitelistableTransaction whitelistableTransaction,
-                                     TransactionActivity.WhitelistServiceListener whitelistServiceListener) throws JSONException {
-        RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistableTransaction));
+    void whitelistTransaction(WhitelistPayload whitelistPayload,
+                              TransactionActivity.WhitelistServiceListener whitelistServiceListener) throws JSONException {
+        RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistPayload));
         Request request = new Request.Builder()
                 .url(URL_WHITELISTING_SERVICE)
                 .post(requestBody)
@@ -65,10 +65,10 @@ class WhitelistService {
         }
     }
 
-    private String toJson(WhitelistableTransaction whitelistableTransaction) throws JSONException {
+    private String toJson(WhitelistPayload whitelistPayload) throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("envelope", whitelistableTransaction.transactionPayload());
-        jo.put("network_id", whitelistableTransaction.networkPassphrase());
+        jo.put("envelope", whitelistPayload.transactionPayload());
+        jo.put("network_id", whitelistPayload.networkPassphrase());
         return jo.toString();
     }
 
