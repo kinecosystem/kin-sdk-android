@@ -1,7 +1,7 @@
 package kin.sdk;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import kin.base.KeyPair;
 import kin.sdk.exception.*;

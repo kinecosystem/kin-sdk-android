@@ -2,7 +2,7 @@ package sdk.sample;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import kin.sdk.WhitelistableTransaction;

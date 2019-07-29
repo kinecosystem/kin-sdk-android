@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.Intent.EXTRA_INTENT
 import android.net.Uri
 import android.os.Build
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.nhaarman.mockitokotlin2.*
 import kin.backupandrestore.restore.presenter.FileSharingHelper.*
 import org.junit.Assert.assertEquals
@@ -27,7 +27,7 @@ class FileSharingHelperTest {
         const val SDK_INT = "SDK_INT"
     }
 
-    private val fragment: Fragment = mock()
+    private val fragment: androidx.fragment.app.Fragment = mock()
     private lateinit var fileSharingHelper: FileSharingHelper
 
     private val intentCaptor = argumentCaptor<Intent>()

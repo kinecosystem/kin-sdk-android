@@ -3,7 +3,7 @@ package sdk.sample;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.format.DateUtils;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

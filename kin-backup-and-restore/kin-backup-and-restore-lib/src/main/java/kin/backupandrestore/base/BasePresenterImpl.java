@@ -1,7 +1,7 @@
 package kin.backupandrestore.base;
 
 
-import android.support.annotation.CallSuper;
+import androidx.annotation.CallSuper;
 
 public abstract class BasePresenterImpl<T extends BaseView> implements BasePresenter<T> {
 

@@ -1,7 +1,7 @@
 package kin.sdk
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.filters.LargeTest
+import androidx.test.InstrumentationRegistry
+import androidx.test.filters.LargeTest
 import kin.base.Memo
 import kin.base.MemoNone
 import kin.base.MemoText

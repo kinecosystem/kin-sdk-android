@@ -1,6 +1,6 @@
 package kin.sdk;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import java.io.UnsupportedEncodingException;
 import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;

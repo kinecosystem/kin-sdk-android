@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/backup_and_restore_margin_extra_large"
-    android:paddingRight="@dimen/backup_and_restore_margin_extra_large"
-    android:background="@android:color/white">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:paddingLeft="@dimen/backup_and_restore_margin_extra_large"
+                                                   android:paddingRight="@dimen/backup_and_restore_margin_extra_large"
+                                                   android:background="@android:color/white">
 
     <ImageView
         android:id="@+id/safe_image"
@@ -56,4 +56,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/save_qr_description"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

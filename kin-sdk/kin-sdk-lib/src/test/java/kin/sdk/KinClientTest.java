@@ -1,7 +1,7 @@
 package kin.sdk;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import kin.base.KeyPair;
 import org.junit.Before;
 import org.junit.Rule;

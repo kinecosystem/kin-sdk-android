@@ -4,7 +4,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static kin.sdk.AccountStatus.CREATED;
 import static kin.sdk.AccountStatus.NOT_CREATED;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 @Retention(SOURCE)

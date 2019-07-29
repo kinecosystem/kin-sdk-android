@@ -1,6 +1,6 @@
 package kin.backupandrestore;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;

@@ -3,7 +3,7 @@ package kin.sdk;
 
 import static kin.sdk.Utils.checkNotNull;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.here.oksse.ServerSentEvent;
 import java.math.BigDecimal;
 import java.util.List;

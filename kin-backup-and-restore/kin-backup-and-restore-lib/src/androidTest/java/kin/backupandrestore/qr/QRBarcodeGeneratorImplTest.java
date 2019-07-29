@@ -6,7 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import java.util.HashMap;
 import kin.backupandrestore.qr.QRBarcodeGenerator.QRNotFoundInImageException;
 import org.junit.Before;

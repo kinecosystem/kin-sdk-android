@@ -2,7 +2,7 @@ package kin.backupandrestore.qr;
 
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public interface QRBarcodeGenerator {
 

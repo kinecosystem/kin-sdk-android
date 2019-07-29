@@ -8,11 +8,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.intent.Intents.intending
-import android.support.test.espresso.intent.matcher.BundleMatchers
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasAction
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtras
+import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.BundleMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtras
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView

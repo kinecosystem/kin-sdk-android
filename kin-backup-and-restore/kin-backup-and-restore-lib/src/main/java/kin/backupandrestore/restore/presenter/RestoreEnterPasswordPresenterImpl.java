@@ -9,7 +9,7 @@ import static kin.backupandrestore.exception.BackupAndRestoreException.CODE_REST
 import static kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import kin.backupandrestore.Validator;
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.exception.BackupAndRestoreException;

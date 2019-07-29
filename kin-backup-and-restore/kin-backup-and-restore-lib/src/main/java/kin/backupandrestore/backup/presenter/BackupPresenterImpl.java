@@ -6,8 +6,8 @@ import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_BACK_TA
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_BACK_TAPPED;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import kin.backupandrestore.backup.view.BackupView;
 import kin.backupandrestore.base.BasePresenterImpl;
 import kin.backupandrestore.events.CallbackManager;

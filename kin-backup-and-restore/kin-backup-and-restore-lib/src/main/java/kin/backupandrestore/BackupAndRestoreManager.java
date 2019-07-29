@@ -2,7 +2,7 @@ package kin.backupandrestore;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import kin.backupandrestore.events.BroadcastManagerImpl;
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.events.EventDispatcherImpl;

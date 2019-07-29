@@ -3,7 +3,7 @@ package kin.backupandrestore.qr;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import java.io.IOException;
 
 interface QRFileUriHandler {
