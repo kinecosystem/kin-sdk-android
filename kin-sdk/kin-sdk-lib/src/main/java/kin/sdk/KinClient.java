@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import kin.base.KeyPair;
+import kin.base.KinOkHttpClientFactory;
 import kin.base.Network;
 import kin.base.Server;
 import kin.sdk.exception.*;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import static kin.sdk.Utils.checkNotNull;
 
@@ -26,7 +26,6 @@ import static kin.sdk.Utils.checkNotNull;
 public class KinClient {
 
     private static final String STORE_NAME_PREFIX = "KinKeyStore_";
-    private static final int TRANSACTIONS_TIMEOUT = 30;
     private final Environment environment;
     private final KeyStore keyStore;
     private final TransactionSender transactionSender;
@@ -91,7 +90,7 @@ public class KinClient {
 
     private Server initServer() {
         Network.use(environment.getNetwork());
-        return new Server(environment.getNetworkUrl(), TRANSACTIONS_TIMEOUT, TimeUnit.SECONDS);
+        return new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).client);
     }
 
     private KeyStore initKeyStore(Context context, String id) {

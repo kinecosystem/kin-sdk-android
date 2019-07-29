@@ -1,7 +1,7 @@
 package kin.base;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,16 +22,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23)
 public class ServerTest extends TestCase {
 
     private static final String KIN_SDK_ANDROID_VERSION_HEADER = "kin-sdk-android-version";
 
-    private OkHttpClient mockClient;
     private MockWebServer mockWebServer;
 
     private final String successResponse =
@@ -78,11 +73,9 @@ public class ServerTest extends TestCase {
         MockitoAnnotations.initMocks(this);
         mockWebServer = new MockWebServer();
         mockWebServer.start();
-        mockClient = new OkHttpClient.Builder()
-                .addInterceptor(new HeaderInterceptor())
-                .build();
+
         server = new Server(mockWebServer.url("/").url().toString());
-        server.setHttpClient(mockClient);
+        server.setHttpClient(new KinOkHttpClientFactory("androidVersion").client);
     }
 
     @After
@@ -158,7 +151,7 @@ public class ServerTest extends TestCase {
         server.submitTransaction(this.buildTransaction());
         try {
             RecordedRequest recordedRequest = mockWebServer.takeRequest();
-            assertThat(recordedRequest.getHeader("kin-sdk-android-version"), is(BuildConfig.VERSION_NAME));
+            assertThat(recordedRequest.getHeader("kin-sdk-android-version"), is("androidVersion"));
         } catch (InterruptedException e) {
             fail();
         }
@@ -190,7 +183,7 @@ public class ServerTest extends TestCase {
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             request = request.newBuilder()
-                    .addHeader(KIN_SDK_ANDROID_VERSION_HEADER, BuildConfig.VERSION_NAME)
+                    .addHeader(KIN_SDK_ANDROID_VERSION_HEADER, "androidVersion")
                     .build();
             return chain.proceed(request);
         }
