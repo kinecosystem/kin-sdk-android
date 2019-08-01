@@ -8,12 +8,12 @@ import kin.base.Transaction.Builder;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
 import kin.base.responses.SubmitTransactionResponse;
-import kin.sdk.Transaction;
 import kin.sdk.TransactionId;
-import kin.sdk.WhitelistPayload;
 import kin.sdk.exception.*;
 import kin.sdk.internal.Utils;
 import kin.sdk.internal.data.TransactionIdImpl;
+import kin.sdk.transaction_data.PaymentTransaction;
+import kin.sdk.transaction_data.Transaction;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -37,14 +37,14 @@ public class TransactionSender {
         this.appId = appId;
     }
 
-    public Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress,
-                                        @NonNull BigDecimal amount,
-                                        int fee) throws OperationFailedException {
+    public PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress,
+                                               @NonNull BigDecimal amount,
+                                               int fee) throws OperationFailedException {
         return buildTransaction(from, publicAddress, amount, fee, null);
     }
 
-    public Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
-                                        int fee, @Nullable String memo) throws OperationFailedException {
+    public PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+                                               int fee, @Nullable String memo) throws OperationFailedException {
         checkParams(from, publicAddress, amount, fee, memo);
         if (appId != null && !appId.equals("")) {
             memo = addAppIdToMemo(memo);
@@ -53,16 +53,13 @@ public class TransactionSender {
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
         AccountResponse sourceAccount = loadSourceAccount(from);
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
-        kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee, memo);
-        TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
-        WhitelistPayload whitelistPayload =
-                new WhitelistPayload(stellarTransaction.toEnvelopeXdrBase64(),
-                        Network.current().getNetworkPassphrase());
-        return new Transaction(addressee, from, amount, fee, memo, id, stellarTransaction, whitelistPayload);
+        kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee
+                , memo);
+        return new PaymentTransaction(stellarTransaction, addressee.getAccountId(), amount, memo);
     }
 
     public TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
-        return sendTransaction(transaction.getStellarTransaction());
+        return sendTransaction(transaction.baseTransaction());
     }
 
     public TransactionId sendWhitelistTransaction(String whitelist) throws OperationFailedException {

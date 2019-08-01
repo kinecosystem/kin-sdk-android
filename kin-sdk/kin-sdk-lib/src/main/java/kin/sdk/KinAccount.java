@@ -3,6 +3,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import kin.sdk.exception.*;
+import kin.sdk.transaction_data.PaymentTransaction;
 import kin.utils.Request;
 
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ public interface KinAccount {
      * @param fee the amount of fee(in stroops) for this transfer.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
+    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
@@ -37,16 +38,17 @@ public interface KinAccount {
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
+    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
+                                                 @Nullable String memo);
 
     /**
      * Create {@link Request} for signing and sending a transaction
-     * <p> See {@link KinAccount#sendTransactionSync(Transaction)} for possibles errors</p>
+     * <p> See {@link KinAccount#sendTransactionSync(PaymentTransaction)} for possibles errors</p>
      * @param transaction is the transaction object to send.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     @NonNull
-    Request<TransactionId> sendTransaction(Transaction transaction);
+    Request<TransactionId> sendTransaction(PaymentTransaction transaction);
 
     /**
      * Create {@link Request} for signing and sending a transaction from a whitelist.
@@ -69,7 +71,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
+    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
@@ -83,7 +85,7 @@ public interface KinAccount {
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
 
     /**
      * send a transaction.
@@ -97,7 +99,7 @@ public interface KinAccount {
      * @throws OperationFailedException other error occurred.
      */
     @NonNull
-    TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException;
+    TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException;
 
     /**
      * send a whitelist transaction.

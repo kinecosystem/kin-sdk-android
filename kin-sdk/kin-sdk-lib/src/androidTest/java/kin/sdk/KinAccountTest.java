@@ -1,15 +1,17 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertNull;
-
 import android.support.test.InstrumentationRegistry;
-import java.math.BigDecimal;
 import kin.sdk.exception.AccountDeletedException;
+import kin.sdk.transaction_data.PaymentTransaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.math.BigDecimal;
+
+import static junit.framework.Assert.assertNull;
 
 @SuppressWarnings({"deprecation", "ConstantConditions"})
 public class KinAccountTest {
@@ -51,7 +53,8 @@ public class KinAccountTest {
     public void sendTransactionSync_DeletedAccount_AccountDeletedException() throws Exception {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);
-        Transaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
+        PaymentTransaction transaction = kinAccount.buildTransactionSync(
+                "GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
                 new BigDecimal(10), FEE);
         kinAccount.sendTransactionSync(transaction);
     }
@@ -60,10 +63,10 @@ public class KinAccountTest {
     public void sendWhitelistTransaction_DeletedAccount_AccountDeletedException() throws Exception {
         KinAccount kinAccount = kinClient.addAccount();
         kinClient.deleteAccount(0);
-        Transaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
+        PaymentTransaction transaction = kinAccount.buildTransactionSync("GBA2XHZRUAHEL4DZX7XNHR7HLBAUYPRNKLD2PIUKWV2LVVE6OJT4NDLM",
                 new BigDecimal(10), 0);
 
-        String whitelist = new WhitelistServiceForTest().whitelistTransaction(transaction.getWhitelistableTransaction());
+        String whitelist = new WhitelistServiceForTest().whitelistTransaction(transaction.whitelistPayload());
         kinAccount.sendWhitelistTransactionSync(whitelist);
     }
 

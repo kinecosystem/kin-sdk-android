@@ -12,6 +12,7 @@ import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEvents;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.transaction_data.PaymentTransaction;
 
 import java.math.BigDecimal;
 
@@ -43,22 +44,22 @@ public final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
-                                            int fee) throws OperationFailedException {
+    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+                                                   int fee) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
-                                            int fee, @Nullable String memo) throws OperationFailedException {
+    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+                                                   int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
     }
 
     @NonNull
     @Override
-    public TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException {
+    public TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendTransaction(transaction);
     }
@@ -101,6 +102,10 @@ public final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public String export(@NonNull String passphrase) throws CryptoException {
         return backupRestore.exportWallet(account, passphrase);
+    }
+
+    public KeyPair getKeyPair() {
+        return account;
     }
 
     public void markAsDeleted() {
