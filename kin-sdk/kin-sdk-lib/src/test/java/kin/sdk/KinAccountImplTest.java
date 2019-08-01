@@ -7,6 +7,7 @@ import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
 import kin.sdk.internal.data.BalanceImpl;
+import kin.sdk.internal.data.TransactionIdImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

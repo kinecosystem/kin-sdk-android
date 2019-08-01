@@ -15,9 +15,9 @@ import java.util.List;
 
 public class KeyStoreImpl implements KeyStore {
 
-    static final String ENCRYPTION_VERSION_NAME = "none";
-    static final String STORE_KEY_ACCOUNTS = "accounts";
-    static final String VERSION_KEY = "encryptor_ver";
+    public static final String ENCRYPTION_VERSION_NAME = "none";
+    public static final String STORE_KEY_ACCOUNTS = "accounts";
+    public static final String VERSION_KEY = "encryptor_ver";
     private static final String JSON_KEY_ACCOUNTS_ARRAY = "accounts";
     private static final String JSON_KEY_PUBLIC_KEY = "public_key";
     private static final String JSON_KEY_ENCRYPTED_SEED = "seed";
