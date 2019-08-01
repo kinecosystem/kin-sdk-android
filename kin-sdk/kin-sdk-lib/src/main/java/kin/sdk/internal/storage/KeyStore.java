@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 import android.support.annotation.NonNull;
 import kin.base.KeyPair;
@@ -6,7 +6,7 @@ import kin.sdk.exception.*;
 
 import java.util.List;
 
-interface KeyStore {
+public interface KeyStore {
 
     @NonNull
     List<KeyPair> loadAccounts() throws LoadAccountException;

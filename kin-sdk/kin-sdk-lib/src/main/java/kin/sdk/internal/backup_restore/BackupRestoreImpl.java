@@ -1,7 +1,6 @@
-package kin.sdk;
+package kin.sdk.internal.backup_restore;
 
 import android.support.annotation.NonNull;
-import java.io.UnsupportedEncodingException;
 import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
@@ -10,7 +9,9 @@ import org.json.JSONObject;
 import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
 
-class BackupRestoreImpl implements BackupRestore {
+import java.io.UnsupportedEncodingException;
+
+public class BackupRestoreImpl implements BackupRestore {
 
     private static final String JSON_KEY_PUBLIC_KEY = "pkey";
     private static final String JSON_KEY_SEED = "seed";

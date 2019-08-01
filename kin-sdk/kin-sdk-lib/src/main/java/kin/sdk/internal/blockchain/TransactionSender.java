@@ -1,30 +1,26 @@
-package kin.sdk;
+package kin.sdk.internal.blockchain;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.util.List;
-import kin.base.AssetTypeNative;
-import kin.base.KeyPair;
-import kin.base.Memo;
-import kin.base.Network;
-import kin.base.PaymentOperation;
-import kin.base.Server;
+import kin.base.*;
 import kin.base.Transaction.Builder;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
 import kin.base.responses.SubmitTransactionResponse;
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.IllegalAmountException;
-import kin.sdk.exception.InsufficientFeeException;
-import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.OperationFailedException;
-import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.Transaction;
+import kin.sdk.TransactionId;
+import kin.sdk.WhitelistPayload;
+import kin.sdk.exception.*;
+import kin.sdk.internal.Utils;
+import kin.sdk.internal.data.TransactionIdImpl;
 
-class TransactionSender {
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.List;
+
+public class TransactionSender {
 
     private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
     private static final int MAX_NUM_OF_DECIMAL_PLACES = 4 ;
@@ -36,18 +32,19 @@ class TransactionSender {
     private final Server server; //horizon server
     private final String appId;
 
-    TransactionSender(Server server, String appId) {
+    public TransactionSender(Server server, String appId) {
         this.server = server;
         this.appId = appId;
     }
 
-    Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
-                                 int fee) throws OperationFailedException {
+    public Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress,
+                                        @NonNull BigDecimal amount,
+                                        int fee) throws OperationFailedException {
         return buildTransaction(from, publicAddress, amount, fee, null);
     }
 
-    Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
-                                 int fee, @Nullable String memo) throws OperationFailedException {
+    public Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+                                        int fee, @Nullable String memo) throws OperationFailedException {
         checkParams(from, publicAddress, amount, fee, memo);
         if (appId != null && !appId.equals("")) {
             memo = addAppIdToMemo(memo);
@@ -58,16 +55,17 @@ class TransactionSender {
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
         kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee, memo);
         TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
-        WhitelistableTransaction whitelistableTransaction =
-                new WhitelistableTransaction(stellarTransaction.toEnvelopeXdrBase64(), Network.current().getNetworkPassphrase());
-        return new Transaction(addressee, from, amount, fee, memo, id, stellarTransaction, whitelistableTransaction);
+        WhitelistPayload whitelistPayload =
+                new WhitelistPayload(stellarTransaction.toEnvelopeXdrBase64(),
+                        Network.current().getNetworkPassphrase());
+        return new Transaction(addressee, from, amount, fee, memo, id, stellarTransaction, whitelistPayload);
     }
 
-    TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
+    public TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
         return sendTransaction(transaction.getStellarTransaction());
     }
 
-    TransactionId sendWhitelistTransaction(String whitelist) throws OperationFailedException {
+    public TransactionId sendWhitelistTransaction(String whitelist) throws OperationFailedException {
         try {
             kin.base.Transaction transaction = kin.base.Transaction.fromEnvelopeXdr(whitelist);
             return sendTransaction(transaction);

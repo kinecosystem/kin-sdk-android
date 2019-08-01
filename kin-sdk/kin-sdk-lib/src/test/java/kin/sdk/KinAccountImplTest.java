@@ -1,19 +1,25 @@
 package kin.sdk;
 
+import kin.base.KeyPair;
+import kin.sdk.exception.AccountDeletedException;
+import kin.sdk.internal.account.KinAccountImpl;
+import kin.sdk.internal.blockchain.AccountInfoRetriever;
+import kin.sdk.internal.blockchain.TransactionSender;
+import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.internal.data.BalanceImpl;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.math.BigDecimal;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import kin.base.KeyPair;
-import kin.sdk.exception.AccountDeletedException;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class KinAccountImplTest {
 

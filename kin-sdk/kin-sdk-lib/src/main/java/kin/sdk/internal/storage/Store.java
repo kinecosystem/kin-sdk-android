@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 
 import android.support.annotation.NonNull;

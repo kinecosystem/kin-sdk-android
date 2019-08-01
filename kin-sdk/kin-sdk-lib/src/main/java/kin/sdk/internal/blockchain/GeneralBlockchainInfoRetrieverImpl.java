@@ -1,7 +1,5 @@
-package kin.sdk;
+package kin.sdk.internal.blockchain;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import kin.base.Server;
 import kin.base.requests.LedgersRequestBuilder;
 import kin.base.requests.RequestBuilder;
@@ -9,11 +7,14 @@ import kin.base.responses.LedgerResponse;
 import kin.base.responses.Page;
 import kin.sdk.exception.OperationFailedException;
 
-class GeneralBlockchainInfoRetrieverImpl implements GeneralBlockchainInfoRetriever {
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class GeneralBlockchainInfoRetrieverImpl implements GeneralBlockchainInfoRetriever {
 
     private final Server server;
 
-    GeneralBlockchainInfoRetrieverImpl(Server server) {
+    public GeneralBlockchainInfoRetrieverImpl(Server server) {
         this.server = server;
     }
 

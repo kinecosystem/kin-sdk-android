@@ -1,10 +1,15 @@
-package kin.sdk;
+package kin.sdk.internal.account;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import kin.sdk.Balance;
+import kin.sdk.KinAccount;
+import kin.sdk.Transaction;
+import kin.sdk.TransactionId;
+import kin.utils.Request;
+
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
-import kin.utils.Request;
 
 abstract class AbstractKinAccount implements KinAccount {
 

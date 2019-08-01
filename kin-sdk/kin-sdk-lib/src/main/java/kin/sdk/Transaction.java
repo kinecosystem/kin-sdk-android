@@ -1,7 +1,8 @@
 package kin.sdk;
 
-import java.math.BigDecimal;
 import kin.base.KeyPair;
+
+import java.math.BigDecimal;
 
 public class Transaction {
 
@@ -17,10 +18,10 @@ public class Transaction {
     private final TransactionId id;
 
     private final kin.base.Transaction stellarTransaction;
-    private final WhitelistableTransaction whitelistableTransaction;
+    private final WhitelistPayload whitelistPayload;
 
-    Transaction(KeyPair destination, KeyPair source, BigDecimal amount, int fee, String memo,
-                TransactionId id, kin.base.Transaction stellarTransaction, WhitelistableTransaction whitelistableTransaction) {
+    public Transaction(KeyPair destination, KeyPair source, BigDecimal amount, int fee, String memo,
+                       TransactionId id, kin.base.Transaction stellarTransaction, WhitelistPayload whitelistPayload) {
         this.destination = destination;
         this.source = source;
         this.amount = amount;
@@ -28,7 +29,7 @@ public class Transaction {
         this.memo = memo;
         this.id = id;
         this.stellarTransaction = stellarTransaction;
-        this.whitelistableTransaction = whitelistableTransaction;
+        this.whitelistPayload = whitelistPayload;
     }
 
     public KeyPair getDestination() {
@@ -55,11 +56,11 @@ public class Transaction {
         return id;
     }
 
-    kin.base.Transaction getStellarTransaction() {
+    public kin.base.Transaction getStellarTransaction() {
         return stellarTransaction;
     }
 
-    public WhitelistableTransaction getWhitelistableTransaction() {
-        return whitelistableTransaction;
+    public WhitelistPayload getWhitelistableTransaction() {
+        return whitelistPayload;
     }
 }

@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.backup_restore;
 
 
 import android.support.annotation.NonNull;
@@ -6,7 +6,7 @@ import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
 
-interface BackupRestore {
+public interface BackupRestore {
 
     @NonNull
     String exportWallet(@NonNull KeyPair keyPair, @NonNull String passphrase)

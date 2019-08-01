@@ -1,10 +1,11 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import kin.base.KeyPair;
 import kin.sdk.exception.*;
+import kin.sdk.internal.backup_restore.BackupRestore;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +13,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-class KeyStoreImpl implements KeyStore {
+public class KeyStoreImpl implements KeyStore {
 
     static final String ENCRYPTION_VERSION_NAME = "none";
     static final String STORE_KEY_ACCOUNTS = "accounts";
@@ -24,7 +25,7 @@ class KeyStoreImpl implements KeyStore {
     private final Store store;
     private final BackupRestore backupRestore;
 
-    KeyStoreImpl(@NonNull Store store, @NonNull BackupRestore backupRestore) {
+    public KeyStoreImpl(@NonNull Store store, @NonNull BackupRestore backupRestore) {
         this.store = store;
         this.backupRestore = backupRestore;
     }

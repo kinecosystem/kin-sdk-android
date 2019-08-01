@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.blockchain;
 
 import kin.sdk.exception.OperationFailedException;
 

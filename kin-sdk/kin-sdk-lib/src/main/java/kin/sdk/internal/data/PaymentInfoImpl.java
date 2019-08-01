@@ -1,9 +1,12 @@
-package kin.sdk;
+package kin.sdk.internal.data;
 
+
+import kin.sdk.PaymentInfo;
+import kin.sdk.TransactionId;
 
 import java.math.BigDecimal;
 
-class PaymentInfoImpl implements PaymentInfo {
+public class PaymentInfoImpl implements PaymentInfo {
 
     private final String createdAt;
     private final String destinationPublicKey;
@@ -13,8 +16,8 @@ class PaymentInfoImpl implements PaymentInfo {
     private final long fee;
     private final String memo;
 
-    PaymentInfoImpl(String createdAt, String destinationPublicKey, String sourcePublicKey, BigDecimal amount,
-        TransactionId hash, long fee, String memo) {
+    public PaymentInfoImpl(String createdAt, String destinationPublicKey, String sourcePublicKey, BigDecimal amount,
+                           TransactionId hash, long fee, String memo) {
         this.createdAt = createdAt;
         this.destinationPublicKey = destinationPublicKey;
         this.sourcePublicKey = sourcePublicKey;

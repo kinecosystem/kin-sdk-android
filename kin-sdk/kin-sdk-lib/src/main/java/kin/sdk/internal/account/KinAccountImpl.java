@@ -1,15 +1,22 @@
-package kin.sdk;
+package kin.sdk.internal.account;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import java.math.BigDecimal;
 import kin.base.KeyPair;
+import kin.sdk.*;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
+import kin.sdk.internal.backup_restore.BackupRestore;
+import kin.sdk.internal.blockchain.AccountInfoRetriever;
+import kin.sdk.internal.blockchain.TransactionSender;
+import kin.sdk.internal.blockchain.events.BlockchainEvents;
+import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+
+import java.math.BigDecimal;
 
 
-final class KinAccountImpl extends AbstractKinAccount {
+public final class KinAccountImpl extends AbstractKinAccount {
 
     private final KeyPair account;
     private final BackupRestore backupRestore;
@@ -18,8 +25,8 @@ final class KinAccountImpl extends AbstractKinAccount {
     private final BlockchainEvents blockchainEvents;
     private boolean isDeleted = false;
 
-    KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
-        AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
+    public KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
+                          AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;
@@ -96,7 +103,7 @@ final class KinAccountImpl extends AbstractKinAccount {
         return backupRestore.exportWallet(account, passphrase);
     }
 
-    void markAsDeleted() {
+    public void markAsDeleted() {
         isDeleted = true;
     }
 

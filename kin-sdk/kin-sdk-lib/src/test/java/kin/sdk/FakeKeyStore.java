@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import kin.base.KeyPair;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
+import kin.sdk.internal.storage.KeyStore;
 
 import java.util.ArrayList;
 import java.util.Iterator;
