@@ -31,7 +31,7 @@ public abstract class Transaction {
      * A Transaction Envelope can be represented as a string base-64 encoded.</p>
      *
      * @param transactionEnvelope a Base-64 encoded <code>TransactionEnvelope</code>
-     * @return a TransactionBase instance from a previously build transaction envelope.
+     * @return a Transaction instance from a previously build transaction envelope.
      */
     public static Transaction decodeTransaction(String transactionEnvelope) throws DecodeTransactionException {
         try {

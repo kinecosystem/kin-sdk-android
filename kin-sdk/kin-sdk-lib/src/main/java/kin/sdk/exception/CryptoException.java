@@ -7,7 +7,7 @@ import kin.sdk.KinClient;
  * Decryption/Encryption error when importing - {@link KinClient#importAccount(String, String)} or
  * exporting {@link KinAccount#export(String)} an account.
  */
-public class CryptoException extends Exception {
+public class CryptoException extends KinSdkException {
 
     public CryptoException(Throwable e) {
         super(e);

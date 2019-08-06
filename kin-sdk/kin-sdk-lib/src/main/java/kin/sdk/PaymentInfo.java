@@ -39,7 +39,7 @@ public interface PaymentInfo {
     String memo();
 
     /**
-     * Amount of fee(in stroops) for this payment.
+     * Amount of fee(in quarks) for this payment.
      */
     long fee();
 }
