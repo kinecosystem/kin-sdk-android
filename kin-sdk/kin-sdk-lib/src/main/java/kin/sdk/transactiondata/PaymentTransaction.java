@@ -1,4 +1,4 @@
-package kin.sdk.transaction_data;
+package kin.sdk.transactiondata;
 
 import java.math.BigDecimal;
 

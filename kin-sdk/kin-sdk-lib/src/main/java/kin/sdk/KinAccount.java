@@ -3,7 +3,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import kin.sdk.exception.*;
-import kin.sdk.transaction_data.PaymentTransaction;
+import kin.sdk.transactiondata.PaymentTransaction;
 import kin.utils.Request;
 
 import java.math.BigDecimal;

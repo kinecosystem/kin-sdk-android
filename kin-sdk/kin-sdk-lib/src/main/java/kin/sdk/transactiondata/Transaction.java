@@ -1,4 +1,4 @@
-package kin.sdk.transaction_data;
+package kin.sdk.transactiondata;
 
 import kin.base.*;
 import kin.base.xdr.DecoratedSignature;

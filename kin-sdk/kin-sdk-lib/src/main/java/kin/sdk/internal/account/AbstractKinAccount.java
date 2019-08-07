@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import kin.sdk.Balance;
 import kin.sdk.KinAccount;
 import kin.sdk.TransactionId;
-import kin.sdk.transaction_data.PaymentTransaction;
+import kin.sdk.transactiondata.PaymentTransaction;
 import kin.utils.Request;
 
 import java.math.BigDecimal;

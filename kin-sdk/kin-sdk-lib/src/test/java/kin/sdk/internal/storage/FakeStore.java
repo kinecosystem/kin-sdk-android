@@ -1,9 +1,8 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import kin.sdk.internal.storage.Store;
 
 import java.util.HashMap;
 

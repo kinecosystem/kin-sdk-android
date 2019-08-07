@@ -15,7 +15,7 @@ import kin.sdk.TransactionId;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.sample.R;
-import kin.sdk.transaction_data.PaymentTransaction;
+import kin.sdk.transactiondata.PaymentTransaction;
 import kin.utils.Request;
 import kin.utils.ResultCallback;
 import org.json.JSONException;

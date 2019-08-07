@@ -8,7 +8,7 @@ import kin.base.responses.HttpResponseException;
 import kin.sdk.exception.*;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.storage.KeyStore;
-import kin.sdk.transaction_data.PaymentTransaction;
+import kin.sdk.transactiondata.PaymentTransaction;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;

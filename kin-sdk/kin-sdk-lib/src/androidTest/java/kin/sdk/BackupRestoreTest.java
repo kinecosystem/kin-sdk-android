@@ -4,7 +4,7 @@ package kin.sdk;
 import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
-import kin.sdk.internal.backup_restore.BackupRestoreImpl;
+import kin.sdk.internal.backuprestore.BackupRestoreImpl;
 import org.json.JSONException;
 import org.junit.Rule;
 import org.junit.Test;

@@ -3,7 +3,7 @@ package kin.sdk.internal.queue;
 import kin.sdk.TransactionId;
 import kin.sdk.queue.PendingPayment;
 import kin.sdk.queue.TransactionProcess;
-import kin.sdk.transaction_data.Transaction;
+import kin.sdk.transactiondata.Transaction;
 
 import java.util.List;
 

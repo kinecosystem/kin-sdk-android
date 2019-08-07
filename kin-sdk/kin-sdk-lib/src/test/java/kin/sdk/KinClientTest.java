@@ -7,6 +7,7 @@ import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetrieverImpl;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.internal.storage.FakeKeyStore;
 import kin.sdk.internal.storage.KeyStore;
 import org.junit.Before;
 import org.junit.Rule;

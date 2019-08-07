@@ -7,12 +7,12 @@ import kin.sdk.*;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
-import kin.sdk.internal.backup_restore.BackupRestore;
+import kin.sdk.internal.backuprestore.BackupRestore;
 import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEvents;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
-import kin.sdk.transaction_data.PaymentTransaction;
+import kin.sdk.transactiondata.PaymentTransaction;
 
 import java.math.BigDecimal;
 

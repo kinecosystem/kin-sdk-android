@@ -12,8 +12,8 @@ import kin.sdk.TransactionId;
 import kin.sdk.exception.*;
 import kin.sdk.internal.Utils;
 import kin.sdk.internal.data.TransactionIdImpl;
-import kin.sdk.transaction_data.PaymentTransaction;
-import kin.sdk.transaction_data.Transaction;
+import kin.sdk.transactiondata.PaymentTransaction;
+import kin.sdk.transactiondata.Transaction;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

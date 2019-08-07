@@ -1,11 +1,10 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 import kin.base.KeyPair;
+import kin.sdk.FakeBackupRestore;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.exception.LoadAccountException;
-import kin.sdk.internal.storage.KeyStoreImpl;
-import kin.sdk.internal.storage.Store;
 import org.json.JSONException;
 import org.junit.Rule;
 import org.junit.Test;

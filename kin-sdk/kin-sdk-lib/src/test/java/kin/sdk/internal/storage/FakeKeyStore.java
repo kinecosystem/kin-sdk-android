@@ -1,11 +1,10 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 
 import android.support.annotation.NonNull;
 import kin.base.KeyPair;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
-import kin.sdk.internal.storage.KeyStore;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,15 +13,15 @@ import java.util.List;
 /**
  * Fake KeyStore for testing, implementing naive in memory store
  */
-class FakeKeyStore implements KeyStore {
+public class FakeKeyStore implements KeyStore {
 
     private List<KeyPair> accounts;
 
-    FakeKeyStore(List<KeyPair> preloadedAccounts) {
+    public FakeKeyStore(List<KeyPair> preloadedAccounts) {
         accounts = new ArrayList<>(preloadedAccounts);
     }
 
-    FakeKeyStore() {
+    public FakeKeyStore() {
         accounts = new ArrayList<>();
     }
 

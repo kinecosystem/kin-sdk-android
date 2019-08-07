@@ -2,7 +2,7 @@ package kin.sdk;
 
 import android.support.test.InstrumentationRegistry;
 import kin.sdk.exception.AccountDeletedException;
-import kin.sdk.transaction_data.PaymentTransaction;
+import kin.sdk.transactiondata.PaymentTransaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

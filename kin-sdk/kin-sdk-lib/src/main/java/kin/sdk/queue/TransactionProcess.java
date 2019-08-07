@@ -2,7 +2,7 @@ package kin.sdk.queue;
 
 import android.support.annotation.Nullable;
 import kin.sdk.TransactionId;
-import kin.sdk.transaction_data.Transaction;
+import kin.sdk.transactiondata.Transaction;
 
 import java.util.List;
 

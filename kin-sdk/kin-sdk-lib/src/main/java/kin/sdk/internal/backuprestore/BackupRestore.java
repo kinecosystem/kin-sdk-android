@@ -1,4 +1,4 @@
-package kin.sdk.internal.backup_restore;
+package kin.sdk.internal.backuprestore;
 
 
 import android.support.annotation.NonNull;

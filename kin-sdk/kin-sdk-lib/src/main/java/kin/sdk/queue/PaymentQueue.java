@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.KinException;
-import kin.sdk.transaction_data.BatchPaymentTransaction;
+import kin.sdk.transactiondata.BatchPaymentTransaction;
 
 import java.math.BigDecimal;
 import java.util.List;
