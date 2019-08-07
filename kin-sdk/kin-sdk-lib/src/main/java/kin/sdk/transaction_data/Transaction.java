@@ -80,7 +80,7 @@ public abstract class Transaction {
      * If this fee is below the network minimum the transaction will fail.
      * The more operations in the transaction, the greater the required fee.
      *
-     * @return the fee paid for transaction in kin base unit which is quark (1 quark = 0.00001 KIN).
+     * @return the fee paid for transaction in kin base unit which is Quark (1 Quark = 0.00001 KIN).
      */
     public int fee() {
         return baseTransaction.getFee();

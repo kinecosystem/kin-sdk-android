@@ -24,7 +24,7 @@ public interface KinAccount {
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in quarks) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
@@ -34,7 +34,7 @@ public interface KinAccount {
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in quarks) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
@@ -66,7 +66,7 @@ public interface KinAccount {
      *
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in quarks) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
@@ -79,7 +79,7 @@ public interface KinAccount {
      *
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in quarks) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.

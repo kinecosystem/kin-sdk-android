@@ -134,7 +134,7 @@ public interface PaymentQueue {
      * Setter for the fee.
      * If this fee is below the minimum then the transaction will fail.
      *
-     * @param fee the amount of fee(in quarks) for each payment
+     * @param fee the amount of fee(in Quarks) for each payment (1 Quark = 0.00001 KIN).
      */
     void setFee(int fee);
 
