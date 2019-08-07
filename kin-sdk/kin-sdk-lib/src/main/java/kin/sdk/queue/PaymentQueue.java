@@ -83,7 +83,7 @@ public interface PaymentQueue {
          * @param transactionProcess can be used to access both generated transaction and all of its associated
          *                           PendingPayments.
          *                           <p>Note - It's for the dev to decide whether to call TransactionProcess.send()
-         *                           to send using the sdk, w
+         *                           to send using the sdk.
          *                           with or without a whitelisted payload, or to send it to the blockchain by dev
          *                           server and just return back the transaction id</p>
          * @return the transaction identifier.

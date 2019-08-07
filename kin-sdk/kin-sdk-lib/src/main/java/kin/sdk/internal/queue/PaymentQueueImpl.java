@@ -41,7 +41,7 @@ public class PaymentQueueImpl implements PaymentQueue {
         return null;
     }
 
-    public static class StatusImpl implements PaymentQueueImpl.Status {
+    public static class StatusImpl implements PaymentQueue.Status {
 
         @Override
         public boolean transactionInProgress() {
