@@ -8,6 +8,7 @@
 
     <!--Sentences-->
     <string name="backup_and_restore_upload_qr_title">Load your Kin from a backup</string>
+    <string name="backup_and_restore_upload_qr_toolbar_title">Load your Kin from a backup</string>
     <string name="backup_and_restore_upload_qr_description">First, upload the QR code you saved\n
         (Hint: Check your email to find it) </string>
     <string name="backup_and_restore_upload_qr_btn">Upload QR code</string>
