@@ -3,7 +3,7 @@ package kin.sdk.queue;
 import android.support.annotation.NonNull;
 import kin.sdk.TransactionId;
 import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.KinSdkException;
+import kin.sdk.exception.KinException;
 import kin.sdk.transaction_data.BatchPaymentTransaction;
 
 import java.math.BigDecimal;
@@ -67,7 +67,7 @@ public interface PaymentQueue {
          *                    information</p>
          */
         void onTransactionSendFailed(BatchPaymentTransaction transaction, List<PendingPayment> payments,
-                                     KinSdkException exception);
+                                     KinException exception);
     }
 
     /**
