@@ -1,5 +1,6 @@
 package kin.sdk.queue;
 
+import android.support.annotation.Nullable;
 import kin.sdk.TransactionId;
 import kin.sdk.transaction_data.Transaction;
 
@@ -22,8 +23,10 @@ public interface TransactionProcess {
     Transaction transaction(String memo);
 
     /**
-     * @return the list of pending payment the the current transaction consist of.
+     * @return the list of pending payment that the current transaction consist of.
+     * Can be null or empty.
      */
+    @Nullable
     List<PendingPayment> payments();
 
     /**

@@ -1,8 +1,6 @@
 package kin.sdk.internal.queue;
 
-import android.support.annotation.Nullable;
 import kin.sdk.queue.PendingPayment;
-import kin.sdk.transaction_data.BatchPaymentTransaction;
 
 import java.math.BigDecimal;
 
@@ -28,12 +26,6 @@ public class PendingPaymentImpl implements PendingPayment {
     @Override
     public int operationIndex() {
         return 0;
-    }
-
-    @Nullable
-    @Override
-    public BatchPaymentTransaction transaction() {
-        return null;
     }
 
     @Override
