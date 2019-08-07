@@ -1,6 +1,7 @@
 package kin.sdk.internal.queue;
 
 import android.support.annotation.NonNull;
+import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.queue.PaymentQueue;
 import kin.sdk.queue.PendingPayment;
