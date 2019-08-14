@@ -1,15 +1,10 @@
 package kin.sdk;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
 import kin.base.Server;
 import kin.base.responses.HttpResponseException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.OperationFailedException;
+import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
@@ -23,6 +18,11 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.io.IOException;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23, manifest = Config.NONE)

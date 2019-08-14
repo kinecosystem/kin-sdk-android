@@ -2,13 +2,11 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import java.math.BigDecimal;
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.CryptoException;
-import kin.sdk.exception.InsufficientKinException;
-import kin.sdk.exception.OperationFailedException;
-import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.exception.*;
+import kin.sdk.transactiondata.PaymentTransaction;
 import kin.utils.Request;
+
+import java.math.BigDecimal;
 
 /**
  * Represents an account which holds Kin.
@@ -26,30 +24,31 @@ public interface KinAccount {
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
+    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
-    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
+    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
+                                                 @Nullable String memo);
 
     /**
      * Create {@link Request} for signing and sending a transaction
-     * <p> See {@link KinAccount#sendTransactionSync(Transaction)} for possibles errors</p>
+     * <p> See {@link KinAccount#sendTransactionSync(PaymentTransaction)} for possibles errors</p>
      * @param transaction is the transaction object to send.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     @NonNull
-    Request<TransactionId> sendTransaction(Transaction transaction);
+    Request<TransactionId> sendTransaction(PaymentTransaction transaction);
 
     /**
      * Create {@link Request} for signing and sending a transaction from a whitelist.
@@ -67,12 +66,12 @@ public interface KinAccount {
      *
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
+    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
@@ -80,13 +79,13 @@ public interface KinAccount {
      *
      * @param publicAddress the account address to send the specified kin amount.
      * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
+     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
 
     /**
      * send a transaction.
@@ -100,7 +99,7 @@ public interface KinAccount {
      * @throws OperationFailedException other error occurred.
      */
     @NonNull
-    TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException;
+    TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException;
 
     /**
      * send a whitelist transaction.

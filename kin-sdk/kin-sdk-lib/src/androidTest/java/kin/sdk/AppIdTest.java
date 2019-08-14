@@ -1,17 +1,14 @@
 package kin.sdk;
 
+import android.support.test.InstrumentationRegistry;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static kin.sdk.IntegConsts.TEST_NETWORK_ID;
 import static kin.sdk.IntegConsts.TEST_NETWORK_URL;
-
-import android.support.test.InstrumentationRegistry;
-import android.util.Log;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class AppIdTest {
 

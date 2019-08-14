@@ -1,6 +1,6 @@
 package kin.sdk.exception;
 
-public class OperationFailedException extends Exception {
+public class OperationFailedException extends KinException {
 
     public OperationFailedException(Throwable cause) {
         super(cause);

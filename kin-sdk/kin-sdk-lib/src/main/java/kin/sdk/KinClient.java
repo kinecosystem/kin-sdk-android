@@ -9,6 +9,16 @@ import kin.base.KeyPair;
 import kin.base.Network;
 import kin.base.Server;
 import kin.sdk.exception.*;
+import kin.sdk.internal.account.KinAccountImpl;
+import kin.sdk.internal.backuprestore.BackupRestore;
+import kin.sdk.internal.backuprestore.BackupRestoreImpl;
+import kin.sdk.internal.blockchain.AccountInfoRetriever;
+import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetrieverImpl;
+import kin.sdk.internal.blockchain.TransactionSender;
+import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.internal.storage.KeyStore;
+import kin.sdk.internal.storage.KeyStoreImpl;
+import kin.sdk.internal.storage.SharedPrefStore;
 import kin.utils.Request;
 
 import java.util.ArrayList;
@@ -18,7 +28,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import static kin.sdk.Utils.checkNotNull;
+import static kin.sdk.internal.Utils.checkNotNull;
 
 /**
  * An account manager for a {@link KinAccount}.
@@ -256,7 +266,7 @@ public class KinClient {
 
     /**
      * Get the current minimum fee that the network charges per operation.
-     * This value is expressed in stroops.
+     * This value is expressed in Quarks (1 Quark = 0.00001 KIN).
      *
      * @return {@code Request<Integer>} - the minimum fee.
      */
@@ -271,7 +281,7 @@ public class KinClient {
 
     /**
      * Get the current minimum fee that the network charges per operation.
-     * This value is expressed in stroops.
+     * This value is expressed in Quarks (1 Quark = 0.00001 KIN).
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @return the minimum fee.

@@ -4,6 +4,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import kin.base.KeyPair;
 import kin.sdk.exception.CryptoException;
+import kin.sdk.internal.backuprestore.BackupRestore;
 import org.json.JSONException;
 import org.json.JSONObject;
 

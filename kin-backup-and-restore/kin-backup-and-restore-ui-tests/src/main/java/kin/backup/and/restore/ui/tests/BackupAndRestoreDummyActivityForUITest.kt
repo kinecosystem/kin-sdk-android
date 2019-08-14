@@ -43,7 +43,7 @@ class BackupAndRestoreDummyActivityForUITest : AppCompatActivity(), View.OnClick
         backupCurrentAccount?.setOnClickListener(this)
         restoreAccount?.setOnClickListener(this)
 
-        kinClient =  KinClient(this, Environment.TEST, "utst", "backup_and_restore_ui_test")
+        kinClient = KinClient(this, Environment.TEST, "utst", "backup_and_restore_ui_test")
         kinAccount = kinClient?.addAccount()
         backupAndRestoreManager = BackupAndRestoreManager(this, reqCodeBackup, reqCodeRestore)
         registerToCallbacks()
