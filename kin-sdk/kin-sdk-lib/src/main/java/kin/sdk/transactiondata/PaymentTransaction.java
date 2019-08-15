@@ -1,8 +1,10 @@
 package kin.sdk.transactiondata;
 
+import kin.sdk.internal.blockchain.TransactionInternal;
+
 import java.math.BigDecimal;
 
-public class PaymentTransaction extends Transaction {
+public class PaymentTransaction extends TransactionInternal {
 
     private final String destination;
     private final BigDecimal amount;

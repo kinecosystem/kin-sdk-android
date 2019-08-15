@@ -13,6 +13,7 @@ public interface PaymentInfo {
      */
     String createdAt();
 
+    // TODO: 2019-08-14 namings???
     /**
      * Destination account public id.
      */

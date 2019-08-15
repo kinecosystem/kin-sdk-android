@@ -16,7 +16,6 @@ import kin.sdk.transactiondata.PaymentTransaction;
 
 import java.math.BigDecimal;
 
-
 public final class KinAccountImpl extends AbstractKinAccount {
 
     private final KeyPair account;
