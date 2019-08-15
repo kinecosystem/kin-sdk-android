@@ -8,6 +8,7 @@
 
     <!--Sentences-->
     <string name="backup_and_restore_upload_qr_title">Load your Kin from a backup</string>
+    <string name="backup_and_restore_upload_qr_toolbar_title">Load your Kin from a backup</string>
     <string name="backup_and_restore_upload_qr_description">First, upload the QR code you saved\n
         (Hint: Check your email to find it) </string>
     <string name="backup_and_restore_upload_qr_btn">Upload QR code</string>
@@ -48,6 +49,8 @@ To do this, you’ll first need to create a password and save your unique QR cod
     <string name="backup_and_restore_save_your_qr_code_description">Now, save your unique QR code by emailing it to yourself.
 You\'ll need it to load your Kin from a backup later on.</string>
     <string name="backup_and_restore_my_kin_wallet_qr_code">Save your QR code</string>
+    <string name="your_app_qr_code_subject">Your %1$s QR code</string>
+    <string name="your_app_qr_code_body">Your %1$s QR code is attached. When you restore your account on %1$s, you will need to provide this QR code. Please save this QR code.</string>
     <string name="backup_and_restore_backup_created_on">Backup created on:</string>
     <string name="backup_and_restore_send_email">Send email…</string>
     <string name="backup_and_restore_well_your_kin_is_safe_title">Your Kin is backed up and safe!</string>

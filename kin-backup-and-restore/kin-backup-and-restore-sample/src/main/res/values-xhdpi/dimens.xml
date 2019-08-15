@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="progress_size">20dp</dimen>
+    <dimen name="progress_margin">10dp</dimen>
+    <dimen name="content_margin_sides">30dp</dimen>
+    <dimen name="text_title">26sp</dimen>
+    <dimen name="margin_top_large">50dp</dimen>
+    <dimen name="text_label">22sp</dimen>
+    <dimen name="margin_top_medium">30dp</dimen>
+    <dimen name="text_content">22sp</dimen>
+    <dimen name="margin_top_small">5dp</dimen>
+    <dimen name="text_button">22sp</dimen>
+</resources>
