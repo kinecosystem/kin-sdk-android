@@ -6,32 +6,33 @@ import java.math.BigDecimal;
 
 public class PendingPaymentImpl implements PendingPayment {
 
-    private final String destinationPublicKey;
-    private final String sourcePublicKey;
+    private final String destinationPublicAddress;
+    private final String sourcePublicAddress;
     private final BigDecimal amount;
     private final Object metadata;
     private Status status;
 
-    public PendingPaymentImpl(String destinationPublicKey, String sourcePublicKey, BigDecimal amount) {
-        this(destinationPublicKey, sourcePublicKey, amount, null);
+    public PendingPaymentImpl(String destinationPublicAddress, String sourcePublicAddress, BigDecimal amount) {
+        this(destinationPublicAddress, sourcePublicAddress, amount, null);
     }
 
-    PendingPaymentImpl(String destinationPublicKey, String sourcePublicKey, BigDecimal amount, Object metadata) {
-        this.destinationPublicKey = destinationPublicKey;
-        this.sourcePublicKey = sourcePublicKey;
+    PendingPaymentImpl(String destinationPublicAddress, String sourcePublicAddress, BigDecimal amount,
+                       Object metadata) {
+        this.destinationPublicAddress = destinationPublicAddress;
+        this.sourcePublicAddress = sourcePublicAddress;
         this.amount = amount;
         this.metadata = metadata;
         this.status = Status.PENDING;
     }
 
     @Override
-    public String destinationPublicKey() {
-        return destinationPublicKey;
+    public String destinationPublicAddress() {
+        return destinationPublicAddress;
     }
 
     @Override
-    public String sourcePublicKey() {
-        return sourcePublicKey;
+    public String sourcePublicAddress() {
+        return sourcePublicAddress;
     }
 
     @Override

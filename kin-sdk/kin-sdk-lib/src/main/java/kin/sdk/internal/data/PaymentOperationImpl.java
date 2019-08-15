@@ -6,24 +6,24 @@ import java.math.BigDecimal;
 
 public class PaymentOperationImpl implements BatchPaymentTransaction.PaymentOperation {
 
-    private final String destinationPublicKey;
-    private final String sourcePublicKey;
+    private final String destinationPublicAddress;
+    private final String sourcePublicAddress;
     private final BigDecimal amount;
 
-    public PaymentOperationImpl(String destinationPublicKey, String sourcePublicKey, BigDecimal amount) {
+    public PaymentOperationImpl(String destinationPublicAddress, String sourcePublicAddress, BigDecimal amount) {
         // TODO: 2019-08-15 namings?
-        this.destinationPublicKey = destinationPublicKey;
-        this.sourcePublicKey = sourcePublicKey;
+        this.destinationPublicAddress = destinationPublicAddress;
+        this.sourcePublicAddress = sourcePublicAddress;
         this.amount = amount;
     }
 
     @Override
-    public String destination() {
+    public String destinationPublicAddress() {
         return null;
     }
 
     @Override
-    public String source() {
+    public String sourcePublicAddress() {
         return null;
     }
 

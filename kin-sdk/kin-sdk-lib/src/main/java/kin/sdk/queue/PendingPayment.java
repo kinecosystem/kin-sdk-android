@@ -13,14 +13,14 @@ public interface PendingPayment {
     // TODO: 2019-08-14 namings???
 
     /**
-     * Destination account public id.
+     * Destination account public address.
      */
-    String destinationPublicKey();
+    String destinationPublicAddress();
 
     /**
-     * Source account public id.
+     * Source account public address.
      */
-    String sourcePublicKey();
+    String sourcePublicAddress();
 
     /**
      * Pending Payment amount in kin.

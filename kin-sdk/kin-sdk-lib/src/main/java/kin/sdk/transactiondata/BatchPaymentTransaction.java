@@ -16,14 +16,14 @@ public class BatchPaymentTransaction extends TransactionInternal {
     public interface PaymentOperation {
 
         /**
-         * Destination account public id.
+         * Destination account public address.
          */
-        String destination();
+        String destinationPublicAddress();
 
         /**
-         * Source account public id.
+         * Source account public address.
          */
-        String source();
+        String sourcePublicAddress();
 
         /**
          * Payment amount in kin.
