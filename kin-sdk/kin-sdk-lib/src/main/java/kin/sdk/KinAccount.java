@@ -3,6 +3,7 @@ package kin.sdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import kin.sdk.exception.*;
+import kin.sdk.queue.PaymentQueue;
 import kin.sdk.transactiondata.PaymentTransaction;
 import kin.utils.Request;
 
@@ -22,42 +23,52 @@ public interface KinAccount {
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address.
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
+     *
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
+    @Deprecated
     Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
-     * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
+     * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that
+     * can be empty or null).
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
+     *
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
-     * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
+     * @param memo          An optional string, can contain a utf-8 string up to 21 bytes in length, included on the
+     *                      transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
+    @Deprecated
     Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
                                                  @Nullable String memo);
 
     /**
      * Create {@link Request} for signing and sending a transaction
      * <p> See {@link KinAccount#sendTransactionSync(PaymentTransaction)} for possibles errors</p>
+     *
      * @param transaction is the transaction object to send.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     @NonNull
+    @Deprecated
     Request<TransactionId> sendTransaction(PaymentTransaction transaction);
 
     /**
      * Create {@link Request} for signing and sending a transaction from a whitelist.
      * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
      * <p> See {@link KinAccount#sendWhitelistTransactionSync(String)} for possibles errors</p>
+     *
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     @NonNull
+    @Deprecated
     Request<TransactionId> sendWhitelistTransaction(String whitelist);
 
     /**
@@ -65,27 +76,32 @@ public interface KinAccount {
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
+    @Deprecated
     PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
-     * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
+     * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that
+     * can be empty or null).
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
-     * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in Quarks) for this transfer (1 Quark = 0.00001 KIN).
+     * @param memo          An optional string, can contain a utf-8 string up to 21 bytes in length, included on the
+     *                      transaction record.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
      */
-    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo) throws OperationFailedException;
+    @Deprecated
+    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
+                                            @Nullable String memo) throws OperationFailedException;
 
     /**
      * send a transaction.
@@ -93,12 +109,13 @@ public interface KinAccount {
      *
      * @param transaction is the transaction object to send.
      * @return TransactionId the transaction identifier.
-     * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws InsufficientKinException if account balance has not enough kin.
+     * @throws AccountNotFoundException   if the sender or destination account was not created.
+     * @throws InsufficientKinException   if account balance has not enough kin.
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
-     * @throws OperationFailedException other error occurred.
+     * @throws OperationFailedException   other error occurred.
      */
     @NonNull
+    @Deprecated
     TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException;
 
     /**
@@ -108,13 +125,64 @@ public interface KinAccount {
      *
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
      * @return TransactionId the transaction identifier.
-     * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws InsufficientKinException if account balance has not enough kin.
+     * @throws AccountNotFoundException   if the sender or destination account was not created.
+     * @throws InsufficientKinException   if account balance has not enough kin.
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
-     * @throws OperationFailedException other error occurred.
+     * @throws OperationFailedException   other error occurred.
      */
     @NonNull
+    @Deprecated
     TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException;
+
+    /**
+     * send a transaction.
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @param transaction is the transaction object to send.
+     * @param interceptor is the interceptor for the transaction before it is being sent.
+     * @return TransactionId the transaction identifier.
+     * @throws AccountNotFoundException   if the sender or destination account was not created.
+     * @throws InsufficientKinException   if account balance has not enough kin.
+     * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
+     * @throws OperationFailedException   other error occurred.
+     */
+    TransactionId sendTransactionSync(SendTransactionParams transaction, TransactionInterceptor interceptor) throws OperationFailedException;
+
+    /**
+     * Create {@link Request} for signing and sending a transaction
+     * <p> See {@link KinAccount#sendTransactionSync(PaymentTransaction)} for possibles errors</p>
+     *
+     * @param transaction is the transaction object to send.
+     * @param interceptor is the interceptor for the transaction before it is being sent.
+     * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
+     */
+    Request<TransactionId> sendTransaction(SendTransactionParams transaction, TransactionInterceptor interceptor);
+
+    /**
+     * @return the payment queue.
+     */
+    PaymentQueue paymentQueue();
+
+    /**
+     * Create {@link Request} for getting the current pending balance
+     * <p>pending balance is a balance that calculates the expected balance including all of the queued transactions
+     * .</p>
+     * <p> See {@link KinAccount#getPendingBalanceSync()} for possibles errors</p>
+     *
+     * @return {@code Request<Balance>} Balance - the pending balance in kin
+     */
+    Request<Balance> getPendingBalance();
+
+    /**
+     * Get the current confirmed pending balance in kin
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     *
+     * @return the pending balance in kin
+     * @throws AccountNotFoundException if account was not created
+     * @throws OperationFailedException any other error
+     */
+    @NonNull
+    Request<Balance> getPendingBalanceSync();
 
     /**
      * Create {@link Request} for getting the current confirmed balance in kin
@@ -178,6 +246,18 @@ public interface KinAccount {
      * @param listener listener object for payment events
      */
     ListenerRegistration addAccountCreationListener(final EventListener<Void> listener);
+
+    /**
+     * Creates and adds listener for pending balance changes of this account, use returned
+     * {@link ListenerRegistration} to
+     * stop listening. <p><b>Note:</b> Events will be fired on background thread.</p>
+     *
+     * <p>pending balance is a balance that calculates the expected balance including all of the queued transactions
+     * .</p>
+     *
+     * @param listener listener object for payment events
+     */
+    ListenerRegistration addPendingBalanceListener(final EventListener<Balance> listener);
 
     /**
      * Export the account data as a JSON string. The seed is encrypted.
