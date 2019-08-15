@@ -182,7 +182,7 @@ public interface KinAccount {
      * @throws OperationFailedException any other error
      */
     @NonNull
-    Request<Balance> getPendingBalanceSync();
+    Balance getPendingBalanceSync();
 
     /**
      * Create {@link Request} for getting the current confirmed balance in kin

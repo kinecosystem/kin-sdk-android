@@ -98,7 +98,7 @@ public final class KinAccountImpl extends AbstractKinAccount {
 
     @NonNull
     @Override
-    public Request<Balance> getPendingBalanceSync() {
+    public Balance getPendingBalanceSync() {
         return null; // TODO: 2019-08-15 implement
     }
 
