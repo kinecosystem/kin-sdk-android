@@ -72,13 +72,12 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
                 }
             }
         });
-
     }
 
     @Override
     public List<PendingPayment> getPaymentQueue() {
-        // TODO: 2019-08-15 need to think why exactly do we need it? is it only for the pending balance updater? 
-        //  maybe return a copy... 
+        // TODO: 2019-08-15 need to think why exactly if we really need it? is it only for the pending balance updater?
+        //  maybe return a copy or make it immutable/read only...
         return queue;
     }
 
