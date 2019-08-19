@@ -11,7 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
 
-class PaymentQueueManagerImplTest {
+class PaymentQueueManagerTest {
 
     object Constants {
         const val ONE_MILLI = 1000L
@@ -25,7 +25,7 @@ class PaymentQueueManagerImplTest {
     private var pendingBalanceUpdater: PendingBalanceUpdater = mock()
     private var eventsManager: EventsManager = mock()
 
-    private lateinit var paymentQueueManager: PaymentQueueManagerImpl
+    private lateinit var paymentQueueManager: PaymentQueueManager
     private lateinit var destinationAccount: String
     private lateinit var sourceAccount: String
     private val amount: BigDecimal = BigDecimal.TEN
@@ -45,7 +45,7 @@ class PaymentQueueManagerImplTest {
     }
 
     @Test
-    fun `enqueue list size is increased by one`() {
+    fun `enqueue, list size is increased by one`() {
         //given
         val pendingPayment = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
 
@@ -57,7 +57,7 @@ class PaymentQueueManagerImplTest {
     }
 
     @Test
-    fun `enqueue wait for delay between payments list is empty after delay`() {
+    fun `enqueue, then wait for delay between payments, after the delay the list will be empty`() {
         //given
         val pendingPayment = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
 
@@ -81,11 +81,11 @@ class PaymentQueueManagerImplTest {
     }
 
     @Test
-    fun `enqueue wait for queue timeout list is empty only after timeout`() {
+    fun `enqueue, then wait for queue timeout, after the timeout the list will be empty`() {
         //given
         val pendingPayment1 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
-        val pendingPayment2 = PendingPaymentImpl(destinationAccount, sourceAccount, amount.add(BigDecimal.TEN))
-        val pendingPayment3 = PendingPaymentImpl(destinationAccount, sourceAccount, amount.add(BigDecimal.ONE))
+        val pendingPayment2 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
+        val pendingPayment3 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
 
         //when
         paymentQueueManager.enqueue(pendingPayment1)
@@ -109,7 +109,7 @@ class PaymentQueueManagerImplTest {
     }
 
     @Test
-    fun `enqueue max items list is empty only after queue has been filled`() {
+    fun `enqueue max items, after the queue has been filled then the list will be empty`() {
         //given
         val pendingPayment1 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
         val pendingPayment2 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
@@ -140,7 +140,7 @@ class PaymentQueueManagerImplTest {
     }
 
     @Test
-    fun `enqueue items schedule queue timeout only for first item each time`() {
+    fun `enqueue items, verify that schedule queue timeout happens only for first item`() {
         //given
         val pendingPayment1 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
         val pendingPayment2 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
