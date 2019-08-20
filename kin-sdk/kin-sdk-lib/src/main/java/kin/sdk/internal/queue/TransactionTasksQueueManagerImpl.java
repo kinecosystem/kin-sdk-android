@@ -5,7 +5,7 @@ import kin.sdk.queue.PendingPayment;
 
 import java.util.List;
 
-public class TransactionTaskQueueManagerImpl implements TransactionTaskQueueManager {
+public class TransactionTasksQueueManagerImpl implements TransactionTasksQueueManager {
 
     @Override
     public void enqueue(List<PendingPayment> queueToSend) {

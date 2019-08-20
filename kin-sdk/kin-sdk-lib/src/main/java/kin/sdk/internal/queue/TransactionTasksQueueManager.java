@@ -5,7 +5,7 @@ import kin.sdk.queue.PendingPayment;
 
 import java.util.List;
 
-public interface TransactionTaskQueueManager {
+public interface TransactionTasksQueueManager {
 
     // TODO: 2019-08-15 add java docs
 

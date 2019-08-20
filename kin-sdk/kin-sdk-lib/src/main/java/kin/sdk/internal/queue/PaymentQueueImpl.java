@@ -18,12 +18,12 @@ public class PaymentQueueImpl implements PaymentQueue {
 
     private final String sourcePublicAddress;
     private final PaymentQueueManager paymentQueueManager;
-    private final TransactionTaskQueueManager txTaskQueueManager;
+    private final TransactionTasksQueueManager txTasksQueueManager;
 
     public PaymentQueueImpl(@NonNull String sourcePublicAddress) {
         this.sourcePublicAddress = sourcePublicAddress;
-        this.txTaskQueueManager = new TransactionTaskQueueManagerImpl();
-        this.paymentQueueManager = new PaymentQueueManagerImpl(txTaskQueueManager, new QueueSchedulerImpl(),
+        this.txTasksQueueManager = new TransactionTasksQueueManagerImpl();
+        this.paymentQueueManager = new PaymentQueueManagerImpl(txTasksQueueManager, new QueueSchedulerImpl(),
                 new PendingBalanceUpdaterImpl(), new EventsManagerImpl(),
                 DELAY_BETWEEN_PAYMENTS_MILLIS, QUEUE_TIMEOUT_MILLIS, MAX_NUM_OF_PAYMENTS);
     }

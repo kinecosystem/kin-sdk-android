@@ -10,7 +10,7 @@ import java.util.List;
 
 class PaymentQueueManagerImpl implements PaymentQueueManager {
 
-    private final TransactionTaskQueueManager txTaskQueueManager;
+    private final TransactionTasksQueueManager txTasksQueueManager;
     private final QueueScheduler queueScheduler;
     private final PendingBalanceUpdater pendingBalanceUpdater;
     private final EventsManager eventsManager;
@@ -20,10 +20,10 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
     private List<PendingPayment> queue;
     private Runnable delayTask;
 
-    PaymentQueueManagerImpl(TransactionTaskQueueManager txTaskQueueManager, QueueScheduler queueScheduler,
+    PaymentQueueManagerImpl(TransactionTasksQueueManager txTasksQueueManager, QueueScheduler queueScheduler,
                             PendingBalanceUpdater pendingBalanceUpdater, EventsManager eventsManager,
                             long delayBetweenPayments, long queueTimeout, int maxNumOfPayments) {
-        this.txTaskQueueManager = txTaskQueueManager;
+        this.txTasksQueueManager = txTasksQueueManager;
         this.queueScheduler = queueScheduler;
         this.pendingBalanceUpdater = pendingBalanceUpdater;
         this.eventsManager = eventsManager;
@@ -96,7 +96,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
         // TODO: 2019-08-08 maybe send events
         List<PendingPayment> pendingPayments = queue;
         queue = new ArrayList<>(maxNumOfPayments);
-        txTaskQueueManager.enqueue(pendingPayments);
+        txTasksQueueManager.enqueue(pendingPayments);
     }
 
     private class DelayTask implements Runnable {

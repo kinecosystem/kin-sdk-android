@@ -21,7 +21,7 @@ class PaymentQueueManagerTest {
     }
 
     private var queueScheduler: FakeQueueScheduler = spy() //TODO use a spy in order to be able to verify method calls on that object, is this fine?
-    private var txTaskQueueManager: TransactionTaskQueueManager = mock()
+    private var txTaskQueueManager: TransactionTasksQueueManager = mock()
     private var pendingBalanceUpdater: PendingBalanceUpdater = mock()
     private var eventsManager: EventsManager = mock()
 
