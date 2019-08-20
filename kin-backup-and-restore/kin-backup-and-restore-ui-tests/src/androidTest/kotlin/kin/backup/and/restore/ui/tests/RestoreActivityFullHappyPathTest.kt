@@ -73,7 +73,7 @@ class RestoreActivityFullHappyPathTest {
                 allOf(childAtPosition(
                         allOf(withId(R.id.kinrecovery_password_edit),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         3)),
                         0),
                         isDisplayed()))

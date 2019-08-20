@@ -64,7 +64,7 @@ class BackupActivityFullHappyPathTest {
                 allOf(childAtPosition(
                         allOf(withId(R.id.enter_pass_edittext),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         2)),
                         0),
                         isDisplayed()))
@@ -127,7 +127,7 @@ class BackupActivityFullHappyPathTest {
                 allOf(childAtPosition(
                         allOf(withId(R.id.confirm_pass_edittext),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         3)),
                         0),
                         isDisplayed()))
@@ -234,7 +234,7 @@ class BackupActivityFullHappyPathTest {
                 allOf(childAtPosition(
                         allOf(withId(R.id.toolbar),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         0)),
                         0),
                         isDisplayed()))

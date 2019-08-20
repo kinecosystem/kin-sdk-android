@@ -124,7 +124,7 @@ class BackupActivityValidateSwitchBetweenScreens {
                 allOf(childAtPosition(
                         allOf(withId(R.id.enter_pass_edittext),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         2)),
                         0),
                         isDisplayed()))
@@ -134,7 +134,7 @@ class BackupActivityValidateSwitchBetweenScreens {
                 allOf(childAtPosition(
                         allOf(withId(R.id.confirm_pass_edittext),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         3)),
                         0),
                         isDisplayed()))
@@ -185,7 +185,7 @@ class BackupActivityValidateSwitchBetweenScreens {
                 allOf(childAtPosition(
                         allOf(withId(R.id.enter_pass_edittext),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         2)),
                         0),
                         isDisplayed()))
@@ -195,7 +195,7 @@ class BackupActivityValidateSwitchBetweenScreens {
                 allOf(childAtPosition(
                         allOf(withId(R.id.confirm_pass_edittext),
                                 childAtPosition(
-                                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
                                         3)),
                         0),
                         isDisplayed()))
