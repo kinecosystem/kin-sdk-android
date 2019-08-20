@@ -1,7 +1,7 @@
 package kin.sdk.exception;
 
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 /**
  * Account was not created on the blockchain

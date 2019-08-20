@@ -2,8 +2,8 @@ package kin.sdk;
 
 
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 class SharedPrefStore implements Store {
 

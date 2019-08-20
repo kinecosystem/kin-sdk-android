@@ -9,7 +9,7 @@ import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_COD
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED;
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_PAGE_VIEWED;
 
-import androidx.annotation.IntDef;
+import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

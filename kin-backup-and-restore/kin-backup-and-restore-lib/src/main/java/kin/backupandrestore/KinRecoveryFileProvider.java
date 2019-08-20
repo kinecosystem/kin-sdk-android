@@ -1,6 +1,6 @@
 package kin.backupandrestore;
 
-import androidx.core.content.FileProvider;
+import android.support.v4.content.FileProvider;
 
 public final class KinRecoveryFileProvider extends FileProvider {
 

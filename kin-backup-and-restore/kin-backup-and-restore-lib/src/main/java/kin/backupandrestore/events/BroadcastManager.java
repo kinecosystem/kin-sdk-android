@@ -1,7 +1,7 @@
 package kin.backupandrestore.events;
 
 import android.content.Intent;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import kin.backupandrestore.events.BroadcastManagerImpl.ActionName;
 
 public interface BroadcastManager {

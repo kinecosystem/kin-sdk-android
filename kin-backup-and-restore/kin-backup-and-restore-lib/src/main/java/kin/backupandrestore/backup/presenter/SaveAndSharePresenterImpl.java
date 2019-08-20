@@ -6,7 +6,7 @@ import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_SEND_QR
 
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import kin.backupandrestore.backup.view.BackupNavigator;
 import kin.backupandrestore.backup.view.SaveAndShareView;
 import kin.backupandrestore.base.BasePresenterImpl;

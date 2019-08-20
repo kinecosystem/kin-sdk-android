@@ -8,7 +8,7 @@ import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_COD
 
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.qr.QRBarcodeGenerator;
 import kin.backupandrestore.qr.QRBarcodeGenerator.QRBarcodeGeneratorException;

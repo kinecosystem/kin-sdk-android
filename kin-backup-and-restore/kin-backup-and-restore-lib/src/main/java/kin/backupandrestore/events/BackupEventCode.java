@@ -12,7 +12,7 @@ import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_BA
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_START_TAPPED;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_VIEWED;
 
-import androidx.annotation.IntDef;
+import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

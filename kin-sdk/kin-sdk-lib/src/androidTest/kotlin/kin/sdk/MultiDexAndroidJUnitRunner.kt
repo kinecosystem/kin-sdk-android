@@ -1,8 +1,8 @@
 package kin.sdk
 
 import android.os.Bundle
-import androidx.multidex.MultiDex
-import androidx.test.runner.AndroidJUnitRunner
+import android.support.multidex.MultiDex
+import android.support.test.runner.AndroidJUnitRunner
 
 
 class MultiDexAndroidJUnitRunner : AndroidJUnitRunner() {

@@ -6,7 +6,7 @@ import static android.graphics.Color.WHITE;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;

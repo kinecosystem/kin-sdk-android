@@ -4,7 +4,7 @@ package kin.backupandrestore.backup.presenter;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import java.util.regex.Pattern;
 import kin.backupandrestore.Validator;
 import kin.backupandrestore.backup.view.BackupNavigator;

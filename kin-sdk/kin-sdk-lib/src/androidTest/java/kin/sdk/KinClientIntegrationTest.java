@@ -1,7 +1,7 @@
 package kin.sdk;
 
 
-import androidx.test.InstrumentationRegistry;
+import android.support.test.InstrumentationRegistry;
 import kin.sdk.exception.CreateAccountException;
 import org.junit.After;
 import org.junit.Before;

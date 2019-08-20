@@ -1,7 +1,7 @@
 package kin.sdk;
 
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.math.BigDecimal;
 import kin.base.KeyPair;

@@ -5,7 +5,10 @@ import static junit.framework.Assert.assertTrue;
 import static kin.sdk.IntegConsts.TEST_NETWORK_ID;
 import static kin.sdk.IntegConsts.TEST_NETWORK_URL;
 
-import androidx.test.InstrumentationRegistry;
+import android.support.test.InstrumentationRegistry;
+import android.util.Log;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

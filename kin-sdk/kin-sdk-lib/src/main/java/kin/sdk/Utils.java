@@ -1,7 +1,7 @@
 package kin.sdk;
 
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import kin.base.responses.SubmitTransactionResponse;
 import kin.base.responses.SubmitTransactionResponse.Extras.ResultCodes;

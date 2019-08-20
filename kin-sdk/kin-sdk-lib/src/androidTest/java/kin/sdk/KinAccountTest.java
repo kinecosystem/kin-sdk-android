@@ -2,7 +2,7 @@ package kin.sdk;
 
 import static junit.framework.Assert.assertNull;
 
-import androidx.test.InstrumentationRegistry;
+import android.support.test.InstrumentationRegistry;
 import java.math.BigDecimal;
 import kin.sdk.exception.AccountDeletedException;
 import org.junit.After;

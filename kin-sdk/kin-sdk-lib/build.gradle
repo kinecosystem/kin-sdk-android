@@ -8,7 +8,7 @@ apply plugin: 'maven'
 group = 'com.github.kinecosystem'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 26
 
     defaultConfig {
         minSdkVersion 16
