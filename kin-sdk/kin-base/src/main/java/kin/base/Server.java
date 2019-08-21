@@ -158,7 +158,9 @@ public class Server {
             .post(formBody)
             .build();
 
-        try (Response response = httpClient.newCall(request).execute()) {
+        Response response = null;
+        try {
+            response = httpClient.newCall(request).execute();
 
             if (response != null) {
                 String location = response.header(LOCATION_HEADER);
@@ -171,6 +173,10 @@ public class Server {
                         return GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
                     }
                 }
+            }
+        } finally {
+            if (response != null) {
+                response.close();
             }
         }
         return null;

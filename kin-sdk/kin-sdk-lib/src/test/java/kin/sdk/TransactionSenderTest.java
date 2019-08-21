@@ -17,6 +17,7 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 import kin.base.FormatException;
 import kin.base.KeyPair;
+import kin.base.KinOkHttpClientFactory;
 import kin.base.Network;
 import kin.base.Server;
 import kin.base.responses.HttpResponseException;
@@ -291,7 +292,11 @@ public class TransactionSenderTest {
     @Test(timeout = 500)
     public void sendTransaction_changeTimeOut() throws Exception {
         String url = mockWebServer.url("").toString();
-        server = new Server(url, new OkHttpClient.Builder().build());
+        server = new Server(url, new OkHttpClient.Builder()
+                .connectTimeout(100, TimeUnit.MILLISECONDS)
+                .writeTimeout(100, TimeUnit.MILLISECONDS)
+                .readTimeout(100, TimeUnit.MILLISECONDS)
+                .build());
         transactionSender = new TransactionSender(server, APP_ID);
 
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
