@@ -99,7 +99,7 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
         toolbarActivity
             .setNavigationIcon(R.drawable.back);
         toolbarActivity.setToolbarColor(android.R.color.white);
-        toolbarActivity.setToolbarTitle(R.string.backup_and_restore_upload_qr_title);
+        toolbarActivity.setToolbarTitle(R.string.backup_and_restore_upload_qr_toolbar_title);
         toolbarActivity.setNavigationClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
