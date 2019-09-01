@@ -65,7 +65,9 @@ public class Server {
     private void createUri(String uri) {
         try {
             serverURI = new URL(uri).toURI();
-        } catch (MalformedURLException | URISyntaxException e ) {
+        } catch (MalformedURLException e ) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e ) {
             throw new RuntimeException(e);
         }
     }

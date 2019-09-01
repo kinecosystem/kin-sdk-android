@@ -11,15 +11,29 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
+import kin.base.Account;
+import kin.base.CreateAccountOperation;
+import kin.base.KeyPair;
+import kin.base.Memo;
+import kin.base.Network;
+import kin.base.Server;
+import kin.base.Transaction;
 import kin.base.responses.SubmitTransactionResponse;
+import kin.sdk.KinOkHttpClientFactory;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ServerTest extends TestCase {
+
+    private static final String KIN_SDK_ANDROID_VERSION_HEADER = "kin-sdk-android-version";
 
     private MockWebServer mockWebServer;
 
@@ -69,11 +83,7 @@ public class ServerTest extends TestCase {
         mockWebServer.start();
 
         server = new Server(mockWebServer.url("/").url().toString());
-        server.setHttpClient(new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .build());
+        server.setHttpClient(new KinOkHttpClientFactory("androidVersion").client);
     }
 
     @After
@@ -100,61 +110,19 @@ public class ServerTest extends TestCase {
     }
 
     @Test
-    public void testSubmitTransactionSuccess() throws IOException {
+    public void testWhenRequestIsDone_ThenHeaderIsAdded() throws IOException {
         mockWebServer.enqueue(
                 new MockResponse()
                         .setResponseCode(200)
                         .setBody(successResponse)
         );
 
-        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
-        assertTrue(response.isSuccess());
-        assertEquals(response.getLedger(), new Long(826150L));
-        assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
-        assertNull(response.getExtras());
-    }
-
-    @Test
-    public void test_ResponseCodeHttp307_SubmitTransactionSuccess() throws IOException {
-        MockWebServer mockWebServerHttp307 = new MockWebServer();
-        mockWebServerHttp307.start();
-        String location = mockWebServerHttp307.url("/").url().toString();
-
-        mockWebServer.enqueue(
-                new MockResponse()
-                        .setResponseCode(307)
-                        .setHeader("Location", location)
-        );
-        mockWebServerHttp307.enqueue(
-                new MockResponse()
-                        .setResponseCode(200)
-                        .setBody(successResponse)
-        );
-
-        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
-        assertTrue(response.isSuccess());
-        assertEquals(response.getLedger(), new Long(826150L));
-        assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
-        assertNull(response.getExtras());
-    }
-
-    @Test
-    public void testSubmitTransactionFail() throws IOException {
-        mockWebServer.enqueue(
-                new MockResponse()
-                        .setResponseCode(400)
-                        .setBody(failureResponse)
-        );
-
-        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
-        assertFalse(response.isSuccess());
-        assertNull(response.getLedger());
-        assertNull(response.getHash());
-        assertEquals(response.getExtras().getEnvelopeXdr(),
-                "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
-        assertEquals(response.getExtras().getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
-        assertNotNull(response.getExtras());
-        assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
-        assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
+        server.submitTransaction(this.buildTransaction());
+        try {
+            RecordedRequest recordedRequest = mockWebServer.takeRequest();
+            assertThat(recordedRequest.getHeader(KIN_SDK_ANDROID_VERSION_HEADER), is("androidVersion"));
+        } catch (InterruptedException e) {
+            fail();
+        }
     }
 }

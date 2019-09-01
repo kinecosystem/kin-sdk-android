@@ -124,7 +124,7 @@ public class TransactionResponse extends Response {
     try {
       Transaction transaction = extractTransaction(envelopeXdr);
       kin.base.xdr.Operation[] xdrOperations = transaction.getOperations();
-      ArrayList<Operation> operationsList = new ArrayList<>(xdrOperations.length);
+      ArrayList<Operation> operationsList = new ArrayList<Operation>(xdrOperations.length);
       for (kin.base.xdr.Operation xdrOperation : xdrOperations) {
         operationsList.add(Operation.fromXdr(xdrOperation));
       }
@@ -147,7 +147,7 @@ public class TransactionResponse extends Response {
     try {
       TransactionMeta transactionMeta = extractTransactionMeta(resultMetaXdr);
       OperationMeta[] operationMetas = transactionMeta.getOperations();
-      ArrayList<LedgerEntryChanges> ledgerChangesList = new ArrayList<>(operationMetas.length);
+      ArrayList<LedgerEntryChanges> ledgerChangesList = new ArrayList<LedgerEntryChanges>(operationMetas.length);
       for (OperationMeta operationMeta : operationMetas) {
         ledgerChangesList.add(LedgerEntryChanges.fromXdr(operationMeta.getChanges()));
       }

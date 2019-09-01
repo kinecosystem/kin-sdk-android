@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import kin.base.KeyPair;
-import kin.base.KinOkHttpClientFactory;
 import kin.base.Network;
 import kin.base.Server;
 import kin.sdk.exception.*;

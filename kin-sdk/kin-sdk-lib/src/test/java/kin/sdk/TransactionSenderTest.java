@@ -17,7 +17,6 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 import kin.base.FormatException;
 import kin.base.KeyPair;
-import kin.base.KinOkHttpClientFactory;
 import kin.base.Network;
 import kin.base.Server;
 import kin.base.responses.HttpResponseException;

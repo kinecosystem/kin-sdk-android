@@ -1,4 +1,4 @@
-package kin.base;
+package kin.sdk;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
