@@ -1,20 +1,22 @@
 package kin.sdk;
 
-import kin.base.KeyPair;
-import kin.sdk.exception.AccountDeletedException;
-import kin.sdk.internal.account.KinAccountImpl;
-import kin.sdk.internal.blockchain.AccountInfoRetriever;
-import kin.sdk.internal.blockchain.TransactionSender;
-import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
-import kin.sdk.internal.data.BalanceImpl;
-import kin.sdk.internal.data.TransactionIdImpl;
-import kin.sdk.transactiondata.PaymentTransaction;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+
+import kin.base.KeyPair;
+import kin.sdk.exception.AccountDeletedException;
+import kin.sdk.internal.account.KinAccountImpl;
+import kin.sdk.internal.blockchain.AccountInfoRetriever;
+import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetriever;
+import kin.sdk.internal.blockchain.TransactionSender;
+import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.internal.data.BalanceImpl;
+import kin.sdk.internal.data.TransactionIdImpl;
+import kin.sdk.transactiondata.PaymentTransaction;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -31,6 +33,9 @@ public class KinAccountImplTest {
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
     private BlockchainEventsCreator mockBlockchainEventsCreator;
+    @Mock
+    private GeneralBlockchainInfoRetriever mockGeneralBlockchainInfoRetriever;
+
     private KinAccountImpl kinAccount;
     private KeyPair expectedRandomAccount;
 
@@ -42,7 +47,8 @@ public class KinAccountImplTest {
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
         kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator);
+                mockAccountInfoRetriever, mockBlockchainEventsCreator,
+                mockGeneralBlockchainInfoRetriever);
     }
 
     @Test

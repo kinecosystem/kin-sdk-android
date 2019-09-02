@@ -2,12 +2,18 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import kin.sdk.exception.*;
-import kin.sdk.queue.PaymentQueue;
-import kin.sdk.transactiondata.PaymentTransaction;
-import kin.utils.Request;
 
 import java.math.BigDecimal;
+
+import kin.sdk.exception.AccountNotFoundException;
+import kin.sdk.exception.CryptoException;
+import kin.sdk.exception.InsufficientKinException;
+import kin.sdk.exception.OperationFailedException;
+import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.queue.PaymentQueue;
+import kin.sdk.transactiondata.PaymentTransaction;
+import kin.sdk.transactiondata.TransactionParams;
+import kin.utils.Request;
 
 /**
  * Represents an account which holds Kin.
@@ -20,7 +26,12 @@ public interface KinAccount {
     @Nullable
     String getPublicAddress();
 
+    // TODO: 2019-08-21 finalize the deprecated texts
+
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * Build a Transaction object of the given amount in kin, to the specified public address.
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
      *
@@ -33,6 +44,9 @@ public interface KinAccount {
     Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that
      * can be empty or null).
      * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
@@ -49,6 +63,9 @@ public interface KinAccount {
                                                  @Nullable String memo);
 
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * Create {@link Request} for signing and sending a transaction
      * <p> See {@link KinAccount#sendTransactionSync(PaymentTransaction)} for possibles errors</p>
      *
@@ -60,6 +77,9 @@ public interface KinAccount {
     Request<TransactionId> sendTransaction(PaymentTransaction transaction);
 
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * Create {@link Request} for signing and sending a transaction from a whitelist.
      * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
      * <p> See {@link KinAccount#sendWhitelistTransactionSync(String)} for possibles errors</p>
@@ -72,6 +92,9 @@ public interface KinAccount {
     Request<TransactionId> sendWhitelistTransaction(String whitelist);
 
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * Build a Transaction object of the given amount in kin, to the specified public address.
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
@@ -86,6 +109,9 @@ public interface KinAccount {
     PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that
      * can be empty or null).
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
@@ -104,6 +130,9 @@ public interface KinAccount {
                                             @Nullable String memo) throws OperationFailedException;
 
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * send a transaction.
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
@@ -119,6 +148,9 @@ public interface KinAccount {
     TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException;
 
     /**
+     * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
+     * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
+     *
      * send a whitelist transaction.
      * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
@@ -136,9 +168,10 @@ public interface KinAccount {
 
     /**
      * send a transaction.
-     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android
+     * main thread.</p>
      *
-     * @param transaction is the transaction object to send.
+     * @param transactionParams is the transaction parameters which define the transaction object to send.
      * @param interceptor is the interceptor for the transaction before it is being sent.
      * @return TransactionId the transaction identifier.
      * @throws AccountNotFoundException   if the sender or destination account was not created.
@@ -146,17 +179,18 @@ public interface KinAccount {
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
      * @throws OperationFailedException   other error occurred.
      */
-    TransactionId sendTransactionSync(SendTransactionParams transaction, TransactionInterceptor interceptor) throws OperationFailedException;
+    TransactionId sendTransactionSync(TransactionParams transactionParams, TransactionInterceptor interceptor) throws OperationFailedException;
 
     /**
      * Create {@link Request} for signing and sending a transaction
-     * <p> See {@link KinAccount#sendTransactionSync(PaymentTransaction)} for possibles errors</p>
+     * <p> See {@link KinAccount#sendTransactionSync(TransactionParams, TransactionInterceptor)}
+     * for possibles errors</p>
      *
-     * @param transaction is the transaction object to send.
+     * @param transactionParams is the transaction parameters which define the transaction object to send.
      * @param interceptor is the interceptor for the transaction before it is being sent.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<TransactionId> sendTransaction(SendTransactionParams transaction, TransactionInterceptor interceptor);
+    Request<TransactionId> sendTransaction(TransactionParams transactionParams, TransactionInterceptor interceptor);
 
     /**
      * @return the payment queue.

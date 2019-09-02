@@ -1,8 +1,8 @@
 package kin.sdk.transactiondata;
 
-import kin.sdk.internal.blockchain.TransactionInternal;
-
 import java.math.BigDecimal;
+
+import kin.sdk.internal.blockchain.TransactionInternal;
 
 public class PaymentTransaction extends TransactionInternal {
 
@@ -10,6 +10,8 @@ public class PaymentTransaction extends TransactionInternal {
     private final BigDecimal amount;
     private final String memo;
 
+    // TODO: 2019-08-26 We should state that this class represent a transaction with a single
+    //  payment operation
     public PaymentTransaction(kin.base.Transaction baseTransaction, String destination, BigDecimal amount,
                               String memo) {
         super(baseTransaction);
@@ -34,7 +36,7 @@ public class PaymentTransaction extends TransactionInternal {
 
     /**
      * @return the memo of this transaction.
-     * In this case you will get a string representation of a memo as opposed to {@link RawTransaction#memo()}
+     * In this case you will get a string representation of a memo.
      */
     public String memo() {
         return memo;

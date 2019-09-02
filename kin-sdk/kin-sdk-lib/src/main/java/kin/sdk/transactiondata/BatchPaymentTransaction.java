@@ -1,13 +1,13 @@
 package kin.sdk.transactiondata;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import kin.base.Operation;
 import kin.base.Transaction;
 import kin.sdk.internal.blockchain.TransactionInternal;
 import kin.sdk.internal.data.PaymentOperationImpl;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BatchPaymentTransaction extends TransactionInternal {
 
@@ -61,4 +61,5 @@ public class BatchPaymentTransaction extends TransactionInternal {
     public String memo() {
         return memo();
     }
+
 }

@@ -20,10 +20,10 @@ class PaymentQueueManagerIntegrationTest {
         const val MAX_NUM_OF_PAYMENTS = 5
     }
 
-    private var queueScheduler = FakeIntegrationTestQueueScheduler()
-    private var txTaskQueueManager = TransactionTasksQueueManagerImpl()
-    private var pendingBalanceUpdater = PendingBalanceUpdaterImpl()
     private var eventsManager = EventsManagerImpl()
+    private var queueScheduler = FakeIntegrationTestQueueScheduler()
+    private var txTaskQueueManager = TransactionTasksQueueManagerImpl(eventsManager)
+    private var pendingBalanceUpdater = PendingBalanceUpdaterImpl()
 
     private lateinit var paymentQueueManager: PaymentQueueManager
     private lateinit var destinationAccount: String

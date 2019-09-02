@@ -5,10 +5,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 import kin.base.KeyPair;
 import kin.base.Network;
 import kin.base.Server;
-import kin.sdk.exception.*;
+import kin.sdk.exception.CorruptedDataException;
+import kin.sdk.exception.CreateAccountException;
+import kin.sdk.exception.CryptoException;
+import kin.sdk.exception.DeleteAccountException;
+import kin.sdk.exception.LoadAccountException;
+import kin.sdk.exception.OperationFailedException;
 import kin.sdk.internal.account.KinAccountImpl;
 import kin.sdk.internal.backuprestore.BackupRestore;
 import kin.sdk.internal.backuprestore.BackupRestoreImpl;
@@ -20,13 +33,6 @@ import kin.sdk.internal.storage.KeyStore;
 import kin.sdk.internal.storage.KeyStoreImpl;
 import kin.sdk.internal.storage.SharedPrefStore;
 import kin.utils.Request;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import static kin.sdk.internal.Utils.checkNotNull;
 
@@ -262,7 +268,7 @@ public class KinClient {
     @NonNull
     private KinAccountImpl createNewKinAccount(KeyPair account) {
         return new KinAccountImpl(account, backupRestore, transactionSender,
-                accountInfoRetriever, blockchainEventsCreator);
+                accountInfoRetriever, blockchainEventsCreator, generalBlockchainInfoRetriever);
     }
 
     /**

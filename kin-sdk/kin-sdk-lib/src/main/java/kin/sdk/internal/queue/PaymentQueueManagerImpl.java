@@ -1,12 +1,12 @@
 package kin.sdk.internal.queue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import kin.sdk.Balance;
 import kin.sdk.internal.data.PendingBalanceUpdater;
 import kin.sdk.internal.events.EventsManager;
 import kin.sdk.queue.PendingPayment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class PaymentQueueManagerImpl implements PaymentQueueManager {
 
@@ -40,7 +40,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
             @Override
             public void run() {
                 // 1. validate pending balance
-                validatePendingBalance(); // TODO: 2019-08-15 handle it
+                validatePendingBalance(); // TODO: 2019-08-15 handle it when starting the task
 
                 if (getPendingPaymentCount() == maxNumOfPayments - 1) {
                     // 2. add to queue

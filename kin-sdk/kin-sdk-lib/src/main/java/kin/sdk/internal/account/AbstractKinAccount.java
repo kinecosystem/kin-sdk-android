@@ -2,14 +2,18 @@ package kin.sdk.internal.account;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import kin.sdk.Balance;
-import kin.sdk.KinAccount;
-import kin.sdk.TransactionId;
-import kin.sdk.transactiondata.PaymentTransaction;
-import kin.utils.Request;
 
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
+
+import kin.sdk.Balance;
+import kin.sdk.KinAccount;
+import kin.sdk.TransactionId;
+import kin.sdk.TransactionInterceptor;
+import kin.sdk.exception.OperationFailedException;
+import kin.sdk.transactiondata.PaymentTransaction;
+import kin.sdk.transactiondata.TransactionParams;
+import kin.utils.Request;
 
 abstract class AbstractKinAccount implements KinAccount {
 
@@ -57,6 +61,28 @@ abstract class AbstractKinAccount implements KinAccount {
             }
         });
     }
+
+    @Override
+    public Request<TransactionId> sendTransaction(final TransactionParams transactionParams,
+                                                  final TransactionInterceptor interceptor) {
+        return new Request<>(new Callable<TransactionId>() {
+            @Override
+            public TransactionId call() throws OperationFailedException {
+                return sendTransactionSync(transactionParams, interceptor);
+            }
+        });
+    }
+
+    @Override
+    public Request<Balance> getPendingBalance() {
+        return new Request<>(new Callable<Balance>() {
+            @Override
+            public Balance call() {
+                return getPendingBalanceSync();
+            }
+        });
+    }
+
 
     @NonNull
     @Override
