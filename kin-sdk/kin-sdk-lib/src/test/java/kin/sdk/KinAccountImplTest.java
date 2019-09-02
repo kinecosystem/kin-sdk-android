@@ -1,20 +1,24 @@
 package kin.sdk;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.math.BigDecimal;
+
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.internal.account.KinAccountImpl;
 import kin.sdk.internal.blockchain.AccountInfoRetriever;
+import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
 import kin.sdk.internal.data.BalanceImpl;
 import kin.sdk.internal.data.TransactionIdImpl;
 import kin.sdk.transactiondata.PaymentTransaction;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.math.BigDecimal;
+import org.robolectric.RobolectricTestRunner;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -23,6 +27,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
 public class KinAccountImplTest {
 
     @Mock
@@ -31,6 +36,9 @@ public class KinAccountImplTest {
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
     private BlockchainEventsCreator mockBlockchainEventsCreator;
+    @Mock
+    private GeneralBlockchainInfoRetriever mockGeneralBlockchainInfoRetriever;
+
     private KinAccountImpl kinAccount;
     private KeyPair expectedRandomAccount;
 
@@ -42,7 +50,8 @@ public class KinAccountImplTest {
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
         kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator);
+                mockAccountInfoRetriever, mockBlockchainEventsCreator,
+                mockGeneralBlockchainInfoRetriever);
     }
 
     @Test
@@ -60,9 +69,9 @@ public class KinAccountImplTest {
         BigDecimal expectedAmount = new BigDecimal("12.2");
         TransactionId expectedTransactionId = new TransactionIdImpl("myId");
 
-        when(mockTransactionSender.sendTransaction((PaymentTransaction) any())).thenReturn(expectedTransactionId);
+        when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
-        PaymentTransaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100);
+        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -78,9 +87,9 @@ public class KinAccountImplTest {
         TransactionId expectedTransactionId = new TransactionIdImpl("myId");
         String memo = "Dummy Memo";
 
-        when(mockTransactionSender.sendTransaction((PaymentTransaction) any())).thenReturn(expectedTransactionId);
+        when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
-        PaymentTransaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100, memo);
+        Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100, memo);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -117,7 +126,7 @@ public class KinAccountImplTest {
         initWithRandomAccount();
         kinAccount.markAsDeleted();
 
-        PaymentTransaction transaction = kinAccount.buildTransactionSync(
+        Transaction transaction = kinAccount.buildTransactionSync(
                 "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"), 100);
         kinAccount.sendTransactionSync(transaction);
     }

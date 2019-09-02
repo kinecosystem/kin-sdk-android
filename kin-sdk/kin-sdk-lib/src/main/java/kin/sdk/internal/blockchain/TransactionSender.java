@@ -3,29 +3,42 @@ package kin.sdk.internal.blockchain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import kin.base.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.List;
+import kin.base.AssetTypeNative;
+import kin.base.KeyPair;
+import kin.base.Memo;
+import kin.base.Network;
+import kin.base.PaymentOperation;
+import kin.base.Server;
 import kin.base.Transaction.Builder;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
 import kin.base.responses.SubmitTransactionResponse;
 import kin.sdk.TransactionId;
-import kin.sdk.exception.*;
+import kin.sdk.WhitelistableTransaction;
+import kin.sdk.exception.AccountNotFoundException;
+import kin.sdk.exception.IllegalAmountException;
+import kin.sdk.exception.InsufficientFeeException;
+import kin.sdk.exception.InsufficientKinException;
+import kin.sdk.exception.OperationFailedException;
+import kin.sdk.exception.TransactionFailedException;
 import kin.sdk.internal.Utils;
 import kin.sdk.internal.data.TransactionIdImpl;
+import kin.sdk.queue.PendingPayment;
+import kin.sdk.transactiondata.BatchPaymentTransaction;
 import kin.sdk.transactiondata.PaymentTransaction;
 import kin.sdk.transactiondata.Transaction;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.util.List;
-
 public class TransactionSender {
 
-    private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
-    private static final int MAX_NUM_OF_DECIMAL_PLACES = 4 ;
-    private static String MEMO_APP_ID_VERSION_PREFIX = "1";
-    private static String MEMO_DELIMITER = "-";
+    private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is
+    // 28 but we add 7 more bytes which includes the appId and some characters.
+    private static final int MAX_NUM_OF_DECIMAL_PLACES = 4;
+    private static final String MEMO_APP_ID_VERSION_PREFIX = "1";
+    private static final String MEMO_DELIMITER = "-";
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
     private static final String INSUFFICIENT_BALANCE_RESULT_CODE = "tx_insufficient_balance";
@@ -37,14 +50,37 @@ public class TransactionSender {
         this.appId = appId;
     }
 
-    public PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress,
-                                               @NonNull BigDecimal amount,
-                                               int fee) throws OperationFailedException {
+    public kin.sdk.Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+        int fee) throws OperationFailedException {
         return buildTransaction(from, publicAddress, amount, fee, null);
     }
 
-    public PaymentTransaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
-                                               int fee, @Nullable String memo) throws OperationFailedException {
+    public kin.sdk.Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+        int fee, @Nullable String memo) throws OperationFailedException {
+        kin.base.Transaction stellarTransaction = buildKinBaseTransaction(from, publicAddress, amount, fee, memo);
+        TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
+        WhitelistableTransaction whitelistableTransaction =
+            new WhitelistableTransaction(stellarTransaction.toEnvelopeXdrBase64(), Network.current().getNetworkPassphrase());
+        return new kin.sdk.Transaction(KeyPair.fromAccountId(publicAddress), from, amount, fee, memo, id, stellarTransaction, whitelistableTransaction);
+    }
+
+    public PaymentTransaction buildPaymentTransaction(@NonNull KeyPair from,
+                                                      @NonNull String publicAddress,
+                                                      @NonNull BigDecimal amount,
+                                                      int fee) throws OperationFailedException {
+        return buildPaymentTransaction(from, publicAddress, amount, fee, null);
+    }
+
+    public PaymentTransaction buildPaymentTransaction(@NonNull KeyPair from,
+                                                      @NonNull String publicAddress,
+                                                      @NonNull BigDecimal amount,
+                                                      int fee, @Nullable String memo) throws OperationFailedException {
+        kin.base.Transaction stellarTransaction = buildKinBaseTransaction(from, publicAddress, amount, fee, memo);
+        return new PaymentTransaction(stellarTransaction, publicAddress, amount, memo);
+    }
+
+    private kin.base.Transaction buildKinBaseTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+        int fee, @Nullable String memo) throws OperationFailedException{
         checkParams(from, publicAddress, amount, fee, memo);
         if (appId != null && !appId.equals("")) {
             memo = addAppIdToMemo(memo);
@@ -53,13 +89,16 @@ public class TransactionSender {
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
         AccountResponse sourceAccount = loadSourceAccount(from);
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
-        kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee, sourceAccount, fee
-                , memo);
-        return new PaymentTransaction(stellarTransaction, addressee.getAccountId(), amount, memo);
+        return buildStellarTransaction(from, amount, addressee
+            , sourceAccount, fee, memo);
     }
 
     public TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
-        return sendTransaction(transaction.baseTransaction());
+        return sendTransaction(((TransactionInternal) transaction).baseTransaction());
+    }
+
+    public TransactionId sendTransaction(kin.sdk.Transaction transaction) throws OperationFailedException {
+        return sendTransaction(transaction.getBaseTransaction());
     }
 
     public TransactionId sendWhitelistTransaction(String whitelist) throws OperationFailedException {
@@ -87,42 +126,30 @@ public class TransactionSender {
         return sb.toString();
     }
 
-    private void checkParams(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+    private void checkParams(@NonNull KeyPair from, @NonNull String publicAddress,
+                             @NonNull BigDecimal amount,
                              int fee, @Nullable String memo) throws OperationFailedException {
         Utils.checkNotNull(from, "account");
         Utils.checkNotNull(amount, "amount");
         validateAmountDecimalPoint(amount);
-        checkForNegativeFee(fee);
-        checkAddressNotEmpty(publicAddress);
-        checkForNegativeAmount(amount);
+        Utils.checkForNegativeFee(fee);
+        Utils.checkAddressNotEmpty(publicAddress);
+        Utils.checkForNegativeAmount(amount);
         checkMemo(memo);
     }
 
+    private void checkBatchPaymentkParams(@NonNull KeyPair from, int fee, @Nullable String memo) {
+        Utils.checkNotNull(from, "account");
+        Utils.checkForNegativeFee(fee);
+        checkMemo(memo);
+    }
 
     private void validateAmountDecimalPoint(BigDecimal amount) throws OperationFailedException {
         BigDecimal amountWithoutTrailingZeros = amount.stripTrailingZeros();
         int numOfDecimalPlaces = amountWithoutTrailingZeros.scale();
         if (numOfDecimalPlaces > MAX_NUM_OF_DECIMAL_PLACES) {
-            throw new IllegalAmountException("amount can't have more then 5 digits after the decimal point");
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void checkAddressNotEmpty(@NonNull String publicAddress) {
-        if (publicAddress == null || publicAddress.isEmpty()) {
-            throw new IllegalArgumentException("Addressee not valid - public address can't be null or empty");
-        }
-    }
-
-    private void checkForNegativeAmount(@NonNull BigDecimal amount) {
-        if (amount.signum() == -1) {
-            throw new IllegalArgumentException("Amount can't be negative");
-        }
-    }
-
-    private void checkForNegativeFee(int fee) {
-        if (fee < 0) {
-            throw new IllegalArgumentException("Fee can't be negative");
+            throw new IllegalAmountException("amount can't have more then 5 digits after the " +
+                    "decimal point");
         }
     }
 
@@ -146,11 +173,51 @@ public class TransactionSender {
     }
 
     @NonNull
-    private kin.base.Transaction buildStellarTransaction(@NonNull KeyPair from, @NonNull BigDecimal amount, KeyPair addressee,
-                                                         AccountResponse sourceAccount, int fee, @Nullable String memo) {
-        Builder transactionBuilder = new Builder(sourceAccount)
-                .addOperation(
-                        new PaymentOperation.Builder(addressee, new AssetTypeNative(), amount.toString()).build());
+    private kin.base.Transaction buildStellarTransaction(@NonNull KeyPair from,
+                                                         @NonNull BigDecimal amount,
+                                                         KeyPair addressee,
+                                                         AccountResponse sourceAccount, int fee,
+                                                         @Nullable String memo) {
+        Builder transactionBuilder = new Builder(sourceAccount);
+        addPaymentOperationToTransaction(transactionBuilder, addressee, amount);
+
+        return addTransactionParametersAndSign(from, fee, memo, transactionBuilder);
+    }
+
+
+    public BatchPaymentTransaction buildBatchPaymentTransaction(@NonNull KeyPair from,
+                                                                @NonNull List<PendingPayment> pendingPayments,
+                                                                int fee, @Nullable String memo) throws OperationFailedException {
+
+        checkBatchPaymentkParams(from, fee, memo);
+        if (appId != null && !appId.equals("")) {
+            memo = addAppIdToMemo(memo);
+        }
+
+        AccountResponse sourceAccount = loadSourceAccount(from);
+
+        Builder transactionBuilder = new Builder(sourceAccount);
+        for (PendingPayment pendingPayment : pendingPayments) {
+            KeyPair destination =
+                    generateAddresseeKeyPair(pendingPayment.destinationPublicAddress());
+            addPaymentOperationToTransaction(transactionBuilder, destination,
+                    pendingPayment.amount());
+        }
+
+        kin.base.Transaction transaction = addTransactionParametersAndSign(from, fee, memo,
+                transactionBuilder);
+        return new BatchPaymentTransaction(transaction);
+    }
+
+    private void addPaymentOperationToTransaction(Builder transactionBuilder, KeyPair destination,
+                                                  BigDecimal amount) {
+        transactionBuilder.addOperation(new PaymentOperation.Builder(destination,
+                new AssetTypeNative(), amount.toString()).build());
+    }
+
+    private kin.base.Transaction addTransactionParametersAndSign(@NonNull KeyPair from, int fee,
+                                                                 String memo,
+                                                                 Builder transactionBuilder) {
         transactionBuilder.addFee(fee);
         if (memo != null) {
             transactionBuilder.addMemo(Memo.text(memo));
@@ -208,7 +275,8 @@ public class TransactionSender {
 
     private TransactionId createFailureException(SubmitTransactionResponse response)
             throws TransactionFailedException, InsufficientKinException, InsufficientFeeException {
-        TransactionFailedException transactionException = Utils.createTransactionException(response);
+        TransactionFailedException transactionException =
+                Utils.createTransactionException(response);
         if (isInsufficientKinException(transactionException)) {
             throw new InsufficientKinException();
         } else if (isInsufficientFeeException(transactionException)) {

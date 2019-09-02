@@ -10,16 +10,22 @@ public interface PendingPayment {
         PENDING, COMPLETED, FAILED
     }
 
-    String destinationPublicKey();
-
-    String sourcePublicKey();
-
-    BigDecimal amount();
+    // TODO: 2019-08-14 namings???
 
     /**
-     * @return the operation index in the pending batch payment transaction
+     * Destination account public address.
      */
-    int operationIndex();
+    String destinationPublicAddress();
+
+    /**
+     * Source account public address.
+     */
+    String sourcePublicAddress();
+
+    /**
+     * Pending Payment amount in kin.
+     */
+    BigDecimal amount();
 
     /**
      * @return the Payment key-value metadata if exist or null otherwise.
@@ -28,6 +34,8 @@ public interface PendingPayment {
     @Nullable
     Object metadata();
 
+    /**
+     * Current Payment status
+     */
     Status status();
-
 }

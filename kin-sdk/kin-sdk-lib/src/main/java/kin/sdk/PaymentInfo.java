@@ -13,6 +13,7 @@ public interface PaymentInfo {
      */
     String createdAt();
 
+    // TODO: 2019-08-14 should we change namings??? instead of key use address?
     /**
      * Destination account public id.
      */

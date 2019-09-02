@@ -1,28 +1,16 @@
 package kin.sdk.queue;
 
 import android.support.annotation.NonNull;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.KinException;
 import kin.sdk.transactiondata.BatchPaymentTransaction;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 public interface PaymentQueue {
-
-    interface Status {
-
-        /**
-         * @return true if there is a transaction in process.
-         */
-        boolean transactionInProgress();
-
-        /**
-         * @return the number of pending payments in the queue
-         */
-        int pendingPaymentsCount();
-    }
 
     /**
      * Register/unregister for queue events.
@@ -111,17 +99,19 @@ public interface PaymentQueue {
     /**
      * Setter for the fee.
      * If this fee is below the minimum then the transaction will fail.
-     *
+     * If no fee will be set then the minimum blockchain fee wil be used.
      * @param fee the amount of fee(in Quarks) for each payment (1 Quark = 0.00001 KIN).
      */
     void setFee(int fee);
 
     /**
-     * provide status on this queue
-     *
-     * @return the status pf this queue.
+     * @return true if there is a transaction in process.
      */
-    Status status(); // TODO: 2019-08-04 this is a bit weird to return an object which has 2 methods to query some
-    // info. ,maybe we should just add those methods
+    boolean transactionInProgress();
+
+    /**
+     * @return the number of pending payments in the queue
+     */
+    int pendingPaymentsCount();
 
 }

@@ -1,6 +1,14 @@
 package kin.sdk.transactiondata;
 
-import kin.base.*;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+
+import kin.base.MemoText;
+import kin.base.Network;
+import kin.base.Operation;
+import kin.base.PaymentOperation;
+import kin.base.TimeBounds;
 import kin.base.xdr.DecoratedSignature;
 import kin.sdk.KinAccount;
 import kin.sdk.TransactionId;
@@ -9,10 +17,6 @@ import kin.sdk.exception.DecodeTransactionException;
 import kin.sdk.internal.Utils;
 import kin.sdk.internal.account.KinAccountImpl;
 import kin.sdk.internal.data.TransactionIdImpl;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.List;
 
 public abstract class Transaction {
 
@@ -48,6 +52,8 @@ public abstract class Transaction {
             if (paymentOperationCount == 1) {
                 return new PaymentTransaction(transaction, paymentOperation.getDestination().getAccountId(),
                         new BigDecimal(paymentOperation.getAmount()), ((MemoText) transaction.getMemo()).getText());
+            } else if (paymentOperationCount > 1) {
+                return new BatchPaymentTransaction(transaction);
             } else {
                 return new RawTransaction(transaction);
             }
@@ -69,10 +75,6 @@ public abstract class Transaction {
         } catch (IOException e) {
             throw new DecodeTransactionException(e.getMessage(), e.getCause());
         }
-    }
-
-    public kin.base.Transaction baseTransaction() {
-        return baseTransaction;
     }
 
     /**
@@ -183,7 +185,7 @@ public abstract class Transaction {
      * @param account {@link KinAccount} object which is the account who we add his signature.
      */
     public void addSignature(KinAccount account) {
-        baseTransaction().sign(((KinAccountImpl) account).getKeyPair());
+        baseTransaction.sign(((KinAccountImpl) account).getKeyPair());
     }
 
 }

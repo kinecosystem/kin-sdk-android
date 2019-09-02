@@ -13,11 +13,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.robolectric.RobolectricTestRunner;
 
 import static junit.framework.Assert.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -28,6 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("deprecation")
+@RunWith(RobolectricTestRunner.class)
 public class KinClientTest {
 
     private static final String APP_ID = "1a2c";

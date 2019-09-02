@@ -2,11 +2,13 @@ package kin.sdk.internal;
 
 
 import android.support.annotation.NonNull;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 import kin.base.responses.SubmitTransactionResponse;
 import kin.base.responses.SubmitTransactionResponse.Extras.ResultCodes;
 import kin.sdk.exception.TransactionFailedException;
-
-import java.util.ArrayList;
 
 public final class Utils {
 
@@ -41,6 +43,26 @@ public final class Utils {
     public static void checkNotEmpty(String string, String paramName) {
         if (string == null || string.isEmpty()) {
             throw new IllegalArgumentException(paramName + " cannot be null or empty.");
+        }
+    }
+
+    public static void checkForNegativeFee(int fee) {
+        if (fee < 0) {
+            throw new IllegalArgumentException("Fee can't be negative");
+        }
+    }
+
+    public static void checkForNegativeAmount(@NonNull BigDecimal amount) {
+        if (amount.signum() == -1) {
+            throw new IllegalArgumentException("Amount can't be negative");
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static void checkAddressNotEmpty(@NonNull String publicAddress) {
+        if (publicAddress == null || publicAddress.isEmpty()) {
+            throw new IllegalArgumentException("Addressee not valid - public address can't be " +
+                    "null or empty");
         }
     }
 }

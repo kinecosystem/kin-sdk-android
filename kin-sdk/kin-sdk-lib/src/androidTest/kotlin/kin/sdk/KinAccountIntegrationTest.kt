@@ -208,7 +208,8 @@ class KinAccountIntegrationTest {
         expectedEx.expectMessage(kinAccountSender.publicAddress)
 
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistPayload())
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(
+                transaction.whitelistableTransaction.transactionPayload, transaction.whitelistableTransaction.networkPassphrase)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
     }
 
@@ -225,7 +226,8 @@ class KinAccountIntegrationTest {
         expectedEx.expectMessage(kinAccountReceiver.publicAddress)
 
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistPayload())
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(
+                transaction.whitelistableTransaction.transactionPayload, transaction.whitelistableTransaction.networkPassphrase)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
 
     }
@@ -251,7 +253,8 @@ class KinAccountIntegrationTest {
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee + 100000)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistPayload())
+         val whitelist = WhitelistServiceForTest().whitelistTransaction(
+                transaction.whitelistableTransaction.transactionPayload, transaction.whitelistableTransaction.networkPassphrase)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
     }
@@ -265,7 +268,8 @@ class KinAccountIntegrationTest {
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistPayload())
+        val whitelist = WhitelistServiceForTest().whitelistTransaction(
+                transaction.whitelistableTransaction.transactionPayload, transaction.whitelistableTransaction.networkPassphrase)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
         assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20.00000")))

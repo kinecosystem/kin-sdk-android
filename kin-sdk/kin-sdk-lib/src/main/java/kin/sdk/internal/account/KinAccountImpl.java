@@ -2,20 +2,30 @@ package kin.sdk.internal.account;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import java.math.BigDecimal;
+
 import kin.base.KeyPair;
-import kin.sdk.*;
+import kin.sdk.Balance;
+import kin.sdk.EventListener;
+import kin.sdk.ListenerRegistration;
+import kin.sdk.PaymentInfo;
+import kin.sdk.Transaction;
+import kin.sdk.TransactionId;
+import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.internal.backuprestore.BackupRestore;
 import kin.sdk.internal.blockchain.AccountInfoRetriever;
+import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEvents;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.internal.queue.PaymentQueueImpl;
+import kin.sdk.queue.PaymentQueue;
 import kin.sdk.transactiondata.PaymentTransaction;
-
-import java.math.BigDecimal;
-
+import kin.sdk.transactiondata.TransactionParams;
 
 public final class KinAccountImpl extends AbstractKinAccount {
 
@@ -24,15 +34,21 @@ public final class KinAccountImpl extends AbstractKinAccount {
     private final TransactionSender transactionSender;
     private final AccountInfoRetriever accountInfoRetriever;
     private final BlockchainEvents blockchainEvents;
+    private final PaymentQueue paymentQueue;
     private boolean isDeleted = false;
 
-    public KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
-                          AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
+    public KinAccountImpl(KeyPair account, BackupRestore backupRestore,
+                          TransactionSender transactionSender,
+                          AccountInfoRetriever accountInfoRetriever,
+                          BlockchainEventsCreator blockchainEventsCreator,
+                          GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever) {
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;
         this.accountInfoRetriever = accountInfoRetriever;
         this.blockchainEvents = blockchainEventsCreator.create(account.getAccountId());
+        this.paymentQueue = new PaymentQueueImpl(account, transactionSender,
+                generalBlockchainInfoRetriever);
     }
 
     @Override
@@ -44,14 +60,14 @@ public final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                                    int fee) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                                    int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
@@ -59,7 +75,7 @@ public final class KinAccountImpl extends AbstractKinAccount {
 
     @NonNull
     @Override
-    public TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException {
+    public TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendTransaction(transaction);
     }
@@ -69,6 +85,23 @@ public final class KinAccountImpl extends AbstractKinAccount {
     public TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendWhitelistTransaction(whitelist);
+    }
+
+    @Override
+    public TransactionId sendTransactionSync(TransactionParams transactionParams,
+                                             TransactionInterceptor interceptor) throws OperationFailedException {
+        return ((PaymentQueueImpl) paymentQueue).enqueueTransactionParams(transactionParams, interceptor);
+    }
+
+    @Override
+    public PaymentQueue paymentQueue() {
+        return paymentQueue;
+    }
+
+    @NonNull
+    @Override
+    public Balance getPendingBalanceSync() {
+        return null; // TODO: 2019-08-15 implement
     }
 
     @NonNull
@@ -97,6 +130,11 @@ public final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public ListenerRegistration addAccountCreationListener(EventListener<Void> listener) {
         return blockchainEvents.addAccountCreationListener(listener);
+    }
+
+    @Override
+    public ListenerRegistration addPendingBalanceListener(EventListener<Balance> listener) {
+        return null; // TODO: 2019-08-15 implement
     }
 
     @Override
