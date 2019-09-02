@@ -10,6 +10,7 @@ import kin.sdk.Balance;
 import kin.sdk.EventListener;
 import kin.sdk.ListenerRegistration;
 import kin.sdk.PaymentInfo;
+import kin.sdk.Transaction;
 import kin.sdk.TransactionId;
 import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.AccountDeletedException;
@@ -59,24 +60,22 @@ public final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress,
-                                                   @NonNull BigDecimal amount,
+    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                                    int fee) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildPaymentTransaction(account, publicAddress, amount, fee);
+        return transactionSender.buildTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress,
-                                                   @NonNull BigDecimal amount,
+    public Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
                                                    int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildPaymentTransaction(account, publicAddress, amount, fee, memo);
+        return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
     }
 
     @NonNull
     @Override
-    public TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException {
+    public TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendTransaction(transaction);
     }

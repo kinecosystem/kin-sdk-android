@@ -3,15 +3,14 @@ package kin.sdk.internal.blockchain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
-
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
 import kin.base.Memo;
+import kin.base.Network;
 import kin.base.PaymentOperation;
 import kin.base.Server;
 import kin.base.Transaction.Builder;
@@ -19,6 +18,7 @@ import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
 import kin.base.responses.SubmitTransactionResponse;
 import kin.sdk.TransactionId;
+import kin.sdk.WhitelistableTransaction;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.IllegalAmountException;
 import kin.sdk.exception.InsufficientFeeException;
@@ -37,8 +37,8 @@ public class TransactionSender {
     private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is
     // 28 but we add 7 more bytes which includes the appId and some characters.
     private static final int MAX_NUM_OF_DECIMAL_PLACES = 4;
-    private static String MEMO_APP_ID_VERSION_PREFIX = "1";
-    private static String MEMO_DELIMITER = "-";
+    private static final String MEMO_APP_ID_VERSION_PREFIX = "1";
+    private static final String MEMO_DELIMITER = "-";
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
     private static final String INSUFFICIENT_BALANCE_RESULT_CODE = "tx_insufficient_balance";
@@ -48,6 +48,20 @@ public class TransactionSender {
     public TransactionSender(Server server, String appId) {
         this.server = server;
         this.appId = appId;
+    }
+
+    public kin.sdk.Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+        int fee) throws OperationFailedException {
+        return buildTransaction(from, publicAddress, amount, fee, null);
+    }
+
+    public kin.sdk.Transaction buildTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+        int fee, @Nullable String memo) throws OperationFailedException {
+        kin.base.Transaction stellarTransaction = buildKinBaseTransaction(from, publicAddress, amount, fee, memo);
+        TransactionId id = new TransactionIdImpl(Utils.byteArrayToHex(stellarTransaction.hash()));
+        WhitelistableTransaction whitelistableTransaction =
+            new WhitelistableTransaction(stellarTransaction.toEnvelopeXdrBase64(), Network.current().getNetworkPassphrase());
+        return new kin.sdk.Transaction(KeyPair.fromAccountId(publicAddress), from, amount, fee, memo, id, stellarTransaction, whitelistableTransaction);
     }
 
     public PaymentTransaction buildPaymentTransaction(@NonNull KeyPair from,
@@ -61,6 +75,12 @@ public class TransactionSender {
                                                       @NonNull String publicAddress,
                                                       @NonNull BigDecimal amount,
                                                       int fee, @Nullable String memo) throws OperationFailedException {
+        kin.base.Transaction stellarTransaction = buildKinBaseTransaction(from, publicAddress, amount, fee, memo);
+        return new PaymentTransaction(stellarTransaction, publicAddress, amount, memo);
+    }
+
+    private kin.base.Transaction buildKinBaseTransaction(@NonNull KeyPair from, @NonNull String publicAddress, @NonNull BigDecimal amount,
+        int fee, @Nullable String memo) throws OperationFailedException{
         checkParams(from, publicAddress, amount, fee, memo);
         if (appId != null && !appId.equals("")) {
             memo = addAppIdToMemo(memo);
@@ -69,13 +89,16 @@ public class TransactionSender {
         KeyPair addressee = generateAddresseeKeyPair(publicAddress);
         AccountResponse sourceAccount = loadSourceAccount(from);
         verifyAddresseeAccount(generateAddresseeKeyPair(addressee.getAccountId()));
-        kin.base.Transaction stellarTransaction = buildStellarTransaction(from, amount, addressee
-                , sourceAccount, fee, memo);
-        return new PaymentTransaction(stellarTransaction, addressee.getAccountId(), amount, memo);
+        return buildStellarTransaction(from, amount, addressee
+            , sourceAccount, fee, memo);
     }
 
     public TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
         return sendTransaction(((TransactionInternal) transaction).baseTransaction());
+    }
+
+    public TransactionId sendTransaction(kin.sdk.Transaction transaction) throws OperationFailedException {
+        return sendTransaction(transaction.getBaseTransaction());
     }
 
     public TransactionId sendWhitelistTransaction(String whitelist) throws OperationFailedException {
@@ -147,10 +170,6 @@ public class TransactionSender {
         } catch (Exception e) {
             throw new OperationFailedException("Invalid addressee public address format", e);
         }
-    }
-
-    void foo() {
-
     }
 
     @NonNull

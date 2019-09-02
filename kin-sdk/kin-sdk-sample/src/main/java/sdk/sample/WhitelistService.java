@@ -3,13 +3,18 @@ package sdk.sample;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import kin.sdk.WhitelistPayload;
-import okhttp3.*;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import kin.sdk.WhitelistableTransaction;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 class WhitelistService {
 
@@ -27,9 +32,9 @@ class WhitelistService {
                 .build();
     }
 
-    void whitelistTransaction(WhitelistPayload whitelistPayload,
-                              TransactionActivity.WhitelistServiceListener whitelistServiceListener) throws JSONException {
-        RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistPayload));
+    void whitelistTransaction(WhitelistableTransaction whitelistableTransaction,
+                                     TransactionActivity.WhitelistServiceListener whitelistServiceListener) throws JSONException {
+        RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistableTransaction));
         Request request = new Request.Builder()
                 .url(URL_WHITELISTING_SERVICE)
                 .post(requestBody)
@@ -65,10 +70,10 @@ class WhitelistService {
         }
     }
 
-    private String toJson(WhitelistPayload whitelistPayload) throws JSONException {
+    private String toJson(WhitelistableTransaction whitelistableTransaction) throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("envelope", whitelistPayload.getTransactionPayload());
-        jo.put("network_id", whitelistPayload.getNetworkPassphrase());
+        jo.put("envelope", whitelistableTransaction.getTransactionPayload());
+        jo.put("network_id", whitelistableTransaction.getNetworkPassphrase());
         return jo.toString();
     }
 

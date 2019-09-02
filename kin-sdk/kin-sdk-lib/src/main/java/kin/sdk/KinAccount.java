@@ -41,7 +41,7 @@ public interface KinAccount {
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     @Deprecated
-    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
+    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
      * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
@@ -59,7 +59,7 @@ public interface KinAccount {
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
     @Deprecated
-    Request<PaymentTransaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
+    Request<Transaction> buildTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
                                                  @Nullable String memo);
 
     /**
@@ -67,14 +67,14 @@ public interface KinAccount {
      * TransactionInterceptor and/or sendTransaction(sync or not) classes</b>
      *
      * Create {@link Request} for signing and sending a transaction
-     * <p> See {@link KinAccount#sendTransactionSync(PaymentTransaction)} for possibles errors</p>
+     * <p> See {@link KinAccount#sendTransactionSync(Transaction)} for possibles errors</p>
      *
      * @param transaction is the transaction object to send.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     @NonNull
     @Deprecated
-    Request<TransactionId> sendTransaction(PaymentTransaction transaction);
+    Request<TransactionId> sendTransaction(Transaction transaction);
 
     /**
      * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
@@ -106,7 +106,7 @@ public interface KinAccount {
      * @throws OperationFailedException other error occurred.
      */
     @Deprecated
-    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
+    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee) throws OperationFailedException;
 
     /**
      * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
@@ -126,7 +126,7 @@ public interface KinAccount {
      * @throws OperationFailedException other error occurred.
      */
     @Deprecated
-    PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
+    Transaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee,
                                             @Nullable String memo) throws OperationFailedException;
 
     /**
@@ -145,7 +145,7 @@ public interface KinAccount {
      */
     @NonNull
     @Deprecated
-    TransactionId sendTransactionSync(PaymentTransaction transaction) throws OperationFailedException;
+    TransactionId sendTransactionSync(Transaction transaction) throws OperationFailedException;
 
     /**
      * @deprecated <b>This method was deprecated in version 2.0.0, please use the PaymentQueue,
