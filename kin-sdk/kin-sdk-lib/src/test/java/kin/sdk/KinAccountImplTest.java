@@ -69,7 +69,7 @@ public class KinAccountImplTest {
         BigDecimal expectedAmount = new BigDecimal("12.2");
         TransactionId expectedTransactionId = new TransactionIdImpl("myId");
 
-        when(mockTransactionSender.sendTransaction((PaymentTransaction) any())).thenReturn(expectedTransactionId);
+        when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
         Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
@@ -87,7 +87,7 @@ public class KinAccountImplTest {
         TransactionId expectedTransactionId = new TransactionIdImpl("myId");
         String memo = "Dummy Memo";
 
-        when(mockTransactionSender.sendTransaction((PaymentTransaction) any())).thenReturn(expectedTransactionId);
+        when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
         Transaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100, memo);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);

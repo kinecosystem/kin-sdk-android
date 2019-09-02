@@ -6,7 +6,7 @@ import org.junit.Test
 
 class TasksQueueIntegrationTest {
 
-    @Test
+    /*@Test
     fun test() {
         //given
         val tasksQueue = TasksQueueImpl()
@@ -25,6 +25,6 @@ class TasksQueueIntegrationTest {
         Thread.sleep(40000)
         //then
         assertThat(value, equalTo(10))
-    }
+    }*/
 
 }

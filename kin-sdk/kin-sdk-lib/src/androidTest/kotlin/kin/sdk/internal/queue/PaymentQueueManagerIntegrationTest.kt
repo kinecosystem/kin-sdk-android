@@ -22,7 +22,7 @@ class PaymentQueueManagerIntegrationTest {
 
     private var eventsManager = EventsManagerImpl()
     private var queueScheduler = FakeIntegrationTestQueueScheduler()
-    private var txTaskQueueManager = TransactionTasksQueueManagerImpl(eventsManager)
+    private var txTaskQueueManager = TransactionTasksQueueManagerImpl(null, eventsManager, 10)
     private var pendingBalanceUpdater = PendingBalanceUpdaterImpl()
 
     private lateinit var paymentQueueManager: PaymentQueueManager
