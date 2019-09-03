@@ -1,14 +1,15 @@
 package kin.sdk.internal.queue;
 
 import android.support.annotation.NonNull;
+
+import java.math.BigDecimal;
+
 import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.internal.data.PendingBalanceUpdaterImpl;
 import kin.sdk.internal.events.EventsManagerImpl;
 import kin.sdk.queue.PaymentQueue;
 import kin.sdk.queue.PendingPayment;
-
-import java.math.BigDecimal;
 
 public class PaymentQueueImpl implements PaymentQueue {
 
@@ -52,7 +53,6 @@ public class PaymentQueueImpl implements PaymentQueue {
 
     @Override
     public void setFee(int fee) {
-        // TODO: 2019-08-14 should we keep it here or set it directly into the task queue manager
     }
 
     @Override

@@ -1,8 +1,8 @@
 package kin.sdk.internal.queue;
 
-import kin.sdk.queue.PendingPayment;
-
 import java.math.BigDecimal;
+
+import kin.sdk.queue.PendingPayment;
 
 public class PendingPaymentImpl implements PendingPayment {
 

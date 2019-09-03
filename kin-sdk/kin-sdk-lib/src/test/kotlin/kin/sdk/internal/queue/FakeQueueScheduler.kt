@@ -50,7 +50,9 @@ open class FakeQueueScheduler : QueueScheduler {
     }
 
     override fun schedule(runnable: Runnable?) {
-        runnable?.run()
+        timer?.schedule(0) {
+            runnable?.run()
+        }
     }
 
 

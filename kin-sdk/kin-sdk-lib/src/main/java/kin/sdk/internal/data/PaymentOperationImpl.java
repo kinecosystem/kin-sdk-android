@@ -1,8 +1,8 @@
 package kin.sdk.internal.data;
 
-import kin.sdk.transactiondata.BatchPaymentTransaction;
-
 import java.math.BigDecimal;
+
+import kin.sdk.transactiondata.BatchPaymentTransaction;
 
 public class PaymentOperationImpl implements BatchPaymentTransaction.PaymentOperation {
 
@@ -11,7 +11,6 @@ public class PaymentOperationImpl implements BatchPaymentTransaction.PaymentOper
     private final BigDecimal amount;
 
     public PaymentOperationImpl(String destinationPublicAddress, String sourcePublicAddress, BigDecimal amount) {
-        // TODO: 2019-08-15 namings?
         this.destinationPublicAddress = destinationPublicAddress;
         this.sourcePublicAddress = sourcePublicAddress;
         this.amount = amount;
