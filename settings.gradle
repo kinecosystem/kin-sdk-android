@@ -1,2 +1,1 @@
-include ':sample', ':kin-sdk', 'kin-base'
-project(":kin-base").projectDir = file("kin-base")
+include  ':kin-sdk:kin-sdk-lib', ':kin-sdk:kin-base', ':kin-sdk:kin-sdk-sample', ':kin-backup-and-restore:kin-backup-and-restore-lib', ':kin-backup-and-restore:kin-backup-and-restore-sample', ':kin-backup-and-restore:kin-backup-and-restore-ui-tests'

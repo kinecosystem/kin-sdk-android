@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="kin.backupandrestore">
+
+    <application>
+        <provider
+            android:authorities="${applicationId}.KinRecoveryFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:name=".KinRecoveryFileProvider">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/backup_and_restore_file_provider_paths"/>
+        </provider>
+
+        <activity
+            android:label="@string/backup_and_restore_backup"
+            android:name=".backup.view.BackupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BackupAndRestoreNoActionBar"/>
+        <activity
+            android:label="@string/backup_and_restore_restore"
+            android:name=".restore.view.RestoreActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BackupAndRestoreNoActionBar"
+            android:windowSoftInputMode="adjustResize"/>
+    </application>
+
+</manifest>

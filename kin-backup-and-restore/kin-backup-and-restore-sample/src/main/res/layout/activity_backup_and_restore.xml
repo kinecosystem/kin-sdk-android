@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/content_margin_sides"
+    android:layout_marginRight="@dimen/content_margin_sides"
+    tools:context=".BackupAndRestoreActivity">
+
+    <TextView
+        android:id="@+id/current_account_details_label"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_large"
+        android:text="@string/current_account_details_label"
+        android:textSize="@dimen/text_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/balance_label"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:text="@string/balance_label"
+        android:textSize="@dimen/text_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/current_account_details_label"/>
+
+    <TextView
+        android:id="@+id/balance_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_small"
+        android:textSize="@dimen/text_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/balance_label"
+        tools:text="1000 KIN"/>
+
+    <ProgressBar
+        android:id="@+id/balance_value_progress"
+        android:layout_width="@dimen/progress_size"
+        android:layout_height="@dimen/progress_size"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/balance_label"
+        app:layout_constraintLeft_toRightOf="@+id/balance_label"
+        app:layout_constraintTop_toTopOf="@+id/balance_label"
+        tools:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/public_address_label"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/public_address_label"
+        android:textSize="@dimen/text_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/balance_value"/>
+
+    <TextView
+        android:id="@+id/public_address_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/text_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/public_address_label"
+        tools:text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+
+    <ProgressBar
+        android:id="@+id/public_address_value_progress"
+        android:layout_width="@dimen/progress_size"
+        android:layout_height="@dimen/progress_size"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/public_address_label"
+        app:layout_constraintLeft_toRightOf="@+id/public_address_label"
+        app:layout_constraintTop_toTopOf="@+id/public_address_label"
+        tools:visibility="visible"/>
+
+    <Button
+        android:id="@+id/create_new_account"
+        style="@style/BackupAndRestoreButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/create_new_account"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintBottom_toTopOf="@+id/backup_current_account"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/public_address_value"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <Button
+        android:id="@+id/backup_current_account"
+        style="@style/BackupAndRestoreButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/backup_current_account"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintBottom_toTopOf="@+id/restore_account"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_new_account"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <Button
+        android:id="@+id/restore_account"
+        style="@style/BackupAndRestoreButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/restore_account"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backup_current_account"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+</android.support.constraint.ConstraintLayout>

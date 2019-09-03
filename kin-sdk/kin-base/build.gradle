@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+
+
+// maven plugin and group definition
+// needed for jitpack support
+apply plugin: 'maven'
+group = 'com.github.kinecosystem'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0.4"
+        consumerProguardFiles 'proguard-rules.pro'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    implementation 'com.moandjiezana.toml:toml4j:0.5.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'net.i2p.crypto:eddsa:0.3.0'
+    api 'com.github.kinecosystem:oksse:93f4ef7445f9c3db3c3bc2d1ccb2691fc7246810'
+
+    testImplementation 'org.mockito:mockito-core:2.13.0'
+    testImplementation "org.robolectric:robolectric:3.6.1"
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.8.1'
+    testImplementation group: 'junit', name: 'junit', version: '4.11'
+}
