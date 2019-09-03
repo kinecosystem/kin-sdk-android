@@ -6,9 +6,7 @@ import java.net.URI;
 import kin.base.Server;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
 public class LedgersRequestBuilderTest {
   @Test
   public void testAccounts() {

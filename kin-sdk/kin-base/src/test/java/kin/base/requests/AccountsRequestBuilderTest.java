@@ -5,10 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 import kin.base.Server;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
 public class AccountsRequestBuilderTest {
   @Test
   public void testAccounts() {

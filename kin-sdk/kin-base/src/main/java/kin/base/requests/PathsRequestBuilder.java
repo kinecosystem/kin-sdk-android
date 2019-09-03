@@ -20,26 +20,26 @@ public class PathsRequestBuilder extends RequestBuilder {
   }
 
   public PathsRequestBuilder destinationAccount(KeyPair account) {
-    uriBuilder.appendQueryParameter("destination_account", account.getAccountId());
+    uriBuilder.addEncodedQueryParameter("destination_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder sourceAccount(KeyPair account) {
-    uriBuilder.appendQueryParameter("source_account", account.getAccountId());
+    uriBuilder.addEncodedQueryParameter("source_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder destinationAmount(String amount) {
-    uriBuilder.appendQueryParameter("destination_amount", amount);
+    uriBuilder.addEncodedQueryParameter("destination_amount", amount);
     return this;
   }
 
   public PathsRequestBuilder destinationAsset(Asset asset) {
-    uriBuilder.appendQueryParameter("destination_asset_type", asset.getType());
+    uriBuilder.addEncodedQueryParameter("destination_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.appendQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.appendQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.addEncodedQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.addEncodedQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }

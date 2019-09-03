@@ -1,13 +1,17 @@
 package kin.base.federation;
 
-import android.net.Uri;
 import com.google.gson.reflect.TypeToken;
 import com.moandjiezana.toml.Toml;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+
 import kin.base.requests.ResponseHandler;
 import kin.base.responses.HttpResponseException;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -24,7 +28,7 @@ import okhttp3.ResponseBody;
  * @see <a href="https://www.stellar.org/developers/learn/concepts/federation.html" target="_blank">Federation docs</a>
  */
 public class FederationServer {
-  private final URI serverUri;
+  private final URL serverUri;
   private final String domain;
   private static OkHttpClient httpClient = new OkHttpClient();
 
@@ -35,9 +39,9 @@ public class FederationServer {
    * @param domain    Domain name this federation server is responsible for
    * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
    */
-  public FederationServer(URI serverUri, String domain) {
+  public FederationServer(URL serverUri, String domain) {
     this.serverUri = serverUri;
-    if (this.serverUri.getScheme() != "https") {
+    if (!this.serverUri.getProtocol().equals("https")) {
       throw new FederationServerInvalidException();
     }
     this.domain = domain;
@@ -52,8 +56,8 @@ public class FederationServer {
    */
   public FederationServer(String serverUri, String domain) {
     try {
-      this.serverUri = new URI(serverUri);
-    } catch (URISyntaxException e) {
+      this.serverUri = new URL(serverUri);
+    } catch (MalformedURLException e) {
       throw new FederationServerInvalidException();
     }
     this.domain = domain;
@@ -85,10 +89,10 @@ public class FederationServer {
     Toml stellarToml = null;
     try {
       Request request = new Request.Builder().get()
-          .url(stellarTomlUri.toString())
-          .build();
+              .url(stellarTomlUri.toString())
+              .build();
       Response response = httpClient.newCall(request)
-          .execute();
+              .execute();
       if (response.code() >= 300) {
         throw new StellarTomlNotFoundInvalidException();
       }
@@ -125,24 +129,23 @@ public class FederationServer {
       throw new MalformedAddressException();
     }
 
-    Uri uri = Uri.parse(serverUri.toString())
-        .buildUpon()
-        .appendQueryParameter("type", "name")
-        .appendQueryParameter("q", address)
-        .build();
+    URL uri = HttpUrl.parse(serverUri.toString()).newBuilder()
+            .addQueryParameter("type", "name")
+            .addQueryParameter("q", address)
+            .build().url();
 
     TypeToken type = new TypeToken<FederationResponse>() {
     };
-      ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<FederationResponse>(httpClient, type);
+    ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<FederationResponse>(httpClient, type);
 
     Request request = new Request.Builder()
-        .url(uri.toString())
-        .get()
-        .build();
+            .url(uri.toString())
+            .get()
+            .build();
 
     try {
       Response response = httpClient.newCall(request)
-          .execute();
+              .execute();
       return responseHandler.handleResponse(response);
     } catch (HttpResponseException e) {
       if (e.getStatusCode() == 404) {
@@ -160,7 +163,7 @@ public class FederationServer {
    *
    * @return URI
    */
-  public URI getServerUri() {
+  public URL getServerUri() {
     return serverUri;
   }
 
