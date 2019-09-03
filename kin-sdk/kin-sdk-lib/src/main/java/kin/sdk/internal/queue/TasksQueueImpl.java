@@ -23,7 +23,7 @@ class TasksQueueImpl extends HandlerThread implements TasksQueue {
     private static final String nameTag = "TaskQueueHandlerThread";
 
     private final TransactionSender transactionSender;
-    private TransactionInterceptor transactionInterceptor;
+    private TransactionInterceptor pendingPaymentsTransactionInterceptor;
     private final EventsManager eventsManager;
     private final GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever;
     private final KeyPair accountFrom;
@@ -57,19 +57,21 @@ class TasksQueueImpl extends HandlerThread implements TasksQueue {
         if (backgroundHandler != null) {
             SendPendingPaymentsTask sendPendingPaymentsTask =
                     new SendPendingPaymentsTask(batchPendingPayments, transactionSender,
-                            transactionInterceptor, taskFinishListener, eventsManager,
-                            generalBlockchainInfoRetriever, fee, accountFrom);
+                            pendingPaymentsTransactionInterceptor, taskFinishListener,
+                            eventsManager, generalBlockchainInfoRetriever, fee, accountFrom);
             backgroundHandler.post(sendPendingPaymentsTask);
         }
     }
 
     @Override
-    public void scheduleTransactionParamsTask(TransactionParams transactionParams) {
+    public void scheduleTransactionParamsTask(TransactionParams transactionParams,
+                                              TransactionInterceptor transactionParamsInterceptor) {
         if (backgroundHandler != null) {
             SendTransactionParamsTask sendTransactionParamsTask =
                     new SendTransactionParamsTask(transactionParams,
                             transactionSender,
-                            transactionInterceptor, taskFinishListener, eventsManager, accountFrom);
+                            transactionParamsInterceptor, taskFinishListener, eventsManager,
+                            accountFrom);
             // TODO: 2019-08-27 although currently we only have one task each time and we are
             //  dealing with the param at the manager level,
             //  if in the future something will change in the manager then it will still post it
@@ -96,7 +98,7 @@ class TasksQueueImpl extends HandlerThread implements TasksQueue {
     }
 
     @Override
-    public void setTransactionInterceptor(TransactionInterceptor transactionInterceptor) {
-        this.transactionInterceptor = transactionInterceptor;
+    public void setPendingPaymentsTransactionInterceptor(TransactionInterceptor pendingPaymentsTransactionInterceptor) {
+        this.pendingPaymentsTransactionInterceptor = pendingPaymentsTransactionInterceptor;
     }
 }

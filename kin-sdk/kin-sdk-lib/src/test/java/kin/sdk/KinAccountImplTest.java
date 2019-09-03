@@ -11,11 +11,11 @@ import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.internal.account.KinAccountImpl;
 import kin.sdk.internal.blockchain.AccountInfoRetriever;
-import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
 import kin.sdk.internal.data.BalanceImpl;
 import kin.sdk.internal.data.TransactionIdImpl;
+import kin.sdk.queue.PaymentQueue;
 import kin.sdk.transactiondata.PaymentTransaction;
 
 import static junit.framework.Assert.assertEquals;
@@ -34,21 +34,21 @@ public class KinAccountImplTest {
     @Mock
     private BlockchainEventsCreator mockBlockchainEventsCreator;
     @Mock
-    private GeneralBlockchainInfoRetriever mockGeneralBlockchainInfoRetriever;
+    private PaymentQueue mockPaymentQueue;
 
     private KinAccountImpl kinAccount;
     private KeyPair expectedRandomAccount;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
-        kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-                mockAccountInfoRetriever, mockBlockchainEventsCreator,
-                mockGeneralBlockchainInfoRetriever);
+        kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(),
+                mockTransactionSender, mockAccountInfoRetriever, mockBlockchainEventsCreator,
+                mockPaymentQueue);
     }
 
     @Test
@@ -68,7 +68,8 @@ public class KinAccountImplTest {
 
         when(mockTransactionSender.sendTransaction((PaymentTransaction) any())).thenReturn(expectedTransactionId);
 
-        PaymentTransaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100);
+        PaymentTransaction transaction = kinAccount.buildTransactionSync(expectedAccountId,
+                expectedAmount, 100);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -86,7 +87,8 @@ public class KinAccountImplTest {
 
         when(mockTransactionSender.sendTransaction((PaymentTransaction) any())).thenReturn(expectedTransactionId);
 
-        PaymentTransaction transaction = kinAccount.buildTransactionSync(expectedAccountId, expectedAmount, 100, memo);
+        PaymentTransaction transaction = kinAccount.buildTransactionSync(expectedAccountId,
+                expectedAmount, 100, memo);
         TransactionId transactionId = kinAccount.sendTransactionSync(transaction);
 
         verify(mockTransactionSender).sendTransaction(transaction);
@@ -124,7 +126,8 @@ public class KinAccountImplTest {
         kinAccount.markAsDeleted();
 
         PaymentTransaction transaction = kinAccount.buildTransactionSync(
-                "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX", new BigDecimal("12.2"), 100);
+                "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX",
+                new BigDecimal("12.2"), 100);
         kinAccount.sendTransactionSync(transaction);
     }
 

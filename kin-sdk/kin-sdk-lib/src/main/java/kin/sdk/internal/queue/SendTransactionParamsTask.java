@@ -35,12 +35,17 @@ class SendTransactionParamsTask extends SendTransactionTask {
     }
 
     @Override
-    void invokeInterceptor() throws Exception {
+    void invokeInterceptor() {
         TransactionProcess transactionProcess =
                 new TransactionParamsProcessImpl(transactionSender, transactionParams,
                         accountFrom, eventsManager);
-        TransactionId transactionId =
-                transactionInterceptor.interceptTransactionSending(transactionProcess);
+        TransactionId transactionId = null;
+        try {
+            transactionId = transactionInterceptor.interceptTransactionSending(transactionProcess);
+        } catch (Exception e) {
+            // TODO: 2019-09-03 if it is not kinsdkexception then wrap it with kinsdkexception
+            //  and send it with events manager
+        }
         handleTransactionFinished(transactionId);
     }
 
@@ -62,5 +67,4 @@ class SendTransactionParamsTask extends SendTransactionTask {
         }
         sendTransaction(transaction);
     }
-    // TODO: 2019-09-01 handle pending payment status
 }

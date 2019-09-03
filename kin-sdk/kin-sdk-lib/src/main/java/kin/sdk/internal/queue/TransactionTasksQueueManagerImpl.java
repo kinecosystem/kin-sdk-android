@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
+import kin.sdk.TransactionInterceptor;
 import kin.sdk.internal.events.EventsManager;
 import kin.sdk.queue.PendingPayment;
 import kin.sdk.transactiondata.PaymentTransactionParams;
@@ -18,6 +19,7 @@ class TransactionTasksQueueManagerImpl implements TransactionTasksQueueManager, 
     private final int maxNumOfPayments;
     private Queue<List<PendingPayment>> batchPendingPaymentsQueue;
     private PaymentTransactionParams currentTransactionParams;
+    private TransactionInterceptor currentTransactionParamsInterceptor;
     private boolean transactionInProgress = false;
 
     TransactionTasksQueueManagerImpl(TasksQueue taskQueue, EventsManager eventsManager,
@@ -30,17 +32,19 @@ class TransactionTasksQueueManagerImpl implements TransactionTasksQueueManager, 
     }
 
     @Override
-    public synchronized void enqueue(final List<PendingPayment> pendingPayments) {
+    public synchronized void enqueue(List<PendingPayment> pendingPayments) {
         mergePayments(pendingPayments);
         sendTask();
     }
 
     @Override
-    public synchronized void enqueue(final PaymentTransactionParams paymentTransactionParams) {
+    public synchronized void enqueue(PaymentTransactionParams paymentTransactionParams,
+                                     TransactionInterceptor transactionInterceptor) {
         if (currentTransactionParams != null) {
-            // TODO: 2019-08-26 double check - throw exception somehow
+            // TODO: 2019-08-26 throw some exception, will decide later
         } else {
             currentTransactionParams = paymentTransactionParams;
+            currentTransactionParamsInterceptor = transactionInterceptor;
             sendTask();
         }
     }
@@ -116,14 +120,24 @@ class TransactionTasksQueueManagerImpl implements TransactionTasksQueueManager, 
         // Check if there is a task running and if not then schedule a task
         if (!transactionInProgress()) {
             if (currentTransactionParams != null) {
-                PaymentTransactionParams toSend = currentTransactionParams;
-                currentTransactionParams = null;
-                taskQueue.scheduleTransactionParamsTask(toSend);
-                transactionInProgress = true;
+                sendTransactionParamsTask();
             } else if (batchPendingPaymentsQueue.size() > 0) {
-                taskQueue.schedulePendingPaymentsTask(batchPendingPaymentsQueue.poll());
-                transactionInProgress = true;
+                sendPendingPaymentsTask();
             }
         }
+    }
+
+    private void sendTransactionParamsTask() {
+        PaymentTransactionParams toSend = currentTransactionParams;
+        currentTransactionParams = null;
+        TransactionInterceptor transactionInterceptor = currentTransactionParamsInterceptor;
+        currentTransactionParamsInterceptor = null;
+        taskQueue.scheduleTransactionParamsTask(toSend, transactionInterceptor);
+        transactionInProgress = true;
+    }
+
+    private void sendPendingPaymentsTask() {
+        taskQueue.schedulePendingPaymentsTask(batchPendingPaymentsQueue.poll());
+        transactionInProgress = true;
     }
 }

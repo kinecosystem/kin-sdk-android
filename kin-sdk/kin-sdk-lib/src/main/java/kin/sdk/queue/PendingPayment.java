@@ -6,10 +6,6 @@ import java.math.BigDecimal;
 
 public interface PendingPayment {
 
-    enum Status {
-        PENDING, COMPLETED, FAILED
-    }
-
     // TODO: 2019-08-14 namings???
 
     /**
@@ -33,9 +29,4 @@ public interface PendingPayment {
      */
     @Nullable
     Object metadata();
-
-    /**
-     * Current Payment status
-     */
-    Status status();
 }

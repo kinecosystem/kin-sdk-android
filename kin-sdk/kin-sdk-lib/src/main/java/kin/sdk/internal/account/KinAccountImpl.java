@@ -11,20 +11,16 @@ import kin.sdk.EventListener;
 import kin.sdk.ListenerRegistration;
 import kin.sdk.PaymentInfo;
 import kin.sdk.TransactionId;
-import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.internal.backuprestore.BackupRestore;
 import kin.sdk.internal.blockchain.AccountInfoRetriever;
-import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEvents;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
-import kin.sdk.internal.queue.PaymentQueueImpl;
 import kin.sdk.queue.PaymentQueue;
 import kin.sdk.transactiondata.PaymentTransaction;
-import kin.sdk.transactiondata.TransactionParams;
 
 public final class KinAccountImpl extends AbstractKinAccount {
 
@@ -40,14 +36,14 @@ public final class KinAccountImpl extends AbstractKinAccount {
                           TransactionSender transactionSender,
                           AccountInfoRetriever accountInfoRetriever,
                           BlockchainEventsCreator blockchainEventsCreator,
-                          GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever) {
+                          PaymentQueue paymentQueue) {
+        super(paymentQueue);
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;
         this.accountInfoRetriever = accountInfoRetriever;
         this.blockchainEvents = blockchainEventsCreator.create(account.getAccountId());
-        this.paymentQueue = new PaymentQueueImpl(account, transactionSender,
-                generalBlockchainInfoRetriever);
+        this.paymentQueue = paymentQueue;
     }
 
     @Override
@@ -86,12 +82,6 @@ public final class KinAccountImpl extends AbstractKinAccount {
     public TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException {
         checkValidAccount();
         return transactionSender.sendWhitelistTransaction(whitelist);
-    }
-
-    @Override
-    public TransactionId sendTransactionSync(TransactionParams transactionParams,
-                                             TransactionInterceptor interceptor) throws OperationFailedException {
-        return ((PaymentQueueImpl) paymentQueue).enqueueTransactionParams(transactionParams, interceptor);
     }
 
     @Override

@@ -29,9 +29,11 @@ import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetrieverImpl;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.internal.queue.PaymentQueueImpl;
 import kin.sdk.internal.storage.KeyStore;
 import kin.sdk.internal.storage.KeyStoreImpl;
 import kin.sdk.internal.storage.SharedPrefStore;
+import kin.sdk.queue.PaymentQueue;
 import kin.utils.Request;
 
 import static kin.sdk.internal.Utils.checkNotNull;
@@ -56,23 +58,29 @@ public class KinClient {
     private List<KinAccountImpl> kinAccounts = new ArrayList<>(1);
 
     /**
-     * For more details please look at {@link #KinClient(Context context,Environment environment, String appId, String storeKey)}
+     * For more details please look at
+     * {@link #KinClient(Context context, Environment environment, String appId, String storeKey)}
      */
     public KinClient(@NonNull Context context, @NonNull Environment environment, String appId) {
-        this(context, environment, appId,"");
+        this(context, environment, appId, "");
     }
 
     /**
      * Build KinClient object.
-     * @param context android context
+     *
+     * @param context     android context
      * @param environment the blockchain network details.
-     * @param appId a 3 or 4 character string which represent the application id which will be added to each
-     *              transaction.
-     *              <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.
-     *              For example 1234 or 2ab3 or bca, etc.</br>
-     * @param storeKey an optional param which is the key for storing this KinClient data, different keys will store a different accounts.
+     * @param appId       a 3 or 4 character string which represent the application id which will
+     *                    be added to each
+     *                    transaction.
+     *                    <br><b>Note:</b> appId must contain only upper and/or lower case
+     *                    letters and/or digits and that the total string length is between 3 to 4.
+     *                    For example 1234 or 2ab3 or bca, etc.</br>
+     * @param storeKey    an optional param which is the key for storing this KinClient data,
+     *                    different keys will store a different accounts.
      */
-    public KinClient(@NonNull Context context, @NonNull Environment environment, @NonNull String appId, @NonNull String storeKey) {
+    public KinClient(@NonNull Context context, @NonNull Environment environment,
+                     @NonNull String appId, @NonNull String storeKey) {
         checkNotNull(storeKey, "storeKey");
         checkNotNull(context, "context");
         checkNotNull(environment, "environment");
@@ -92,8 +100,10 @@ public class KinClient {
 
     @VisibleForTesting
     KinClient(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
-        AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
-        BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String appId, String storeKey) {
+              AccountInfoRetriever accountInfoRetriever,
+              GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
+              BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore,
+              String appId, String storeKey) {
         this.environment = environment;
         this.keyStore = keyStore;
         this.transactionSender = transactionSender;
@@ -113,7 +123,7 @@ public class KinClient {
 
     private KeyStore initKeyStore(Context context, String id) {
         SharedPrefStore store = new SharedPrefStore(
-            context.getSharedPreferences(STORE_NAME_PREFIX + id, Context.MODE_PRIVATE));
+                context.getSharedPreferences(STORE_NAME_PREFIX + id, Context.MODE_PRIVATE));
         return new KeyStoreImpl(store, backupRestore);
     }
 
@@ -149,10 +159,11 @@ public class KinClient {
 
     private void validateAppId(String appId) {
         if (appId == null || appId.equals("")) {
-            Log.w("KinClient","WARNING: KinClient instance was created without a proper application ID. Is this what you intended to do?");
-        }
-        else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
-            throw new IllegalArgumentException("appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.\n" +
+            Log.w("KinClient", "WARNING: KinClient instance was created without a proper " +
+                    "application ID. Is this what you intended to do?");
+        } else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
+            throw new IllegalArgumentException("appId must contain only upper and/or lower case " +
+                    "letters and/or digits and that the total string length is between 3 to 4.\n" +
                     "for example 1234 or 2ab3 or cd2 or fqa, etc.");
         }
     }
@@ -174,19 +185,20 @@ public class KinClient {
      * Import an account from a JSON-formatted string.
      *
      * @param exportedJson The exported JSON-formatted string.
-     * @param passphrase The passphrase to decrypt the secret key.
+     * @param passphrase   The passphrase to decrypt the secret key.
      * @return The imported account
      */
     @NonNull
     public KinAccount importAccount(@NonNull String exportedJson, @NonNull String passphrase)
-        throws CryptoException, CreateAccountException, CorruptedDataException {
+            throws CryptoException, CreateAccountException, CorruptedDataException {
         KeyPair account = keyStore.importAccount(exportedJson, passphrase);
         KinAccount kinAccount = getAccountByPublicAddress(account.getAccountId());
         return kinAccount != null ? kinAccount : addKeyPair(account);
     }
 
     @Nullable
-    private KinAccount getAccountByPublicAddress(String accountId) { //TODO we should make this method public
+    private KinAccount getAccountByPublicAddress(String accountId) { //TODO we should make this
+        // method public
         loadAccounts();
         KinAccount kinAccount = null;
         for (int i = 0; i < kinAccounts.size(); i++) {
@@ -235,8 +247,10 @@ public class KinClient {
 
     /**
      * Deletes the account at input index (if it exists)
+     *
      * @return true if the delete was successful or false otherwise
-     * @throws DeleteAccountException in case of a delete account exception while trying to delete the account
+     * @throws DeleteAccountException in case of a delete account exception while trying to
+     *                                delete the account
      */
     public boolean deleteAccount(int index) throws DeleteAccountException {
         boolean deleteSuccess = false;
@@ -267,8 +281,10 @@ public class KinClient {
 
     @NonNull
     private KinAccountImpl createNewKinAccount(KeyPair account) {
-        return new KinAccountImpl(account, backupRestore, transactionSender,
-                accountInfoRetriever, blockchainEventsCreator, generalBlockchainInfoRetriever);
+        PaymentQueue paymentQueue = new PaymentQueueImpl(account, transactionSender,
+                generalBlockchainInfoRetriever);
+        return new KinAccountImpl(account, backupRestore, transactionSender, accountInfoRetriever,
+                blockchainEventsCreator, paymentQueue);
     }
 
     /**
@@ -289,7 +305,8 @@ public class KinClient {
     /**
      * Get the current minimum fee that the network charges per operation.
      * This value is expressed in Quarks (1 Quark = 0.00001 KIN).
-     * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
+     * <p><b>Note:</b> This method accesses the network, and should not be called on the android
+     * main thread.</p>
      *
      * @return the minimum fee.
      */

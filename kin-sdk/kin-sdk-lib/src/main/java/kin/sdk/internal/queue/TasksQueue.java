@@ -1,5 +1,7 @@
 package kin.sdk.internal.queue;
 
+import android.support.annotation.Nullable;
+
 import java.util.List;
 
 import kin.sdk.TransactionInterceptor;
@@ -16,7 +18,7 @@ public interface TasksQueue {
      * will be executed next.
      *
      * @param batchPendingPayments the list of batched pending payments from which we will create
-     *                            a batch transaction.
+     *                             a batch transaction.
      */
     void schedulePendingPaymentsTask(List<PendingPayment> batchPendingPayments);
 
@@ -27,10 +29,13 @@ public interface TasksQueue {
      * If this task has high priority then it will enter to the top of the queue, meaning that it
      * will be executed next.
      *
-     * @param paymentTransactionParams is the object from which we will create the payment
-     *                                 transaction
+     * @param paymentTransactionParams     is the object from which we will create the payment
+     *                                     transaction
+     * @param transactionParamsInterceptor an optional interceptor that will be used to intercept
+     *                                     the transaction.
      */
-    void scheduleTransactionParamsTask(TransactionParams paymentTransactionParams);
+    void scheduleTransactionParamsTask(TransactionParams paymentTransactionParams,
+                                       @Nullable TransactionInterceptor transactionParamsInterceptor);
 
     /**
      * Stop all tasks in the queue.
@@ -60,8 +65,9 @@ public interface TasksQueue {
     /**
      * Set a transaction interceptor.
      *
-     * @param transactionInterceptor is the TransactionInterceptor to set.
-     *                               <p> See {@link TransactionInterceptor} </p>
+     * @param pendingPaymentsTransactionInterceptor is the TransactionInterceptor for batch
+     *                                              payments transactions to set.
+     *                                              <p> See {@link TransactionInterceptor} </p>
      */
-    void setTransactionInterceptor(TransactionInterceptor transactionInterceptor);
+    void setPendingPaymentsTransactionInterceptor(TransactionInterceptor pendingPaymentsTransactionInterceptor);
 }

@@ -52,8 +52,7 @@ public class TransactionSender {
 
     public PaymentTransaction buildPaymentTransaction(@NonNull KeyPair from,
                                                       @NonNull String publicAddress,
-                                                      @NonNull BigDecimal amount,
-                                                      int fee) throws OperationFailedException {
+                                                      @NonNull BigDecimal amount, int fee) throws OperationFailedException {
         return buildPaymentTransaction(from, publicAddress, amount, fee, null);
     }
 
@@ -133,7 +132,9 @@ public class TransactionSender {
     private void checkMemo(String memo) {
         try {
             if (memo != null && memo.getBytes("UTF-8").length > MEMO_BYTES_LENGTH_LIMIT) {
-                throw new IllegalArgumentException("Memo cannot be longer that " + MEMO_BYTES_LENGTH_LIMIT + " bytes(UTF-8 characters)");
+                throw new IllegalArgumentException(
+                        "Memo cannot be longer that " + MEMO_BYTES_LENGTH_LIMIT + " bytes(UTF-8 " +
+                                "characters)");
             }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException("Memo text have unsupported characters encoding");
@@ -270,8 +271,9 @@ public class TransactionSender {
     private boolean isInsufficientKinException(TransactionFailedException transactionException) {
         List<String> resultCodes = transactionException.getOperationsResultCodes();
         String transactionResultCode = transactionException.getTransactionResultCode();
-        return ((resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0))) ||
-                !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE.equals(transactionResultCode));
+        return (
+                (resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0)))
+                        || !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE.equals(transactionResultCode));
     }
 
     private boolean isInsufficientFeeException(TransactionFailedException transactionException) {

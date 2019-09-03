@@ -64,16 +64,16 @@ public class PaymentQueueImpl implements PaymentQueue {
     }
 
     /**
-     * enqueue a non blocking transaction.
-     * This transaction will be pushed to the top of the queue.
+     * enqueue a non blocking transaction. This transaction will be pushed to the top of the queue.
      *
-     * @param transactionParams the transaction parameters
-     * @param interceptor       the interceptor to set
+     * @param transactionParams      the transaction parameters
+     * @param transactionInterceptor an optional interceptor that will be used to intercept the
+     *                               transaction.
      */
     public TransactionId enqueueTransactionParams(TransactionParams transactionParams,
-                                                  TransactionInterceptor interceptor) {
-        tasksQueue.setTransactionInterceptor(interceptor);
-        tasksQueue.scheduleTransactionParamsTask(transactionParams);
+                                                  TransactionInterceptor transactionInterceptor) {
+
+        tasksQueue.scheduleTransactionParamsTask(transactionParams, transactionInterceptor);
         return null;
         // TODO: 2019-09-02 because we want it to be sync then we should handle it here and
         //  return the transaction id
@@ -81,7 +81,7 @@ public class PaymentQueueImpl implements PaymentQueue {
 
     @Override
     public void setTransactionInterceptor(TransactionInterceptor transactionInterceptor) {
-        tasksQueue.setTransactionInterceptor(transactionInterceptor);
+        tasksQueue.setPendingPaymentsTransactionInterceptor(transactionInterceptor);
     }
 
     @Override
@@ -92,6 +92,7 @@ public class PaymentQueueImpl implements PaymentQueue {
 
     @Override
     public void setFee(int fee) {
+        Utils.checkForNegativeFee(fee);
         tasksQueue.setFee(fee);
     }
 

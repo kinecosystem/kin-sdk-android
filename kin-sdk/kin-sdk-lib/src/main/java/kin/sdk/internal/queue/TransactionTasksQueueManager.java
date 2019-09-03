@@ -2,6 +2,7 @@ package kin.sdk.internal.queue;
 
 import java.util.List;
 
+import kin.sdk.TransactionInterceptor;
 import kin.sdk.queue.PendingPayment;
 import kin.sdk.transactiondata.PaymentTransactionParams;
 
@@ -19,9 +20,11 @@ public interface TransactionTasksQueueManager {
      * enqueue the transaction parameters object which will later on become a transaction.
      *
      * @param transactionParams the transaction parameters
+     * @param transactionInterceptor an optional interceptor that will be used to intercept
+     *      *                        the transaction.
      */
-    void enqueue(PaymentTransactionParams transactionParams); // TODO: 2019-08-26 should we use
-    // PaymentTransactionParams or TransactionParams
+    void enqueue(PaymentTransactionParams transactionParams,
+                 TransactionInterceptor transactionInterceptor);
 
     /**
      * @return true if currently there is a transaction in progress, meaning it will return true if

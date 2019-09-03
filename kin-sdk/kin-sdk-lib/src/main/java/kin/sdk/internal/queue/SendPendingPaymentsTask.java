@@ -48,15 +48,32 @@ class SendPendingPaymentsTask extends SendTransactionTask {
     }
 
     @Override
-    void invokeInterceptor() throws Exception {
+    void invokeInterceptor() {
         TransactionProcess transactionProcess =
                 new BatchPaymentTransactionProcessImpl(transactionSender, pendingPayments,
                         accountFrom, fee, eventsManager);
         // TODO: 2019-09-01 if we give them the TransactionProcess then they wont have access to
         //  the pending payments... need to be changed
-        TransactionId transactionId =
-                transactionInterceptor.interceptTransactionSending(transactionProcess);
-        handleTransactionFinished(transactionId);
+        try {
+            TransactionId transactionId =
+                    transactionInterceptor.interceptTransactionSending(transactionProcess);
+            handleTransactionFinished(transactionId);
+        } catch (Exception e) {
+            // TODO: 2019-09-03 if it is not kinsdkexception then wrap it with kinsdkexception
+            //  and send it with events manager
+        }
+    }
+
+    @Override
+    void handleTransactionFinished(TransactionId transactionId) {
+        super.handleTransactionFinished(transactionId);
+        if (transactionId != null) {
+            // TODO: 2019-09-02 need to update pending payments with their status?...
+
+            // TODO: 2019-09-01 invoke events for transaction success
+        } else {
+            // TODO: 2019-09-01 invoke events for transaction fail
+        }
     }
 
     @Override
@@ -73,8 +90,7 @@ class SendPendingPaymentsTask extends SendTransactionTask {
             try {
                 fee = (int) generalBlockchainInfoRetriever.getMinimumFeeSync();
             } catch (OperationFailedException e) {
-                // TODO: 2019-08-27 need to maybe add an exception to the events manager or
-                //  something
+                // TODO: 2019-08-27 need to maybe add an exception to the events manager or something...
             }
         }
     }

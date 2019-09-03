@@ -167,30 +167,25 @@ public interface KinAccount {
     TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException;
 
     /**
-     * send a transaction.
-     * <p><b>Note:</b> This method accesses the network, and should not be called on the android
-     * main thread.</p>
+     * Create {@link Request} for signing and sending a transaction
+     * <p> See {@link KinAccount#sendTransaction(TransactionParams, TransactionInterceptor)}
+     * for possibles errors</p>
      *
      * @param transactionParams is the transaction parameters which define the transaction object to send.
-     * @param interceptor is the interceptor for the transaction before it is being sent.
-     * @return TransactionId the transaction identifier.
-     * @throws AccountNotFoundException   if the sender or destination account was not created.
-     * @throws InsufficientKinException   if account balance has not enough kin.
-     * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
-     * @throws OperationFailedException   other error occurred.
+     * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    TransactionId sendTransactionSync(TransactionParams transactionParams, TransactionInterceptor interceptor) throws OperationFailedException;
+    Request<TransactionId> sendTransaction(final TransactionParams transactionParams);
 
     /**
      * Create {@link Request} for signing and sending a transaction
-     * <p> See {@link KinAccount#sendTransactionSync(TransactionParams, TransactionInterceptor)}
      * for possibles errors</p>
      *
      * @param transactionParams is the transaction parameters which define the transaction object to send.
      * @param interceptor is the interceptor for the transaction before it is being sent.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
-    Request<TransactionId> sendTransaction(TransactionParams transactionParams, TransactionInterceptor interceptor);
+    Request<TransactionId> sendTransaction(TransactionParams transactionParams,
+                                           @Nullable TransactionInterceptor interceptor);
 
     /**
      * @return the payment queue.

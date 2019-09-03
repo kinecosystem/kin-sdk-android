@@ -51,7 +51,7 @@ abstract class SendTransactionTask implements Runnable {
         }
     }
 
-    abstract void invokeInterceptor() throws Exception;
+    abstract void invokeInterceptor();
 
     abstract void buildAndSendTransaction() throws OperationFailedException;
 }
