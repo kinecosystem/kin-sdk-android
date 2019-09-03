@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+<<<<<<< HEAD  
 ![Kin Token](kin_android.png)
 # Kin SDK for Android
 
