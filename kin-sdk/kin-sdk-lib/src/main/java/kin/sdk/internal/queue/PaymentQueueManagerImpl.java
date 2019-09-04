@@ -32,7 +32,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
         this.queueTimeout = queueTimeout;
         this.maxNumOfPayments = maxNumOfPayments;
         queue = new ArrayList<>(maxNumOfPayments);
-        delayTask = new DelayTask();
+        delayTask = new DequeueTask();
     }
 
     @Override
@@ -56,7 +56,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
                 addToQueue(pendingPayment);
                 resetScheduler();
                 if (queue.size() == 1) {
-                    queueScheduler.scheduleDelayed(new DelayTask(), queueTimeout);
+                    queueScheduler.scheduleDelayed(new DequeueTask(), queueTimeout);
                 }
             }
 
@@ -66,7 +66,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
 
             private void resetScheduler() {
                 queueScheduler.removePendingTask(delayTask);
-                delayTask = new DelayTask();
+                delayTask = new DequeueTask();
                 queueScheduler.scheduleDelayed(delayTask, delayBetweenPayments);
             }
         });
@@ -96,7 +96,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
         txTaskQueueManager.enqueue(pendingPayments);
     }
 
-    private class DelayTask implements Runnable { // TODO: 2019-09-03 change name
+    private class DequeueTask implements Runnable {
 
         @Override
         public void run() {
