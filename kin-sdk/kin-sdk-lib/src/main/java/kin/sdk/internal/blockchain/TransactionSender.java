@@ -59,7 +59,7 @@ public class TransactionSender {
     }
 
     public TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
-        return sendTransaction(transaction.baseTransaction());
+        return sendTransaction(((TransactionInternal) transaction).baseTransaction());
     }
 
     public TransactionId sendWhitelistTransaction(String whitelist) throws OperationFailedException {

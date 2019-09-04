@@ -1,40 +1,56 @@
 package kin.sdk.internal.queue;
 
-import kin.sdk.queue.PendingPayment;
-
 import java.math.BigDecimal;
+
+import kin.sdk.queue.PendingPayment;
 
 public class PendingPaymentImpl implements PendingPayment {
 
-    // TODO: 2019-08-04 implement
+    private final String destinationPublicAddress;
+    private final String sourcePublicAddress;
+    private final BigDecimal amount;
+    private final Object metadata;
+    private Status status;
 
-    @Override
-    public String destinationPublicKey() {
-        return null;
+    public PendingPaymentImpl(String destinationPublicAddress, String sourcePublicAddress, BigDecimal amount) {
+        this(destinationPublicAddress, sourcePublicAddress, amount, null);
+    }
+
+    PendingPaymentImpl(String destinationPublicAddress, String sourcePublicAddress, BigDecimal amount,
+                       Object metadata) {
+        this.destinationPublicAddress = destinationPublicAddress;
+        this.sourcePublicAddress = sourcePublicAddress;
+        this.amount = amount;
+        this.metadata = metadata;
+        this.status = Status.PENDING;
     }
 
     @Override
-    public String sourcePublicKey() {
-        return null;
+    public String destinationPublicAddress() {
+        return destinationPublicAddress;
+    }
+
+    @Override
+    public String sourcePublicAddress() {
+        return sourcePublicAddress;
     }
 
     @Override
     public BigDecimal amount() {
-        return null;
-    }
-
-    @Override
-    public int operationIndex() {
-        return 0;
+        return amount;
     }
 
     @Override
     public Object metadata() {
-        return null;
+        return metadata;
     }
 
     @Override
     public Status status() {
-        return null;
+        return status;
+    }
+
+    void setStatus(Status status) {
+        this.status = status;
     }
 }

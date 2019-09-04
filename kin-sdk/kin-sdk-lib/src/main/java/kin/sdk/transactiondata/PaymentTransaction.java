@@ -2,25 +2,28 @@ package kin.sdk.transactiondata;
 
 import java.math.BigDecimal;
 
-public class PaymentTransaction extends Transaction {
+import kin.sdk.internal.blockchain.TransactionInternal;
 
-    private final String destination;
+public class PaymentTransaction extends TransactionInternal {
+
+    private final String destinationPublicAddress;
     private final BigDecimal amount;
     private final String memo;
 
-    public PaymentTransaction(kin.base.Transaction baseTransaction, String destination, BigDecimal amount,
+    public PaymentTransaction(kin.base.Transaction baseTransaction,
+                              String destinationPublicAddress, BigDecimal amount,
                               String memo) {
         super(baseTransaction);
-        this.destination = destination;
+        this.destinationPublicAddress = destinationPublicAddress;
         this.amount = amount;
         this.memo = memo;
     }
 
     /**
-     * @return the account address that receives the payment.
+     * @return the destination account public address that should receives the payment.
      */
     public String destination() {
-        return destination;
+        return destinationPublicAddress;
     }
 
     /**

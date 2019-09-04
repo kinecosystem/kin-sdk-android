@@ -10,24 +10,30 @@ public interface PendingPayment {
         PENDING, COMPLETED, FAILED
     }
 
-    String destinationPublicKey();
+    /**
+     * Destination account public address.
+     */
+    String destinationPublicAddress();
 
-    String sourcePublicKey();
+    /**
+     * Source account public address.
+     */
+    String sourcePublicAddress();
 
+    /**
+     * Pending Payment amount in kin.
+     */
     BigDecimal amount();
 
     /**
-     * @return the operation index in the pending batch payment transaction
-     */
-    int operationIndex();
-
-    /**
-     * @return the Payment key-value metadata if exist or null otherwise.
+     * @return the Payment metadata if exist or null otherwise.
      * <p>For more details see {@link PaymentQueue#enqueuePayment(String, BigDecimal, Object)}</p>
      */
     @Nullable
     Object metadata();
 
+    /**
+     * Current Payment status
+     */
     Status status();
-
 }

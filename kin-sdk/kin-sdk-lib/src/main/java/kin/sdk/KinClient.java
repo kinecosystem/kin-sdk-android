@@ -60,9 +60,10 @@ public class KinClient {
      * Build KinClient object.
      * @param context android context
      * @param environment the blockchain network details.
-     * @param appId a 4 character string which represent the application id which will be added to each transaction.
+     * @param appId a 3 or 4 character string which represent the application id which will be added to each
+     *              transaction.
      *              <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.
-     *              For example 1234 or 2ab3 or bcda, etc.</br>
+     *              For example 1234 or 2ab3 or bca, etc.</br>
      * @param storeKey an optional param which is the key for storing this KinClient data, different keys will store a different accounts.
      */
     public KinClient(@NonNull Context context, @NonNull Environment environment, @NonNull String appId, @NonNull String storeKey) {

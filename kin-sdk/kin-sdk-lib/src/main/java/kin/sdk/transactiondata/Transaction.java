@@ -71,10 +71,6 @@ public abstract class Transaction {
         }
     }
 
-    public kin.base.Transaction baseTransaction() {
-        return baseTransaction;
-    }
-
     /**
      * Each transaction sets a fee that is paid by the source account.
      * If this fee is below the network minimum the transaction will fail.
@@ -183,7 +179,7 @@ public abstract class Transaction {
      * @param account {@link KinAccount} object which is the account who we add his signature.
      */
     public void addSignature(KinAccount account) {
-        baseTransaction().sign(((KinAccountImpl) account).getKeyPair());
+        baseTransaction.sign(((KinAccountImpl) account).getKeyPair());
     }
 
 }

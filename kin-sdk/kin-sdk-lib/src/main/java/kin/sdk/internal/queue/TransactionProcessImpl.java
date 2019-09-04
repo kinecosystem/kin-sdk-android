@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TransactionProcessImpl implements TransactionProcess {
 
-    // TODO: 2019-08-04 implement
+    // TODO: 2019-08-04 implement and add java docs
 
     @Override
     public Transaction transaction() {

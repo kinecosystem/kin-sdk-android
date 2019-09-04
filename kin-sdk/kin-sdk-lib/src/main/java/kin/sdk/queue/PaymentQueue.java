@@ -11,19 +11,6 @@ import java.util.List;
 
 public interface PaymentQueue {
 
-    interface Status {
-
-        /**
-         * @return true if there is a transaction in process.
-         */
-        boolean transactionInProgress();
-
-        /**
-         * @return the number of pending payments in the queue
-         */
-        int pendingPaymentsCount();
-    }
-
     /**
      * Register/unregister for queue events.
      */
@@ -117,11 +104,13 @@ public interface PaymentQueue {
     void setFee(int fee);
 
     /**
-     * provide status on this queue
-     *
-     * @return the status pf this queue.
+     * @return true if there is a transaction in process.
      */
-    Status status(); // TODO: 2019-08-04 this is a bit weird to return an object which has 2 methods to query some
-    // info. ,maybe we should just add those methods
+    boolean transactionInProgress();
+
+    /**
+     * @return the number of pending payments in the queue
+     */
+    int pendingPaymentsCount();
 
 }

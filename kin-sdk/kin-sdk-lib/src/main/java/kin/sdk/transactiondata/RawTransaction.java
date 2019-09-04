@@ -5,8 +5,11 @@ import kin.base.Operation;
 
 public class RawTransaction extends Transaction {
 
+    private final kin.base.Transaction baseTransaction;
+
     public RawTransaction(kin.base.Transaction baseTransaction) {
         super(baseTransaction);
+        this.baseTransaction = baseTransaction;
     }
 
     /**
@@ -26,7 +29,7 @@ public class RawTransaction extends Transaction {
      * </ul>
      */
     public Memo memo() {
-        return baseTransaction().getMemo();
+        return baseTransaction.getMemo();
     }
 
     /**
@@ -40,7 +43,7 @@ public class RawTransaction extends Transaction {
      * then they require signatures of the accounts in question.
      */
     public Operation[] operations() {
-        return baseTransaction().getOperations();
+        return baseTransaction.getOperations();
     }
 
 }

@@ -12,10 +12,12 @@ import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEvents;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
+import kin.sdk.internal.queue.PaymentQueueImpl;
+import kin.sdk.queue.PaymentQueue;
 import kin.sdk.transactiondata.PaymentTransaction;
+import kin.utils.Request;
 
 import java.math.BigDecimal;
-
 
 public final class KinAccountImpl extends AbstractKinAccount {
 
@@ -24,6 +26,7 @@ public final class KinAccountImpl extends AbstractKinAccount {
     private final TransactionSender transactionSender;
     private final AccountInfoRetriever accountInfoRetriever;
     private final BlockchainEvents blockchainEvents;
+    private final PaymentQueue paymentQueue;
     private boolean isDeleted = false;
 
     public KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
@@ -33,6 +36,7 @@ public final class KinAccountImpl extends AbstractKinAccount {
         this.transactionSender = transactionSender;
         this.accountInfoRetriever = accountInfoRetriever;
         this.blockchainEvents = blockchainEventsCreator.create(account.getAccountId());
+        this.paymentQueue = new PaymentQueueImpl(account.getAccountId());
     }
 
     @Override
@@ -71,6 +75,33 @@ public final class KinAccountImpl extends AbstractKinAccount {
         return transactionSender.sendWhitelistTransaction(whitelist);
     }
 
+    @Override
+    public TransactionId sendTransactionSync(SendTransactionParams transaction, TransactionInterceptor interceptor) throws OperationFailedException {
+        return null; // TODO: 2019-08-15 implement
+    }
+
+    @Override
+    public Request<TransactionId> sendTransaction(SendTransactionParams transaction,
+                                                  TransactionInterceptor interceptor) {
+        return null; // TODO: 2019-08-15 implement
+    }
+
+    @Override
+    public PaymentQueue paymentQueue() {
+        return paymentQueue;
+    }
+
+    @Override
+    public Request<Balance> getPendingBalance() {
+        return null; // TODO: 2019-08-15 implement
+    }
+
+    @NonNull
+    @Override
+    public Balance getPendingBalanceSync() {
+        return null; // TODO: 2019-08-15 implement
+    }
+
     @NonNull
     @Override
     public Balance getBalanceSync() throws OperationFailedException {
@@ -97,6 +128,11 @@ public final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public ListenerRegistration addAccountCreationListener(EventListener<Void> listener) {
         return blockchainEvents.addAccountCreationListener(listener);
+    }
+
+    @Override
+    public ListenerRegistration addPendingBalanceListener(EventListener<Balance> listener) {
+        return null; // TODO: 2019-08-15 implement
     }
 
     @Override

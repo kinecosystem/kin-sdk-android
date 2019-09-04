@@ -94,10 +94,10 @@ public class KeyStoreImpl implements KeyStore {
     private KeyPair addKeyPairToStorage(KeyPair newKeyPair) throws CreateAccountException {
         try {
             String encryptedSeed = String.valueOf(newKeyPair.getSecretSeed());
-            String publicKey = newKeyPair.getAccountId();
+            String publicAddress = newKeyPair.getAccountId();
             String accounts = store.getString(STORE_KEY_ACCOUNTS);
-            if (TextUtils.isEmpty(accounts) || !accounts.contains(publicKey)) {
-                JSONObject accountsJson = addKeyPairToAccountsJson(encryptedSeed, publicKey);
+            if (TextUtils.isEmpty(accounts) || !accounts.contains(publicAddress)) {
+                JSONObject accountsJson = addKeyPairToAccountsJson(encryptedSeed, publicAddress);
                 store.saveString(STORE_KEY_ACCOUNTS, accountsJson.toString());
             }
             return newKeyPair;
