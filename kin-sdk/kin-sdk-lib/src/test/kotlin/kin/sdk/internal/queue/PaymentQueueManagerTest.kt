@@ -1,6 +1,7 @@
 package kin.sdk.internal.queue
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import kin.base.KeyPair
 import kin.sdk.internal.data.PendingBalanceUpdater
 import kin.sdk.internal.events.EventsManager
@@ -14,13 +15,13 @@ import java.math.BigDecimal
 class PaymentQueueManagerTest {
 
     object Constants {
-        const val ONE_MILLI = 1000L
-        const val DELAY_BETWEEN_PAYMENTS_MILLIS = 3000L
-        const val QUEUE_TIMEOUT_MILLIS = 5000L
+        const val DELAY_BETWEEN_PAYMENTS_MILLIS = 100L
+        const val EPSILON_IN_MILLIS = DELAY_BETWEEN_PAYMENTS_MILLIS / 2
+        const val QUEUE_TIMEOUT_MILLIS = DELAY_BETWEEN_PAYMENTS_MILLIS * 4
         const val MAX_NUM_OF_PAYMENTS = 5
     }
 
-    private var queueScheduler: FakeQueueScheduler = spy() //TODO use a spy in order to be able to verify method calls on that object, is this fine?
+    private var queueScheduler: FakeQueueScheduler = FakeQueueScheduler()
     private var txTaskQueueManager: TransactionTasksQueueManager = mock()
     private var pendingBalanceUpdater: PendingBalanceUpdater = mock()
     private var eventsManager: EventsManager = mock()
@@ -39,7 +40,6 @@ class PaymentQueueManagerTest {
     private fun initPaymentQueueManager() {
         destinationAccount = KeyPair.random().accountId
         sourceAccount = KeyPair.random().accountId
-//        kinAccount = KinAccountImpl(expectedRandomAccount, FakeBackupRestore(), mock(), mock(), mock())
         paymentQueueManager = PaymentQueueManagerImpl(txTaskQueueManager, queueScheduler, pendingBalanceUpdater, eventsManager,
                 Constants.DELAY_BETWEEN_PAYMENTS_MILLIS, Constants.QUEUE_TIMEOUT_MILLIS, Constants.MAX_NUM_OF_PAYMENTS)
     }
@@ -51,6 +51,7 @@ class PaymentQueueManagerTest {
 
         //when
         paymentQueueManager.enqueue(pendingPayment)
+        Thread.sleep(Constants.EPSILON_IN_MILLIS)
 
         //then
         assertThat(paymentQueueManager.pendingPaymentCount, equalTo(1))
@@ -63,8 +64,7 @@ class PaymentQueueManagerTest {
 
         //when
         paymentQueueManager.enqueue(pendingPayment)
-        // TODO because we know how much time the task should take then i use sleep for that time plus one milli - is this the correct pattern?
-        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.ONE_MILLI)
+        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.EPSILON_IN_MILLIS)
 
         //then
         assertThat(paymentQueueManager.pendingPaymentCount, equalTo(0))
@@ -72,10 +72,7 @@ class PaymentQueueManagerTest {
         val pendingPayments: MutableList<PendingPayment> = mutableListOf()
         pendingPayments.add(pendingPayment)
 
-        //TODO should i really verify it? maybe this shouldn't be verified because it is
-        //TODO like a whitebox for us we should verify the outcome and not the way we got to that outcome. no?
-        verify(queueScheduler).removePendingTask(any())
-        verify(queueScheduler).removeAllPendingTasks()
+        assertThat(queueScheduler.numOfTasks, equalTo(0))
 
         verify(txTaskQueueManager).enqueue(pendingPayments)
     }
@@ -89,14 +86,15 @@ class PaymentQueueManagerTest {
 
         //when
         paymentQueueManager.enqueue(pendingPayment1)
-        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS - Constants.ONE_MILLI)
+        Thread.sleep(Constants.EPSILON_IN_MILLIS)
         paymentQueueManager.enqueue(pendingPayment2)
-        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS - Constants.ONE_MILLI)
+        Thread.sleep(Constants.EPSILON_IN_MILLIS)
         paymentQueueManager.enqueue(pendingPayment3)
+        Thread.sleep(Constants.EPSILON_IN_MILLIS)
 
         //then
         assertThat(paymentQueueManager.pendingPaymentCount, equalTo(3))
-        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS)
+        Thread.sleep(Constants.QUEUE_TIMEOUT_MILLIS)
         assertThat(paymentQueueManager.pendingPaymentCount, equalTo(0))
 
         val pendingPayments: MutableList<PendingPayment> = mutableListOf()
@@ -104,26 +102,30 @@ class PaymentQueueManagerTest {
         pendingPayments.add(pendingPayment2)
         pendingPayments.add(pendingPayment3)
 
-        verify(queueScheduler).removeAllPendingTasks()
+        assertThat(queueScheduler.numOfTasks, equalTo(0))
+
         verify(txTaskQueueManager).enqueue(pendingPayments)
     }
 
     @Test
     fun `enqueue max items, after the queue has been filled then the list will be empty`() {
         //given
-        val pendingPayment1 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
-        val pendingPayment2 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
-        val pendingPayment3 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
-        val pendingPayment4 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
-        val pendingPayment5 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
+        val pendingPayment1 = PendingPaymentImpl(destinationAccount, sourceAccount, amount.add(BigDecimal(1)))
+        val pendingPayment2 = PendingPaymentImpl(destinationAccount, sourceAccount, amount.add(BigDecimal(2)))
+        val pendingPayment3 = PendingPaymentImpl(destinationAccount, sourceAccount, amount.add(BigDecimal(3)))
+        val pendingPayment4 = PendingPaymentImpl(destinationAccount, sourceAccount, amount.add(BigDecimal(4)))
+        val pendingPayment5 = PendingPaymentImpl(destinationAccount, sourceAccount, amount.add(BigDecimal(5)))
 
         //when
         paymentQueueManager.enqueue(pendingPayment1)
         paymentQueueManager.enqueue(pendingPayment2)
         paymentQueueManager.enqueue(pendingPayment3)
         paymentQueueManager.enqueue(pendingPayment4)
+        Thread.sleep(Constants.EPSILON_IN_MILLIS)
+
         assertThat(paymentQueueManager.pendingPaymentCount, equalTo(4))
         paymentQueueManager.enqueue(pendingPayment5)
+        Thread.sleep(Constants.EPSILON_IN_MILLIS)
 
         //then
         assertThat(paymentQueueManager.pendingPaymentCount, equalTo(0))
@@ -135,12 +137,12 @@ class PaymentQueueManagerTest {
         pendingPayments.add(pendingPayment4)
         pendingPayments.add(pendingPayment5)
 
-        verify(queueScheduler).removeAllPendingTasks()
+        assertThat(queueScheduler.numOfTasks, equalTo(0))
         verify(txTaskQueueManager).enqueue(pendingPayments)
     }
 
     @Test
-    fun `enqueue items, verify that schedule queue timeout happens only for first item`() {
+    fun `enqueue items, verify that schedule queue timeout did not occurred`() {
         //given
         val pendingPayment1 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
         val pendingPayment2 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
@@ -148,21 +150,32 @@ class PaymentQueueManagerTest {
         val pendingPayment4 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
         val pendingPayment5 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
         val pendingPayment6 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
+        val pendingPayment7 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
+        val pendingPayment8 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
+        val pendingPayment9 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
+        val pendingPayment10 = PendingPaymentImpl(destinationAccount, sourceAccount, amount)
 
         //when
         paymentQueueManager.enqueue(pendingPayment1)
         paymentQueueManager.enqueue(pendingPayment2)
-        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.ONE_MILLI)
+        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.EPSILON_IN_MILLIS)
         paymentQueueManager.enqueue(pendingPayment3)
         paymentQueueManager.enqueue(pendingPayment4)
-        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.ONE_MILLI)
+        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.EPSILON_IN_MILLIS)
         paymentQueueManager.enqueue(pendingPayment5)
         paymentQueueManager.enqueue(pendingPayment6)
+        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.EPSILON_IN_MILLIS)
+        paymentQueueManager.enqueue(pendingPayment7)
+        paymentQueueManager.enqueue(pendingPayment8)
+        Thread.sleep(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS + Constants.EPSILON_IN_MILLIS)
+        paymentQueueManager.enqueue(pendingPayment9)
+        paymentQueueManager.enqueue(pendingPayment10)
+        Thread.sleep(Constants.EPSILON_IN_MILLIS)
 
         //then
         assertThat(paymentQueueManager.pendingPaymentCount, equalTo(2))
-        verify(queueScheduler, times(2)).removeAllPendingTasks()
-        verify(queueScheduler, times(3)).scheduleDelayed(any(), eq(Constants.QUEUE_TIMEOUT_MILLIS))
+        // 2 tasks should remain, the queue timeout task and the delay task which was added after enqueue of pendingPayment10.
+        assertThat(queueScheduler.numOfTasks, equalTo(2))
     }
 
     //TODO maybe make better method names, look at conventions, also later add tests with pending balance

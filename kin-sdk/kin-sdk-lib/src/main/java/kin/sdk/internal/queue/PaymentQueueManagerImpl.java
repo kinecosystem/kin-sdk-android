@@ -1,6 +1,7 @@
 package kin.sdk.internal.queue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import kin.sdk.Balance;
@@ -18,7 +19,8 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
     private final long queueTimeout;
     private final int maxNumOfPayments;
     private List<PendingPayment> queue;
-    private Runnable delayTask;
+    private Runnable dequeueTask;
+    private Runnable timeoutTask;
 
     PaymentQueueManagerImpl(TransactionTasksQueueManager txTasksQueueManager, QueueScheduler queueScheduler,
                             PendingBalanceUpdater pendingBalanceUpdater, EventsManager eventsManager,
@@ -31,54 +33,52 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
         this.queueTimeout = queueTimeout;
         this.maxNumOfPayments = maxNumOfPayments;
         queue = new ArrayList<>(maxNumOfPayments);
-        delayTask = new DelayTask();
+        dequeueTask = new DequeueTask();
     }
 
     @Override
     public void enqueue(final PendingPayment pendingPayment) {
+        // TODO: 2019-09-03 add events whenever it is necessary
         queueScheduler.schedule(new Runnable() {
             @Override
             public void run() {
-                // 1. validate pending balance
-                validatePendingBalance(); // TODO: 2019-08-15 handle it when starting the task
+                validatePendingBalance(); // TODO: 2019-08-15 handle it
 
                 if (getPendingPaymentCount() == maxNumOfPayments - 1) {
-                    // 2. add to queue
-                    // 3. cancel scheduling
-                    // 4. maybe events in later stages
-                    // 5. clear and send to task queue manager
-
-                    queue.add(pendingPayment);
-                    // TODO: 2019-08-08 maybe send events here
+                    addToQueue(pendingPayment);
                     sendPendingPaymentsToTaskQueue();
                 } else {
-                    addToQueue();
+                    handlePendingPayment();
                 }
             }
 
-            private void addToQueue() {
-                // 1. add to list
-                // 2. handle events later (maybe also change the execution)
-                // 3. reset and schedule delay
-                // 4. schedule timeout if first in list
-
-                queue.add(pendingPayment);
-                // TODO: 2019-08-08 maybe send events here
-                queueScheduler.removePendingTask(delayTask);
-                delayTask = new DelayTask();
-                queueScheduler.scheduleDelayed(delayTask, delayBetweenPayments);
+            private void handlePendingPayment() {
+                addToQueue(pendingPayment);
                 if (queue.size() == 1) {
-                    queueScheduler.scheduleDelayed(new DelayTask(), queueTimeout);
+                    queueScheduler.removePendingTask(timeoutTask);
+                    timeoutTask = new DequeueTask();
+                    queueScheduler.scheduleDelayed(timeoutTask, queueTimeout);
                 }
+                resetScheduler();
+            }
+
+            private void addToQueue(PendingPayment pendingPayment) {
+                queue.add(pendingPayment);
+            }
+
+            private void resetScheduler() {
+                queueScheduler.removePendingTask(dequeueTask);
+                dequeueTask = new DequeueTask();
+                queueScheduler.scheduleDelayed(dequeueTask, delayBetweenPayments);
             }
         });
     }
 
     @Override
     public List<PendingPayment> getPaymentQueue() {
-        // TODO: 2019-08-15 need to think why exactly if we really need it? is it only for the pending balance updater?
-        //  maybe return a copy or make it immutable/read only...
-        return queue;
+        // although it is used internally, we return an unmodifiableList here to reduce the
+        // chances of mistakes.
+        return Collections.unmodifiableList(queue);
     }
 
     @Override
@@ -93,13 +93,12 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
 
     private void sendPendingPaymentsToTaskQueue() {
         queueScheduler.removeAllPendingTasks();
-        // TODO: 2019-08-08 maybe send events
         List<PendingPayment> pendingPayments = queue;
         queue = new ArrayList<>(maxNumOfPayments);
         txTasksQueueManager.enqueue(pendingPayments);
     }
 
-    private class DelayTask implements Runnable {
+    private class DequeueTask implements Runnable {
 
         @Override
         public void run() {

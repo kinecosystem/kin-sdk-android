@@ -4,6 +4,6 @@ import kin.sdk.Balance;
 
 public interface PendingBalanceUpdater {
 
-    // TODO: 2019-08-08 this should be async? it should probably take it from the blockchain...
+    // TODO: 2019-08-08 when reaching this task then need to figure out regarding the async or sync.
     Balance getPendingBalance();
 }
