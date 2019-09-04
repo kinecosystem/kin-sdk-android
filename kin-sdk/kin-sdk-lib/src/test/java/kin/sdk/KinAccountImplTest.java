@@ -1,5 +1,14 @@
 package kin.sdk;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+
+import java.math.BigDecimal;
+
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.internal.account.KinAccountImpl;
@@ -9,12 +18,6 @@ import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
 import kin.sdk.internal.data.BalanceImpl;
 import kin.sdk.internal.data.TransactionIdImpl;
 import kin.sdk.transactiondata.PaymentTransaction;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.math.BigDecimal;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -23,6 +26,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
 public class KinAccountImplTest {
 
     @Mock
@@ -42,7 +46,7 @@ public class KinAccountImplTest {
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
         kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator);
+                mockAccountInfoRetriever, mockBlockchainEventsCreator);
     }
 
     @Test

@@ -2,6 +2,19 @@ package kin.sdk;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import kin.base.KeyPair;
 import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetrieverImpl;
@@ -9,17 +22,12 @@ import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
 import kin.sdk.internal.storage.FakeKeyStore;
 import kin.sdk.internal.storage.KeyStore;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +36,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("deprecation")
+@RunWith(RobolectricTestRunner.class)
 public class KinClientTest {
 
     private static final String APP_ID = "1a2c";

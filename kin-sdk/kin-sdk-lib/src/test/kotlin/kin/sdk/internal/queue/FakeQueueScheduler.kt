@@ -1,59 +1,47 @@
 package kin.sdk.internal.queue
 
 import java.util.*
-import kotlin.concurrent.schedule
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 open class FakeQueueScheduler : QueueScheduler {
 
-    private var timer: Timer? = Timer()
-    private val futureTasks: HashMap<Runnable?, TimerTask?> = HashMap()
+    var scheduler: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
+    private val futureTasks: HashMap<Runnable?, ScheduledFuture<*>?> = HashMap()
+    val numOfTasks: Int
+        get() = futureTasks.size
 
-    //TODO what is better? one of the commented one or the non commented one. Which one?
-
-//    override fun scheduleDelayed(runnable: Runnable?, delayInMillis: Long) {
-//        Handler().postDelayed({
-//            runnable?.run()
-//        }, delayInMillis)
-//    }
-
-//    override fun scheduleDelayed(runnable: Runnable?, delayInMillis: Long) {
-//        val timer = Timer()
-//        timer.schedule(object: TimerTask() {
-//            override fun run() {
-//                runnable?.run()
-//            }
-//        }, delayInMillis)
-//    }
-
-//    override fun scheduleDelayed(runnable: Runnable?, delayInMillis: Long) {
-//        val timer = Timer()
-//        timer.schedule(timerTask {runnable?.run() }, delayInMillis)
-//    }
+    init {
+        scheduler.removeOnCancelPolicy = true
+    }
 
     override fun scheduleDelayed(runnable: Runnable?, delayInMillis: Long) {
-        val task = timer?.schedule(delayInMillis) {
-            runnable?.run()
-        }
-        futureTasks[runnable] = task
+        val scheduleFuture = scheduler.schedule(runnable, delayInMillis, TimeUnit.MILLISECONDS)
+        futureTasks[runnable] = scheduleFuture
     }
 
     override fun removeAllPendingTasks() {
         // killing all future futureTasks not including the current running task if there is one.
-        timer?.cancel()
-        timer?.purge()
+        scheduler.shutdown()
+        scheduler = ScheduledThreadPoolExecutor(1)
+        println(futureTasks.size)
         futureTasks.clear()
-        timer = Timer()
+        println(futureTasks.size)
+        println()
     }
 
     override fun removePendingTask(runnable: Runnable?) {
-        futureTasks[runnable]?.cancel()
+        println(futureTasks.size)
+        val removedRunnable = futureTasks.remove(runnable)
+        println(removedRunnable)
+        println(futureTasks.size)
+        removedRunnable?.cancel(false)
+        println()
     }
 
     override fun schedule(runnable: Runnable?) {
-        timer?.schedule(0) {
-            runnable?.run()
-        }
+        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS)
     }
-
 
 }

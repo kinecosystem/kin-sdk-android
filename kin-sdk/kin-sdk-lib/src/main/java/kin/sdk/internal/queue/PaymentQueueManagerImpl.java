@@ -19,7 +19,8 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
     private final long queueTimeout;
     private final int maxNumOfPayments;
     private List<PendingPayment> queue;
-    private Runnable delayTask;
+    private Runnable dequeueTask;
+    private Runnable timeoutTask;
 
     PaymentQueueManagerImpl(TransactionTaskQueueManager txTaskQueueManager, QueueScheduler queueScheduler,
                             PendingBalanceUpdater pendingBalanceUpdater, EventsManager eventsManager,
@@ -32,7 +33,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
         this.queueTimeout = queueTimeout;
         this.maxNumOfPayments = maxNumOfPayments;
         queue = new ArrayList<>(maxNumOfPayments);
-        delayTask = new DequeueTask();
+        dequeueTask = new DequeueTask();
     }
 
     @Override
@@ -41,7 +42,6 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
         queueScheduler.schedule(new Runnable() {
             @Override
             public void run() {
-                // 1. validate pending balance
                 validatePendingBalance(); // TODO: 2019-08-15 handle it
 
                 if (getPendingPaymentCount() == maxNumOfPayments - 1) {
@@ -54,10 +54,12 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
 
             private void handlePendingPayment() {
                 addToQueue(pendingPayment);
-                resetScheduler();
                 if (queue.size() == 1) {
-                    queueScheduler.scheduleDelayed(new DequeueTask(), queueTimeout);
+                    queueScheduler.removePendingTask(timeoutTask);
+                    timeoutTask = new DequeueTask();
+                    queueScheduler.scheduleDelayed(timeoutTask, queueTimeout);
                 }
+                resetScheduler();
             }
 
             private void addToQueue(PendingPayment pendingPayment) {
@@ -65,9 +67,9 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
             }
 
             private void resetScheduler() {
-                queueScheduler.removePendingTask(delayTask);
-                delayTask = new DequeueTask();
-                queueScheduler.scheduleDelayed(delayTask, delayBetweenPayments);
+                queueScheduler.removePendingTask(dequeueTask);
+                dequeueTask = new DequeueTask();
+                queueScheduler.scheduleDelayed(dequeueTask, delayBetweenPayments);
             }
         });
     }
