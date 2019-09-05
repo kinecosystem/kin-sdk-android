@@ -66,7 +66,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
   public ServerSentEvent stream(final EventListener<AccountResponse> listener) {
-    return new StreamHandler<>(new TypeToken<AccountResponse>() {})
+    return new StreamHandler<AccountResponse>(new TypeToken<AccountResponse>() {})
         .handleStream(this.buildUri(),listener);
   }
 

@@ -26,6 +26,7 @@ import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
@@ -290,7 +291,11 @@ public class TransactionSenderTest {
     @Test(timeout = 500)
     public void sendTransaction_changeTimeOut() throws Exception {
         String url = mockWebServer.url("").toString();
-        server = new Server(url, 100, TimeUnit.MILLISECONDS);
+        server = new Server(url, new OkHttpClient.Builder()
+                .connectTimeout(100, TimeUnit.MILLISECONDS)
+                .writeTimeout(100, TimeUnit.MILLISECONDS)
+                .readTimeout(100, TimeUnit.MILLISECONDS)
+                .build());
         transactionSender = new TransactionSender(server, APP_ID);
 
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));

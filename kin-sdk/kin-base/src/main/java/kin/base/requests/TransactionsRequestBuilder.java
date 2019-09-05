@@ -92,7 +92,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
   public ServerSentEvent stream(final EventListener<TransactionResponse> listener) {
-    return new StreamHandler<>(new TypeToken<TransactionResponse>() {})
+    return new StreamHandler<TransactionResponse>(new TypeToken<TransactionResponse>() {})
         .handleStream(this.buildUri(),listener);
   }
 

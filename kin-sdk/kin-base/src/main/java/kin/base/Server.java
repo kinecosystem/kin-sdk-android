@@ -1,11 +1,10 @@
 package kin.base;
 
-import android.net.Uri;
-import android.net.Uri.Builder;
-import android.text.TextUtils;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import kin.base.requests.AccountsRequestBuilder;
 import kin.base.requests.EffectsRequestBuilder;
@@ -20,6 +19,7 @@ import kin.base.requests.TransactionsRequestBuilder;
 import kin.base.responses.GsonSingleton;
 import kin.base.responses.SubmitTransactionResponse;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,7 +34,6 @@ public class Server {
 
     private static final int TEMPORARY_REDIRECT = 307;
     private static final String LOCATION_HEADER = "Location";
-    private static final String KIN_SDK_ANDROID_VERSION_HEADER = "kin-sdk-android-version";
 
     private URI serverURI;
 
@@ -56,23 +55,19 @@ public class Server {
      * time above default of 10 sec</p>
      *
      * @param uri Horizon server uri
-     * @param transactionsTimeout transactions timeout value
-     * @param timeUnit transactions timeout unit
+     * @param client OkHttpClient
      */
-    public Server(String uri, int transactionsTimeout, TimeUnit timeUnit) {
+    public Server(String uri, OkHttpClient client) {
         createUri(uri);
-        httpClient = new OkHttpClient.Builder()
-            .connectTimeout(transactionsTimeout, timeUnit)
-            .writeTimeout(transactionsTimeout, timeUnit)
-            .readTimeout(transactionsTimeout, timeUnit)
-            .addInterceptor(new HeaderInterceptor())
-            .build();
+        httpClient = client;
     }
 
     private void createUri(String uri) {
         try {
-            serverURI = new URI(uri);
-        } catch (URISyntaxException e) {
+            serverURI = new URL(uri).toURI();
+        } catch (MalformedURLException e ) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e ) {
             throw new RuntimeException(e);
         }
     }
@@ -155,7 +150,7 @@ public class Server {
      * @return {@link SubmitTransactionResponse}
      */
     private SubmitTransactionResponse submitTransaction(Transaction transaction, String url) throws IOException {
-        Uri transactionsUri = getUri(url);
+        URI transactionsUri = getUri(url);
 
         RequestBody formBody = new FormBody.Builder()
             .add("tx", transaction.toEnvelopeXdrBase64())
@@ -199,14 +194,15 @@ public class Server {
         return submitTransaction(transaction, null);
     }
 
-    private Uri getUri(String url) {
-        boolean urlIsEmpty = TextUtils.isEmpty(url);
+    private URI getUri(String url) {
+        boolean urlIsEmpty = url == null || url.length() == 0;
         String serverUrl = urlIsEmpty ? serverURI.toString() : url;
-        Builder uriBuilder = Uri.parse(serverUrl).buildUpon();
+
+        HttpUrl.Builder uriBuilder = HttpUrl.get(URI.create(serverUrl)).newBuilder();
         if (urlIsEmpty) {
-            uriBuilder.appendPath("transactions");
+            uriBuilder.addPathSegment("transactions").build().url();
         }
-        return uriBuilder.build();
+        return uriBuilder.build().uri();
     }
 
     /**
@@ -214,17 +210,5 @@ public class Server {
      */
     void setHttpClient(OkHttpClient httpClient) {
         this.httpClient = httpClient;
-    }
-
-    private class HeaderInterceptor implements Interceptor {
-
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            request = request.newBuilder()
-                .addHeader(KIN_SDK_ANDROID_VERSION_HEADER, BuildConfig.VERSION_NAME)
-                .build();
-            return chain.proceed(request);
-        }
     }
 }

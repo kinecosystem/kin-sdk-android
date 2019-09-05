@@ -79,7 +79,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
   public ServerSentEvent stream(final EventListener<OperationResponse> listener) {
-    return new StreamHandler<>(new TypeToken<OperationResponse>() {})
+    return new StreamHandler<OperationResponse>(new TypeToken<OperationResponse>() {})
         .handleStream(this.buildUri(),listener);
   }
 

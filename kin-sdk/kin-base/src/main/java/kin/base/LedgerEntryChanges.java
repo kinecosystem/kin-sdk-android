@@ -19,8 +19,8 @@ public class LedgerEntryChanges {
 
   public static LedgerEntryChanges fromXdr(kin.base.xdr.LedgerEntryChanges xdr) {
     LedgerEntryChanges ledgerEntryChanges = new LedgerEntryChanges();
-    List<LedgerEntryChange> updates = new ArrayList<>();
-    List<LedgerEntryChange> states = new ArrayList<>();
+    List<LedgerEntryChange> updates = new ArrayList<LedgerEntryChange>();
+    List<LedgerEntryChange> states = new ArrayList<LedgerEntryChange>();
     for (kin.base.xdr.LedgerEntryChange ledgerEntryChange : xdr.getLedgerEntryChanges()) {
       switch (ledgerEntryChange.getDiscriminant()) {
         case LEDGER_ENTRY_CREATED:
