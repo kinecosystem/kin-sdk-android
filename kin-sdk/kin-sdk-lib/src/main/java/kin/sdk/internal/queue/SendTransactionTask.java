@@ -33,6 +33,7 @@ abstract class SendTransactionTask implements Runnable {
         } else {
             // TODO: 2019-09-01 invoke events for transaction fail
         }
+        taskFinishListener.onTaskFinish();
     }
 
     @Override
@@ -46,8 +47,8 @@ abstract class SendTransactionTask implements Runnable {
                 buildAndSendTransaction();
             }
         } catch (Exception e) {
-            // TODO: 2019-08-26 use events manager and send them the exception if it is not a kin
-            //  exception then create a KinException with the exception
+            // TODO: 2019-09-11 because transaction params doesn't have any event listener then
+            //  what should we do here?
         }
     }
 

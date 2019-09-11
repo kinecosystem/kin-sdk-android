@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.math.BigDecimal;
 
 import kin.base.KeyPair;
-import kin.sdk.TransactionId;
 import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.internal.Utils;
@@ -15,16 +14,12 @@ import kin.sdk.internal.data.PendingBalanceUpdaterImpl;
 import kin.sdk.internal.events.EventsManager;
 import kin.sdk.internal.events.EventsManagerImpl;
 import kin.sdk.queue.PaymentQueue;
+import kin.sdk.queue.PaymentQueueTransactionProcess;
 import kin.sdk.queue.PendingPayment;
+import kin.sdk.queue.TransactionProcess;
 import kin.sdk.transactiondata.TransactionParams;
 
 public class PaymentQueueImpl implements PaymentQueue {
-
-    private static final long DELAY_BETWEEN_PAYMENTS_MILLIS = 3000; // TODO: 2019-08-15 get those
-    // number from somewhere
-    private static final long QUEUE_TIMEOUT_MILLIS = 10000;         // TODO: 2019-08-15 get those
-    // number from somewhere
-    private static final int MAX_NUM_OF_PAYMENTS = 100;
 
     private final KeyPair accountFrom;
     private final PaymentQueueManager paymentQueueManager;
@@ -33,17 +28,17 @@ public class PaymentQueueImpl implements PaymentQueue {
     private final TasksQueueImpl tasksQueue;
 
     public PaymentQueueImpl(@NonNull KeyPair accountFrom, TransactionSender transactionSender,
-                            GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever) {
+                            GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever,
+                            PaymentQueueConfiguration configuration) {
         this.accountFrom = accountFrom;
         this.eventsManager = new EventsManagerImpl();
         tasksQueue = new TasksQueueImpl(transactionSender, eventsManager,
                 generalBlockchainInfoRetriever, accountFrom);
         this.txTasksQueueManager = new TransactionTasksQueueManagerImpl(tasksQueue, eventsManager
-                , MAX_NUM_OF_PAYMENTS);
+                , configuration.maxNumOfPayments);
         this.paymentQueueManager = new PaymentQueueManagerImpl(txTasksQueueManager,
-                new QueueSchedulerImpl(),
-                new PendingBalanceUpdaterImpl(), eventsManager,
-                DELAY_BETWEEN_PAYMENTS_MILLIS, QUEUE_TIMEOUT_MILLIS, MAX_NUM_OF_PAYMENTS);
+                new QueueSchedulerImpl(), new PendingBalanceUpdaterImpl(), eventsManager,
+                configuration);
     }
 
     @Override
@@ -70,30 +65,26 @@ public class PaymentQueueImpl implements PaymentQueue {
      * @param transactionInterceptor an optional interceptor that will be used to intercept the
      *                               transaction.
      */
-    public TransactionId enqueueTransactionParams(TransactionParams transactionParams,
-                                                  TransactionInterceptor transactionInterceptor) {
+    public void enqueueTransactionParams(TransactionParams transactionParams,
+                                         TransactionInterceptor<TransactionProcess> transactionInterceptor) {
 
         tasksQueue.scheduleTransactionParamsTask(transactionParams, transactionInterceptor);
-        return null;
-        // TODO: 2019-09-02 because we want it to be sync then we should handle it here and
-        //  return the transaction id
     }
 
     @Override
-    public void setTransactionInterceptor(TransactionInterceptor transactionInterceptor) {
-        tasksQueue.setPendingPaymentsTransactionInterceptor(transactionInterceptor);
+    public void setTransactionInterceptor(TransactionInterceptor<PaymentQueueTransactionProcess> transactionInterceptor) {
+        tasksQueue.setPaymentQueueTransactionInterceptor(transactionInterceptor);
     }
 
     @Override
-    public void addEventsListener(EventsListener eventListener) {
-        // TODO: 2019-08-27 did we agree that we call it add? meaning we will maintain a list of
-        //  them in the events manager?
+    public void setEventListener(EventListener eventListener) {
+        eventsManager.setEventListener(eventListener);
     }
 
     @Override
     public void setFee(int fee) {
         Utils.checkForNegativeFee(fee);
-        tasksQueue.setFee(fee);
+        tasksQueue.setBatchPaymentsFee(fee);
     }
 
     @Override
@@ -104,6 +95,37 @@ public class PaymentQueueImpl implements PaymentQueue {
     @Override
     public int pendingPaymentsCount() {
         return paymentQueueManager.getPendingPaymentCount();
+    }
+
+    @Override
+    public void releaseQueue() {
+        tasksQueue.stopTaskQueue();
+    }
+
+    public static class PaymentQueueConfiguration {
+
+        private long delayBetweenPaymentsMillis; // TODO: 2019-08-15 get this number from somewhere
+        private long queueTimeoutMillis;         // TODO: 2019-08-15 get this number from somewhere
+        private int maxNumOfPayments;            // TODO: 2019-08-15 get this number from somewhere
+
+        public PaymentQueueConfiguration(long delayBetweenPaymentsMillis, long queueTimeoutMillis,
+                                         int maxNumOfPayments) {
+            this.delayBetweenPaymentsMillis = delayBetweenPaymentsMillis;
+            this.queueTimeoutMillis = queueTimeoutMillis;
+            this.maxNumOfPayments = maxNumOfPayments;
+        }
+
+        long getDelayBetweenPayments() {
+            return delayBetweenPaymentsMillis;
+        }
+
+        long getQueueTimeout() {
+            return queueTimeoutMillis;
+        }
+
+        int getMaxNumOfPayments() {
+            return maxNumOfPayments;
+        }
     }
 
 }

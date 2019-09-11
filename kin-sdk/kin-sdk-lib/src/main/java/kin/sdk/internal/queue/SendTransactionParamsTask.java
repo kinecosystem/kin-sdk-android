@@ -3,9 +3,9 @@ package kin.sdk.internal.queue;
 import kin.base.KeyPair;
 import kin.sdk.TransactionId;
 import kin.sdk.TransactionInterceptor;
+import kin.sdk.exception.KinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.internal.blockchain.TransactionSender;
-import kin.sdk.internal.events.EventsManager;
 import kin.sdk.queue.TransactionParamsProcessImpl;
 import kin.sdk.queue.TransactionProcess;
 import kin.sdk.transactiondata.PaymentTransactionParams;
@@ -16,21 +16,17 @@ class SendTransactionParamsTask extends SendTransactionTask {
 
     private final TransactionParams transactionParams;
     private final TransactionSender transactionSender;
-    private final TransactionInterceptor transactionInterceptor;
-    private final EventsManager eventsManager;
+    private final TransactionInterceptor<TransactionProcess> transactionInterceptor;
     private final KeyPair accountFrom;
 
     SendTransactionParamsTask(TransactionParams transactionParams,
                               TransactionSender transactionSender,
-                              TransactionInterceptor transactionInterceptor,
-                              TaskFinishListener taskFinishListener,
-                              EventsManager eventsManager,
-                              KeyPair accountFrom) {
+                              TransactionInterceptor<TransactionProcess> transactionInterceptor,
+                              TaskFinishListener taskFinishListener, KeyPair accountFrom) {
         super(transactionSender, transactionInterceptor, taskFinishListener);
         this.transactionParams = transactionParams;
         this.transactionSender = transactionSender;
         this.transactionInterceptor = transactionInterceptor;
-        this.eventsManager = eventsManager;
         this.accountFrom = accountFrom;
     }
 
@@ -38,13 +34,16 @@ class SendTransactionParamsTask extends SendTransactionTask {
     void invokeInterceptor() {
         TransactionProcess transactionProcess =
                 new TransactionParamsProcessImpl(transactionSender, transactionParams,
-                        accountFrom, eventsManager);
+                        accountFrom);
         TransactionId transactionId = null;
         try {
             transactionId = transactionInterceptor.interceptTransactionSending(transactionProcess);
         } catch (Exception e) {
-            // TODO: 2019-09-03 if it is not kinsdkexception then wrap it with kinsdkexception
-            //  and send it with events manager
+            if (!(e instanceof KinException)) {
+                e = new OperationFailedException(e);
+            }
+            // TODO: 2019-09-11 because transaction params doesn't have any event listener then
+            //  what should we do here?
         }
         handleTransactionFinished(transactionId);
     }

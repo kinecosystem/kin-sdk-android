@@ -34,14 +34,17 @@ import kin.sdk.transactiondata.Transaction;
 
 public class TransactionSender {
 
-    private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is
-    // 28 but we add 7 more bytes which includes the appId and some characters.
+    // Memo length limitation(in bytes) is 28 but we add 7(or 6) more bytes which includes the
+    // appId and some characters.
+    private static final int MEMO_BYTES_LENGTH_LIMIT = 21; // TODO: 2019-09-08 we should fix this
+    // because it could be 22 in case of a 3 char appId
     private static final int MAX_NUM_OF_DECIMAL_PLACES = 4;
-    private static String MEMO_APP_ID_VERSION_PREFIX = "1";
-    private static String MEMO_DELIMITER = "-";
+    private static final String MEMO_APP_ID_VERSION_PREFIX = "1";
+    private static final String MEMO_DELIMITER = "-";
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
     private static final String INSUFFICIENT_BALANCE_RESULT_CODE = "tx_insufficient_balance";
+
     private final Server server; //horizon server
     private final String appId;
 
@@ -72,6 +75,30 @@ public class TransactionSender {
                 , sourceAccount, fee, memo);
         return new PaymentTransaction(stellarTransaction, addressee.getAccountId(), amount, memo);
     }
+
+    public BatchPaymentTransaction buildBatchPaymentTransaction(@NonNull KeyPair from,
+                                                                @NonNull List<PendingPayment> pendingPayments,
+                                                                int fee, @Nullable String memo) throws OperationFailedException {
+        checkBatchPaymentkParams(from, fee, memo);
+        if (appId != null && !appId.equals("")) {
+            memo = addAppIdToMemo(memo);
+        }
+
+        AccountResponse sourceAccount = loadSourceAccount(from);
+
+        Builder transactionBuilder = new Builder(sourceAccount);
+        for (PendingPayment pendingPayment : pendingPayments) {
+            KeyPair destination =
+                    generateAddresseeKeyPair(pendingPayment.destinationPublicAddress());
+            addPaymentOperationToTransaction(transactionBuilder, destination,
+                    pendingPayment.amount());
+        }
+
+        kin.base.Transaction transaction = addTransactionParametersAndSign(from, fee, memo,
+                transactionBuilder);
+        return new BatchPaymentTransaction(transaction);
+    }
+
 
     public TransactionId sendTransaction(Transaction transaction) throws OperationFailedException {
         return sendTransaction(((TransactionInternal) transaction).baseTransaction());
@@ -164,31 +191,6 @@ public class TransactionSender {
         addPaymentOperationToTransaction(transactionBuilder, addressee, amount);
 
         return addTransactionParametersAndSign(from, fee, memo, transactionBuilder);
-    }
-
-
-    public BatchPaymentTransaction buildBatchPaymentTransaction(@NonNull KeyPair from,
-                                                                @NonNull List<PendingPayment> pendingPayments,
-                                                                int fee, @Nullable String memo) throws OperationFailedException {
-
-        checkBatchPaymentkParams(from, fee, memo);
-        if (appId != null && !appId.equals("")) {
-            memo = addAppIdToMemo(memo);
-        }
-
-        AccountResponse sourceAccount = loadSourceAccount(from);
-
-        Builder transactionBuilder = new Builder(sourceAccount);
-        for (PendingPayment pendingPayment : pendingPayments) {
-            KeyPair destination =
-                    generateAddresseeKeyPair(pendingPayment.destinationPublicAddress());
-            addPaymentOperationToTransaction(transactionBuilder, destination,
-                    pendingPayment.amount());
-        }
-
-        kin.base.Transaction transaction = addTransactionParametersAndSign(from, fee, memo,
-                transactionBuilder);
-        return new BatchPaymentTransaction(transaction);
     }
 
     private void addPaymentOperationToTransaction(Builder transactionBuilder, KeyPair destination,

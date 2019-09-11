@@ -6,8 +6,6 @@ import java.math.BigDecimal;
 
 public interface PendingPayment {
 
-    // TODO: 2019-08-14 namings???
-
     /**
      * Destination account public address.
      */

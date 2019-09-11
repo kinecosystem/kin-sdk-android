@@ -1,11 +1,8 @@
 package kin.sdk.queue;
 
-import android.support.annotation.Nullable;
-
 import kin.sdk.TransactionId;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.internal.blockchain.TransactionSender;
-import kin.sdk.internal.events.EventsManager;
 import kin.sdk.transactiondata.Transaction;
 
 /**
@@ -15,36 +12,15 @@ import kin.sdk.transactiondata.Transaction;
 public abstract class TransactionProcess {
 
     private final TransactionSender transactionSender;
-    private final EventsManager eventsManager;
 
-    TransactionProcess(TransactionSender transactionSender, EventsManager eventsManager) {
+    TransactionProcess(TransactionSender transactionSender) {
         this.transactionSender = transactionSender;
-        this.eventsManager = eventsManager;
-    }
-
-    /**
-     * Build the transaction
-     *
-     * @param memo the memo that should be added to the transaction
-     * @return a new created transaction.
-     * @throws OperationFailedException in case it couldn't be build.
-     */
-    abstract Transaction buildTransaction(@Nullable String memo) throws OperationFailedException;
-
-    /**
-     * @return a transaction that consist of the list of pending payments.
-     */
-    public Transaction transaction() throws OperationFailedException {
-        return buildTransaction(null);
     }
 
     /**
      * @return a transaction that consist of the list of pending payments.
-     * Also add a memo to that transaction
      */
-    public Transaction transaction(String memo) throws OperationFailedException {
-        return buildTransaction(memo);
-    }
+    public abstract Transaction transaction() throws OperationFailedException;
 
     /**
      * Send the transaction with a Transaction object

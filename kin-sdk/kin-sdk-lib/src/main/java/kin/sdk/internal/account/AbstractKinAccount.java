@@ -10,8 +10,8 @@ import kin.sdk.Balance;
 import kin.sdk.KinAccount;
 import kin.sdk.TransactionId;
 import kin.sdk.TransactionInterceptor;
-import kin.sdk.internal.queue.PaymentQueueImpl;
 import kin.sdk.queue.PaymentQueue;
+import kin.sdk.queue.TransactionProcess;
 import kin.sdk.transactiondata.PaymentTransaction;
 import kin.sdk.transactiondata.TransactionParams;
 import kin.utils.Request;
@@ -80,12 +80,16 @@ abstract class AbstractKinAccount implements KinAccount {
 
     @Override
     public Request<TransactionId> sendTransaction(final TransactionParams transactionParams,
-                                                  final TransactionInterceptor interceptor) {
+                                                  final TransactionInterceptor<TransactionProcess> interceptor) {
         return new Request<>(new Callable<TransactionId>() {
             @Override
             public TransactionId call() {
-                return ((PaymentQueueImpl) paymentQueue).enqueueTransactionParams(transactionParams, interceptor);
+//                return ((PaymentQueueImpl) paymentQueue).enqueueTransactionParams
+//                (transactionParams, interceptor);
+                // TODO: 2019-09-09 implement
+                return null;
             }
+
         });
     }
 

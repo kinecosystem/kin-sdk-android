@@ -15,24 +15,20 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
     private final QueueScheduler queueScheduler;
     private final PendingBalanceUpdater pendingBalanceUpdater;
     private final EventsManager eventsManager;
-    private final long delayBetweenPayments;
-    private final long queueTimeout;
-    private final int maxNumOfPayments;
+    private final PaymentQueueImpl.PaymentQueueConfiguration configuration;
     private List<PendingPayment> queue;
     private Runnable dequeueTask;
     private Runnable timeoutTask;
 
     PaymentQueueManagerImpl(TransactionTasksQueueManager txTasksQueueManager, QueueScheduler queueScheduler,
                             PendingBalanceUpdater pendingBalanceUpdater, EventsManager eventsManager,
-                            long delayBetweenPayments, long queueTimeout, int maxNumOfPayments) {
+                            PaymentQueueImpl.PaymentQueueConfiguration configuration) {
         this.txTasksQueueManager = txTasksQueueManager;
         this.queueScheduler = queueScheduler;
         this.pendingBalanceUpdater = pendingBalanceUpdater;
         this.eventsManager = eventsManager;
-        this.delayBetweenPayments = delayBetweenPayments;
-        this.queueTimeout = queueTimeout;
-        this.maxNumOfPayments = maxNumOfPayments;
-        queue = new ArrayList<>(maxNumOfPayments);
+        this.configuration = configuration;
+        queue = new ArrayList<>(configuration.getMaxNumOfPayments());
         dequeueTask = new DequeueTask();
     }
 
@@ -44,7 +40,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
             public void run() {
                 validatePendingBalance(); // TODO: 2019-08-15 handle it
 
-                if (getPendingPaymentCount() == maxNumOfPayments - 1) {
+                if (getPendingPaymentCount() == configuration.getMaxNumOfPayments() - 1) {
                     addToQueue(pendingPayment);
                     sendPendingPaymentsToTaskQueue();
                 } else {
@@ -57,19 +53,21 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
                 if (queue.size() == 1) {
                     queueScheduler.removePendingTask(timeoutTask);
                     timeoutTask = new DequeueTask();
-                    queueScheduler.scheduleDelayed(timeoutTask, queueTimeout);
+                    queueScheduler.scheduleDelayed(timeoutTask, configuration.getQueueTimeout());
                 }
                 resetScheduler();
             }
 
             private void addToQueue(PendingPayment pendingPayment) {
                 queue.add(pendingPayment);
+                eventsManager.onPaymentEnqueued(pendingPayment);
             }
 
             private void resetScheduler() {
                 queueScheduler.removePendingTask(dequeueTask);
                 dequeueTask = new DequeueTask();
-                queueScheduler.scheduleDelayed(dequeueTask, delayBetweenPayments);
+                queueScheduler.scheduleDelayed(dequeueTask,
+                        configuration.getDelayBetweenPayments());
             }
         });
     }
@@ -94,7 +92,7 @@ class PaymentQueueManagerImpl implements PaymentQueueManager {
     private void sendPendingPaymentsToTaskQueue() {
         queueScheduler.removeAllPendingTasks();
         List<PendingPayment> pendingPayments = queue;
-        queue = new ArrayList<>(maxNumOfPayments);
+        queue = new ArrayList<>(configuration.getMaxNumOfPayments());
         txTasksQueueManager.enqueue(pendingPayments);
     }
 

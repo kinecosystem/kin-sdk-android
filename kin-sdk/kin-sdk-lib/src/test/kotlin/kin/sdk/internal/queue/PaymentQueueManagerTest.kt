@@ -40,8 +40,10 @@ class PaymentQueueManagerTest {
     private fun initPaymentQueueManager() {
         destinationAccount = KeyPair.random().accountId
         sourceAccount = KeyPair.random().accountId
-        paymentQueueManager = PaymentQueueManagerImpl(txTaskQueueManager, queueScheduler, pendingBalanceUpdater, eventsManager,
-                Constants.DELAY_BETWEEN_PAYMENTS_MILLIS, Constants.QUEUE_TIMEOUT_MILLIS, Constants.MAX_NUM_OF_PAYMENTS)
+        val configuration = PaymentQueueImpl.PaymentQueueConfiguration(Constants.DELAY_BETWEEN_PAYMENTS_MILLIS,
+                Constants.QUEUE_TIMEOUT_MILLIS, Constants.MAX_NUM_OF_PAYMENTS)
+        paymentQueueManager = PaymentQueueManagerImpl(txTaskQueueManager, queueScheduler,
+                pendingBalanceUpdater, eventsManager, configuration)
     }
 
     @Test

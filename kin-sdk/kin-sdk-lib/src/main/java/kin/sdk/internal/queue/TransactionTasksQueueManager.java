@@ -4,6 +4,7 @@ import java.util.List;
 
 import kin.sdk.TransactionInterceptor;
 import kin.sdk.queue.PendingPayment;
+import kin.sdk.queue.TransactionProcess;
 import kin.sdk.transactiondata.PaymentTransactionParams;
 
 public interface TransactionTasksQueueManager {
@@ -24,7 +25,7 @@ public interface TransactionTasksQueueManager {
      *      *                        the transaction.
      */
     void enqueue(PaymentTransactionParams transactionParams,
-                 TransactionInterceptor transactionInterceptor);
+                 TransactionInterceptor<TransactionProcess> transactionInterceptor);
 
     /**
      * @return true if currently there is a transaction in progress, meaning it will return true if

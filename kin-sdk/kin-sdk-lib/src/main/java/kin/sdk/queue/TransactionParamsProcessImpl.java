@@ -3,7 +3,6 @@ package kin.sdk.queue;
 import kin.base.KeyPair;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.internal.blockchain.TransactionSender;
-import kin.sdk.internal.events.EventsManager;
 import kin.sdk.transactiondata.PaymentTransactionParams;
 import kin.sdk.transactiondata.Transaction;
 import kin.sdk.transactiondata.TransactionParams;
@@ -14,20 +13,26 @@ public class TransactionParamsProcessImpl extends TransactionProcess {
     private final TransactionParams transactionParams;
     private final KeyPair accountFrom;
 
-    // TODO: 2019-08-04 implement and add java docs
     public TransactionParamsProcessImpl(TransactionSender transactionSender,
-                                        TransactionParams transactionParams, KeyPair accountFrom,
-                                        EventsManager eventsManager) {
-        super(transactionSender, eventsManager);
+                                        TransactionParams transactionParams, KeyPair accountFrom) {
+        super(transactionSender);
         this.transactionSender = transactionSender;
         this.transactionParams = transactionParams;
         this.accountFrom = accountFrom;
     }
 
     @Override
-    Transaction buildTransaction(String memo) throws OperationFailedException {
-        // TODO: 2019-08-28 which memo should we use? probably the last one, which is the one
-        //  they set here, no? only if it is null or empty use the first one?  we need to decide!
+    public Transaction transaction() throws OperationFailedException {
+        return buildTransaction();
+    }
+
+    /**
+     * Build the transaction
+     *
+     * @return a new created transaction.
+     * @throws OperationFailedException in case it couldn't be build.
+     */
+    private Transaction buildTransaction() throws OperationFailedException {
         if (transactionParams instanceof PaymentTransactionParams) {
             PaymentTransactionParams paymentTransactionParams =
                     (PaymentTransactionParams) transactionParams;

@@ -11,7 +11,9 @@ import kin.sdk.TransactionInterceptor;
 import kin.sdk.internal.blockchain.GeneralBlockchainInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.events.EventsManager;
+import kin.sdk.queue.PaymentQueueTransactionProcess;
 import kin.sdk.queue.PendingPayment;
+import kin.sdk.queue.TransactionProcess;
 import kin.sdk.transactiondata.TransactionParams;
 
 /**
@@ -23,13 +25,13 @@ class TasksQueueImpl extends HandlerThread implements TasksQueue {
     private static final String nameTag = "TaskQueueHandlerThread";
 
     private final TransactionSender transactionSender;
-    private TransactionInterceptor pendingPaymentsTransactionInterceptor;
+    private TransactionInterceptor<PaymentQueueTransactionProcess> paymentQueueTransactionInterceptor;
     private final EventsManager eventsManager;
     private final GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever;
     private final KeyPair accountFrom;
     private TaskFinishListener taskFinishListener;
     private Handler backgroundHandler;
-    private int fee = -1;
+    private int batchPaymentsFee = -1;
 
     TasksQueueImpl(@NonNull TransactionSender transactionSender,
                    @NonNull EventsManager eventsManager,
@@ -42,8 +44,6 @@ class TasksQueueImpl extends HandlerThread implements TasksQueue {
         this.accountFrom = accountFrom;
 
         start();
-        // TODO: 2019-08-21 check the threading priority and what is the difference between this
-        //  and Process.THREAD_PRIORITY_...
     }
 
     @Override
@@ -57,34 +57,32 @@ class TasksQueueImpl extends HandlerThread implements TasksQueue {
         if (backgroundHandler != null) {
             SendPendingPaymentsTask sendPendingPaymentsTask =
                     new SendPendingPaymentsTask(batchPendingPayments, transactionSender,
-                            pendingPaymentsTransactionInterceptor, taskFinishListener,
-                            eventsManager, generalBlockchainInfoRetriever, fee, accountFrom);
+                            paymentQueueTransactionInterceptor, taskFinishListener,
+                            eventsManager, generalBlockchainInfoRetriever, batchPaymentsFee,
+                            accountFrom);
             backgroundHandler.post(sendPendingPaymentsTask);
         }
     }
 
     @Override
     public void scheduleTransactionParamsTask(TransactionParams transactionParams,
-                                              TransactionInterceptor transactionParamsInterceptor) {
+                                              TransactionInterceptor<TransactionProcess> transactionParamsInterceptor) {
         if (backgroundHandler != null) {
             SendTransactionParamsTask sendTransactionParamsTask =
                     new SendTransactionParamsTask(transactionParams,
                             transactionSender,
-                            transactionParamsInterceptor, taskFinishListener, eventsManager,
-                            accountFrom);
-            // TODO: 2019-08-27 although currently we only have one task each time and we are
-            //  dealing with the param at the manager level,
-            //  if in the future something will change in the manager then it will still post it
-            //  at front of queue. if not needed then we can currently just do backgroundHandler
-            //  .post(...)
+                            transactionParamsInterceptor, taskFinishListener, accountFrom);
             backgroundHandler.postAtFrontOfQueue(sendTransactionParamsTask);
         }
     }
 
     @Override
     public void stopTaskQueue() {
-        // TODO: 2019-08-22 need to call quit from outside when finishing
-        quit();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            quitSafely();
+        } else {
+            quit();
+        }
     }
 
     @Override
@@ -93,12 +91,12 @@ class TasksQueueImpl extends HandlerThread implements TasksQueue {
     }
 
     @Override
-    public void setFee(int fee) {
-        this.fee = fee;
+    public void setBatchPaymentsFee(int batchPaymentsFee) {
+        this.batchPaymentsFee = batchPaymentsFee;
     }
 
     @Override
-    public void setPendingPaymentsTransactionInterceptor(TransactionInterceptor pendingPaymentsTransactionInterceptor) {
-        this.pendingPaymentsTransactionInterceptor = pendingPaymentsTransactionInterceptor;
+    public void setPaymentQueueTransactionInterceptor(TransactionInterceptor<PaymentQueueTransactionProcess> pendingPaymentsTransactionInterceptor) {
+        this.paymentQueueTransactionInterceptor = pendingPaymentsTransactionInterceptor;
     }
 }

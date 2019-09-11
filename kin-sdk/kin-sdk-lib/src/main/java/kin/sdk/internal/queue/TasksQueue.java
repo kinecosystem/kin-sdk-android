@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import kin.sdk.TransactionInterceptor;
+import kin.sdk.queue.PaymentQueueTransactionProcess;
 import kin.sdk.queue.PendingPayment;
+import kin.sdk.queue.TransactionProcess;
 import kin.sdk.transactiondata.TransactionParams;
 
 public interface TasksQueue {
@@ -35,7 +37,7 @@ public interface TasksQueue {
      *                                     the transaction.
      */
     void scheduleTransactionParamsTask(TransactionParams paymentTransactionParams,
-                                       @Nullable TransactionInterceptor transactionParamsInterceptor);
+                                       @Nullable TransactionInterceptor<TransactionProcess> transactionParamsInterceptor);
 
     /**
      * Stop all tasks in the queue.
@@ -60,7 +62,7 @@ public interface TasksQueue {
      *
      * @param fee the amount of fee(in Quarks) for each payment (1 Quark = 0.00001 KIN).
      */
-    void setFee(int fee);
+    void setBatchPaymentsFee(int fee);
 
     /**
      * Set a transaction interceptor.
@@ -69,5 +71,5 @@ public interface TasksQueue {
      *                                              payments transactions to set.
      *                                              <p> See {@link TransactionInterceptor} </p>
      */
-    void setPendingPaymentsTransactionInterceptor(TransactionInterceptor pendingPaymentsTransactionInterceptor);
+    void setPaymentQueueTransactionInterceptor(TransactionInterceptor<PaymentQueueTransactionProcess> pendingPaymentsTransactionInterceptor);
 }

@@ -11,6 +11,7 @@ import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
 import kin.sdk.queue.PaymentQueue;
+import kin.sdk.queue.TransactionProcess;
 import kin.sdk.transactiondata.PaymentTransaction;
 import kin.sdk.transactiondata.TransactionParams;
 import kin.utils.Request;
@@ -185,7 +186,7 @@ public interface KinAccount {
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     Request<TransactionId> sendTransaction(TransactionParams transactionParams,
-                                           @Nullable TransactionInterceptor interceptor);
+                                           @Nullable TransactionInterceptor<TransactionProcess> interceptor);
 
     /**
      * @return the payment queue.
