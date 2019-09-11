@@ -12,6 +12,10 @@ public class EventsManagerImpl implements EventsManager {
 
     private PaymentQueue.EventListener eventListener;
 
+    // TODO: 2019-09-11 if we should use the main thread in the callback then we will have a
+    //  problem because we also use this event manager for our needs and not necessarily want to
+    //  run on main thread
+
     public EventsManagerImpl() {
     }
 
