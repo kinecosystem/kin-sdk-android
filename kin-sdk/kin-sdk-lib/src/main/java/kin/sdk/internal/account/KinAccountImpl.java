@@ -2,8 +2,15 @@ package kin.sdk.internal.account;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import java.math.BigDecimal;
+
 import kin.base.KeyPair;
-import kin.sdk.*;
+import kin.sdk.Balance;
+import kin.sdk.EventListener;
+import kin.sdk.ListenerRegistration;
+import kin.sdk.PaymentInfo;
+import kin.sdk.TransactionId;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.OperationFailedException;
@@ -12,12 +19,8 @@ import kin.sdk.internal.blockchain.AccountInfoRetriever;
 import kin.sdk.internal.blockchain.TransactionSender;
 import kin.sdk.internal.blockchain.events.BlockchainEvents;
 import kin.sdk.internal.blockchain.events.BlockchainEventsCreator;
-import kin.sdk.internal.queue.PaymentQueueImpl;
 import kin.sdk.queue.PaymentQueue;
 import kin.sdk.transactiondata.PaymentTransaction;
-import kin.utils.Request;
-
-import java.math.BigDecimal;
 
 public final class KinAccountImpl extends AbstractKinAccount {
 
@@ -29,14 +32,18 @@ public final class KinAccountImpl extends AbstractKinAccount {
     private final PaymentQueue paymentQueue;
     private boolean isDeleted = false;
 
-    public KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
-                          AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
+    public KinAccountImpl(KeyPair account, BackupRestore backupRestore,
+                          TransactionSender transactionSender,
+                          AccountInfoRetriever accountInfoRetriever,
+                          BlockchainEventsCreator blockchainEventsCreator,
+                          PaymentQueue paymentQueue) {
+        super(paymentQueue);
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;
         this.accountInfoRetriever = accountInfoRetriever;
         this.blockchainEvents = blockchainEventsCreator.create(account.getAccountId());
-        this.paymentQueue = new PaymentQueueImpl(account.getAccountId());
+        this.paymentQueue = paymentQueue;
     }
 
     @Override
@@ -48,17 +55,19 @@ public final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress,
+                                                   @NonNull BigDecimal amount,
                                                    int fee) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildTransaction(account, publicAddress, amount, fee);
+        return transactionSender.buildPaymentTransaction(account, publicAddress, amount, fee);
     }
 
     @Override
-    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress, @NonNull BigDecimal amount,
+    public PaymentTransaction buildTransactionSync(@NonNull String publicAddress,
+                                                   @NonNull BigDecimal amount,
                                                    int fee, @Nullable String memo) throws OperationFailedException {
         checkValidAccount();
-        return transactionSender.buildTransaction(account, publicAddress, amount, fee, memo);
+        return transactionSender.buildPaymentTransaction(account, publicAddress, amount, fee, memo);
     }
 
     @NonNull
@@ -76,24 +85,8 @@ public final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public TransactionId sendTransactionSync(SendTransactionParams transaction, TransactionInterceptor interceptor) throws OperationFailedException {
-        return null; // TODO: 2019-08-15 implement
-    }
-
-    @Override
-    public Request<TransactionId> sendTransaction(SendTransactionParams transaction,
-                                                  TransactionInterceptor interceptor) {
-        return null; // TODO: 2019-08-15 implement
-    }
-
-    @Override
     public PaymentQueue paymentQueue() {
         return paymentQueue;
-    }
-
-    @Override
-    public Request<Balance> getPendingBalance() {
-        return null; // TODO: 2019-08-15 implement
     }
 
     @NonNull

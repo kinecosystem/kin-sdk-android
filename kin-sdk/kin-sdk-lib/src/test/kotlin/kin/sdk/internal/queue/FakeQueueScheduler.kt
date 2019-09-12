@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 open class FakeQueueScheduler : QueueScheduler {
 
-    var scheduler: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
+    private var scheduler: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
     private val futureTasks: HashMap<Runnable?, ScheduledFuture<*>?> = HashMap()
     val numOfTasks: Int
         get() = futureTasks.size
@@ -25,19 +25,12 @@ open class FakeQueueScheduler : QueueScheduler {
         // killing all future futureTasks not including the current running task if there is one.
         scheduler.shutdown()
         scheduler = ScheduledThreadPoolExecutor(1)
-        println(futureTasks.size)
         futureTasks.clear()
-        println(futureTasks.size)
-        println()
     }
 
     override fun removePendingTask(runnable: Runnable?) {
-        println(futureTasks.size)
         val removedRunnable = futureTasks.remove(runnable)
-        println(removedRunnable)
-        println(futureTasks.size)
         removedRunnable?.cancel(false)
-        println()
     }
 
     override fun schedule(runnable: Runnable?) {

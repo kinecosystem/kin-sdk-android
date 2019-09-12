@@ -30,7 +30,6 @@ class KinAccountIntegrationTest {
     private val appId = "1a2c"
     private val fee: Int = 100
     private val feeInKin: BigDecimal = BigDecimal.valueOf(0.001)
-    private val appIdVersionPrefix = "1"
     private val timeoutDurationSeconds: Long = 15
     private val timeoutDurationSecondsLong: Long = 20
 
@@ -106,10 +105,10 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithMemo() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard, senderFundAmount = 100)
 
         val memo = "fake memo"
-        val expectedMemo = addAppIdToMemo(memo)
+        val expectedMemo = addAppIdToMemo(memo, appId)
 
         val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, memo)
 
@@ -123,8 +122,8 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithoutMemoJustPrefix() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
-        val expectedMemo = addAppIdToMemo("")
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard, senderFundAmount = 100)
+        val expectedMemo = addAppIdToMemo("", appId)
         val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, null)
         val server = Server(TEST_NETWORK_URL)
         val transactionResponse = server.transactions().transaction(transactionId.id())
@@ -136,10 +135,8 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithoutMemo() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(
-                senderFundAmount = 100,
-                kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, null))
-
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(KinClient(InstrumentationRegistry.getTargetContext(), environment, null),
+                fakeKinOnBoard, senderFundAmount = 100)
         val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, null)
         val server = Server(TEST_NETWORK_URL)
         val transactionResponse = server.transactions().transaction(transactionId.id())
@@ -151,10 +148,8 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithoutMemoPrefix() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(
-                senderFundAmount = 100,
-                kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, null))
-
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(KinClient(InstrumentationRegistry.getTargetContext(), environment, null),
+                fakeKinOnBoard, senderFundAmount = 100)
         val memo = "fake memo"
         val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, memo)
         val server = Server(TEST_NETWORK_URL)
@@ -234,7 +229,7 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_NotEnoughFee_InsufficientFeeException() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard)
 
         expectedEx.expect(InsufficientFeeException::class.java)
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
@@ -246,7 +241,7 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendWhitelistTransaction_FeeNotReduce() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard, senderFundAmount = 100)
 
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
@@ -260,7 +255,7 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendWhitelistTransaction_Success() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard, senderFundAmount = 100)
 
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
@@ -275,7 +270,7 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_Success() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard, senderFundAmount = 100)
         val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, "fake memo")
         assertNotNull(transactionId)
         assertThat(transactionId.id(), not(isEmptyString()))
@@ -302,7 +297,7 @@ class KinAccountIntegrationTest {
         val fundingAmount = BigDecimal("100")
         val transactionAmount = BigDecimal("21.123")
 
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(0, 0)
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard, 0, 0)
 
         //register listeners for testing
         val actualPaymentsResults = ArrayList<PaymentInfo>()
@@ -324,7 +319,7 @@ class KinAccountIntegrationTest {
         //send the transaction we want to observe
         fakeKinOnBoard.fundWithKin(kinAccountSender.publicAddress.orEmpty(), "100")
         val memo = "memo"
-        val expectedMemo = addAppIdToMemo(memo)
+        val expectedMemo = addAppIdToMemo(memo, appId)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), transactionAmount, fee, memo)
         val expectedTransactionId = kinAccountSender.sendTransactionSync(transaction)
 
@@ -351,7 +346,7 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun createPaymentListener_RemoveListener_NoEvents() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard, senderFundAmount = 100)
 
         val latch = CountDownLatch(1)
         val listenerRegistration = kinAccountReceiver.addPaymentListener {
@@ -368,25 +363,11 @@ class KinAccountIntegrationTest {
     @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_NotEnoughKin_InsufficientKinException() {
-        val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
+        val (kinAccountSender, kinAccountReceiver) = onboardAccounts(kinClient, fakeKinOnBoard)
 
         expectedEx.expect(InsufficientKinException::class.java)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
         kinAccountSender.sendTransactionSync(transaction)
-    }
-
-    private fun onboardAccounts(senderFundAmount: Int = 0,
-                                receiverFundAmount: Int = 0,
-                                kinClient: KinClient = this.kinClient): Pair<KinAccount, KinAccount> {
-        val kinAccountSender = kinClient.addAccount()
-        val kinAccountReceiver = kinClient.addAccount()
-        fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty(), senderFundAmount)
-        fakeKinOnBoard.createAccount(kinAccountReceiver.publicAddress.orEmpty(), receiverFundAmount)
-        return Pair(kinAccountSender, kinAccountReceiver)
-    }
-
-    private fun addAppIdToMemo(memo: String): String {
-        return appIdVersionPrefix.plus("-").plus(appId).plus("-").plus(memo)
     }
 
     private fun sendTransactionAndAssert(kinAccountSender: KinAccount, kinAccountReceiver: KinAccount, memo: String?): TransactionId {

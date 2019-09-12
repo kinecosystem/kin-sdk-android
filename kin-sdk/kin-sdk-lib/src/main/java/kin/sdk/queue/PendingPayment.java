@@ -6,10 +6,6 @@ import java.math.BigDecimal;
 
 public interface PendingPayment {
 
-    enum Status {
-        PENDING, COMPLETED, FAILED
-    }
-
     /**
      * Destination account public address.
      */
@@ -31,9 +27,4 @@ public interface PendingPayment {
      */
     @Nullable
     Object metadata();
-
-    /**
-     * Current Payment status
-     */
-    Status status();
 }

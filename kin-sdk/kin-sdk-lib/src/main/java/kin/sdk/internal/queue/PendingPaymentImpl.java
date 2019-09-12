@@ -10,7 +10,6 @@ public class PendingPaymentImpl implements PendingPayment {
     private final String sourcePublicAddress;
     private final BigDecimal amount;
     private final Object metadata;
-    private Status status;
 
     public PendingPaymentImpl(String destinationPublicAddress, String sourcePublicAddress, BigDecimal amount) {
         this(destinationPublicAddress, sourcePublicAddress, amount, null);
@@ -22,7 +21,6 @@ public class PendingPaymentImpl implements PendingPayment {
         this.sourcePublicAddress = sourcePublicAddress;
         this.amount = amount;
         this.metadata = metadata;
-        this.status = Status.PENDING;
     }
 
     @Override
@@ -43,14 +41,5 @@ public class PendingPaymentImpl implements PendingPayment {
     @Override
     public Object metadata() {
         return metadata;
-    }
-
-    @Override
-    public Status status() {
-        return status;
-    }
-
-    void setStatus(Status status) {
-        this.status = status;
     }
 }

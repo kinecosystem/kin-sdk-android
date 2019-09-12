@@ -5,7 +5,7 @@ import kin.sdk.queue.TransactionProcess;
 /**
  * provide the generated transaction before sending to the blockchain.
  */
-public interface TransactionInterceptor {
+public interface TransactionInterceptor<T extends TransactionProcess> {
 
     /**
      * Intercept the generated transaction before sending to the blockchain
@@ -21,6 +21,6 @@ public interface TransactionInterceptor {
      * @return the transaction identifier.
      * @throws Exception
      */
-    TransactionId interceptTransactionSending(TransactionProcess transactionProcess) throws Exception;
+    TransactionId interceptTransactionSending(T transactionProcess) throws Exception;
 }
 

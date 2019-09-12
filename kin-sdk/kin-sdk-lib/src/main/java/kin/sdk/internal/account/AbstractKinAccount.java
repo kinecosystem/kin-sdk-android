@@ -2,36 +2,51 @@ package kin.sdk.internal.account;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import kin.sdk.Balance;
-import kin.sdk.KinAccount;
-import kin.sdk.TransactionId;
-import kin.sdk.transactiondata.PaymentTransaction;
-import kin.utils.Request;
 
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
 
+import kin.sdk.Balance;
+import kin.sdk.KinAccount;
+import kin.sdk.TransactionId;
+import kin.sdk.TransactionInterceptor;
+import kin.sdk.queue.PaymentQueue;
+import kin.sdk.queue.TransactionProcess;
+import kin.sdk.transactiondata.PaymentTransaction;
+import kin.sdk.transactiondata.TransactionParams;
+import kin.utils.Request;
+
 abstract class AbstractKinAccount implements KinAccount {
+
+    private final PaymentQueue paymentQueue;
+
+    AbstractKinAccount(PaymentQueue paymentQueue) {
+        this.paymentQueue = paymentQueue;
+    }
 
     @NonNull
     @Override
     public Request<PaymentTransaction> buildTransaction(@NonNull final String publicAddress,
-                                                        @NonNull final BigDecimal amount, final int fee) {
+                                                        @NonNull final BigDecimal amount,
+                                                        final int fee) {
         return new Request<>(new Callable<PaymentTransaction>() {
             @Override
             public PaymentTransaction call() throws Exception {
                 return buildTransactionSync(publicAddress, amount, fee);
             }
         });
-    }@NonNull
+    }
+
+    @NonNull
     @Override
     public Request<PaymentTransaction> buildTransaction(@NonNull final String publicAddress,
                                                         @NonNull final BigDecimal amount,
-                                                        final int fee, @Nullable final String memo) {
+                                                        final int fee,
+                                                        @Nullable final String memo) {
         return new Request<>(new Callable<PaymentTransaction>() {
             @Override
             public PaymentTransaction call() throws Exception {
-                return buildTransactionSync(publicAddress, amount, fee, memo); 
+                return buildTransactionSync(publicAddress, amount, fee, memo);
             }
         });
     }
@@ -57,6 +72,37 @@ abstract class AbstractKinAccount implements KinAccount {
             }
         });
     }
+
+    @Override
+    public Request<TransactionId> sendTransaction(final TransactionParams transactionParams) {
+        return sendTransaction(transactionParams, null);
+    }
+
+    @Override
+    public Request<TransactionId> sendTransaction(final TransactionParams transactionParams,
+                                                  final TransactionInterceptor<TransactionProcess> interceptor) {
+        return new Request<>(new Callable<TransactionId>() {
+            @Override
+            public TransactionId call() {
+//                return ((PaymentQueueImpl) paymentQueue).enqueueTransactionParams
+//                (transactionParams, interceptor);
+                // TODO: 2019-09-09 implement
+                return null;
+            }
+
+        });
+    }
+
+    @Override
+    public Request<Balance> getPendingBalance() {
+        return new Request<>(new Callable<Balance>() {
+            @Override
+            public Balance call() {
+                return getPendingBalanceSync();
+            }
+        });
+    }
+
 
     @NonNull
     @Override

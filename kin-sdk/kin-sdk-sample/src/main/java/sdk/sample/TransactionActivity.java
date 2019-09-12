@@ -10,6 +10,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import org.json.JSONException;
+
+import java.math.BigDecimal;
+
 import kin.sdk.KinAccount;
 import kin.sdk.TransactionId;
 import kin.sdk.exception.AccountDeletedException;
@@ -18,9 +23,6 @@ import kin.sdk.sample.R;
 import kin.sdk.transactiondata.PaymentTransaction;
 import kin.utils.Request;
 import kin.utils.ResultCallback;
-import org.json.JSONException;
-
-import java.math.BigDecimal;
 
 /**
  * Displays form to enter public address and amount and a button to send a transaction
@@ -281,7 +283,8 @@ public class TransactionActivity extends BaseActivity {
 
         @Override
         public void onResult(PaymentTransaction transaction) {
-            Log.d(TAG, "buildTransaction: build transaction " + transaction.id().id() + " succeeded");
+            Log.d(TAG, "buildPaymentTransaction: build transaction " + transaction.id().id() + " " +
+                    "succeeded");
 
             // This is just to differentiate between whitelist transaction and regular transaction
             if (switchButton.isChecked()) {
@@ -296,7 +299,7 @@ public class TransactionActivity extends BaseActivity {
 
         @Override
         public void onError(Exception e) {
-            Utils.logError(e, "buildTransaction");
+            Utils.logError(e, "buildPaymentTransaction");
             KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
         }
     }

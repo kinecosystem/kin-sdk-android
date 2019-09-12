@@ -1,20 +1,22 @@
 package kin.sdk.queue;
 
 import android.support.annotation.NonNull;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import kin.sdk.TransactionId;
 import kin.sdk.TransactionInterceptor;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.KinException;
 import kin.sdk.transactiondata.BatchPaymentTransaction;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 public interface PaymentQueue {
 
     /**
      * Register/unregister for queue events.
      */
-    interface EventsListener {
+    interface EventListener {
 
         /**
          * Invoked when a new payment is enqueued
@@ -42,7 +44,7 @@ public interface PaymentQueue {
          *                    <p> See {@link BatchPaymentTransaction} and {@link PendingPayment} for more
          *                    information</p>
          */
-        void onTransactionSendSuccess(BatchPaymentTransaction transaction, List<PendingPayment> payments);
+        void onTransactionSendSuccess(TransactionId transactionId, List<PendingPayment> payments);
 
         /**
          * Invoked when a Transaction just before the transaction will be send.
@@ -53,8 +55,7 @@ public interface PaymentQueue {
          *                    <p> See {@link BatchPaymentTransaction} and {@link PendingPayment} for more
          *                    information</p>
          */
-        void onTransactionSendFailed(BatchPaymentTransaction transaction, List<PendingPayment> payments,
-                                     KinException exception);
+        void onTransactionSendFailed(List<PendingPayment> payments, KinException exception);
     }
 
     /**
@@ -88,17 +89,17 @@ public interface PaymentQueue {
      * @param interceptor is the TransactionInterceptor to set.
      *                    <p> See {@link TransactionInterceptor} </p>
      */
-    void setTransactionInterceptor(TransactionInterceptor interceptor);
+    void setTransactionInterceptor(TransactionInterceptor<PaymentQueueTransactionProcess> interceptor);
 
     /**
      * @param listener is a queue event listener.
      */
-    void addEventsListener(EventsListener listener);
+    void setEventListener(EventListener listener);
 
     /**
      * Setter for the fee.
      * If this fee is below the minimum then the transaction will fail.
-     *
+     * If no fee will be set then the minimum blockchain fee wil be used.
      * @param fee the amount of fee(in Quarks) for each payment (1 Quark = 0.00001 KIN).
      */
     void setFee(int fee);
@@ -112,5 +113,15 @@ public interface PaymentQueue {
      * @return the number of pending payments in the queue
      */
     int pendingPaymentsCount();
+
+    /**
+     * This method is responsible for safely releasing all the resources of the queue.
+     * By safely we mean that it will try to finish the current task that he have.
+     * After this method is called then the payment queue is not usable and in order to use a
+     * payment queue
+     * then you will need to create a new instance of the payment queue class
+     */
+    void releaseQueue(); // TODO: 2019-09-11 we can even write it only in the implementation and
+    // not expose it
 
 }

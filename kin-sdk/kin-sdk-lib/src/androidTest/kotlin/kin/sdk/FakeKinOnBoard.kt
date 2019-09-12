@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Fake on board for integration test, support creating and funding accounts on stellar test net
  */
-internal class FakeKinOnBoard @Throws(IOException::class)
+class FakeKinOnBoard @Throws(IOException::class)
 constructor() {
 
     private val client: OkHttpClient = OkHttpClient.Builder()
