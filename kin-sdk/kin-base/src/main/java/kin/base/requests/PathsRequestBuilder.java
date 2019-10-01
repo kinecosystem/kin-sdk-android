@@ -1,6 +1,7 @@
 package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.ServerSentEvent;
 import java.io.IOException;
 import java.net.URI;
 import kin.base.Asset;
@@ -61,5 +62,10 @@ public class PathsRequestBuilder extends RequestBuilder {
    */
   public Page<PathResponse> execute() throws IOException, TooManyRequestsException {
     return this.execute(httpClient, this.buildUri());
+  }
+
+  @Override
+  public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
+    return null;
   }
 }

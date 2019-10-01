@@ -86,9 +86,10 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link EffectResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<EffectResponse> listener) {
+  @Override
+  public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
     return new StreamHandler<EffectResponse>(new TypeToken<EffectResponse>() {})
-        .handleStream(this.buildUri(),listener);
+        .handleStream(this.buildUri(), (EventListener<EffectResponse>) listener);
   }
 
   /**

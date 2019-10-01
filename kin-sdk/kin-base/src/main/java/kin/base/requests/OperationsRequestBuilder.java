@@ -3,6 +3,7 @@ package kin.base.requests;
 import static kin.base.Util.checkNotNull;
 
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.ServerSentEvent;
 import java.io.IOException;
 import java.net.URI;
 import kin.base.KeyPair;
@@ -114,5 +115,10 @@ public class OperationsRequestBuilder extends RequestBuilder {
   public OperationsRequestBuilder order(Order direction) {
     super.order(direction);
     return this;
+  }
+
+  @Override
+  public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
+    return null;
   }
 }

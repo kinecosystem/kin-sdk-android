@@ -17,6 +17,7 @@ import kin.base.MemoText;
 import kin.base.Operation;
 import kin.base.PaymentOperation;
 import kin.base.Server;
+import kin.base.requests.TransactionsRequestBuilder;
 import kin.base.responses.TransactionResponse;
 
 /**
@@ -29,10 +30,17 @@ class BlockchainEvents {
 
     private final Server server;
     private final KeyPair accountKeyPair;
+    private final ManagedServerSentEventStream<TransactionResponse> transactionsStream;
 
     BlockchainEvents(Server server, String accountId) {
         this.server = server;
         this.accountKeyPair = KeyPair.fromAccountId(accountId);
+
+        this.transactionsStream = new ManagedServerSentEventStream<>(
+            server.transactions()
+                .forAccount(this.accountKeyPair)
+                .cursor(CURSOR_FUTURE_ONLY)
+        );
     }
 
     /**
@@ -43,17 +51,22 @@ class BlockchainEvents {
      */
     ListenerRegistration addBalanceListener(@NonNull final EventListener<Balance> listener) {
         checkNotNull(listener, "listener");
-        ServerSentEvent serverSentEvent = server
-                .transactions()
-                .forAccount(accountKeyPair)
-                .cursor(CURSOR_FUTURE_ONLY)
-                .stream(new kin.base.requests.EventListener<TransactionResponse>() {
-                    @Override
-                    public void onEvent(TransactionResponse transactionResponse) {
-                        extractBalanceChangeFromTransaction(transactionResponse, listener);
-                    }
-                });
-        return new ListenerRegistration(serverSentEvent);
+
+        final kin.base.requests.EventListener<TransactionResponse> responseListener = new kin.base.requests.EventListener<TransactionResponse>() {
+            @Override
+            public void onEvent(TransactionResponse transactionResponse) {
+                extractBalanceChangeFromTransaction(transactionResponse, listener);
+            }
+        };
+
+        transactionsStream.addListener(responseListener);
+
+        return new ListenerRegistration(new Runnable() {
+            @Override
+            public void run() {
+                transactionsStream.removeListener(responseListener);
+            }
+        });
     }
 
     private void extractBalanceChangeFromTransaction(TransactionResponse transactionResponse,
@@ -94,17 +107,22 @@ class BlockchainEvents {
      */
     ListenerRegistration addPaymentListener(@NonNull final EventListener<PaymentInfo> listener) {
         checkNotNull(listener, "listener");
-        ServerSentEvent serverSentEvent = server
-                .transactions()
-                .forAccount(accountKeyPair)
-                .cursor(CURSOR_FUTURE_ONLY)
-                .stream(new kin.base.requests.EventListener<TransactionResponse>() {
-                    @Override
-                    public void onEvent(TransactionResponse transactionResponse) {
-                        extractPaymentsFromTransaction(transactionResponse, listener);
-                    }
-                });
-        return new ListenerRegistration(serverSentEvent);
+
+        final kin.base.requests.EventListener<TransactionResponse> responseListener = new kin.base.requests.EventListener<TransactionResponse>() {
+            @Override
+            public void onEvent(TransactionResponse transactionResponse) {
+                extractPaymentsFromTransaction(transactionResponse, listener);
+            }
+        };
+
+        transactionsStream.addListener(responseListener);
+
+        return new ListenerRegistration(new Runnable() {
+            @Override
+            public void run() {
+                transactionsStream.removeListener(responseListener);
+            }
+        });
     }
 
     /**
@@ -115,22 +133,28 @@ class BlockchainEvents {
      */
     ListenerRegistration addAccountCreationListener(final EventListener<Void> listener) {
         checkNotNull(listener, "listener");
-        ServerSentEvent serverSentEvent = server.transactions()
-                .forAccount(accountKeyPair)
-                .stream(new kin.base.requests.EventListener<TransactionResponse>() {
 
-                    private boolean eventOccurred = false;
+        final kin.base.requests.EventListener<TransactionResponse> responseListener = new kin.base.requests.EventListener<TransactionResponse>() {
+            private boolean eventOccurred = false;
 
-                    @Override
-                    public void onEvent(TransactionResponse transactionResponse) {
-                        //account creation is one time operation, fire event only once
-                        if (!eventOccurred) {
-                            eventOccurred = true;
-                            listener.onEvent(null);
-                        }
-                    }
-                });
-        return new ListenerRegistration(serverSentEvent);
+            @Override
+            public void onEvent(TransactionResponse transactionResponse) {
+                //account creation is one time operation, fire event only once
+                if (!eventOccurred) {
+                    eventOccurred = true;
+                    listener.onEvent(null);
+                }
+            }
+        };
+
+        transactionsStream.addListener(responseListener);
+
+        return new ListenerRegistration(new Runnable() {
+            @Override
+            public void run() {
+                transactionsStream.removeListener(responseListener);
+            }
+        });
     }
 
     private void extractPaymentsFromTransaction(TransactionResponse transactionResponse,

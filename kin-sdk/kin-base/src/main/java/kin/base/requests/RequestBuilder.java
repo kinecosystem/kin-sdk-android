@@ -1,5 +1,6 @@
 package kin.base.requests;
 
+import com.here.oksse.ServerSentEvent;
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -102,4 +103,6 @@ public abstract class RequestBuilder {
       return value;
     }
   }
+
+  abstract public <ListenerType> ServerSentEvent stream(final EventListener<ListenerType> listener);
 }
