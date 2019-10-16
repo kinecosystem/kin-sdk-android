@@ -28,12 +28,10 @@ class BlockchainEvents {
     private static final String ASSET_TYPE_NATIVE = "native";
     private static final String CURSOR_FUTURE_ONLY = "now";
 
-    private final Server server;
     private final KeyPair accountKeyPair;
     private final ManagedServerSentEventStream<TransactionResponse> transactionsStream;
 
     BlockchainEvents(Server server, String accountId) {
-        this.server = server;
         this.accountKeyPair = KeyPair.fromAccountId(accountId);
 
         this.transactionsStream = new ManagedServerSentEventStream<>(
