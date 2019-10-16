@@ -53,7 +53,7 @@ dependencies {
 
 //jacoco unified code coverage
 jacoco {
-    toolVersion = '0.8.2'
+    toolVersion = jaccoco_version
 }
 
 tasks.withType(Test) {
