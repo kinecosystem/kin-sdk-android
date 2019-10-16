@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion android_compilesdk_version
 
     defaultConfig {
 
         applicationId "kin.backupandrestore.sample"
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion android_minsdk_version
+        targetSdkVersion android_targetsdk_version
         versionCode 1
         versionName "1.0"
 
@@ -37,14 +36,14 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
+    implementation "com.android.support:appcompat-v7:$androidsupport_version"
+    implementation "com.android.support.constraint:constraint-layout:$constraintlayout_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     api project(':kin-backup-and-restore:kin-backup-and-restore-lib')
     api project(':kin-sdk:kin-sdk-lib')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "junit:junit:$junit_version"
+
+    androidTestImplementation "com.android.support.test:runner:$supporttest_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
 }
