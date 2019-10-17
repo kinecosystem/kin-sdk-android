@@ -1,6 +1,7 @@
 package kin.sdk;
 
 
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -9,7 +10,9 @@ import java.util.UUID;
 import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
+import org.hamcrest.CoreMatchers;
 import org.json.JSONException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -19,7 +22,29 @@ public class BackupRestoreTest {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
-    private BackupRestoreImpl backupRestore = new BackupRestoreImpl();
+    private static final String APP_ID = "1a2c";
+    private Environment environment;
+    private KinClientInternal kinClient1;
+    private KinClientInternal kinClient2;
+    private KeyStore keystore1;
+    private KeyStore keystore2;
+    private BackupRestore backupRestore;
+
+    @Before
+    public void setup() {
+        environment = new Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID);
+        backupRestore = new BackupRestoreImpl();
+        keystore1 = new FakeKeyStore(backupRestore);
+        keystore2 = new FakeKeyStore(backupRestore);
+        kinClient1 = createNewKinClient(keystore1);
+        kinClient2 = createNewKinClient(keystore2);
+        kinClient1.clearAllAccounts();
+        kinClient2.clearAllAccounts();
+    }
+
+    private KinClientInternal createNewKinClient(KeyStore keyStore) {
+        return new KinClientInternal(keyStore, environment, APP_ID, backupRestore);
+    }
 
     @Test
     public void backupAndRestore_Success() throws CryptoException, CorruptedDataException {
@@ -102,5 +127,62 @@ public class BackupRestoreTest {
         assertThat(importKeyPair.getAccountId(), equalTo(publicKey));
     }
 
+
+    @Test
+    public void importAccount_AddOnlyIfNotExists() throws Exception {
+        kinClient1.addAccount();
+        kinClient1.addAccount();
+        kinClient1.addAccount();
+        KinAccount kinAccount = kinClient1.addAccount();
+        String passphrase = UUID.randomUUID().toString();
+        String exported = kinAccount.export(passphrase);
+        kinClient1.importAccount(exported, passphrase);
+        assertEquals(4, kinClient1.getAccountCount());
+    }
+
+    @Test
+    public void backupRestore() throws Exception {
+        for (int i = 0; i < 50; i++) {
+            KinAccount kinAccount = kinClient1.addAccount();
+            String uuid = UUID.randomUUID().toString();
+            String exported = kinAccount.export(uuid);
+            KinAccount kinAccount2 = kinClient2.importAccount(exported, uuid);
+            assertThat(kinAccount2.getPublicAddress(), CoreMatchers.equalTo(kinAccount.getPublicAddress()));
+        }
+    }
+
+    @Test
+    public void importAccount_AddNewAccount() throws Exception {
+        KinAccount kinAccount = kinClient1.addAccount();
+        String passphrase = UUID.randomUUID().toString();
+        String exported = kinAccount.export(passphrase);
+        kinClient1.importAccount(exported, passphrase);
+        assertEquals(1, kinClient1.getAccountCount());
+
+        kinClient1.clearAllAccounts();
+        assertEquals(0, kinClient1.getAccountCount());
+
+        kinClient1.importAccount(exported, passphrase);
+        assertEquals(1, kinClient1.getAccountCount());
+    }
+
+    @Test
+    public void importAccount_CreateKinClientAgain_AddOnlyIfNotExists() throws Exception {
+        kinClient1.addAccount();
+        kinClient1.addAccount();
+        kinClient1.addAccount();
+        KinAccount kinAccount = kinClient1.addAccount();
+        String passphrase = UUID.randomUUID().toString();
+        String exported = kinAccount.export(passphrase);
+        kinClient1.importAccount(exported, passphrase);
+        KinClientInternal anotherKinClient = createNewKinClient(keystore1);
+        assertEquals(4, anotherKinClient.getAccountCount());
+        assertEquals(4, kinClient1.getAccountCount());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void initKinClient_NullId_Exception() {
+        kinClient1 = createNewKinClient(null);
+    }
 
 }

@@ -227,12 +227,12 @@ class TransactionSender {
         List<String> resultCodes = transactionException.getOperationsResultCodes();
         String transactionResultCode = transactionException.getTransactionResultCode();
         return ((resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0))) ||
-                !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE.equals(transactionResultCode));
+                !Utils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE.equals(transactionResultCode));
     }
 
     private boolean isInsufficientFeeException(TransactionFailedException transactionException) {
         String transactionResultCode = transactionException.getTransactionResultCode();
-        return !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_FEE_RESULT_CODE.equals(transactionResultCode);
+        return !Utils.isEmpty(transactionResultCode) && INSUFFICIENT_FEE_RESULT_CODE.equals(transactionResultCode);
     }
 
 }

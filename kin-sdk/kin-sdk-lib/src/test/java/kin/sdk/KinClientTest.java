@@ -7,11 +7,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -22,6 +25,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("deprecation")
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 23, manifest = Config.NONE)
 public class KinClientTest {
 
     private static final String APP_ID = "1a2c";
@@ -53,28 +58,17 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("environment");
 
-        Context ctx = mock(Context.class);
-
-        new KinClient(ctx, null, APP_ID, "test");
-
+        BackupRestore backupRestore = new BackupRestoreImpl();
+        new KinClientInternal(new FakeKeyStore(backupRestore), null, APP_ID, backupRestore);
     }
 
     @Test
     public void kinClientBuilder_missingStoreKey_IllegalArgumentException() {
         expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("storeKey");
+        expectedEx.expectMessage("keyStore");
 
-        Context ctx = mock(Context.class);
-
-        new KinClient(ctx, fakeEnvironment, APP_ID, null);
-    }
-
-    @Test
-    public void kinClientBuilder_missingContext_IllegalArgumentException() {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("context");
-
-        new KinClient(null, fakeEnvironment, APP_ID, "test");
+        BackupRestore backupRestore = new BackupRestoreImpl();
+        new KinClientInternal(null, fakeEnvironment, APP_ID, backupRestore);
     }
 
     @Test
