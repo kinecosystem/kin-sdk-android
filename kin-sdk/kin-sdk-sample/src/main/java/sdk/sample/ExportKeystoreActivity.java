@@ -60,7 +60,7 @@ public class ExportKeystoreActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!Utils.isEmpty(charSequence)) {
+                if (!TextUtils.isEmpty(charSequence)) {
                     clearOutput();
                     if (!exportBtn.isEnabled()) {
                         exportBtn.setEnabled(true);
@@ -118,7 +118,7 @@ public class ExportKeystoreActivity extends BaseActivity {
     }
 
     private void updateOutput(String outputString) {
-        if (Utils.isEmpty(outputString)) {
+        if (TextUtils.isEmpty(outputString)) {
             outputTextView.setText(outputString);
             outputTextView.setTextIsSelectable(false);
         } else {

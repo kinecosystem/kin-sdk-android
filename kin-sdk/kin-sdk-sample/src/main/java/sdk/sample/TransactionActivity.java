@@ -100,7 +100,7 @@ public class TransactionActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!Utils.isEmpty(charSequence) && !Utils.isEmpty(amountInput.getText()) && !Utils.isEmpty(feeInput.getText())) {
+                if (!TextUtils.isEmpty(charSequence) && !TextUtils.isEmpty(amountInput.getText()) && !TextUtils.isEmpty(feeInput.getText())) {
                     if (!sendTransaction.isEnabled()) {
                         sendTransaction.setEnabled(true);
                     }
@@ -131,7 +131,7 @@ public class TransactionActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!Utils.isEmpty(charSequence) && !Utils.isEmpty(toAddressInput.getText()) && !Utils.isEmpty(feeInput.getText())) {
+                if (!TextUtils.isEmpty(charSequence) && !TextUtils.isEmpty(toAddressInput.getText()) && !TextUtils.isEmpty(feeInput.getText())) {
                     if (!sendTransaction.isEnabled()) {
                         sendTransaction.setEnabled(true);
                     }
@@ -162,7 +162,7 @@ public class TransactionActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!Utils.isEmpty(charSequence) && !Utils.isEmpty(toAddressInput.getText()) && !Utils.isEmpty(amountInput.getText())) {
+                if (!TextUtils.isEmpty(charSequence) && !TextUtils.isEmpty(toAddressInput.getText()) && !TextUtils.isEmpty(amountInput.getText())) {
                     if (!sendTransaction.isEnabled()) {
                         sendTransaction.setEnabled(true);
                     }
