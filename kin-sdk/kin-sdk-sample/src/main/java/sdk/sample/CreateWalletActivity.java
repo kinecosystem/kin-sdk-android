@@ -79,8 +79,8 @@ public class CreateWalletActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(editExportedJson.getText().toString()) ||
-                    TextUtils.isEmpty(editPassphrase.getText().toString())) {
+                if (Utils.isEmpty(editExportedJson.getText().toString()) ||
+                    Utils.isEmpty(editPassphrase.getText().toString())) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);

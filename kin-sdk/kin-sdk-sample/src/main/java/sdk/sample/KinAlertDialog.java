@@ -50,7 +50,7 @@ public class KinAlertDialog {
     }
 
     private void setPositiveButtonText(String text){
-        if(TextUtils.isEmpty(text)) {
+        if(Utils.isEmpty(text)) {
             positiveButtonText = context.getResources().getString(R.string.ok);
         }else {
             positiveButtonText = text;
@@ -58,7 +58,7 @@ public class KinAlertDialog {
     }
 
     protected void setMessage(String message) {
-        if(TextUtils.isEmpty(message)){
+        if(Utils.isEmpty(message)){
             message = context.getResources().getString(R.string.error_no_message);
         }
         dialog.setView(buildMessageView(message));
