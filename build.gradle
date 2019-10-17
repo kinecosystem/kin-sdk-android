@@ -28,7 +28,7 @@ buildscript {
         kinutilsandroid_version = '1.1'
 
         // Test
-        mockito_version = '2.23.0'
+        mockito_version = '2.10.0'
         mockitokotlin_version = '2.1.0'
         junit_version = '4.12'
         hamcrest_version = '1.3'
