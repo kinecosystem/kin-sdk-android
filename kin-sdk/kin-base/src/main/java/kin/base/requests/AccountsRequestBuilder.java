@@ -65,10 +65,10 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<AccountResponse> listener) {
+  @Override
+  public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
     return new StreamHandler<AccountResponse>(new TypeToken<AccountResponse>() {})
-        .handleStream(this.buildUri(),listener);
-  }
+        .handleStream(this.buildUri(), (EventListener<AccountResponse>) listener);  }
 
   /**
    * Build and execute request. <strong>Warning!</strong> {@link AccountResponse}s in {@link Page} will contain only <code>keypair</code> field.

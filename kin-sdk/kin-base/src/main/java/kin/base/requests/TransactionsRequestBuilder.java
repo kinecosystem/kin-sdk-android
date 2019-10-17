@@ -81,6 +81,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
     return responseHandler.handleGetRequest(uri);
   }
 
+
+
   /**
    * Allows to stream SSE events from horizon.
    * Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
@@ -91,9 +93,10 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link TransactionResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<TransactionResponse> listener) {
+  @Override
+  public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
     return new StreamHandler<TransactionResponse>(new TypeToken<TransactionResponse>() {})
-        .handleStream(this.buildUri(),listener);
+        .handleStream(this.buildUri(), (EventListener<TransactionResponse>) listener);
   }
 
   /**

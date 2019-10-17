@@ -1,6 +1,7 @@
 package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.ServerSentEvent;
 import java.io.IOException;
 import java.net.URI;
 import kin.base.Asset;
@@ -61,5 +62,10 @@ public class OrderBookRequestBuilder extends RequestBuilder {
   @Override
   public RequestBuilder order(Order direction) {
     throw new RuntimeException("Not implemented yet.");
+  }
+
+  @Override
+  public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
+    return null;
   }
 }

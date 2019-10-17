@@ -2,6 +2,7 @@ package kin.sdk;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class KinOkHttpClientFactory {
     private class KinHeaderInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            okhttp3.Request request = chain.request();
+            Request request = chain.request();
             request = request.newBuilder()
                     .addHeader(KIN_SDK_ANDROID_VERSION_HEADER, versionName)
                     .build();
