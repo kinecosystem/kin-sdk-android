@@ -15,7 +15,10 @@ public class WhitelistServiceForTest {
     private final OkHttpClient okHttpClient;
 
     WhitelistServiceForTest() {
-        okHttpClient = new KinOkHttpClientFactory("test").client;
+        okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .build();
     }
 
     String whitelistTransaction(WhitelistableTransaction whitelistableTransaction) throws Exception {
