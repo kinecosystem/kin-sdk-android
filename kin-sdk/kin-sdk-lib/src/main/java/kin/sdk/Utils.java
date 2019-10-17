@@ -2,12 +2,13 @@ package kin.sdk;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import kin.base.responses.SubmitTransactionResponse;
 import kin.base.responses.SubmitTransactionResponse.Extras.ResultCodes;
 import kin.sdk.exception.TransactionFailedException;
 
-final class Utils {
+final public class Utils {
 
     private Utils() {
         //no instances
@@ -41,5 +42,9 @@ final class Utils {
         if (string == null || string.isEmpty()) {
             throw new IllegalArgumentException(paramName + " cannot be null or empty.");
         }
+    }
+
+    public static boolean isEmpty(@Nullable CharSequence str) {
+        return str == null || str.length() == 0;
     }
 }
