@@ -58,7 +58,6 @@ dependencies {
     testImplementation 'org.json:json:20180813'
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testImplementation project(':kin-sdk:kin-base')
 
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'org.mockito:mockito-core:2.10.0'
