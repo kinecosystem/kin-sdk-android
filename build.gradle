@@ -10,7 +10,7 @@ buildscript {
 
         // Plugins
         androidgradle_version = '3.4.2'
-        jaccoco_version = '0.8.2'
+        jaccoco_version = '0.8.5'
 
         // 3rd Party
         kotlin_version = '1.3.41'
