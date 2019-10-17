@@ -25,6 +25,7 @@ import kotlin.test.fail
 @Suppress("FunctionName")
 class KinAccountIntegrationTest {
 
+    private val whitelistingService = WhitelistServiceForTest()
     private val appId = "1a2c"
     private val fee: Int = 100
     private val feeInKin: BigDecimal = BigDecimal.valueOf(0.001)
@@ -235,7 +236,7 @@ class KinAccountIntegrationTest {
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee + 100000)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        val whitelist = whitelistingService.whitelistTransaction(transaction.whitelistableTransaction)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
     }
@@ -248,7 +249,7 @@ class KinAccountIntegrationTest {
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee)
-        val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction)
+        val whitelist = whitelistingService.whitelistTransaction(transaction.whitelistableTransaction)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
         assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20.00000")))
