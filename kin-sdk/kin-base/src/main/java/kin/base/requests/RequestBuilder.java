@@ -1,8 +1,11 @@
 package kin.base.requests;
 
+import com.here.oksse.ServerSentEvent;
 import java.net.URI;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
@@ -16,13 +19,10 @@ public abstract class RequestBuilder {
   private final ArrayList<String> segments;
   private boolean segmentsAdded;
 
-  RequestBuilder(OkHttpClient httpClient, URI serverURI, String defaultSegment) {
+  RequestBuilder(OkHttpClient httpClient, URI serverURI, String ... defaultSegments) {
     uriBuilder = HttpUrl.parse(serverURI.toString()).newBuilder();
     segments = new ArrayList<String>();
-    if (defaultSegment != null) {
-      this.setSegments(defaultSegment);
-    }
-    segmentsAdded = false; // Allow overwriting segments
+    segments.addAll(Arrays.asList(defaultSegments));
     this.httpClient = httpClient;
   }
 
@@ -30,13 +30,10 @@ public abstract class RequestBuilder {
     if (segmentsAdded) {
       throw new RuntimeException("URL segments have been already added.");
     }
-
     segmentsAdded = true;
     // Remove default segments
     this.segments.clear();
-    for (String segment : segments) {
-      this.segments.add(segment);
-    }
+    Collections.addAll(this.segments, segments);
 
     return this;
   }
@@ -74,17 +71,10 @@ public abstract class RequestBuilder {
   }
 
   URI buildUri() {
-    if (segments.size() > 0) {
-      StringBuilder path = new StringBuilder();
-      for (int i=0; i<segments.size(); i++) {
-        String segment = segments.get(i);
-        if(i!=0) {
-          path.append("/");
-        }
-        path.append(segment);
-      }
-      uriBuilder.addEncodedPathSegments(path.toString());
+    for (String segment : segments) {
+      uriBuilder.addPathSegment(segment);
     }
+    segments.clear();
     return URI.create(uriBuilder.build().toString());
   }
 
@@ -102,4 +92,6 @@ public abstract class RequestBuilder {
       return value;
     }
   }
+
+  abstract public <ListenerType> ServerSentEvent stream(final EventListener<ListenerType> listener);
 }

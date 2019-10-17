@@ -1,23 +1,20 @@
 package kin.sdk;
 
-
-import com.here.oksse.ServerSentEvent;
-
 /**
  * Represents a listener to {@link BlockchainEvents}, that can be removed using {@link #remove()}.
  */
 public class ListenerRegistration {
 
-    private final ServerSentEvent serverSentEvent;
+    private final Runnable removeRunnable;
 
-    ListenerRegistration(ServerSentEvent serverSentEvent) {
-        this.serverSentEvent = serverSentEvent;
+    ListenerRegistration(Runnable removeRunnable) {
+        this.removeRunnable = removeRunnable;
     }
 
     /**
      * Remove and unregisters this listener.
      */
     public void remove() {
-        serverSentEvent.close();
+        removeRunnable.run();
     }
 }

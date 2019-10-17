@@ -1,8 +1,10 @@
 package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.ServerSentEvent;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import kin.base.Asset;
 import kin.base.AssetTypeCreditAlphaNum;
 import kin.base.responses.TradeResponse;
@@ -14,7 +16,7 @@ import okhttp3.OkHttpClient;
 public class TradesRequestBuilder extends RequestBuilder {
 
     public TradesRequestBuilder(OkHttpClient httpClient, URI serverURI) {
-        super(httpClient, serverURI, "order_book/trades");
+        super(httpClient, serverURI, "order_book", "trades");
     }
 
     public TradesRequestBuilder buyingAsset(Asset asset) {
@@ -45,5 +47,10 @@ public class TradesRequestBuilder extends RequestBuilder {
 
     public TradeResponse execute() throws IOException, TooManyRequestsException {
         return this.execute(httpClient, this.buildUri());
+    }
+
+    @Override
+    public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
+        return null;
     }
 }

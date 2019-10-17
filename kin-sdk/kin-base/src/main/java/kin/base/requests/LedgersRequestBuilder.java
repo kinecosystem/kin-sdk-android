@@ -53,6 +53,8 @@ public class LedgersRequestBuilder extends RequestBuilder {
     return responseHandler.handleGetRequest(uri);
   }
 
+
+
   /**
    * Allows to stream SSE events from horizon.
    * Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
@@ -63,9 +65,10 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link LedgerResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<LedgerResponse> listener) {
+  @Override
+  public <ListenerType> ServerSentEvent stream(EventListener<ListenerType> listener) {
     return new StreamHandler<LedgerResponse>(new TypeToken<LedgerResponse>() {})
-        .handleStream(this.buildUri(),listener);
+        .handleStream(this.buildUri(), (EventListener<LedgerResponse>) listener);
   }
 
   /**
