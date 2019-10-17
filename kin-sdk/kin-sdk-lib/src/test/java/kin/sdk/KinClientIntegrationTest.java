@@ -1,53 +1,64 @@
 package kin.sdk;
 
 
-import android.support.test.InstrumentationRegistry;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+
+import java.util.UUID;
 import kin.sdk.exception.CreateAccountException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.UUID;
-
-import static junit.framework.Assert.*;
-import static kin.sdk.IntegConsts.TEST_NETWORK_ID;
-import static kin.sdk.IntegConsts.TEST_NETWORK_URL;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 @SuppressWarnings("deprecation")
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 23, manifest = Config.NONE)
 public class KinClientIntegrationTest {
 
     private static final String APP_ID = "1a2c";
-    private static final String STORE_KEY_TEST1 = "test";
-    private static final String STORE_KEY_TEST2 = "test2";
     private Environment environment;
-    private KinClient kinClient1;
-    private KinClient kinClient2;
+    private KinClientInternal kinClient1;
+    private KinClientInternal kinClient2;
+    private KeyStore keystore1;
+    private KeyStore keystore2;
+    private BackupRestore backupRestore;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Before
     public void setup() {
-        environment = new Environment(TEST_NETWORK_URL, TEST_NETWORK_ID);
-        kinClient1 = createNewKinClient(STORE_KEY_TEST1);
-        kinClient2 = createNewKinClient(STORE_KEY_TEST2);
+        environment = new Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID);
+        backupRestore = new BackupRestoreImpl();
+        keystore1 = new FakeKeyStore(backupRestore);
+        keystore2 = new FakeKeyStore(backupRestore);
+        kinClient1 = createNewKinClient(keystore1);
+        kinClient2 = createNewKinClient(keystore2);
         kinClient1.clearAllAccounts();
         kinClient2.clearAllAccounts();
     }
 
-    private KinClient createNewKinClient(String storeKey) {
-        return new KinClient(InstrumentationRegistry.getTargetContext(), environment, APP_ID, storeKey);
+    private KinClientInternal createNewKinClient(KeyStore keyStore) {
+        return new KinClientInternal(keyStore, environment, APP_ID, backupRestore);
     }
 
     @After
     public void teardown() {
-        kinClient1 = createNewKinClient(STORE_KEY_TEST1);
-        kinClient2 = createNewKinClient(STORE_KEY_TEST2);
+        kinClient1 = createNewKinClient(keystore1);
+        kinClient2 = createNewKinClient(keystore2);
         kinClient1.clearAllAccounts();
         kinClient2.clearAllAccounts();
     }
@@ -179,7 +190,7 @@ public class KinClientIntegrationTest {
     }
 
     private void buildKinClient() {
-        kinClient1 = new KinClient(InstrumentationRegistry.getTargetContext(), environment, APP_ID, STORE_KEY_TEST1);
+        kinClient1 = createNewKinClient(keystore1);
     }
 
     @Test
@@ -253,7 +264,8 @@ public class KinClientIntegrationTest {
     public void getEnvironment() throws Exception {
         String url = "https://www.myawesomeserver.com";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
-        kinClient1 = new KinClient(InstrumentationRegistry.getTargetContext(), environment, APP_ID, STORE_KEY_TEST1);
+        BackupRestore backupRestore = new BackupRestoreImpl();
+        kinClient1 = new KinClientInternal(new FakeKeyStore(backupRestore), environment, APP_ID, backupRestore);
         Environment actualEnvironment = kinClient1.getEnvironment();
 
         assertNotNull(actualEnvironment);
@@ -266,12 +278,12 @@ public class KinClientIntegrationTest {
     public void multipleKinClients_AddAccount_DifferentAccounts() throws Exception {
         KinAccount account = kinClient1.addAccount();
 
-        kinClient2 = createNewKinClient(STORE_KEY_TEST2);
+        kinClient2 = createNewKinClient(keystore2);
         assertThat(kinClient2.getAccount(0), nullValue());
 
         KinAccount account2 = kinClient2.addAccount();
 
-        kinClient1 = createNewKinClient(STORE_KEY_TEST1);
+        kinClient1 = createNewKinClient(keystore1);
         assertThat(kinClient1.getAccount(0), equalTo(account));
         assertThat(kinClient2.getAccount(0), equalTo(account2));
         assertThat(account, not(equalTo(account2)));
@@ -282,61 +294,9 @@ public class KinClientIntegrationTest {
         KinAccount account = kinClient2.addAccount();
 
         kinClient1.clearAllAccounts();
-        kinClient2 = createNewKinClient(STORE_KEY_TEST2);
+        kinClient2 = createNewKinClient(keystore2);
 
         assertThat(kinClient2.getAccount(0), equalTo(account));
-    }
-
-    @Test
-    public void backupRestore() throws Exception {
-        for (int i = 0; i < 50; i++) {
-            KinAccount kinAccount = kinClient1.addAccount();
-            String uuid = UUID.randomUUID().toString();
-            String exported = kinAccount.export(uuid);
-            KinAccount kinAccount2 = kinClient2.importAccount(exported, uuid);
-            assertThat(kinAccount2.getPublicAddress(), equalTo(kinAccount.getPublicAddress()));
-        }
-    }
-
-    @Test
-    public void importAccount_CreateKinClientAgain_AddOnlyIfNotExists() throws Exception {
-        kinClient1.addAccount();
-        kinClient1.addAccount();
-        kinClient1.addAccount();
-        KinAccount kinAccount = kinClient1.addAccount();
-        String passphrase = UUID.randomUUID().toString();
-        String exported = kinAccount.export(passphrase);
-        kinClient1.importAccount(exported, passphrase);
-        KinClient anotherKinClient = createNewKinClient(STORE_KEY_TEST1);
-        assertEquals(4, anotherKinClient.getAccountCount());
-        assertEquals(4, kinClient1.getAccountCount());
-    }
-
-    @Test
-    public void importAccount_AddOnlyIfNotExists() throws Exception {
-        kinClient1.addAccount();
-        kinClient1.addAccount();
-        kinClient1.addAccount();
-        KinAccount kinAccount = kinClient1.addAccount();
-        String passphrase = UUID.randomUUID().toString();
-        String exported = kinAccount.export(passphrase);
-        kinClient1.importAccount(exported, passphrase);
-        assertEquals(4, kinClient1.getAccountCount());
-    }
-
-    @Test
-    public void importAccount_AddNewAccount() throws Exception {
-        KinAccount kinAccount = kinClient1.addAccount();
-        String passphrase = UUID.randomUUID().toString();
-        String exported = kinAccount.export(passphrase);
-        kinClient1.importAccount(exported, passphrase);
-        assertEquals(1, kinClient1.getAccountCount());
-
-        kinClient1.clearAllAccounts();
-        assertEquals(0, kinClient1.getAccountCount());
-
-        kinClient1.importAccount(exported, passphrase);
-        assertEquals(1, kinClient1.getAccountCount());
     }
 
     @Test
@@ -344,7 +304,7 @@ public class KinClientIntegrationTest {
         KinAccount kinAccount1 = kinClient1.addAccount();
         kinClient1.addAccount();
 
-        KinClient anotherKinClientSameStoreKey = createNewKinClient(STORE_KEY_TEST1);
+        KinClientInternal anotherKinClientSameStoreKey = createNewKinClient(keystore1);
         KinAccount kinAccount3 = anotherKinClientSameStoreKey.addAccount();
         KinAccount kinAccount4 = anotherKinClientSameStoreKey.addAccount();
 
@@ -374,7 +334,7 @@ public class KinClientIntegrationTest {
         kinClient1.addAccount();
         kinClient1.addAccount();
 
-        KinClient anotherKinClientSameStoreKey = createNewKinClient(STORE_KEY_TEST1);
+        KinClientInternal anotherKinClientSameStoreKey = createNewKinClient(keystore1);
 
         kinClient1.deleteAccount(1);
         anotherKinClientSameStoreKey.deleteAccount(1);
@@ -385,10 +345,5 @@ public class KinClientIntegrationTest {
         assertThat(kinClient1.getAccount(0).getPublicAddress(), equalTo(kinAccount1.getPublicAddress()));
         assertThat(anotherKinClientSameStoreKey.getAccount(0).getPublicAddress(),
                 equalTo(kinAccount1.getPublicAddress()));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void initKinClient_NullId_Exception() {
-        kinClient1 = createNewKinClient(null);
     }
 }
