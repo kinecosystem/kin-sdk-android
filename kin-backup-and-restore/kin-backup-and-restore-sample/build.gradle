@@ -7,7 +7,7 @@ android {
 
         applicationId "kin.backupandrestore.sample"
         minSdkVersion android_minsdk_version
-        targetSdkVersion 28 //android_targetsdk_version
+        targetSdkVersion android_targetsdk_version
         versionCode 1
         versionName "1.0"
 

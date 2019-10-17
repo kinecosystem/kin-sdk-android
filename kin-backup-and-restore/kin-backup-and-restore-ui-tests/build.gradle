@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "kin.backup.and.restore.ui.tests"
         minSdkVersion 18 // This is only 18+ instead of android_minsdk_version b/c of the ui test automator requiring 18+
-        targetSdkVersion 28 //android_targetsdk_version
+        targetSdkVersion android_targetsdk_version
         versionCode 1
         versionName "1.0"
 
