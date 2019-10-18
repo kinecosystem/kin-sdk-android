@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "kin-backup-and-restore/build.gradle" }}-{{ checksum  "kin-backup-and-restore-sample/build.gradle" }}-{{ checksum  "kin-backup-and-restore-ui-tests/build.gradle" }}-{{ checksum  "kin-sdk/kin-base/build.gradle" }}-{{ checksum  "kin-sdk/kin-sdk-lib/build.gradle" }}-{{ checksum  "kin-sdk/kin-sdk-sample/build.gradle" }}
+      - restore_cache:
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "kin-backup-and-restore/build.gradle" }}-{{ checksum  "kin-backup-and-restore-sample/build.gradle" }}-{{ checksum  "kin-backup-and-restore-ui-tests/build.gradle" }}-{{ checksum  "kin-sdk/kin-base/build.gradle" }}-{{ checksum  "kin-sdk/kin-sdk-lib/build.gradle" }}-{{ checksum  "kin-sdk/kin-sdk-sample/build.gradle" }}
+     - run:
+          name: Assemble
+          command: ./gradlew assemble
+      - run:
+          name: Run Unit & Integration Tests
+          command: ./gradlew testDebugUnitTest jacocoTestReport
+      - run:
+          name: Run kin-sdk-lib Android Tests
+          command: ./scripts/ci_android_test_with_firebase.sh kin-sdk kin-sdk-sample kin-sdk-lib 2
+       - run:
+          name: Run kin-backup-and-restore-lib Android Tests
+          command: ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-sample kin-backup-and-restore-lib 0
+      - run:
+          name: Run kin-backup-and-restore-ui-tests Ui Automator Tests
+          command: ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-ui-tests kin-backup-and-restore-ui-tests 0
+      
