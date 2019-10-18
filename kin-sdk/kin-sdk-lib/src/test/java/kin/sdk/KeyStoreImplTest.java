@@ -4,9 +4,6 @@ import org.json.JSONException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.List;
 
@@ -27,9 +24,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23, manifest = Config.NONE)
 public class KeyStoreImplTest {
 
     @Rule

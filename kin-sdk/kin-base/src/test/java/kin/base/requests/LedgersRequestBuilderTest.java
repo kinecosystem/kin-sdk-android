@@ -1,17 +1,26 @@
 package kin.base.requests;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
 
 import kin.base.Server;
+import okhttp3.OkHttpClient;
 
 import static org.junit.Assert.assertEquals;
 
 public class LedgersRequestBuilderTest {
+
+    private Server server;
+
+    @Before
+    public void before() {
+        server = new Server("https://horizon-testnet.stellar.org", new OkHttpClient());
+    }
+
     @Test
     public void testAccounts() {
-        Server server = new Server("https://horizon-testnet.stellar.org");
         URI uri = server.ledgers()
                 .limit(200)
                 .order(RequestBuilder.Order.ASC)

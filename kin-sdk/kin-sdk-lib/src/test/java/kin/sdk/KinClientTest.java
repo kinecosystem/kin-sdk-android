@@ -6,11 +6,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +26,6 @@ import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("deprecation")
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23, manifest = Config.NONE)
 public class KinClientTest {
 
     private static final String APP_ID = "1a2c";
@@ -45,7 +40,7 @@ public class KinClientTest {
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
     private BlockchainEventsCreator mockBlockchainEventsCreator;
-    private KinClient kinClient;
+    private KinClientInternal kinClient;
     private KeyStore fakeKeyStore;
     private Environment fakeEnvironment;
 
@@ -63,7 +58,16 @@ public class KinClientTest {
         expectedEx.expectMessage("environment");
 
         BackupRestore backupRestore = new BackupRestoreImpl();
-        new KinClientInternal(new FakeKeyStore(backupRestore), null, APP_ID, backupRestore);
+        new KinClientInternal(
+                new FakeKeyStore(backupRestore),
+                null,
+                mockTransactionSender,
+                mockAccountInfoRetriever,
+                mockGeneralBlockchainInfoRetriever,
+                mockBlockchainEventsCreator,
+                new BackupRestoreImpl(),
+                APP_ID
+        );
     }
 
     @Test
@@ -71,8 +75,16 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("keyStore");
 
-        BackupRestore backupRestore = new BackupRestoreImpl();
-        new KinClientInternal(null, fakeEnvironment, APP_ID, backupRestore);
+        new KinClientInternal(
+                null,
+                fakeEnvironment,
+                mockTransactionSender,
+                mockAccountInfoRetriever,
+                mockGeneralBlockchainInfoRetriever,
+                mockBlockchainEventsCreator,
+                new BackupRestoreImpl(),
+                APP_ID
+        );
     }
 
     @Test
@@ -158,13 +170,13 @@ public class KinClientTest {
 
     @Test
     public void createMultipleKinClients_SameAccounts() throws Exception {
-        KinClient kinClient1 = createNewKinClient();
+        KinClientInternal kinClient1 = createNewKinClient();
         kinClient1.addAccount();
         kinClient1.addAccount();
 
         assertThat(kinClient1.getAccountCount(), equalTo(2));
 
-        KinClient kinClient2 = createNewKinClient();
+        KinClientInternal kinClient2 = createNewKinClient();
         assertTrue(kinClient2.hasAccount());
         assertThat(kinClient2.getAccountCount(), equalTo(2));
 
@@ -357,9 +369,17 @@ public class KinClientTest {
     public void getEnvironment() throws Exception {
         String url = "My awesome Horizon server";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
-        kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender,
-                mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
-                new FakeBackupRestore(), APP_ID, "");
+        kinClient = new KinClientInternal(
+                fakeKeyStore,
+                environment,
+                mockTransactionSender,
+                mockAccountInfoRetriever,
+                mockGeneralBlockchainInfoRetriever,
+                mockBlockchainEventsCreator,
+                new FakeBackupRestore(),
+                APP_ID
+        );
+
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);
@@ -410,9 +430,16 @@ public class KinClientTest {
     }
 
     @NonNull
-    private KinClient createNewKinClient() {
-        return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender,
-                mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
-                new FakeBackupRestore(), APP_ID, "");
+    private KinClientInternal createNewKinClient() {
+        return new KinClientInternal(
+                fakeKeyStore,
+                fakeEnvironment,
+                mockTransactionSender,
+                mockAccountInfoRetriever,
+                mockGeneralBlockchainInfoRetriever,
+                mockBlockchainEventsCreator,
+                new FakeBackupRestore(),
+                APP_ID
+        );
     }
 }

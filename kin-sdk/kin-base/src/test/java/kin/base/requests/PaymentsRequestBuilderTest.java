@@ -1,18 +1,27 @@
 package kin.base.requests;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
 
 import kin.base.KeyPair;
 import kin.base.Server;
+import okhttp3.OkHttpClient;
 
 import static org.junit.Assert.assertEquals;
 
 public class PaymentsRequestBuilderTest {
+
+    private Server server;
+
+    @Before
+    public void before() {
+        server = new Server("https://horizon-testnet.stellar.org", new OkHttpClient());
+    }
+
     @Test
     public void testPayments() {
-        Server server = new Server("https://horizon-testnet.stellar.org");
         URI uri = server.payments()
                 .limit(200)
                 .order(RequestBuilder.Order.DESC)
@@ -22,7 +31,6 @@ public class PaymentsRequestBuilderTest {
 
     @Test
     public void testForAccount() {
-        Server server = new Server("https://horizon-testnet.stellar.org");
         URI uri = server.payments()
                 .forAccount(KeyPair.fromAccountId("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
                 .limit(200)
@@ -33,7 +41,6 @@ public class PaymentsRequestBuilderTest {
 
     @Test
     public void testForLedger() {
-        Server server = new Server("https://horizon-testnet.stellar.org");
         URI uri = server.payments()
                 .forLedger(200000000000L)
                 .limit(50)
@@ -44,7 +51,6 @@ public class PaymentsRequestBuilderTest {
 
     @Test
     public void testForTransaction() {
-        Server server = new Server("https://horizon-testnet.stellar.org");
         URI uri = server.payments()
                 .forTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
                 .buildUri();

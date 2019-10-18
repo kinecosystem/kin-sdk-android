@@ -5,19 +5,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.math.BigDecimal;
 
+import kin.base.Server;
 import kin.sdk.exception.AccountDeletedException;
 
 import static junit.framework.Assert.assertNull;
 
 @SuppressWarnings({"deprecation", "ConstantConditions"})
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23, manifest = Config.NONE)
 public class KinAccountTest {
 
     private static final String APP_ID = "1a2c";
@@ -31,7 +27,17 @@ public class KinAccountTest {
     @Before
     public void setup() {
         BackupRestore backupRestore = new BackupRestoreImpl();
-        kinClient = new KinClientInternal(new FakeKeyStore(backupRestore), Environment.TEST, APP_ID, backupRestore);
+        Server server = new Server(Environment.TEST.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).testClient);
+        kinClient = new KinClientInternal(
+                new FakeKeyStore(backupRestore),
+                Environment.TEST,
+                new TransactionSender(server, APP_ID),
+                new AccountInfoRetriever(server),
+                new GeneralBlockchainInfoRetrieverImpl(server),
+                new BlockchainEventsCreator(server),
+                backupRestore,
+                APP_ID
+        );
         kinClient.clearAllAccounts();
     }
 

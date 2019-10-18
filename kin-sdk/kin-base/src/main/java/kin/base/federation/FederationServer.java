@@ -129,24 +129,15 @@ public class FederationServer {
             throw new MalformedAddressException();
         }
 
-        URL uri = HttpUrl.parse(serverUri.toString()).newBuilder()
-                .addQueryParameter("type", "name")
-                .addQueryParameter("q", address)
-                .build().url();
-
-        TypeToken type = new TypeToken<FederationResponse>() {
-        };
-        ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<FederationResponse>(httpClient, type);
-
-        Request request = new Request.Builder()
-                .url(uri.toString())
-                .get()
-                .build();
-
+        ResponseHandler<FederationResponse> responseHandler =
+                new ResponseHandler<FederationResponse>(httpClient, new TypeToken<FederationResponse>() {
+                });
         try {
-            Response response = httpClient.newCall(request)
-                    .execute();
-            return responseHandler.handleResponse(response);
+            URI uri = HttpUrl.parse(serverUri.toString()).newBuilder()
+                    .addQueryParameter("type", "name")
+                    .addQueryParameter("q", address)
+                    .build().url().toURI();
+            return responseHandler.handleGetRequest(uri);
         } catch (HttpResponseException e) {
             if (e.getStatusCode() == 404) {
                 throw new NotFoundException();
@@ -154,6 +145,8 @@ public class FederationServer {
                 throw new ServerErrorException();
             }
         } catch (IOException e) {
+            throw new ConnectionErrorException();
+        } catch (URISyntaxException e) {
             throw new ConnectionErrorException();
         }
     }

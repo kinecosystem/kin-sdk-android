@@ -15,30 +15,30 @@ import okhttp3.ResponseBody;
 
 public class ResponseHandler<T> {
 
-    private TypeToken<T> type;
-    private OkHttpClient httpClient;
+    private final TypeToken<T> type;
+    private final OkHttpClient httpClient;
 
     /**
-     * "Generics on a type are typically erased at runtime, except when the type is compiled with the
-     * generic parameter bound. In that case, the compiler inserts the generic type information into
-     * the compiled class. In other cases, that is not possible."
-     * More info: http://stackoverflow.com/a/14506181
+     * "Generics on a type are typically erased at runtime, except when the type is compiled with the generic parameter
+     * bound. In that case, the compiler inserts the generic type information into the compiled class. In other cases,
+     * that is not possible." More info: http://stackoverflow.com/a/14506181
      */
     public ResponseHandler(OkHttpClient httpClient, TypeToken<T> type) {
         this.type = type;
         this.httpClient = httpClient;
     }
 
-    public T handleGetRequest(final URI uri) throws IOException {
-        return handleResponse(httpClient.newCall(
-                new Request.Builder()
-                        .url(uri.toString())
-                        .build()
-        )
-                .execute());
+    private Request newGetRequest(final URI uri) {
+        return new Request.Builder()
+                .url(uri.toString())
+                .build();
     }
 
-    public T handleResponse(final okhttp3.Response response) throws IOException, TooManyRequestsException {
+    public T handleGetRequest(final URI uri) throws IOException {
+        return handleResponse(httpClient.newCall(newGetRequest(uri)).execute(), 0);
+    }
+
+    private T handleResponse(final okhttp3.Response response, int attempt) throws IOException, TooManyRequestsException {
         if (response == null) {
             return null;
         }
@@ -80,5 +80,4 @@ public class ResponseHandler<T> {
             response.close();
         }
     }
-
 }

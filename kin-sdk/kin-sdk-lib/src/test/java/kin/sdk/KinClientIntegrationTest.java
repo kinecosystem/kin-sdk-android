@@ -6,10 +6,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
+import kin.base.Server;
 import kin.sdk.exception.CreateAccountException;
 
 import static junit.framework.Assert.assertEquals;
@@ -24,10 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 
 @SuppressWarnings("deprecation")
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23, manifest = Config.NONE)
 public class KinClientIntegrationTest {
-
     private static final String APP_ID = "1a2c";
     private Environment environment;
     private KinClientInternal kinClient1;
@@ -35,6 +30,7 @@ public class KinClientIntegrationTest {
     private KeyStore keystore1;
     private KeyStore keystore2;
     private BackupRestore backupRestore;
+    Server server;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -42,6 +38,7 @@ public class KinClientIntegrationTest {
     @Before
     public void setup() {
         environment = new Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID);
+        server = new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).testClient);
         backupRestore = new BackupRestoreImpl();
         keystore1 = new FakeKeyStore(backupRestore);
         keystore2 = new FakeKeyStore(backupRestore);
@@ -52,7 +49,16 @@ public class KinClientIntegrationTest {
     }
 
     private KinClientInternal createNewKinClient(KeyStore keyStore) {
-        return new KinClientInternal(keyStore, environment, APP_ID, backupRestore);
+        return new KinClientInternal(
+                keyStore,
+                environment,
+                new TransactionSender(server, APP_ID),
+                new AccountInfoRetriever(server),
+                new GeneralBlockchainInfoRetrieverImpl(server),
+                new BlockchainEventsCreator(server),
+                backupRestore,
+                APP_ID
+        );
     }
 
     @After
@@ -265,7 +271,16 @@ public class KinClientIntegrationTest {
         String url = "https://www.myawesomeserver.com";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
         BackupRestore backupRestore = new BackupRestoreImpl();
-        kinClient1 = new KinClientInternal(new FakeKeyStore(backupRestore), environment, APP_ID, backupRestore);
+        kinClient1 = new KinClientInternal(
+                new FakeKeyStore(backupRestore),
+                environment,
+                new TransactionSender(server, APP_ID),
+                new AccountInfoRetriever(server),
+                new GeneralBlockchainInfoRetrieverImpl(server),
+                new BlockchainEventsCreator(server),
+                backupRestore,
+                APP_ID
+        );
         Environment actualEnvironment = kinClient1.getEnvironment();
 
         assertNotNull(actualEnvironment);

@@ -9,8 +9,8 @@ sourceSets {
     test.java.srcDirs += 'src/test/java'
 }
 
-sourceCompatibility = "6"
-targetCompatibility = "6"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')

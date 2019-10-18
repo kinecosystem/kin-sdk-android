@@ -2,8 +2,8 @@ package kin.sdk;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 
+import kin.base.Server;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
@@ -22,7 +22,6 @@ public class KinClient {
 
     private final KinClientInternal kinClientInternal;
     private final String storeKey;
-    private final BackupRestore backupRestore;
 
     /**
      * For more details please look at {@link #KinClient(Context context, Environment environment, String appId, String storeKey)}
@@ -44,23 +43,26 @@ public class KinClient {
     public KinClient(@NonNull Context context, @NonNull Environment environment, @NonNull String appId, @NonNull String storeKey) {
         checkNotNull(storeKey, "storeKey");
         this.storeKey = storeKey;
-        backupRestore = new BackupRestoreImpl();
-        kinClientInternal = new KinClientInternal(createKeyStore(context, storeKey), environment, appId, backupRestore);
+
+        BackupRestore backupRestore = new BackupRestoreImpl();
+
+        // Init Server
+        Server server = new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).client);
+
+        kinClientInternal = new KinClientInternal(
+                createKeyStore(context, storeKey, backupRestore),
+                environment,
+                new TransactionSender(server, appId),
+                new AccountInfoRetriever(server),
+                new GeneralBlockchainInfoRetrieverImpl(server),
+                new BlockchainEventsCreator(server),
+                backupRestore,
+                appId
+        );
     }
 
-    @VisibleForTesting
-    KinClient(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
-              AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
-              BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String appId, String storeKey) {
-        this.storeKey = storeKey;
-        this.backupRestore = backupRestore;
-        kinClientInternal = new KinClientInternal(environment, keyStore, transactionSender, accountInfoRetriever,
-                generalBlockchainInfoRetriever, blockchainEventsCreator, backupRestore, appId);
-    }
-
-    private KeyStore createKeyStore(Context context, String id) {
-        SharedPrefStore store = new SharedPrefStore(
-                context.getSharedPreferences(STORE_NAME_PREFIX + id, Context.MODE_PRIVATE));
+    private KeyStore createKeyStore(Context context, String id, BackupRestore backupRestore) {
+        SharedPrefStore store = new SharedPrefStore(context.getSharedPreferences(STORE_NAME_PREFIX + id, Context.MODE_PRIVATE));
         return new KeyStoreImpl(store, backupRestore);
     }
 

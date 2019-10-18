@@ -205,6 +205,7 @@ class TransactionSender {
             if (response.isSuccess()) {
                 return new TransactionIdImpl(response.getHash());
             } else {
+                // TODO: backoff + retry here or in Server.java?
                 return createFailureException(response);
             }
         } catch (IOException e) {

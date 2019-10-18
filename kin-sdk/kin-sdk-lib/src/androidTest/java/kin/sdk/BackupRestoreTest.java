@@ -11,6 +11,7 @@ import org.junit.rules.ExpectedException;
 import java.util.UUID;
 
 import kin.base.KeyPair;
+import kin.base.Server;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
 
@@ -45,7 +46,17 @@ public class BackupRestoreTest {
     }
 
     private KinClientInternal createNewKinClient(KeyStore keyStore) {
-        return new KinClientInternal(keyStore, environment, APP_ID, backupRestore);
+        Server server = new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).testClient);
+        return new KinClientInternal(
+                keyStore,
+                environment,
+                new TransactionSender(server, APP_ID),
+                new AccountInfoRetriever(server),
+                new GeneralBlockchainInfoRetrieverImpl(server),
+                new BlockchainEventsCreator(server),
+                backupRestore,
+                APP_ID
+        );
     }
 
     @Test

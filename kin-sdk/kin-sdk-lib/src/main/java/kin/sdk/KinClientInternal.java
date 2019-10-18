@@ -2,7 +2,6 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import java.util.logging.Logger;
 
 import kin.base.KeyPair;
 import kin.base.Network;
-import kin.base.Server;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
@@ -33,7 +31,7 @@ class KinClientInternal {
     private final KeyStore keyStore;
     private final TransactionSender transactionSender;
     private final AccountInfoRetriever accountInfoRetriever;
-    private final GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever;
+    private final GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever;
     private final BlockchainEventsCreator blockchainEventsCreator;
     private final BackupRestore backupRestore;
     private final String appId;
@@ -48,30 +46,27 @@ class KinClientInternal {
      * @param keyStore    a place to store keys
      * @param environment the blockchain network details.
      * @param appId       a 4 character string which represent the application id which will be added to each transaction.
-     *                    <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.
+     *                    <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string
+     *                    length is between 3 to 4.
      *                    For example 1234 or 2ab3 or bcda, etc.</br>
      */
-    public KinClientInternal(@NonNull KeyStore keyStore, @NonNull Environment environment, @NonNull String appId, @NonNull BackupRestore backupRestore) {
+    KinClientInternal(
+            @NonNull KeyStore keyStore,
+            @NonNull Environment environment,
+            @NonNull TransactionSender transactionSender,
+            @NonNull AccountInfoRetriever accountInfoRetriever,
+            @NonNull GeneralBlockchainInfoRetriever generalBlockchainInfoRetriever,
+            @NonNull BlockchainEventsCreator blockchainEventsCreator,
+            @NonNull BackupRestore backupRestore,
+            @NonNull String appId
+    ) {
         checkNotNull(keyStore, "keyStore");
         checkNotNull(environment, "environment");
         validateAppId(appId);
-        this.environment = environment;
-        this.backupRestore = backupRestore;
-        Server server = initServer();
-        this.appId = appId;
-        this.keyStore = keyStore;
-        transactionSender = new TransactionSender(server, appId);
-        accountInfoRetriever = new AccountInfoRetriever(server);
-        generalBlockchainInfoRetriever = new GeneralBlockchainInfoRetrieverImpl(server);
-        blockchainEventsCreator = new BlockchainEventsCreator(server);
-        loadAccounts();
-    }
 
-    @VisibleForTesting
-    KinClientInternal(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
-                      AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
-                      BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String appId) {
+        Network.use(environment.getNetwork());
         this.environment = environment;
+
         this.keyStore = keyStore;
         this.transactionSender = transactionSender;
         this.accountInfoRetriever = accountInfoRetriever;
@@ -79,12 +74,8 @@ class KinClientInternal {
         this.blockchainEventsCreator = blockchainEventsCreator;
         this.backupRestore = backupRestore;
         this.appId = appId;
-        loadAccounts();
-    }
 
-    private Server initServer() {
-        Network.use(environment.getNetwork());
-        return new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).client);
+        loadAccounts();
     }
 
     private void loadAccounts() {
@@ -119,10 +110,13 @@ class KinClientInternal {
 
     private void validateAppId(String appId) {
         if (appId == null || appId.equals("")) {
-            logger.warning("WARNING: KinClient instance was created without a proper application ID. Is this what you intended to do?");
+            logger.warning(
+                    "WARNING: KinClient instance was created without a proper application ID. Is this what you intended to do?");
         } else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
-            throw new IllegalArgumentException("appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.\n" +
-                    "for example 1234 or 2ab3 or cd2 or fqa, etc.");
+            throw new IllegalArgumentException(
+                    "appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.\n"
+                            +
+                            "for example 1234 or 2ab3 or cd2 or fqa, etc.");
         }
     }
 
@@ -242,8 +236,7 @@ class KinClientInternal {
     }
 
     /**
-     * Get the current minimum fee that the network charges per operation.
-     * This value is expressed in stroops.
+     * Get the current minimum fee that the network charges per operation. This value is expressed in stroops.
      *
      * @return {@code Request<Integer>} - the minimum fee.
      */
@@ -257,8 +250,7 @@ class KinClientInternal {
     }
 
     /**
-     * Get the current minimum fee that the network charges per operation.
-     * This value is expressed in stroops.
+     * Get the current minimum fee that the network charges per operation. This value is expressed in stroops.
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @return the minimum fee.

@@ -65,12 +65,13 @@ public class ServerTest extends TestCase {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
-        server = new Server(mockWebServer.url("/").url().toString());
-        server.setHttpClient(new OkHttpClient.Builder()
+        OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .build());
+                .build();
+
+        server = new Server(mockWebServer.url("/").url().toString(), client);
     }
 
     @After

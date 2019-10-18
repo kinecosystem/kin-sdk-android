@@ -34,19 +34,9 @@ public class Server {
     private static final int TEMPORARY_REDIRECT = 307;
     private static final String LOCATION_HEADER = "Location";
 
-    private URI serverURI;
+    private final URI serverURI;
 
-    private OkHttpClient httpClient;
-
-    /**
-     * Creates server with input uri
-     *
-     * @param uri Horizon server uri
-     */
-    public Server(String uri) {
-        createUri(uri);
-        httpClient = new OkHttpClient();
-    }
+    private final OkHttpClient httpClient;
 
     /**
      * Creates server with input uri and timeout for transactions, i.e. {@link Server#submitTransaction(Transaction)}
@@ -57,16 +47,14 @@ public class Server {
      * @param client OkHttpClient
      */
     public Server(String uri, OkHttpClient client) {
-        createUri(uri);
+        serverURI = createUri(uri);
         httpClient = client;
     }
 
-    private void createUri(String uri) {
+    private URI createUri(String uri) {
         try {
-            serverURI = new URL(uri).toURI();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (URISyntaxException e) {
+            return new URL(uri).toURI();
+        } catch (MalformedURLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }
@@ -202,12 +190,5 @@ public class Server {
             uriBuilder.addPathSegment("transactions").build().url();
         }
         return uriBuilder.build().uri();
-    }
-
-    /**
-     * To support mocking a client
-     */
-    void setHttpClient(OkHttpClient httpClient) {
-        this.httpClient = httpClient;
     }
 }

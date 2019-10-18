@@ -1,29 +1,28 @@
 package kin.sdk;
 
-import android.support.test.InstrumentationRegistry;
 
-import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static kin.sdk.IntegConsts.TEST_NETWORK_ID;
-import static kin.sdk.IntegConsts.TEST_NETWORK_URL;
+import kin.base.Server;
 
 public class AppIdTest {
-
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
 
     private static final String APP_ID = "1a2c";
     private static final String STORE_KEY_TEST = "test";
 
-    private KinClient createNewKinClient(String appId) {
-        return new KinClient(InstrumentationRegistry.getTargetContext(),
-                new Environment(TEST_NETWORK_URL, TEST_NETWORK_ID),
-                appId,
-                STORE_KEY_TEST);
+    private KinClientInternal createNewKinClient(String appId) {
+        Server server = new Server(IntegConsts.TEST_NETWORK_URL, new KinOkHttpClientFactory("test").testClient);
+        return new KinClientInternal(
+                new FakeKeyStore(),
+                new Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID),
+                new TransactionSender(server, appId),
+                new AccountInfoRetriever(server),
+                new GeneralBlockchainInfoRetrieverImpl(server),
+                new BlockchainEventsCreator(server),
+                new BackupRestoreImpl(),
+                appId
+        );
     }
 
     @Test
@@ -39,7 +38,7 @@ public class AppIdTest {
         } catch (IllegalArgumentException e) {
             failed = true;
         }
-        assertFalse(failed);
+        Assert.assertFalse(failed);
     }
 
     @Test
@@ -50,7 +49,7 @@ public class AppIdTest {
         } catch (IllegalArgumentException e) {
             failed = true;
         }
-        assertFalse(failed);
+        Assert.assertFalse(failed);
     }
 
     @Test
@@ -65,7 +64,7 @@ public class AppIdTest {
             } catch (IllegalArgumentException e) {
                 failed = true;
             }
-            assertTrue(failed);
+            Assert.assertTrue(failed);
         }
     }
 }

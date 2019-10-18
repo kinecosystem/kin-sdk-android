@@ -69,8 +69,7 @@ public class ServerTest extends TestCase {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
-        server = new Server(mockWebServer.url("/").url().toString());
-        server.setHttpClient(new KinOkHttpClientFactory("androidVersion").client);
+        server = new Server(mockWebServer.url("/").url().toString(), new KinOkHttpClientFactory("androidVersion").testClient);
     }
 
     @After
