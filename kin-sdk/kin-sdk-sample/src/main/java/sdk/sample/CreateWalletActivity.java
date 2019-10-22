@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
 import kin.sdk.KinClient;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.sample.R;
@@ -59,28 +60,28 @@ public class CreateWalletActivity extends BaseActivity {
         final EditText editExportedJson = content.findViewById(R.id.exported_json);
 
         final AlertDialog dialog = new Builder(CreateWalletActivity.this)
-            .setView(content)
-            .setTitle("Import Wallet Json")
-            .setPositiveButton("Import", (dialog1, which) ->
-                importAccount(editExportedJson.getText().toString(), editPassphrase.getText().toString()))
-            .setNegativeButton("Cancel", null)
-            .create();
+                .setView(content)
+                .setTitle("Import Wallet Json")
+                .setPositiveButton("Import", (dialog1, which) ->
+                        importAccount(editExportedJson.getText().toString(), editPassphrase.getText().toString()))
+                .setNegativeButton("Cancel", null)
+                .create();
         dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false));
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
-                int count) {
+                                      int count) {
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
-                int after) {
+                                          int after) {
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (TextUtils.isEmpty(editExportedJson.getText().toString()) ||
-                    TextUtils.isEmpty(editPassphrase.getText().toString())) {
+                        TextUtils.isEmpty(editPassphrase.getText().toString())) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);

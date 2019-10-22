@@ -3,6 +3,7 @@ package kin.sdk.exception;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public class TransactionFailedException extends OperationFailedException {
     private final List<String> opResultCode;
 
     public TransactionFailedException(@Nullable String txResultCode,
-        @Nullable List<String> opResultCode) {
+                                      @Nullable List<String> opResultCode) {
         super(getMessage(opResultCode));
 
         this.txResultCode = txResultCode;
@@ -24,8 +25,8 @@ public class TransactionFailedException extends OperationFailedException {
     @NonNull
     private static String getMessage(@Nullable List<String> opResultCode) {
         return opResultCode != null && !opResultCode.isEmpty() ?
-            "Transaction failed with the error = " + opResultCode.get(0) :
-            "Transaction failed";
+                "Transaction failed with the error = " + opResultCode.get(0) :
+                "Transaction failed";
     }
 
     @Nullable

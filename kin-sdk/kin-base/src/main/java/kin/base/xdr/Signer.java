@@ -15,30 +15,39 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class Signer  {
-  public Signer () {}
-  private SignerKey key;
-  public SignerKey getKey() {
-    return this.key;
-  }
-  public void setKey(SignerKey value) {
-    this.key = value;
-  }
-  private Uint32 weight;
-  public Uint32 getWeight() {
-    return this.weight;
-  }
-  public void setWeight(Uint32 value) {
-    this.weight = value;
-  }
-  public static void encode(XdrDataOutputStream stream, Signer encodedSigner) throws IOException{
-    SignerKey.encode(stream, encodedSigner.key);
-    Uint32.encode(stream, encodedSigner.weight);
-  }
-  public static Signer decode(XdrDataInputStream stream) throws IOException {
-    Signer decodedSigner = new Signer();
-    decodedSigner.key = SignerKey.decode(stream);
-    decodedSigner.weight = Uint32.decode(stream);
-    return decodedSigner;
-  }
+public class Signer {
+    public Signer() {
+    }
+
+    private SignerKey key;
+
+    public SignerKey getKey() {
+        return this.key;
+    }
+
+    public void setKey(SignerKey value) {
+        this.key = value;
+    }
+
+    private Uint32 weight;
+
+    public Uint32 getWeight() {
+        return this.weight;
+    }
+
+    public void setWeight(Uint32 value) {
+        this.weight = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, Signer encodedSigner) throws IOException {
+        SignerKey.encode(stream, encodedSigner.key);
+        Uint32.encode(stream, encodedSigner.weight);
+    }
+
+    public static Signer decode(XdrDataInputStream stream) throws IOException {
+        Signer decodedSigner = new Signer();
+        decodedSigner.key = SignerKey.decode(stream);
+        decodedSigner.weight = Uint32.decode(stream);
+        return decodedSigner;
+    }
 }

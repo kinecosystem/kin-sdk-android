@@ -23,33 +23,36 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum AccountFlags  {
-  AUTH_REQUIRED_FLAG(1),
-  AUTH_REVOCABLE_FLAG(2),
-  AUTH_IMMUTABLE_FLAG(4),
-  ;
-  private int mValue;
+public enum AccountFlags {
+    AUTH_REQUIRED_FLAG(1),
+    AUTH_REVOCABLE_FLAG(2),
+    AUTH_IMMUTABLE_FLAG(4),
+    ;
+    private int mValue;
 
-  AccountFlags(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static AccountFlags decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 1: return AUTH_REQUIRED_FLAG;
-      case 2: return AUTH_REVOCABLE_FLAG;
-      case 4: return AUTH_IMMUTABLE_FLAG;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    AccountFlags(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, AccountFlags value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static AccountFlags decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 1:
+                return AUTH_REQUIRED_FLAG;
+            case 2:
+                return AUTH_REVOCABLE_FLAG;
+            case 4:
+                return AUTH_IMMUTABLE_FLAG;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, AccountFlags value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

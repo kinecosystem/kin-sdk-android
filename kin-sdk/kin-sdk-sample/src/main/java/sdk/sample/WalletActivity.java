@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.TextView;
+
 import kin.sdk.AccountStatus;
 import kin.sdk.Balance;
 import kin.sdk.KinAccount;
@@ -89,7 +90,7 @@ public class WalletActivity extends BaseActivity {
         watchPayments.setOnClickListener(view -> startActivity(PaymentListenerActivity.getIntent(WalletActivity.this)));
         refresh.setOnClickListener(view -> updateAccountInfo(true));
         balanceListenSwitch
-            .setOnCheckedChangeListener((buttonView, isChecked) -> handleAutoBalanceSwitchChanges(refresh, isChecked));
+                .setOnCheckedChangeListener((buttonView, isChecked) -> handleAutoBalanceSwitchChanges(refresh, isChecked));
         exportKeyStore.setOnClickListener(view -> startActivity(ExportKeystoreActivity.getIntent(this)));
     }
 
@@ -102,7 +103,7 @@ public class WalletActivity extends BaseActivity {
         refresh.setEnabled(!isChecked);
         if (isChecked) {
             balanceListenerRegistration = account.addBalanceListener(
-                updatedBalance -> runOnUiThread(() -> balance.setText(updatedBalance.value().toPlainString())));
+                    updatedBalance -> runOnUiThread(() -> balance.setText(updatedBalance.value().toPlainString())));
         } else {
             balanceListenerRegistration.remove();
         }
@@ -110,7 +111,7 @@ public class WalletActivity extends BaseActivity {
 
     private void showDeleteAlert() {
         KinAlertDialog.createConfirmationDialog(this, getResources().getString(R.string.delete_wallet_warning),
-            getResources().getString(R.string.delete), this::deleteAccount).show();
+                getResources().getString(R.string.delete), this::deleteAccount).show();
     }
 
     private void deleteAccount() {

@@ -1,10 +1,15 @@
 package kin.sdk;
 
 import android.support.annotation.NonNull;
-import kin.base.KeyPair;
-import kin.sdk.exception.*;
 
 import java.util.List;
+
+import kin.base.KeyPair;
+import kin.sdk.exception.CorruptedDataException;
+import kin.sdk.exception.CreateAccountException;
+import kin.sdk.exception.CryptoException;
+import kin.sdk.exception.DeleteAccountException;
+import kin.sdk.exception.LoadAccountException;
 
 interface KeyStore {
 
@@ -16,7 +21,7 @@ interface KeyStore {
     KeyPair newAccount() throws CreateAccountException;
 
     KeyPair importAccount(@NonNull String json, @NonNull String passphrase)
-        throws CryptoException, CreateAccountException, CorruptedDataException;
+            throws CryptoException, CreateAccountException, CorruptedDataException;
 
     void clearAllAccounts();
 }

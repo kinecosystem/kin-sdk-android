@@ -1,10 +1,10 @@
 package kin.base.xdr;
 
-import static kin.base.Util.CHARSET_UTF8;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static kin.base.Util.CHARSET_UTF8;
 
 public class XdrDataOutputStream extends DataOutputStream {
 
@@ -93,7 +93,7 @@ public class XdrDataOutputStream extends DataOutputStream {
             int pad = 0;
             int mod = mCount % 4;
             if (mod > 0) {
-                pad = 4-mod;
+                pad = 4 - mod;
             }
             while (pad-- > 0) {
                 write(0);

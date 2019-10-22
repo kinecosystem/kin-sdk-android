@@ -28,51 +28,63 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum TransactionResultCode  {
-  txSUCCESS(0),
-  txFAILED(-1),
-  txTOO_EARLY(-2),
-  txTOO_LATE(-3),
-  txMISSING_OPERATION(-4),
-  txBAD_SEQ(-5),
-  txBAD_AUTH(-6),
-  txINSUFFICIENT_BALANCE(-7),
-  txNO_ACCOUNT(-8),
-  txINSUFFICIENT_FEE(-9),
-  txBAD_AUTH_EXTRA(-10),
-  txINTERNAL_ERROR(-11),
-  ;
-  private int mValue;
+public enum TransactionResultCode {
+    txSUCCESS(0),
+    txFAILED(-1),
+    txTOO_EARLY(-2),
+    txTOO_LATE(-3),
+    txMISSING_OPERATION(-4),
+    txBAD_SEQ(-5),
+    txBAD_AUTH(-6),
+    txINSUFFICIENT_BALANCE(-7),
+    txNO_ACCOUNT(-8),
+    txINSUFFICIENT_FEE(-9),
+    txBAD_AUTH_EXTRA(-10),
+    txINTERNAL_ERROR(-11),
+    ;
+    private int mValue;
 
-  TransactionResultCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static TransactionResultCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return txSUCCESS;
-      case -1: return txFAILED;
-      case -2: return txTOO_EARLY;
-      case -3: return txTOO_LATE;
-      case -4: return txMISSING_OPERATION;
-      case -5: return txBAD_SEQ;
-      case -6: return txBAD_AUTH;
-      case -7: return txINSUFFICIENT_BALANCE;
-      case -8: return txNO_ACCOUNT;
-      case -9: return txINSUFFICIENT_FEE;
-      case -10: return txBAD_AUTH_EXTRA;
-      case -11: return txINTERNAL_ERROR;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    TransactionResultCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, TransactionResultCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static TransactionResultCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return txSUCCESS;
+            case -1:
+                return txFAILED;
+            case -2:
+                return txTOO_EARLY;
+            case -3:
+                return txTOO_LATE;
+            case -4:
+                return txMISSING_OPERATION;
+            case -5:
+                return txBAD_SEQ;
+            case -6:
+                return txBAD_AUTH;
+            case -7:
+                return txINSUFFICIENT_BALANCE;
+            case -8:
+                return txNO_ACCOUNT;
+            case -9:
+                return txINSUFFICIENT_FEE;
+            case -10:
+                return txBAD_AUTH_EXTRA;
+            case -11:
+                return txINTERNAL_ERROR;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, TransactionResultCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

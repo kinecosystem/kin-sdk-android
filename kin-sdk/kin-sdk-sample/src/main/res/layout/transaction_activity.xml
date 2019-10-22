@@ -21,7 +21,7 @@
             style="@style/KinText.Title.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/public_address"/>
+            android:text="@string/public_address" />
 
         <EditText
             android:id="@+id/to_address_input"
@@ -31,13 +31,13 @@
             android:layout_marginBottom="10dp"
             android:digits="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:inputType="textNoSuggestions|textVisiblePassword"
-            tools:text="public key"/>
+            tools:text="public key" />
 
         <TextView
             style="@style/KinText.Title.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/amount"/>
+            android:text="@string/amount" />
 
         <EditText
             android:id="@+id/amount_input"
@@ -46,13 +46,13 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:inputType="numberSigned|numberDecimal"
-            tools:text="10"/>
+            tools:text="10" />
 
         <TextView
             style="@style/KinText.Title.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fee"/>
+            android:text="@string/fee" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:inputType="numberSigned|numberDecimal"
-                tools:text="100"/>
+                tools:text="100" />
 
             <Button
                 android:id="@+id/retrieve_minimum_fee_btn"
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16dp"
-                android:text="@string/retrieve_minimum_fee"/>
+                android:text="@string/retrieve_minimum_fee" />
 
         </LinearLayout>
 
@@ -83,7 +83,7 @@
             style="@style/KinText.Title.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/memo"/>
+            android:text="@string/memo" />
 
         <EditText
             android:id="@+id/memo_input"
@@ -92,12 +92,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:inputType="text"
-            tools:text="optional memo"/>
+            tools:text="optional memo" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <ProgressBar
             android:id="@+id/transaction_progress"
@@ -105,7 +105,7 @@
             android:layout_height="20dp"
             android:layout_marginBottom="15dp"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/send_transaction_btn"
@@ -113,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="@string/send_transaction"/>
+            android:text="@string/send_transaction" />
 
     </LinearLayout>
 
@@ -126,7 +126,6 @@
         android:padding="@dimen/activity_padding"
         android:theme="@style/KinSwitch"
         android:text="@string/whitelist"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 
 </android.support.constraint.ConstraintLayout>

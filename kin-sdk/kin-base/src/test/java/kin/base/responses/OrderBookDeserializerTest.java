@@ -1,10 +1,12 @@
 package kin.base.responses;
 
 import junit.framework.TestCase;
+
+import org.junit.Test;
+
 import kin.base.Asset;
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
-import org.junit.Test;
 
 public class OrderBookDeserializerTest extends TestCase {
     @Test

@@ -1,9 +1,11 @@
 package kin.base.responses;
 
 import junit.framework.TestCase;
+
+import org.junit.Test;
+
 import kin.base.Asset;
 import kin.base.AssetTypeCreditAlphaNum;
-import org.junit.Test;
 
 public class AssetDeserializerTest extends TestCase {
     @Test

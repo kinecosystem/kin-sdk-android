@@ -1,13 +1,14 @@
 package kin.base.requests;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.net.URI;
+
 import kin.base.Asset;
 import kin.base.KeyPair;
 import kin.base.Server;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import static org.junit.Assert.assertEquals;
 
 public class TradesRequestBuilderTest {
     @Test

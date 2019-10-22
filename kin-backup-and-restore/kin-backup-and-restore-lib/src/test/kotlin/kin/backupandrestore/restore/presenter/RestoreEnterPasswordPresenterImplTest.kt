@@ -1,9 +1,15 @@
 package kin.backupandrestore.restore.presenter
 
 import android.os.Bundle
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kin.backupandrestore.events.CallbackManager
-import kin.backupandrestore.events.RestoreEventCode.*
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_DONE_TAPPED
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_BACK_TAPPED
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_VIEWED
 import kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY
 import kin.backupandrestore.restore.view.RestoreEnterPasswordView
 import kin.sdk.KinAccount

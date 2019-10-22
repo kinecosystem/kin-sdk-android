@@ -5,38 +5,38 @@ import kin.base.xdr.Uint32;
 
 
 public class TrustLineLedgerEntryChange extends LedgerEntryChange {
-  private KeyPair accountID;
-  private Asset asset;
-  private String balance;
-  private String limit;
-  private Uint32 flags;
+    private KeyPair accountID;
+    private Asset asset;
+    private String balance;
+    private String limit;
+    private Uint32 flags;
 
-  TrustLineLedgerEntryChange() {
-  }
+    TrustLineLedgerEntryChange() {
+    }
 
-  public KeyPair getAccount() {
-    return this.accountID;
-  }
+    public KeyPair getAccount() {
+        return this.accountID;
+    }
 
-  public Asset getAsset() {
-    return this.asset;
-  }
+    public Asset getAsset() {
+        return this.asset;
+    }
 
-  public String getBalance() {
-    return this.balance;
-  }
+    public String getBalance() {
+        return this.balance;
+    }
 
-  public String getLimit() {
-    return this.limit;
-  }
+    public String getLimit() {
+        return this.limit;
+    }
 
-  public static TrustLineLedgerEntryChange fromXdr(kin.base.xdr.TrustLineEntry xdr) {
-    TrustLineLedgerEntryChange entry = new TrustLineLedgerEntryChange();
-    entry.accountID = KeyPair.fromXdrPublicKey(xdr.getAccountID().getAccountID());
-    entry.asset = Asset.fromXdr(xdr.getAsset());
-    entry.balance = Operation.fromXdrAmount(xdr.getBalance().getInt64());
-    entry.limit = Operation.fromXdrAmount(xdr.getLimit().getInt64());
-    return entry;
-  }
+    public static TrustLineLedgerEntryChange fromXdr(kin.base.xdr.TrustLineEntry xdr) {
+        TrustLineLedgerEntryChange entry = new TrustLineLedgerEntryChange();
+        entry.accountID = KeyPair.fromXdrPublicKey(xdr.getAccountID().getAccountID());
+        entry.asset = Asset.fromXdr(xdr.getAsset());
+        entry.balance = Operation.fromXdrAmount(xdr.getBalance().getInt64());
+        entry.limit = Operation.fromXdrAmount(xdr.getLimit().getInt64());
+        return entry;
+    }
 
 }

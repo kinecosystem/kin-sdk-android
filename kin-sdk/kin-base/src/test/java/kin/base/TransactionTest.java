@@ -1,17 +1,19 @@
 package kin.base;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+
 import kin.base.codec.Base64;
 import kin.base.xdr.XdrDataInputStream;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TransactionTest {
 
@@ -49,8 +51,8 @@ public class TransactionTest {
         assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
         assertEquals(transaction.getFee(), transaction2.getFee());
         assertEquals(
-                ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
-                ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+                ((CreateAccountOperation) transaction.getOperations()[0]).getStartingBalance(),
+                ((CreateAccountOperation) transaction2.getOperations()[0]).getStartingBalance()
         );
 
         assertEquals(transaction.getSignatures(), transaction2.getSignatures());
@@ -81,8 +83,8 @@ public class TransactionTest {
         assertEquals(transaction.getMemo(), transaction2.getMemo());
         assertEquals(transaction.getFee(), transaction2.getFee());
         assertEquals(
-                ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
-                ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+                ((CreateAccountOperation) transaction.getOperations()[0]).getStartingBalance(),
+                ((CreateAccountOperation) transaction2.getOperations()[0]).getStartingBalance()
         );
     }
 
@@ -117,8 +119,8 @@ public class TransactionTest {
         assertEquals(transaction.getTimeBounds(), transaction2.getTimeBounds());
         assertEquals(transaction.getFee(), transaction2.getFee());
         assertEquals(
-                ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
-                ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+                ((CreateAccountOperation) transaction.getOperations()[0]).getStartingBalance(),
+                ((CreateAccountOperation) transaction2.getOperations()[0]).getStartingBalance()
         );
     }
 

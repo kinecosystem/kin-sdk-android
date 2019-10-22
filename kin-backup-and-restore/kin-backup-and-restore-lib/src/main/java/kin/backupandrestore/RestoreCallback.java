@@ -6,9 +6,9 @@ import kin.sdk.KinClient;
 
 public interface RestoreCallback {
 
-	void onSuccess(KinClient kinClient, KinAccount kinAccount);
+    void onSuccess(KinClient kinClient, KinAccount kinAccount);
 
-	void onCancel();
+    void onCancel();
 
-	void onFailure(BackupAndRestoreException throwable);
+    void onFailure(BackupAndRestoreException throwable);
 }

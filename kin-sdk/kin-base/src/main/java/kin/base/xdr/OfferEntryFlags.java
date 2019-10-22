@@ -15,29 +15,30 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum OfferEntryFlags  {
-  PASSIVE_FLAG(1),
-  ;
-  private int mValue;
+public enum OfferEntryFlags {
+    PASSIVE_FLAG(1),
+    ;
+    private int mValue;
 
-  OfferEntryFlags(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static OfferEntryFlags decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 1: return PASSIVE_FLAG;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    OfferEntryFlags(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, OfferEntryFlags value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static OfferEntryFlags decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 1:
+                return PASSIVE_FLAG;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, OfferEntryFlags value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

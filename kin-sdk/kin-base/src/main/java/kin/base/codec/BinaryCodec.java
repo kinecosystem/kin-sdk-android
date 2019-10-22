@@ -36,47 +36,67 @@ package kin.base.codec;
 
 /**
  * Converts between byte arrays and strings of "0"s and "1"s.
- *
+ * <p>
  * TODO: may want to add more bit vector functions like and/or/xor/nand
  * TODO: also might be good to generate boolean[] from byte[] et cetera.
  *
  * @author Apache Software Foundation
- * @since 1.3
  * @version $Id$
+ * @since 1.3
  */
 public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /*
      * tried to avoid using ArrayUtils to minimize dependencies while using these empty arrays - dep is just not worth
      * it.
      */
-    /** Empty char array. */
+    /**
+     * Empty char array.
+     */
     private static final char[] EMPTY_CHAR_ARRAY = new char[0];
 
-    /** Empty byte array. */
+    /**
+     * Empty byte array.
+     */
     private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
-    /** Mask for bit 0 of a byte. */
+    /**
+     * Mask for bit 0 of a byte.
+     */
     private static final int BIT_0 = 1;
 
-    /** Mask for bit 1 of a byte. */
+    /**
+     * Mask for bit 1 of a byte.
+     */
     private static final int BIT_1 = 0x02;
 
-    /** Mask for bit 2 of a byte. */
+    /**
+     * Mask for bit 2 of a byte.
+     */
     private static final int BIT_2 = 0x04;
 
-    /** Mask for bit 3 of a byte. */
+    /**
+     * Mask for bit 3 of a byte.
+     */
     private static final int BIT_3 = 0x08;
 
-    /** Mask for bit 4 of a byte. */
+    /**
+     * Mask for bit 4 of a byte.
+     */
     private static final int BIT_4 = 0x10;
 
-    /** Mask for bit 5 of a byte. */
+    /**
+     * Mask for bit 5 of a byte.
+     */
     private static final int BIT_5 = 0x20;
 
-    /** Mask for bit 6 of a byte. */
+    /**
+     * Mask for bit 6 of a byte.
+     */
     private static final int BIT_6 = 0x40;
 
-    /** Mask for bit 7 of a byte. */
+    /**
+     * Mask for bit 7 of a byte.
+     */
     private static final int BIT_7 = 0x80;
 
     private static final int[] BITS = {BIT_0, BIT_1, BIT_2, BIT_3, BIT_4, BIT_5, BIT_6, BIT_7};
@@ -84,8 +104,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Converts an array of raw binary data into an array of ASCII 0 and 1 characters.
      *
-     * @param raw
-     *                  the raw binary data to convert
+     * @param raw the raw binary data to convert
      * @return 0 and 1 ASCII character bytes one for each bit of the argument
      */
     public byte[] encode(byte[] raw) {
@@ -95,11 +114,9 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Converts an array of raw binary data into an array of ASCII 0 and 1 chars.
      *
-     * @param raw
-     *                  the raw binary data to convert
+     * @param raw the raw binary data to convert
      * @return 0 and 1 ASCII character chars one for each bit of the argument
-     * @throws EncoderException
-     *                  if the argument is not a byte[]
+     * @throws EncoderException if the argument is not a byte[]
      */
     public Object encode(Object raw) throws EncoderException {
         if (!(raw instanceof byte[])) {
@@ -111,11 +128,9 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Decodes a byte array where each byte represents an ASCII '0' or '1'.
      *
-     * @param ascii
-     *                  each byte represents an ASCII '0' or '1'
+     * @param ascii each byte represents an ASCII '0' or '1'
      * @return the raw encoded binary where each bit corresponds to a byte in the byte array argument
-     * @throws DecoderException
-     *                  if argument is not a byte[], char[] or String
+     * @throws DecoderException if argument is not a byte[], char[] or String
      */
     public Object decode(Object ascii) throws DecoderException {
         if (ascii == null) {
@@ -136,8 +151,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Decodes a byte array where each byte represents an ASCII '0' or '1'.
      *
-     * @param ascii
-     *                  each byte represents an ASCII '0' or '1'
+     * @param ascii each byte represents an ASCII '0' or '1'
      * @return the raw encoded binary where each bit corresponds to a byte in the byte array argument
      */
     public byte[] decode(byte[] ascii) {
@@ -147,8 +161,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Decodes a String where each char of the String represents an ASCII '0' or '1'.
      *
-     * @param ascii
-     *                  String of '0' and '1' characters
+     * @param ascii String of '0' and '1' characters
      * @return the raw encoded binary where each bit corresponds to a byte in the byte array argument
      */
     public byte[] toByteArray(String ascii) {
@@ -163,11 +176,11 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     // static codec operations
     //
     // ------------------------------------------------------------------------
+
     /**
      * Decodes a char array where each char represents an ASCII '0' or '1'.
      *
-     * @param ascii
-     *                  each char represents an ASCII '0' or '1'
+     * @param ascii each char represents an ASCII '0' or '1'
      * @return the raw encoded binary where each bit corresponds to a char in the char array argument
      */
     public static byte[] fromAscii(char[] ascii) {
@@ -193,8 +206,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Decodes a byte array where each byte represents an ASCII '0' or '1'.
      *
-     * @param ascii
-     *                  each byte represents an ASCII '0' or '1'
+     * @param ascii each byte represents an ASCII '0' or '1'
      * @return the raw encoded binary where each bit corresponds to a byte in the byte array argument
      */
     public static byte[] fromAscii(byte[] ascii) {
@@ -220,8 +232,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Returns <code>true</code> if the given array is <code>null</code> or empty (size 0.)
      *
-     * @param array
-     *            the source array
+     * @param array the source array
      * @return <code>true</code> if the given array is <code>null</code> or empty (size 0.)
      */
     private static boolean isEmpty(byte[] array) {
@@ -232,8 +243,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
      * Converts an array of raw binary data into an array of ASCII 0 and 1 character bytes - each byte is a truncated
      * char.
      *
-     * @param raw
-     *                  the raw binary data to convert
+     * @param raw the raw binary data to convert
      * @return an array of 0 and 1 character bytes for each bit of the argument
      */
     public static byte[] toAsciiBytes(byte[] raw) {
@@ -261,8 +271,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Converts an array of raw binary data into an array of ASCII 0 and 1 characters.
      *
-     * @param raw
-     *                  the raw binary data to convert
+     * @param raw the raw binary data to convert
      * @return an array of 0 and 1 characters for each bit of the argument
      */
     public static char[] toAsciiChars(byte[] raw) {
@@ -290,8 +299,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     /**
      * Converts an array of raw binary data into a String of ASCII 0 and 1 characters.
      *
-     * @param raw
-     *                  the raw binary data to convert
+     * @param raw the raw binary data to convert
      * @return a String of 0 and 1 characters representing the binary data
      */
     public static String toAsciiString(byte[] raw) {

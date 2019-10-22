@@ -5,13 +5,20 @@ import android.content.ComponentName
 import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.*
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.action.ViewActions.closeSoftKeyboard
+import android.support.test.espresso.action.ViewActions.typeText
 import android.support.test.espresso.assertion.ViewAssertions.doesNotExist
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.Intents.intended
 import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
+import android.support.test.espresso.matcher.ViewMatchers.isEnabled
+import android.support.test.espresso.matcher.ViewMatchers.withClassName
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.withParent
+import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -25,7 +32,10 @@ import kin.backupandrestore.restore.view.RestoreActivity
 import kin.sdk.Environment
 import kin.sdk.KinClient
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.not
 import org.hamcrest.core.IsInstanceOf
 import org.junit.After
 import org.junit.Before
@@ -69,40 +79,40 @@ class RestoreActivityValidateSwitchBetweenScreens {
         expectedIntent = intendingStubQRIntent()
 
         val backImageButton = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.toolbar),
-                                childAtPosition(
-                                        IsInstanceOf.instanceOf(android.view.ViewGroup::class.java),
-                                        0)),
-                        0),
-                        isDisplayed()))
+            allOf(childAtPosition(
+                allOf(withId(R.id.toolbar),
+                    childAtPosition(
+                        IsInstanceOf.instanceOf(android.view.ViewGroup::class.java),
+                        0)),
+                0),
+                isDisplayed()))
         backImageButton.check(matches(isDisplayed()))
-                .check(matches(isSameDrawable(R.drawable.back)))
+            .check(matches(isSameDrawable(R.drawable.back)))
 
         val toolbarTitle = onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.toolbar))))
         toolbarTitle.check(doesNotExist())
 
         val textView = onView(withId(R.id.steps_text))
         textView.check(matches(withText("")))
-                .check(matches(not(isDisplayed())))
+            .check(matches(not(isDisplayed())))
 
         val appCompatTextView = onView(
-                allOf(withId(R.id.upload_btn_text), withText(R.string.backup_and_restore_upload_qr_btn),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_frame),
-                                        0),
-                                5),
-                        isDisplayed()))
+            allOf(withId(R.id.upload_btn_text), withText(R.string.backup_and_restore_upload_qr_btn),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.fragment_frame),
+                        0),
+                    5),
+                isDisplayed()))
         appCompatTextView.perform(click())
 
         val appCompatButton2 = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.buttonPanel),
-                                        0),
-                                3)))
+            allOf(withId(android.R.id.button1), withText("OK"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.buttonPanel),
+                        0),
+                    3)))
         appCompatButton2.perform(click())
 
         Intents.release()
@@ -111,20 +121,20 @@ class RestoreActivityValidateSwitchBetweenScreens {
 
         val targetContext = InstrumentationRegistry.getTargetContext()
         onView(withId(R.id.kinrecovery_password_edit))
-                .check(matches(hasValueEqualTo(targetContext.resources.getString(R.string.backup_and_restore_enter_password))))
+            .check(matches(hasValueEqualTo(targetContext.resources.getString(R.string.backup_and_restore_enter_password))))
 
         onView(allOf(instanceOf(TextView::class.java),
-                withParent(withId(R.id.toolbar))))
-                .check(matches(withText(R.string.backup_and_restore_upload_qr_title)))
+            withParent(withId(R.id.toolbar))))
+            .check(matches(withText(R.string.backup_and_restore_upload_qr_title)))
 
         val stepsTextView = onView(withId(R.id.steps_text))
         stepsTextView.check(matches(withText("")))
-                .check(matches(not(isDisplayed())))
+            .check(matches(not(isDisplayed())))
 
         val button = onView(
-                allOf(withId(R.id.kinrecovery_password_done_btn), isDisplayed()))
+            allOf(withId(R.id.kinrecovery_password_done_btn), isDisplayed()))
         button.check(matches(isDisplayed()))
-                .check(matches(isEnabled()))
+            .check(matches(isEnabled()))
     }
 
     @Test
@@ -135,68 +145,67 @@ class RestoreActivityValidateSwitchBetweenScreens {
         expectedIntent = intendingStubQRIntent()
 
         val appCompatTextView = onView(
-                allOf(withId(R.id.upload_btn_text), withText(R.string.backup_and_restore_upload_qr_btn),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_frame),
-                                        0),
-                                5),
-                        isDisplayed()))
+            allOf(withId(R.id.upload_btn_text), withText(R.string.backup_and_restore_upload_qr_btn),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.fragment_frame),
+                        0),
+                    5),
+                isDisplayed()))
         appCompatTextView.perform(click())
 
         val appCompatButton2 = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.buttonPanel),
-                                        0),
-                                3)))
+            allOf(withId(android.R.id.button1), withText("OK"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.buttonPanel),
+                        0),
+                    3)))
         appCompatButton2.perform(click())
 
         Intents.release()
 
         val editText = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.kinrecovery_password_edit),
-                                childAtPosition(
-                                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
-                                        3)),
-                        0),
-                        isDisplayed()))
+            allOf(childAtPosition(
+                allOf(withId(R.id.kinrecovery_password_edit),
+                    childAtPosition(
+                        withClassName(`is`("android.support.constraint.ConstraintLayout")),
+                        3)),
+                0),
+                isDisplayed()))
         editText.perform(typeText("qwertyU1!"), closeSoftKeyboard())
 
         val doneButton = onView(
-                allOf(withId(R.id.kinrecovery_password_done_btn), isDisplayed()))
+            allOf(withId(R.id.kinrecovery_password_done_btn), isDisplayed()))
         doneButton.perform(click())
 
         onView(allOf(instanceOf(TextView::class.java),
-                withParent(withId(R.id.toolbar))))
-                .check(matches(withText(R.string.backup_and_restore_restore_completed_title)))
+            withParent(withId(R.id.toolbar))))
+            .check(matches(withText(R.string.backup_and_restore_restore_completed_title)))
 
         val stepsTextView = onView(withId(R.id.steps_text))
         stepsTextView.check(matches(withText("")))
-                .check(matches(not(isDisplayed())))
+            .check(matches(not(isDisplayed())))
 
         val imageButton = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.toolbar),
-                                childAtPosition(
-                                        IsInstanceOf.instanceOf(android.view.ViewGroup::class.java),
-                                        0)),
-                        0)))
+            allOf(childAtPosition(
+                allOf(withId(R.id.toolbar),
+                    childAtPosition(
+                        IsInstanceOf.instanceOf(android.view.ViewGroup::class.java),
+                        0)),
+                0)))
         imageButton.check(matches(isTransparentDrawable(R.drawable.back)))
 
         val button = onView(
-                allOf(withId(R.id.backup_and_restore_v_btn), isDisplayed()))
+            allOf(withId(R.id.backup_and_restore_v_btn), isDisplayed()))
         button.check(matches(isDisplayed()))
-                .check(matches(isEnabled()))
+            .check(matches(isEnabled()))
         button.perform(click())
 
         val f = Activity::class.java.getDeclaredField("mResultCode")
         f.isAccessible = true
         val resultCode = f.getInt(activityTestRule.activity)
         assertEquals(resultCode, 5000) //5000 is success
-
     }
 
     //TODO For full coverage we still need to add method to check when pressing back from screen B then go to Screen A and everything is correct
@@ -211,5 +220,4 @@ class RestoreActivityValidateSwitchBetweenScreens {
         intended(expectedIntent)
         Intents.release()
     }
-
 }

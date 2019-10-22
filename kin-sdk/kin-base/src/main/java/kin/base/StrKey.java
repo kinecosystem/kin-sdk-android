@@ -3,18 +3,21 @@ package kin.base;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+
 import kin.base.codec.Base32;
 
 class StrKey {
     public enum VersionByte {
-        ACCOUNT_ID((byte)(6 << 3)), // G
-        SEED((byte)(18 << 3)), // S
-        PRE_AUTH_TX((byte)(19 << 3)), // T
-        SHA256_HASH((byte)(23 << 3)); // X
+        ACCOUNT_ID((byte) (6 << 3)), // G
+        SEED((byte) (18 << 3)), // S
+        PRE_AUTH_TX((byte) (19 << 3)), // T
+        SHA256_HASH((byte) (23 << 3)); // X
         private final byte value;
+
         VersionByte(byte value) {
             this.value = value;
         }
+
         public int getValue() {
             return value;
         }
@@ -96,9 +99,9 @@ class StrKey {
         Base32 base32Codec = new Base32();
         byte[] decoded = base32Codec.decode(bytes);
         byte decodedVersionByte = decoded[0];
-        byte[] payload  = Arrays.copyOfRange(decoded, 0, decoded.length-2);
-        byte[] data     = Arrays.copyOfRange(payload, 1, payload.length);
-        byte[] checksum = Arrays.copyOfRange(decoded, decoded.length-2, decoded.length);
+        byte[] payload = Arrays.copyOfRange(decoded, 0, decoded.length - 2);
+        byte[] data = Arrays.copyOfRange(payload, 1, payload.length);
+        byte[] checksum = Arrays.copyOfRange(decoded, decoded.length - 2, decoded.length);
 
         if (decodedVersionByte != versionByte.getValue()) {
             throw new FormatException("Version byte is invalid");
@@ -141,8 +144,8 @@ class StrKey {
         }
 
         // little-endian
-        return new byte[] {
-            (byte)crc,
-            (byte)(crc >>> 8)};
+        return new byte[]{
+                (byte) crc,
+                (byte) (crc >>> 8)};
     }
 }

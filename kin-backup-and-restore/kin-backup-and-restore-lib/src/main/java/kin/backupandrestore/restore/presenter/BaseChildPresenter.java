@@ -6,5 +6,5 @@ import kin.backupandrestore.base.BaseView;
 
 interface BaseChildPresenter<T extends BaseView> extends BasePresenter<T> {
 
-	void onAttach(T view, RestorePresenter restorePresenter);
+    void onAttach(T view, RestorePresenter restorePresenter);
 }

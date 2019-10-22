@@ -7,30 +7,30 @@ import android.support.annotation.NonNull;
 public interface QRBarcodeGenerator {
 
 
-	@NonNull
-	Uri generate(@NonNull String text) throws QRBarcodeGeneratorException;
+    @NonNull
+    Uri generate(@NonNull String text) throws QRBarcodeGeneratorException;
 
-	@NonNull
-	String decodeQR(@NonNull Uri uri) throws QRBarcodeGeneratorException;
+    @NonNull
+    String decodeQR(@NonNull Uri uri) throws QRBarcodeGeneratorException;
 
-	class QRBarcodeGeneratorException extends Exception {
+    class QRBarcodeGeneratorException extends Exception {
 
-		QRBarcodeGeneratorException(String msg, Throwable throwable) {
-			super(msg, throwable);
-		}
-	}
+        QRBarcodeGeneratorException(String msg, Throwable throwable) {
+            super(msg, throwable);
+        }
+    }
 
-	class QRNotFoundInImageException extends QRBarcodeGeneratorException {
+    class QRNotFoundInImageException extends QRBarcodeGeneratorException {
 
-		QRNotFoundInImageException(String msg, Throwable throwable) {
-			super(msg, throwable);
-		}
-	}
+        QRNotFoundInImageException(String msg, Throwable throwable) {
+            super(msg, throwable);
+        }
+    }
 
-	class QRFileHandlingException extends QRBarcodeGeneratorException {
+    class QRFileHandlingException extends QRBarcodeGeneratorException {
 
-		QRFileHandlingException(String msg, Throwable throwable) {
-			super(msg, throwable);
-		}
-	}
+        QRFileHandlingException(String msg, Throwable throwable) {
+            super(msg, throwable);
+        }
+    }
 }

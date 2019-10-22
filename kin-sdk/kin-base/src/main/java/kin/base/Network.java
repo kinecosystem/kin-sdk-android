@@ -1,9 +1,9 @@
 package kin.base;
 
+import java.io.UnsupportedEncodingException;
+
 import static kin.base.Util.CHARSET_UTF8;
 import static kin.base.Util.checkNotNull;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Network class is used to specify which Stellar network you want to use.
@@ -13,75 +13,75 @@ import java.io.UnsupportedEncodingException;
  * {@link Network#use(Network)}, {@link Network#usePublicNetwork()} or {@link Network#useTestNetwork()}.
  */
 public class Network {
-  private final static String PUBLIC = "Public Global Stellar Network ; September 2015";
-  private final static String TESTNET = "Test SDF Network ; September 2015";
-  private static Network current;
+    private final static String PUBLIC = "Public Global Stellar Network ; September 2015";
+    private final static String TESTNET = "Test SDF Network ; September 2015";
+    private static Network current;
 
-  private final String networkPassphrase;
+    private final String networkPassphrase;
 
-  /**
-   * Creates a new Network object to represent a network with a given passphrase
-   *
-   * @param networkPassphrase
-   */
-  public Network(String networkPassphrase) {
-    this.networkPassphrase = checkNotNull(networkPassphrase, "networkPassphrase cannot be null");
-  }
-
-  /**
-   * Returns network passphrase
-   */
-  public String getNetworkPassphrase() {
-    return networkPassphrase;
-  }
-
-  /**
-   * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
-   */
-  public byte[] getNetworkId() {
-    try {
-      return Util.hash(current.getNetworkPassphrase().getBytes(CHARSET_UTF8));
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-      return null;
+    /**
+     * Creates a new Network object to represent a network with a given passphrase
+     *
+     * @param networkPassphrase
+     */
+    public Network(String networkPassphrase) {
+        this.networkPassphrase = checkNotNull(networkPassphrase, "networkPassphrase cannot be null");
     }
-  }
 
-  /**
-   * Returns currently used Network object.
-   */
-  public static Network current() {
-    return current;
-  }
+    /**
+     * Returns network passphrase
+     */
+    public String getNetworkPassphrase() {
+        return networkPassphrase;
+    }
 
-  /**
-   * Use <code>network</code> as a current network.
-   *
-   * @param network Network object to set as current network
-   */
-  public static void use(Network network) {
-    current = network;
-  }
+    /**
+     * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
+     */
+    public byte[] getNetworkId() {
+        try {
+            return Util.hash(current.getNetworkPassphrase().getBytes(CHARSET_UTF8));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-  /**
-   * Use Stellar Public Network
-   */
-  public static void usePublicNetwork() {
-    Network.use(getPublicNetwork());
-  }
+    /**
+     * Returns currently used Network object.
+     */
+    public static Network current() {
+        return current;
+    }
 
-  /**
-   * Use Stellar Test Network.
-   */
-  public static void useTestNetwork() {
-    Network.use(getTestNetwork());
-  }
+    /**
+     * Use <code>network</code> as a current network.
+     *
+     * @param network Network object to set as current network
+     */
+    public static void use(Network network) {
+        current = network;
+    }
 
-  public static Network getPublicNetwork() {
-    return new Network(PUBLIC);
-  }
+    /**
+     * Use Stellar Public Network
+     */
+    public static void usePublicNetwork() {
+        Network.use(getPublicNetwork());
+    }
 
-  public static Network getTestNetwork() {
-    return new Network(TESTNET);
-  }
+    /**
+     * Use Stellar Test Network.
+     */
+    public static void useTestNetwork() {
+        Network.use(getTestNetwork());
+    }
+
+    public static Network getPublicNetwork() {
+        return new Network(PUBLIC);
+    }
+
+    public static Network getTestNetwork() {
+        return new Network(TESTNET);
+    }
 }

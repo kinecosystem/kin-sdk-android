@@ -50,12 +50,10 @@ public interface Encoder {
      * or <code>String</code>s depending on the implementation used.
      *
      * @param source An object ot encode
-     *
      * @return An "encoded" Object
-     *
      * @throws EncoderException an encoder exception is
-     *  thrown if the encoder experiences a failure
-     *  condition during the encoding process.
+     *                          thrown if the encoder experiences a failure
+     *                          condition during the encoding process.
      */
     Object encode(Object source) throws EncoderException;
 }

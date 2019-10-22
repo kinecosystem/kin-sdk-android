@@ -22,37 +22,42 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum CreateAccountResultCode  {
-  CREATE_ACCOUNT_SUCCESS(0),
-  CREATE_ACCOUNT_MALFORMED(-1),
-  CREATE_ACCOUNT_UNDERFUNDED(-2),
-  CREATE_ACCOUNT_LOW_RESERVE(-3),
-  CREATE_ACCOUNT_ALREADY_EXIST(-4),
-  ;
-  private int mValue;
+public enum CreateAccountResultCode {
+    CREATE_ACCOUNT_SUCCESS(0),
+    CREATE_ACCOUNT_MALFORMED(-1),
+    CREATE_ACCOUNT_UNDERFUNDED(-2),
+    CREATE_ACCOUNT_LOW_RESERVE(-3),
+    CREATE_ACCOUNT_ALREADY_EXIST(-4),
+    ;
+    private int mValue;
 
-  CreateAccountResultCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static CreateAccountResultCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return CREATE_ACCOUNT_SUCCESS;
-      case -1: return CREATE_ACCOUNT_MALFORMED;
-      case -2: return CREATE_ACCOUNT_UNDERFUNDED;
-      case -3: return CREATE_ACCOUNT_LOW_RESERVE;
-      case -4: return CREATE_ACCOUNT_ALREADY_EXIST;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    CreateAccountResultCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, CreateAccountResultCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static CreateAccountResultCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return CREATE_ACCOUNT_SUCCESS;
+            case -1:
+                return CREATE_ACCOUNT_MALFORMED;
+            case -2:
+                return CREATE_ACCOUNT_UNDERFUNDED;
+            case -3:
+                return CREATE_ACCOUNT_LOW_RESERVE;
+            case -4:
+                return CREATE_ACCOUNT_ALREADY_EXIST;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, CreateAccountResultCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

@@ -1,12 +1,21 @@
 package kin.backupandrestore.backup.presenter
 
 import android.os.Bundle
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kin.backupandrestore.backup.presenter.BackupPresenterImpl.KEY_ACCOUNT_KEY
 import kin.backupandrestore.backup.presenter.BackupPresenterImpl.KEY_STEP
-import kin.backupandrestore.backup.view.BackupNavigator.*
+import kin.backupandrestore.backup.view.BackupNavigator.STEP_CREATE_PASSWORD
+import kin.backupandrestore.backup.view.BackupNavigator.STEP_SAVE_AND_SHARE
+import kin.backupandrestore.backup.view.BackupNavigator.STEP_START
+import kin.backupandrestore.backup.view.BackupNavigator.STEP_WELL_DONE
 import kin.backupandrestore.backup.view.BackupView
-import kin.backupandrestore.events.BackupEventCode.*
+import kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_BACK_TAPPED
+import kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_BACK_TAPPED
+import kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_BACK_TAPPED
 import kin.backupandrestore.events.CallbackManager
 import kin.sdk.KinAccount
 import org.junit.Assert.assertEquals
@@ -154,13 +163,10 @@ class BackupPresenterImplTest {
             assertEquals(STEP_CREATE_PASSWORD, getInt(KEY_STEP))
             assertEquals(accountKeyA, getString(KEY_ACCOUNT_KEY))
         }
-
     }
 
     private fun createPresenter() {
         backupPresenter = BackupPresenterImpl(callbackManager, kinAccount, savedInstanceState)
         backupPresenter.onAttach(view)
     }
-
-
 }

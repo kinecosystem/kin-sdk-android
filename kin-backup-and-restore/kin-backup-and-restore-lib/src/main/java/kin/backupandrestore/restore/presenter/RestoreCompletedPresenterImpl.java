@@ -3,19 +3,19 @@ package kin.backupandrestore.restore.presenter;
 import kin.backupandrestore.restore.view.RestoreCompletedView;
 
 public class RestoreCompletedPresenterImpl extends BaseChildPresenterImpl<RestoreCompletedView> implements
-	RestoreCompletedPresenter {
+        RestoreCompletedPresenter {
 
-	public RestoreCompletedPresenterImpl() {
-	}
+    public RestoreCompletedPresenterImpl() {
+    }
 
-	@Override
-	public void onBackClicked() {
-		getParentPresenter().previousStep();
-	}
+    @Override
+    public void onBackClicked() {
+        getParentPresenter().previousStep();
+    }
 
-	@Override
-	public void close() {
-		getParentPresenter().closeFlow();
-	}
+    @Override
+    public void close() {
+        getParentPresenter().closeFlow();
+    }
 
 }

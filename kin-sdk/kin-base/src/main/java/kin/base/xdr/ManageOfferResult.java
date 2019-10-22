@@ -17,43 +17,52 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class ManageOfferResult  {
-  public ManageOfferResult () {}
-  ManageOfferResultCode code;
-  public ManageOfferResultCode getDiscriminant() {
-    return this.code;
-  }
-  public void setDiscriminant(ManageOfferResultCode value) {
-    this.code = value;
-  }
-  private ManageOfferSuccessResult success;
-  public ManageOfferSuccessResult getSuccess() {
-    return this.success;
-  }
-  public void setSuccess(ManageOfferSuccessResult value) {
-    this.success = value;
-  }
-  public static void encode(XdrDataOutputStream stream, ManageOfferResult encodedManageOfferResult) throws IOException {
-  stream.writeInt(encodedManageOfferResult.getDiscriminant().getValue());
-  switch (encodedManageOfferResult.getDiscriminant()) {
-  case MANAGE_OFFER_SUCCESS:
-  ManageOfferSuccessResult.encode(stream, encodedManageOfferResult.success);
-  break;
-  default:
-  break;
-  }
-  }
-  public static ManageOfferResult decode(XdrDataInputStream stream) throws IOException {
-  ManageOfferResult decodedManageOfferResult = new ManageOfferResult();
-  ManageOfferResultCode discriminant = ManageOfferResultCode.decode(stream);
-  decodedManageOfferResult.setDiscriminant(discriminant);
-  switch (decodedManageOfferResult.getDiscriminant()) {
-  case MANAGE_OFFER_SUCCESS:
-  decodedManageOfferResult.success = ManageOfferSuccessResult.decode(stream);
-  break;
-  default:
-  break;
-  }
-    return decodedManageOfferResult;
-  }
+public class ManageOfferResult {
+    public ManageOfferResult() {
+    }
+
+    ManageOfferResultCode code;
+
+    public ManageOfferResultCode getDiscriminant() {
+        return this.code;
+    }
+
+    public void setDiscriminant(ManageOfferResultCode value) {
+        this.code = value;
+    }
+
+    private ManageOfferSuccessResult success;
+
+    public ManageOfferSuccessResult getSuccess() {
+        return this.success;
+    }
+
+    public void setSuccess(ManageOfferSuccessResult value) {
+        this.success = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, ManageOfferResult encodedManageOfferResult) throws IOException {
+        stream.writeInt(encodedManageOfferResult.getDiscriminant().getValue());
+        switch (encodedManageOfferResult.getDiscriminant()) {
+            case MANAGE_OFFER_SUCCESS:
+                ManageOfferSuccessResult.encode(stream, encodedManageOfferResult.success);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static ManageOfferResult decode(XdrDataInputStream stream) throws IOException {
+        ManageOfferResult decodedManageOfferResult = new ManageOfferResult();
+        ManageOfferResultCode discriminant = ManageOfferResultCode.decode(stream);
+        decodedManageOfferResult.setDiscriminant(discriminant);
+        switch (decodedManageOfferResult.getDiscriminant()) {
+            case MANAGE_OFFER_SUCCESS:
+                decodedManageOfferResult.success = ManageOfferSuccessResult.decode(stream);
+                break;
+            default:
+                break;
+        }
+        return decodedManageOfferResult;
+    }
 }

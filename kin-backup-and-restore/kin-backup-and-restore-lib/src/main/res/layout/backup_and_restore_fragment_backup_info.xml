@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +15,7 @@
         app:srcCompat="@drawable/safe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/keep_safe_title"
@@ -27,7 +26,7 @@
         android:text="@string/backup_and_restore_keep_your_kin_safe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/safe_icon"/>
+        app:layout_constraintTop_toBottomOf="@+id/safe_icon" />
 
     <TextView
         android:id="@+id/description"
@@ -42,7 +41,7 @@
         android:text="@string/backup_and_restore_backup_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/keep_safe_title"/>
+        app:layout_constraintTop_toBottomOf="@+id/keep_safe_title" />
 
     <Button
         android:id="@+id/lets_go_button"
@@ -54,6 +53,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/backup_and_restore_btn_purple_blue"/>
+        android:background="@drawable/backup_and_restore_btn_purple_blue" />
 
 </android.support.constraint.ConstraintLayout>

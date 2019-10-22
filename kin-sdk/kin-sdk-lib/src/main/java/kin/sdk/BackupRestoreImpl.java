@@ -1,14 +1,17 @@
 package kin.sdk;
 
 import android.support.annotation.NonNull;
-import java.io.UnsupportedEncodingException;
-import kin.base.KeyPair;
-import kin.sdk.exception.CorruptedDataException;
-import kin.sdk.exception.CryptoException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
+
+import java.io.UnsupportedEncodingException;
+
+import kin.base.KeyPair;
+import kin.sdk.exception.CorruptedDataException;
+import kin.sdk.exception.CryptoException;
 
 class BackupRestoreImpl implements BackupRestore {
 

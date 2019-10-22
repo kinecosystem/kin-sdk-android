@@ -2,9 +2,10 @@ package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
+
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
+
 import kin.base.Asset;
 import kin.base.AssetTypeCreditAlphaNum;
 import kin.base.responses.TradeResponse;
@@ -40,7 +41,8 @@ public class TradesRequestBuilder extends RequestBuilder {
     }
 
     public static TradeResponse execute(OkHttpClient httpClient, URI uri) throws IOException, TooManyRequestsException {
-        TypeToken type = new TypeToken<TradeResponse>() {};
+        TypeToken type = new TypeToken<TradeResponse>() {
+        };
         ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(httpClient, type);
         return responseHandler.handleGetRequest(uri);
     }

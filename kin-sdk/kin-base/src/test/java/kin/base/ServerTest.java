@@ -12,10 +12,7 @@ import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
 import kin.base.responses.SubmitTransactionResponse;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 

@@ -2,9 +2,20 @@ package kin.backupandrestore.restore.presenter
 
 import android.content.Intent
 import android.os.Bundle
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kin.backupandrestore.events.CallbackManager
-import kin.backupandrestore.restore.presenter.RestorePresenterImpl.*
+import kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY
+import kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_PUBLIC_ADDRESS
+import kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_RESTORE_STEP
+import kin.backupandrestore.restore.presenter.RestorePresenterImpl.STEP_ENTER_PASSWORD
+import kin.backupandrestore.restore.presenter.RestorePresenterImpl.STEP_FINISH
+import kin.backupandrestore.restore.presenter.RestorePresenterImpl.STEP_RESTORE_COMPLETED
+import kin.backupandrestore.restore.presenter.RestorePresenterImpl.STEP_UPLOAD
 import kin.backupandrestore.restore.view.RestoreView
 import kin.sdk.KinAccount
 import kin.sdk.KinClient

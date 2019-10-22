@@ -15,31 +15,33 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum IPAddrType  {
-  IPv4(0),
-  IPv6(1),
-  ;
-  private int mValue;
+public enum IPAddrType {
+    IPv4(0),
+    IPv6(1),
+    ;
+    private int mValue;
 
-  IPAddrType(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static IPAddrType decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return IPv4;
-      case 1: return IPv6;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    IPAddrType(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, IPAddrType value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static IPAddrType decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return IPv4;
+            case 1:
+                return IPv6;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, IPAddrType value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

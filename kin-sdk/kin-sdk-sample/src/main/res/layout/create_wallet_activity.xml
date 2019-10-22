@@ -11,15 +11,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/btn_create_wallet"
         style="@style/KinButtonStyle.TestNet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_wallet"
-        />
+        android:text="@string/create_wallet" />
 
     <Button
         android:id="@+id/btn_import_wallet"
@@ -27,7 +26,6 @@
         android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/import_wallet"
-        />
+        android:text="@string/import_wallet" />
 
 </LinearLayout>

@@ -14,21 +14,27 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class OperationMeta  {
-  public OperationMeta () {}
-  private LedgerEntryChanges changes;
-  public LedgerEntryChanges getChanges() {
-    return this.changes;
-  }
-  public void setChanges(LedgerEntryChanges value) {
-    this.changes = value;
-  }
-  public static void encode(XdrDataOutputStream stream, OperationMeta encodedOperationMeta) throws IOException{
-    LedgerEntryChanges.encode(stream, encodedOperationMeta.changes);
-  }
-  public static OperationMeta decode(XdrDataInputStream stream) throws IOException {
-    OperationMeta decodedOperationMeta = new OperationMeta();
-    decodedOperationMeta.changes = LedgerEntryChanges.decode(stream);
-    return decodedOperationMeta;
-  }
+public class OperationMeta {
+    public OperationMeta() {
+    }
+
+    private LedgerEntryChanges changes;
+
+    public LedgerEntryChanges getChanges() {
+        return this.changes;
+    }
+
+    public void setChanges(LedgerEntryChanges value) {
+        this.changes = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, OperationMeta encodedOperationMeta) throws IOException {
+        LedgerEntryChanges.encode(stream, encodedOperationMeta.changes);
+    }
+
+    public static OperationMeta decode(XdrDataInputStream stream) throws IOException {
+        OperationMeta decodedOperationMeta = new OperationMeta();
+        decodedOperationMeta.changes = LedgerEntryChanges.decode(stream);
+        return decodedOperationMeta;
+    }
 }

@@ -16,21 +16,27 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class Auth  {
-  public Auth () {}
-  private Integer unused;
-  public Integer getUnused() {
-    return this.unused;
-  }
-  public void setUnused(Integer value) {
-    this.unused = value;
-  }
-  public static void encode(XdrDataOutputStream stream, Auth encodedAuth) throws IOException{
-    stream.writeInt(encodedAuth.unused);
-  }
-  public static Auth decode(XdrDataInputStream stream) throws IOException {
-    Auth decodedAuth = new Auth();
-    decodedAuth.unused = stream.readInt();
-    return decodedAuth;
-  }
+public class Auth {
+    public Auth() {
+    }
+
+    private Integer unused;
+
+    public Integer getUnused() {
+        return this.unused;
+    }
+
+    public void setUnused(Integer value) {
+        this.unused = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, Auth encodedAuth) throws IOException {
+        stream.writeInt(encodedAuth.unused);
+    }
+
+    public static Auth decode(XdrDataInputStream stream) throws IOException {
+        Auth decodedAuth = new Auth();
+        decodedAuth.unused = stream.readInt();
+        return decodedAuth;
+    }
 }

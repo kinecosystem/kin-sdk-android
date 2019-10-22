@@ -14,7 +14,7 @@ import kin.sdk.Environment
 import kin.sdk.KinAccount
 import kin.sdk.KinClient
 
-class BackupAndRestoreDummyActivityForUITest : AppCompatActivity(), View.OnClickListener{
+class BackupAndRestoreDummyActivityForUITest : AppCompatActivity(), View.OnClickListener {
 
     private val reqCodeBackup = 9000
     private val reqCodeRestore = 9001
@@ -43,7 +43,7 @@ class BackupAndRestoreDummyActivityForUITest : AppCompatActivity(), View.OnClick
         backupCurrentAccount?.setOnClickListener(this)
         restoreAccount?.setOnClickListener(this)
 
-        kinClient =  KinClient(this, Environment.TEST, "utst", "backup_and_restore_ui_test")
+        kinClient = KinClient(this, Environment.TEST, "utst", "backup_and_restore_ui_test")
         kinAccount = kinClient?.addAccount()
         backupAndRestoreManager = BackupAndRestoreManager(this, reqCodeBackup, reqCodeRestore)
         registerToCallbacks()
@@ -111,5 +111,4 @@ class BackupAndRestoreDummyActivityForUITest : AppCompatActivity(), View.OnClick
         super.onDestroy()
         backupAndRestoreManager?.release()
     }
-
 }

@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import kin.sdk.KinAccount;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
@@ -109,7 +110,7 @@ public class ExportKeystoreActivity extends BaseActivity {
     }
 
     private String generatePrivateKeyStoreString()
-        throws OperationFailedException, CryptoException {
+            throws OperationFailedException, CryptoException {
         KinAccount account = getKinClient().getAccount(0);
         if (account == null) {
             throw new AccountDeletedException();

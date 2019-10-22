@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import kin.sdk.sample.R;
 
 public class KinAlertDialog {
@@ -25,7 +26,7 @@ public class KinAlertDialog {
     }
 
     public static KinAlertDialog createConfirmationDialog(Context context, String message, String confirmationText,
-        OnConfirmedListener confirmedListener) {
+                                                          OnConfirmedListener confirmedListener) {
         KinAlertDialog dialog = new KinAlertDialog(context);
         dialog.setPositiveButtonText(confirmationText);
         dialog.setOnConfirmedListener(confirmedListener);
@@ -49,36 +50,36 @@ public class KinAlertDialog {
         }
     }
 
-    private void setPositiveButtonText(String text){
-        if(TextUtils.isEmpty(text)) {
+    private void setPositiveButtonText(String text) {
+        if (TextUtils.isEmpty(text)) {
             positiveButtonText = context.getResources().getString(R.string.ok);
-        }else {
+        } else {
             positiveButtonText = text;
         }
     }
 
     protected void setMessage(String message) {
-        if(TextUtils.isEmpty(message)){
+        if (TextUtils.isEmpty(message)) {
             message = context.getResources().getString(R.string.error_no_message);
         }
         dialog.setView(buildMessageView(message));
     }
 
-    protected void setOnConfirmedListener(OnConfirmedListener onConfirmedListener){
+    protected void setOnConfirmedListener(OnConfirmedListener onConfirmedListener) {
         this.confirmedListener = onConfirmedListener;
     }
 
     protected void setConfirmButton() {
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, positiveButtonText,
-            (dialogInterface, i) -> {
-                dialogInterface.dismiss();
-                onConfirmed();
-            });
+                (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    onConfirmed();
+                });
     }
 
     protected void setCancelButton() {
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getResources().getString(R.string.cancel),
-            (dialogInterface, i) -> dialogInterface.dismiss());
+                (dialogInterface, i) -> dialogInterface.dismiss());
     }
 
     protected void onConfirmed() {
@@ -98,8 +99,8 @@ public class KinAlertDialog {
         textView.setOnLongClickListener(v -> {
             Utils.copyToClipboard(v.getContext(), message);
             Toast.makeText(v.getContext(), R.string.copied_to_clipboard,
-                Toast.LENGTH_SHORT)
-                .show();
+                    Toast.LENGTH_SHORT)
+                    .show();
             return true;
         });
         return textView;

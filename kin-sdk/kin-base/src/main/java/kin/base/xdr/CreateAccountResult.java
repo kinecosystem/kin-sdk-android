@@ -17,34 +17,40 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class CreateAccountResult  {
-  public CreateAccountResult () {}
-  CreateAccountResultCode code;
-  public CreateAccountResultCode getDiscriminant() {
-    return this.code;
-  }
-  public void setDiscriminant(CreateAccountResultCode value) {
-    this.code = value;
-  }
-  public static void encode(XdrDataOutputStream stream, CreateAccountResult encodedCreateAccountResult) throws IOException {
-  stream.writeInt(encodedCreateAccountResult.getDiscriminant().getValue());
-  switch (encodedCreateAccountResult.getDiscriminant()) {
-  case CREATE_ACCOUNT_SUCCESS:
-  break;
-  default:
-  break;
-  }
-  }
-  public static CreateAccountResult decode(XdrDataInputStream stream) throws IOException {
-  CreateAccountResult decodedCreateAccountResult = new CreateAccountResult();
-  CreateAccountResultCode discriminant = CreateAccountResultCode.decode(stream);
-  decodedCreateAccountResult.setDiscriminant(discriminant);
-  switch (decodedCreateAccountResult.getDiscriminant()) {
-  case CREATE_ACCOUNT_SUCCESS:
-  break;
-  default:
-  break;
-  }
-    return decodedCreateAccountResult;
-  }
+public class CreateAccountResult {
+    public CreateAccountResult() {
+    }
+
+    CreateAccountResultCode code;
+
+    public CreateAccountResultCode getDiscriminant() {
+        return this.code;
+    }
+
+    public void setDiscriminant(CreateAccountResultCode value) {
+        this.code = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, CreateAccountResult encodedCreateAccountResult) throws IOException {
+        stream.writeInt(encodedCreateAccountResult.getDiscriminant().getValue());
+        switch (encodedCreateAccountResult.getDiscriminant()) {
+            case CREATE_ACCOUNT_SUCCESS:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static CreateAccountResult decode(XdrDataInputStream stream) throws IOException {
+        CreateAccountResult decodedCreateAccountResult = new CreateAccountResult();
+        CreateAccountResultCode discriminant = CreateAccountResultCode.decode(stream);
+        decodedCreateAccountResult.setDiscriminant(discriminant);
+        switch (decodedCreateAccountResult.getDiscriminant()) {
+            case CREATE_ACCOUNT_SUCCESS:
+                break;
+            default:
+                break;
+        }
+        return decodedCreateAccountResult;
+    }
 }

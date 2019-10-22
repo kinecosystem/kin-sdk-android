@@ -17,31 +17,33 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum InflationResultCode  {
-  INFLATION_SUCCESS(0),
-  INFLATION_NOT_TIME(-1),
-  ;
-  private int mValue;
+public enum InflationResultCode {
+    INFLATION_SUCCESS(0),
+    INFLATION_NOT_TIME(-1),
+    ;
+    private int mValue;
 
-  InflationResultCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static InflationResultCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return INFLATION_SUCCESS;
-      case -1: return INFLATION_NOT_TIME;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    InflationResultCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, InflationResultCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static InflationResultCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return INFLATION_SUCCESS;
+            case -1:
+                return INFLATION_NOT_TIME;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, InflationResultCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

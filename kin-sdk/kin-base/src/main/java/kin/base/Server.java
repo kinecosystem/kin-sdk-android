@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+
 import kin.base.requests.AccountsRequestBuilder;
 import kin.base.requests.EffectsRequestBuilder;
 import kin.base.requests.LedgersRequestBuilder;
@@ -20,7 +20,6 @@ import kin.base.responses.GsonSingleton;
 import kin.base.responses.SubmitTransactionResponse;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -54,7 +53,7 @@ public class Server {
      * <p>Increase timeout to prevent timeout exception for transaction with ledger close
      * time above default of 10 sec</p>
      *
-     * @param uri Horizon server uri
+     * @param uri    Horizon server uri
      * @param client OkHttpClient
      */
     public Server(String uri, OkHttpClient client) {
@@ -65,9 +64,9 @@ public class Server {
     private void createUri(String uri) {
         try {
             serverURI = new URL(uri).toURI();
-        } catch (MalformedURLException e ) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e);
-        } catch (URISyntaxException e ) {
+        } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }
@@ -146,19 +145,19 @@ public class Server {
      * Submits transaction to the network.
      *
      * @param transaction transaction to submit to the network.
-     * @param url if supplied then use this url instead of the serverURI member and don't append anything to it.
+     * @param url         if supplied then use this url instead of the serverURI member and don't append anything to it.
      * @return {@link SubmitTransactionResponse}
      */
     private SubmitTransactionResponse submitTransaction(Transaction transaction, String url) throws IOException {
         URI transactionsUri = getUri(url);
 
         RequestBody formBody = new FormBody.Builder()
-            .add("tx", transaction.toEnvelopeXdrBase64())
-            .build();
+                .add("tx", transaction.toEnvelopeXdrBase64())
+                .build();
         Request request = new Request.Builder()
-            .url(transactionsUri.toString())
-            .post(formBody)
-            .build();
+                .url(transactionsUri.toString())
+                .post(formBody)
+                .build();
 
         Response response = null;
         try {

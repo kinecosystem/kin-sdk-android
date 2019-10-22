@@ -2,8 +2,10 @@ package kin.sdk;
 
 
 import android.support.annotation.NonNull;
+
 import java.io.IOException;
 import java.math.BigDecimal;
+
 import kin.base.KeyPair;
 import kin.base.Server;
 import kin.base.responses.AccountResponse;

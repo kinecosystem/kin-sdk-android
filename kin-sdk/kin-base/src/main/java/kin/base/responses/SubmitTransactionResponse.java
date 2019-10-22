@@ -1,9 +1,11 @@
 package kin.base.responses;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import kin.base.Server;
 import kin.base.Transaction;
 import kin.base.codec.Base64;
@@ -13,6 +15,7 @@ import kin.base.xdr.XdrDataInputStream;
 
 /**
  * Represents server response after submitting transaction.
+ *
  * @see Server#submitTransaction(Transaction)
  */
 public class SubmitTransactionResponse extends Response {
@@ -66,6 +69,7 @@ public class SubmitTransactionResponse extends Response {
     /**
      * Helper method that returns Offer ID for ManageOffer from TransactionResult Xdr.
      * This is helpful when you need ID of an offer to update it later.
+     *
      * @param position Position of ManageOffer operation. If ManageOffer is second operation in this transaction this should be equal <code>1</code>.
      * @return Offer ID or <code>null</code> when operation at <code>position</code> is not a ManageOffer operation or error has occurred.
      */
@@ -150,6 +154,7 @@ public class SubmitTransactionResponse extends Response {
 
         /**
          * Contains result codes for this transaction.
+         *
          * @see <a href="https://github.com/stellar/horizon/blob/master/src/github.com/stellar/horizon/codes/main.go" target="_blank">Possible values</a>
          */
         public static class ResultCodes {

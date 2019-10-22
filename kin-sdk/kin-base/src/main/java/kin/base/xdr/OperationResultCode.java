@@ -17,33 +17,36 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum OperationResultCode  {
-  opINNER(0),
-  opBAD_AUTH(-1),
-  opNO_ACCOUNT(-2),
-  ;
-  private int mValue;
+public enum OperationResultCode {
+    opINNER(0),
+    opBAD_AUTH(-1),
+    opNO_ACCOUNT(-2),
+    ;
+    private int mValue;
 
-  OperationResultCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static OperationResultCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return opINNER;
-      case -1: return opBAD_AUTH;
-      case -2: return opNO_ACCOUNT;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    OperationResultCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, OperationResultCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static OperationResultCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return opINNER;
+            case -1:
+                return opBAD_AUTH;
+            case -2:
+                return opNO_ACCOUNT;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, OperationResultCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

@@ -14,7 +14,7 @@ class PaymentInfoImpl implements PaymentInfo {
     private final String memo;
 
     PaymentInfoImpl(String createdAt, String destinationPublicKey, String sourcePublicKey, BigDecimal amount,
-        TransactionId hash, long fee, String memo) {
+                    TransactionId hash, long fee, String memo) {
         this.createdAt = createdAt;
         this.destinationPublicKey = destinationPublicKey;
         this.sourcePublicKey = sourcePublicKey;

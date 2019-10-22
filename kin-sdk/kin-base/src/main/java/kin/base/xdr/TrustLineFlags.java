@@ -15,29 +15,30 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum TrustLineFlags  {
-  AUTHORIZED_FLAG(1),
-  ;
-  private int mValue;
+public enum TrustLineFlags {
+    AUTHORIZED_FLAG(1),
+    ;
+    private int mValue;
 
-  TrustLineFlags(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static TrustLineFlags decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 1: return AUTHORIZED_FLAG;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    TrustLineFlags(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, TrustLineFlags value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static TrustLineFlags decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 1:
+                return AUTHORIZED_FLAG;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, TrustLineFlags value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

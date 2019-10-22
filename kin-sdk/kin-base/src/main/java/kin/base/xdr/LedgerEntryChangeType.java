@@ -17,35 +17,39 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum LedgerEntryChangeType  {
-  LEDGER_ENTRY_CREATED(0),
-  LEDGER_ENTRY_UPDATED(1),
-  LEDGER_ENTRY_REMOVED(2),
-  LEDGER_ENTRY_STATE(3),
-  ;
-  private int mValue;
+public enum LedgerEntryChangeType {
+    LEDGER_ENTRY_CREATED(0),
+    LEDGER_ENTRY_UPDATED(1),
+    LEDGER_ENTRY_REMOVED(2),
+    LEDGER_ENTRY_STATE(3),
+    ;
+    private int mValue;
 
-  LedgerEntryChangeType(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static LedgerEntryChangeType decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return LEDGER_ENTRY_CREATED;
-      case 1: return LEDGER_ENTRY_UPDATED;
-      case 2: return LEDGER_ENTRY_REMOVED;
-      case 3: return LEDGER_ENTRY_STATE;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    LedgerEntryChangeType(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, LedgerEntryChangeType value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static LedgerEntryChangeType decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return LEDGER_ENTRY_CREATED;
+            case 1:
+                return LEDGER_ENTRY_UPDATED;
+            case 2:
+                return LEDGER_ENTRY_REMOVED;
+            case 3:
+                return LEDGER_ENTRY_STATE;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, LedgerEntryChangeType value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

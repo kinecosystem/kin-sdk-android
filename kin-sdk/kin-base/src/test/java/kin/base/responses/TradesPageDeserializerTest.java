@@ -1,13 +1,16 @@
 package kin.base.responses;
 
 import com.google.gson.reflect.TypeToken;
+
 import junit.framework.TestCase;
+
 import org.junit.Test;
 
 public class TradesPageDeserializerTest extends TestCase {
     @Test
     public void testDeserialize() {
-        Page<TradeResponse> tradesPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<TradeResponse>>() {}.getType());
+        Page<TradeResponse> tradesPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<TradeResponse>>() {
+        }.getType());
 
         assertEquals(tradesPage.getLinks().getNext().getHref(), "https://horizon.stellar.org/order_book/trades?order=asc&limit=10&cursor=43186647780560897-5");
         assertEquals(tradesPage.getLinks().getPrev().getHref(), "https://horizon.stellar.org/order_book/trades?order=desc&limit=10&cursor=37129640086605825-1");

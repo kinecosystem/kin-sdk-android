@@ -2,11 +2,12 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
+
 import kin.base.AssetTypeNative;
 import kin.base.KeyPair;
 import kin.base.Memo;
@@ -27,7 +28,7 @@ import kin.sdk.exception.TransactionFailedException;
 class TransactionSender {
 
     private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
-    private static final int MAX_NUM_OF_DECIMAL_PLACES = 4 ;
+    private static final int MAX_NUM_OF_DECIMAL_PLACES = 4;
     private static String MEMO_APP_ID_VERSION_PREFIX = "1";
     private static String MEMO_DELIMITER = "-";
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";

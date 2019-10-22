@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import kin.sdk.sample.R;
 
 /**
+ *
  */
 
 public class WebWrapperActivity extends BaseActivity {

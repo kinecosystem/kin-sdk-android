@@ -3,7 +3,9 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
+
 import kin.base.responses.SubmitTransactionResponse;
 import kin.base.responses.SubmitTransactionResponse.Extras.ResultCodes;
 import kin.sdk.exception.TransactionFailedException;
@@ -27,7 +29,7 @@ final public class Utils {
 
     static String byteArrayToHex(byte[] a) {
         StringBuilder sb = new StringBuilder(a.length * 2);
-        for(byte b : a)
+        for (byte b : a)
             sb.append(String.format("%02x", b));
         return sb.toString();
     }

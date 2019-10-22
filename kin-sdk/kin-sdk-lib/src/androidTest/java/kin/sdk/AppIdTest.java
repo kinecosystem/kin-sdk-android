@@ -1,17 +1,15 @@
 package kin.sdk;
 
+import android.support.test.InstrumentationRegistry;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static kin.sdk.IntegConsts.TEST_NETWORK_ID;
 import static kin.sdk.IntegConsts.TEST_NETWORK_URL;
-
-import android.support.test.InstrumentationRegistry;
-import android.util.Log;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class AppIdTest {
 
@@ -23,9 +21,9 @@ public class AppIdTest {
 
     private KinClient createNewKinClient(String appId) {
         return new KinClient(InstrumentationRegistry.getTargetContext(),
-            new Environment(TEST_NETWORK_URL, TEST_NETWORK_ID),
-            appId,
-            STORE_KEY_TEST);
+                new Environment(TEST_NETWORK_URL, TEST_NETWORK_ID),
+                appId,
+                STORE_KEY_TEST);
     }
 
     @Test
@@ -58,7 +56,7 @@ public class AppIdTest {
     @Test
     public void create_with_invalid_appId_throws() {
 
-        String[] invalidIds = new String[] {"A", "AB", "1", "a2", "ab", "$#", "$#@", "A?BC"};
+        String[] invalidIds = new String[]{"A", "AB", "1", "a2", "ab", "$#", "$#@", "A?BC"};
 
         for (String invalidId : invalidIds) {
             boolean failed = false;

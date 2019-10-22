@@ -15,30 +15,39 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class SCPBallot  {
-  public SCPBallot () {}
-  private Uint32 counter;
-  public Uint32 getCounter() {
-    return this.counter;
-  }
-  public void setCounter(Uint32 value) {
-    this.counter = value;
-  }
-  private Value value;
-  public Value getValue() {
-    return this.value;
-  }
-  public void setValue(Value value) {
-    this.value = value;
-  }
-  public static void encode(XdrDataOutputStream stream, SCPBallot encodedSCPBallot) throws IOException{
-    Uint32.encode(stream, encodedSCPBallot.counter);
-    Value.encode(stream, encodedSCPBallot.value);
-  }
-  public static SCPBallot decode(XdrDataInputStream stream) throws IOException {
-    SCPBallot decodedSCPBallot = new SCPBallot();
-    decodedSCPBallot.counter = Uint32.decode(stream);
-    decodedSCPBallot.value = Value.decode(stream);
-    return decodedSCPBallot;
-  }
+public class SCPBallot {
+    public SCPBallot() {
+    }
+
+    private Uint32 counter;
+
+    public Uint32 getCounter() {
+        return this.counter;
+    }
+
+    public void setCounter(Uint32 value) {
+        this.counter = value;
+    }
+
+    private Value value;
+
+    public Value getValue() {
+        return this.value;
+    }
+
+    public void setValue(Value value) {
+        this.value = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, SCPBallot encodedSCPBallot) throws IOException {
+        Uint32.encode(stream, encodedSCPBallot.counter);
+        Value.encode(stream, encodedSCPBallot.value);
+    }
+
+    public static SCPBallot decode(XdrDataInputStream stream) throws IOException {
+        SCPBallot decodedSCPBallot = new SCPBallot();
+        decodedSCPBallot.counter = Uint32.decode(stream);
+        decodedSCPBallot.value = Value.decode(stream);
+        return decodedSCPBallot;
+    }
 }

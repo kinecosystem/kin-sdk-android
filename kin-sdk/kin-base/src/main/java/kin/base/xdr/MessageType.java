@@ -33,53 +33,66 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum MessageType  {
-  ERROR_MSG(0),
-  AUTH(2),
-  DONT_HAVE(3),
-  GET_PEERS(4),
-  PEERS(5),
-  GET_TX_SET(6),
-  TX_SET(7),
-  TRANSACTION(8),
-  GET_SCP_QUORUMSET(9),
-  SCP_QUORUMSET(10),
-  SCP_MESSAGE(11),
-  GET_SCP_STATE(12),
-  HELLO(13),
-  ;
-  private int mValue;
+public enum MessageType {
+    ERROR_MSG(0),
+    AUTH(2),
+    DONT_HAVE(3),
+    GET_PEERS(4),
+    PEERS(5),
+    GET_TX_SET(6),
+    TX_SET(7),
+    TRANSACTION(8),
+    GET_SCP_QUORUMSET(9),
+    SCP_QUORUMSET(10),
+    SCP_MESSAGE(11),
+    GET_SCP_STATE(12),
+    HELLO(13),
+    ;
+    private int mValue;
 
-  MessageType(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static MessageType decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return ERROR_MSG;
-      case 2: return AUTH;
-      case 3: return DONT_HAVE;
-      case 4: return GET_PEERS;
-      case 5: return PEERS;
-      case 6: return GET_TX_SET;
-      case 7: return TX_SET;
-      case 8: return TRANSACTION;
-      case 9: return GET_SCP_QUORUMSET;
-      case 10: return SCP_QUORUMSET;
-      case 11: return SCP_MESSAGE;
-      case 12: return GET_SCP_STATE;
-      case 13: return HELLO;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    MessageType(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, MessageType value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static MessageType decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return ERROR_MSG;
+            case 2:
+                return AUTH;
+            case 3:
+                return DONT_HAVE;
+            case 4:
+                return GET_PEERS;
+            case 5:
+                return PEERS;
+            case 6:
+                return GET_TX_SET;
+            case 7:
+                return TX_SET;
+            case 8:
+                return TRANSACTION;
+            case 9:
+                return GET_SCP_QUORUMSET;
+            case 10:
+                return SCP_QUORUMSET;
+            case 11:
+                return SCP_MESSAGE;
+            case 12:
+                return GET_SCP_STATE;
+            case 13:
+                return HELLO;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, MessageType value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

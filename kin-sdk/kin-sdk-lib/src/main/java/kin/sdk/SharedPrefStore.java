@@ -16,8 +16,8 @@ class SharedPrefStore implements Store {
     @Override
     public void saveString(@NonNull String key, @NonNull String value) {
         sharedPref.edit()
-            .putString(key, value)
-            .apply();
+                .putString(key, value)
+                .apply();
     }
 
     @Override

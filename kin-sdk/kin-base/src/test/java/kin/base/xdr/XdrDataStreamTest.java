@@ -1,17 +1,17 @@
-
 package kin.base.xdr;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class XdrDataStreamTest {
     //helper for tests below.
-     public static String backAndForthXdrStreaming(String inputString) throws IOException {
+    public static String backAndForthXdrStreaming(String inputString) throws IOException {
 
         //String to XDR
         ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
@@ -40,8 +40,8 @@ public class XdrDataStreamTest {
         String memo = "Euro Sign €";
         assertEquals(memo, backAndForthXdrStreaming(memo));
     }
-    
-     @Test
+
+    @Test
     public void backAndForthXdrStreamingWithAllNonStandardAscii() throws IOException {
         String memo = "øûý™€♠♣♥†‡µ¢£€";
         assertEquals(memo, backAndForthXdrStreaming(memo));

@@ -17,34 +17,40 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class SetOptionsResult  {
-  public SetOptionsResult () {}
-  SetOptionsResultCode code;
-  public SetOptionsResultCode getDiscriminant() {
-    return this.code;
-  }
-  public void setDiscriminant(SetOptionsResultCode value) {
-    this.code = value;
-  }
-  public static void encode(XdrDataOutputStream stream, SetOptionsResult encodedSetOptionsResult) throws IOException {
-  stream.writeInt(encodedSetOptionsResult.getDiscriminant().getValue());
-  switch (encodedSetOptionsResult.getDiscriminant()) {
-  case SET_OPTIONS_SUCCESS:
-  break;
-  default:
-  break;
-  }
-  }
-  public static SetOptionsResult decode(XdrDataInputStream stream) throws IOException {
-  SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();
-  SetOptionsResultCode discriminant = SetOptionsResultCode.decode(stream);
-  decodedSetOptionsResult.setDiscriminant(discriminant);
-  switch (decodedSetOptionsResult.getDiscriminant()) {
-  case SET_OPTIONS_SUCCESS:
-  break;
-  default:
-  break;
-  }
-    return decodedSetOptionsResult;
-  }
+public class SetOptionsResult {
+    public SetOptionsResult() {
+    }
+
+    SetOptionsResultCode code;
+
+    public SetOptionsResultCode getDiscriminant() {
+        return this.code;
+    }
+
+    public void setDiscriminant(SetOptionsResultCode value) {
+        this.code = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, SetOptionsResult encodedSetOptionsResult) throws IOException {
+        stream.writeInt(encodedSetOptionsResult.getDiscriminant().getValue());
+        switch (encodedSetOptionsResult.getDiscriminant()) {
+            case SET_OPTIONS_SUCCESS:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static SetOptionsResult decode(XdrDataInputStream stream) throws IOException {
+        SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();
+        SetOptionsResultCode discriminant = SetOptionsResultCode.decode(stream);
+        decodedSetOptionsResult.setDiscriminant(discriminant);
+        switch (decodedSetOptionsResult.getDiscriminant()) {
+            case SET_OPTIONS_SUCCESS:
+                break;
+            default:
+                break;
+        }
+        return decodedSetOptionsResult;
+    }
 }

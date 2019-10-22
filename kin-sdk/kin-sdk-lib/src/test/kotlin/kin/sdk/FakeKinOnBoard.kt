@@ -15,15 +15,15 @@ internal class FakeKinOnBoard @Throws(IOException::class)
 constructor() {
 
     private val client: OkHttpClient = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .build()
 
     @Throws(Exception::class)
     fun createAccount(destinationAccount: String, amount: Int = 0) {
         val request = Request.Builder()
-                .url(String.format(URL_CREATE_ACCOUNT, destinationAccount, amount)).build()
+            .url(String.format(URL_CREATE_ACCOUNT, destinationAccount, amount)).build()
         client.newCall(request).execute()?.let {
             if (it.body() == null || it.code() != 200) {
                 Log.d("test", "createAccount error, error code = ${it.code()}, message = ${it.body()}")
@@ -34,15 +34,14 @@ constructor() {
 
     fun fundWithKin(destinationAccount: String, amount: String) {
         val request = Request.Builder()
-                .url(String.format(URL_FUND + amount, destinationAccount))
-                .get()
-                .build()
+            .url(String.format(URL_FUND + amount, destinationAccount))
+            .get()
+            .build()
         client.newCall(request).execute()?.let {
             if (it.body() == null || it.code() != 200) {
                 Log.d("test", "fundWithKin error, error code = ${it.code()}, message = ${it.message()}")
             }
         }
-
     }
 }
 

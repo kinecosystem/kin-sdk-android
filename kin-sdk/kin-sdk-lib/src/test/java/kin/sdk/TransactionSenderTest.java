@@ -1,20 +1,22 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.assertThat;
+import org.hamcrest.beans.HasPropertyWithValue;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
+
 import kin.base.FormatException;
 import kin.base.KeyPair;
 import kin.base.Network;
@@ -30,17 +32,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
-import org.hamcrest.beans.HasPropertyWithValue;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23, manifest = Config.NONE)
@@ -146,11 +148,11 @@ public class TransactionSenderTest {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
         // No need for a real location because any way it is local host
         mockWebServer
-            .enqueue(TestUtils.generateSuccessHttp307MockResponse(location));
+                .enqueue(TestUtils.generateSuccessHttp307MockResponse(location));
         mockWebServerHttp307.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_success_res.json"));
 
         Transaction transaction = transactionSender
-            .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
+                .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         TransactionId transactionId = transactionSender.sendTransaction(transaction);
 
         assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.id());
@@ -178,8 +180,8 @@ public class TransactionSenderTest {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
         mockWebServer.enqueue(new MockResponse()
-            .setBody(TestUtils.loadResource(this.getClass(), "tx_failure_res_general_stellar_error.json"))
-            .setResponseCode(400)
+                .setBody(TestUtils.loadResource(this.getClass(), "tx_failure_res_general_stellar_error.json"))
+                .setResponseCode(400)
         );
 
         expectedEx.expect(TransactionFailedException.class);
@@ -197,8 +199,8 @@ public class TransactionSenderTest {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
         mockWebServer.enqueue(new MockResponse()
-            .setBody(TestUtils.loadResource(this.getClass(), "tx_failure_res_underfunded.json"))
-            .setResponseCode(400)
+                .setBody(TestUtils.loadResource(this.getClass(), "tx_failure_res_underfunded.json"))
+                .setResponseCode(400)
         );
 
         expectedEx.expect(InsufficientKinException.class);
@@ -248,7 +250,7 @@ public class TransactionSenderTest {
     public void sendTransaction_SecondQuery_HttpResponseError() throws Exception {
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));
         mockWebServer.enqueue(new MockResponse()
-            .setResponseCode(500)
+                .setResponseCode(500)
         );
 
         testHttpResponseCode(500);

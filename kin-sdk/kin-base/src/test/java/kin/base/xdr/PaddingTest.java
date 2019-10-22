@@ -1,9 +1,11 @@
 package kin.base.xdr;
 
+import junit.framework.TestCase;
+
+import org.junit.Test;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import junit.framework.TestCase;
-import org.junit.Test;
 
 public class PaddingTest extends TestCase {
     @Test

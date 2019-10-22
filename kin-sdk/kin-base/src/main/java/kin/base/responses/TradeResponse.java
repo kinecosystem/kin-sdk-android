@@ -1,11 +1,13 @@
 package kin.base.responses;
 
 import com.google.gson.annotations.SerializedName;
+
 import kin.base.KeyPair;
 import kin.base.Server;
 
 /**
  * Represents trades response.
+ *
  * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-orderbook.html" target="_blank">Trades for Orderbook documentation</a>
  * @see kin.base.requests.TradesRequestBuilder
  * @see Server#trades()

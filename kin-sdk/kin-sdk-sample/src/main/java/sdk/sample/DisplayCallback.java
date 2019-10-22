@@ -2,6 +2,7 @@ package sdk.sample;
 
 import android.content.Context;
 import android.view.View;
+
 import kin.utils.ResultCallback;
 
 /**

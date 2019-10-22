@@ -15,7 +15,7 @@
         app:srcCompat="@drawable/safe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/save_qr_tile"
@@ -27,7 +27,7 @@
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/safe_image"/>
+        app:layout_constraintTop_toBottomOf="@id/safe_image" />
 
     <TextView
         android:id="@+id/save_qr_description"
@@ -40,7 +40,7 @@
         android:lineSpacingExtra="@dimen/backup_and_restore_line_spacing_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/save_qr_tile"/>
+        app:layout_constraintTop_toBottomOf="@id/save_qr_tile" />
 
     <TextView
         android:id="@+id/save_qr_be_sure_to_save"
@@ -54,6 +54,6 @@
         android:textColor="@color/backup_and_restore_red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_qr_description"/>
+        app:layout_constraintTop_toBottomOf="@+id/save_qr_description" />
 
 </android.support.constraint.ConstraintLayout>

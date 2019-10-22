@@ -17,34 +17,40 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class AllowTrustResult  {
-  public AllowTrustResult () {}
-  AllowTrustResultCode code;
-  public AllowTrustResultCode getDiscriminant() {
-    return this.code;
-  }
-  public void setDiscriminant(AllowTrustResultCode value) {
-    this.code = value;
-  }
-  public static void encode(XdrDataOutputStream stream, AllowTrustResult encodedAllowTrustResult) throws IOException {
-  stream.writeInt(encodedAllowTrustResult.getDiscriminant().getValue());
-  switch (encodedAllowTrustResult.getDiscriminant()) {
-  case ALLOW_TRUST_SUCCESS:
-  break;
-  default:
-  break;
-  }
-  }
-  public static AllowTrustResult decode(XdrDataInputStream stream) throws IOException {
-  AllowTrustResult decodedAllowTrustResult = new AllowTrustResult();
-  AllowTrustResultCode discriminant = AllowTrustResultCode.decode(stream);
-  decodedAllowTrustResult.setDiscriminant(discriminant);
-  switch (decodedAllowTrustResult.getDiscriminant()) {
-  case ALLOW_TRUST_SUCCESS:
-  break;
-  default:
-  break;
-  }
-    return decodedAllowTrustResult;
-  }
+public class AllowTrustResult {
+    public AllowTrustResult() {
+    }
+
+    AllowTrustResultCode code;
+
+    public AllowTrustResultCode getDiscriminant() {
+        return this.code;
+    }
+
+    public void setDiscriminant(AllowTrustResultCode value) {
+        this.code = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, AllowTrustResult encodedAllowTrustResult) throws IOException {
+        stream.writeInt(encodedAllowTrustResult.getDiscriminant().getValue());
+        switch (encodedAllowTrustResult.getDiscriminant()) {
+            case ALLOW_TRUST_SUCCESS:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static AllowTrustResult decode(XdrDataInputStream stream) throws IOException {
+        AllowTrustResult decodedAllowTrustResult = new AllowTrustResult();
+        AllowTrustResultCode discriminant = AllowTrustResultCode.decode(stream);
+        decodedAllowTrustResult.setDiscriminant(discriminant);
+        switch (decodedAllowTrustResult.getDiscriminant()) {
+            case ALLOW_TRUST_SUCCESS:
+                break;
+            default:
+                break;
+        }
+        return decodedAllowTrustResult;
+    }
 }

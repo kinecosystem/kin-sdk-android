@@ -10,7 +10,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import org.json.JSONException;
+
 import java.math.BigDecimal;
+
 import kin.sdk.KinAccount;
 import kin.sdk.Transaction;
 import kin.sdk.TransactionId;
@@ -19,7 +23,6 @@ import kin.sdk.exception.OperationFailedException;
 import kin.sdk.sample.R;
 import kin.utils.Request;
 import kin.utils.ResultCallback;
-import org.json.JSONException;
 
 /**
  * Displays form to enter public address and amount and a button to send a transaction
@@ -43,6 +46,7 @@ public class TransactionActivity extends BaseActivity {
 
     public interface WhitelistServiceCallbacks {
         void onSuccess(String whitelistTransaction);
+
         void onFailure(Exception e);
     }
 
@@ -286,7 +290,7 @@ public class TransactionActivity extends BaseActivity {
                 handleWhitelistTransaction(transaction);
             } else {
                 KinAccount account = getKinClient().getAccount(0);
-                if (account!= null) {
+                if (account != null) {
                     sendTransaction(transaction, account, new SendTransactionCallback());
                 }
             }
@@ -305,7 +309,7 @@ public class TransactionActivity extends BaseActivity {
         public void onSuccess(String whitelistTransaction) {
             Log.d(TAG, "WhitelistServiceListener: onSuccess");
             KinAccount account = getKinClient().getAccount(0);
-            if (account!= null) {
+            if (account != null) {
                 sendTransactionRequest = account.sendWhitelistTransaction(whitelistTransaction);
                 sendTransactionRequest.run(new SendTransactionCallback());
             }

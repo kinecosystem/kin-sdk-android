@@ -1,10 +1,11 @@
 package kin.base;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.Test;
 
 import java.io.IOException;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class StrKeyTest {
     @Test
@@ -21,7 +22,8 @@ public class StrKeyTest {
         try {
             StrKey.decodeCheck(StrKey.VersionByte.SEED, address.toCharArray());
             fail();
-        } catch (FormatException e) {}
+        } catch (FormatException e) {
+        }
     }
 
     @Test()
@@ -30,7 +32,8 @@ public class StrKeyTest {
         try {
             StrKey.decodeCheck(StrKey.VersionByte.SEED, seed.toCharArray());
             fail();
-        } catch (FormatException e) {}
+        } catch (FormatException e) {
+        }
     }
 
     // TODO more tests

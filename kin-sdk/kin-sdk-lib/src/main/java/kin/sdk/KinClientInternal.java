@@ -1,16 +1,16 @@
 package kin.sdk;
 
-import static kin.sdk.Utils.checkNotNull;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
+
 import kin.base.KeyPair;
 import kin.base.Network;
 import kin.base.Server;
@@ -21,6 +21,8 @@ import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.exception.LoadAccountException;
 import kin.sdk.exception.OperationFailedException;
 import kin.utils.Request;
+
+import static kin.sdk.Utils.checkNotNull;
 
 /**
  * An account manager for a {@link KinAccount}.
@@ -42,11 +44,12 @@ class KinClientInternal {
 
     /**
      * Build KinClient object.
-     * @param keyStore a place to store keys
+     *
+     * @param keyStore    a place to store keys
      * @param environment the blockchain network details.
-     * @param appId a 4 character string which represent the application id which will be added to each transaction.
-     *              <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.
-     *              For example 1234 or 2ab3 or bcda, etc.</br>
+     * @param appId       a 4 character string which represent the application id which will be added to each transaction.
+     *                    <br><b>Note:</b> appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.
+     *                    For example 1234 or 2ab3 or bcda, etc.</br>
      */
     public KinClientInternal(@NonNull KeyStore keyStore, @NonNull Environment environment, @NonNull String appId, @NonNull BackupRestore backupRestore) {
         checkNotNull(keyStore, "keyStore");
@@ -66,8 +69,8 @@ class KinClientInternal {
 
     @VisibleForTesting
     KinClientInternal(Environment environment, KeyStore keyStore, TransactionSender transactionSender,
-        AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
-        BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String appId) {
+                      AccountInfoRetriever accountInfoRetriever, GeneralBlockchainInfoRetrieverImpl generalBlockchainInfoRetriever,
+                      BlockchainEventsCreator blockchainEventsCreator, BackupRestore backupRestore, String appId) {
         this.environment = environment;
         this.keyStore = keyStore;
         this.transactionSender = transactionSender;
@@ -117,8 +120,7 @@ class KinClientInternal {
     private void validateAppId(String appId) {
         if (appId == null || appId.equals("")) {
             logger.warning("WARNING: KinClient instance was created without a proper application ID. Is this what you intended to do?");
-        }
-        else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
+        } else if (!appId.matches("[a-zA-Z0-9]{3,4}")) {
             throw new IllegalArgumentException("appId must contain only upper and/or lower case letters and/or digits and that the total string length is between 3 to 4.\n" +
                     "for example 1234 or 2ab3 or cd2 or fqa, etc.");
         }
@@ -141,12 +143,12 @@ class KinClientInternal {
      * Import an account from a JSON-formatted string.
      *
      * @param exportedJson The exported JSON-formatted string.
-     * @param passphrase The passphrase to decrypt the secret key.
+     * @param passphrase   The passphrase to decrypt the secret key.
      * @return The imported account
      */
     @NonNull
     public KinAccount importAccount(@NonNull String exportedJson, @NonNull String passphrase)
-        throws CryptoException, CreateAccountException, CorruptedDataException {
+            throws CryptoException, CreateAccountException, CorruptedDataException {
         KeyPair account = keyStore.importAccount(exportedJson, passphrase);
         KinAccount kinAccount = getAccountByPublicAddress(account.getAccountId());
         return kinAccount != null ? kinAccount : addKeyPair(account);
@@ -202,6 +204,7 @@ class KinClientInternal {
 
     /**
      * Deletes the account at input index (if it exists)
+     *
      * @return true if the delete was successful or false otherwise
      * @throws DeleteAccountException in case of a delete account exception while trying to delete the account
      */

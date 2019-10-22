@@ -1,12 +1,11 @@
 package kin.sdk;
 
 
-import static kin.sdk.Utils.checkNotNull;
-
 import android.support.annotation.NonNull;
-import com.here.oksse.ServerSentEvent;
+
 import java.math.BigDecimal;
 import java.util.List;
+
 import kin.base.AccountLedgerEntryChange;
 import kin.base.Asset;
 import kin.base.KeyPair;
@@ -17,8 +16,9 @@ import kin.base.MemoText;
 import kin.base.Operation;
 import kin.base.PaymentOperation;
 import kin.base.Server;
-import kin.base.requests.TransactionsRequestBuilder;
 import kin.base.responses.TransactionResponse;
+
+import static kin.sdk.Utils.checkNotNull;
 
 /**
  * Provides listeners, for various events happens on the blockchain.
@@ -35,9 +35,9 @@ class BlockchainEvents {
         this.accountKeyPair = KeyPair.fromAccountId(accountId);
 
         this.transactionsStream = new ManagedServerSentEventStream<>(
-            server.transactions()
-                .forAccount(this.accountKeyPair)
-                .cursor(CURSOR_FUTURE_ONLY)
+                server.transactions()
+                        .forAccount(this.accountKeyPair)
+                        .cursor(CURSOR_FUTURE_ONLY)
         );
     }
 

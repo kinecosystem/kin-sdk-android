@@ -29,165 +29,195 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class SetOptionsOp  {
-  public SetOptionsOp () {}
-  private AccountID inflationDest;
-  public AccountID getInflationDest() {
-    return this.inflationDest;
-  }
-  public void setInflationDest(AccountID value) {
-    this.inflationDest = value;
-  }
-  private Uint32 clearFlags;
-  public Uint32 getClearFlags() {
-    return this.clearFlags;
-  }
-  public void setClearFlags(Uint32 value) {
-    this.clearFlags = value;
-  }
-  private Uint32 setFlags;
-  public Uint32 getSetFlags() {
-    return this.setFlags;
-  }
-  public void setSetFlags(Uint32 value) {
-    this.setFlags = value;
-  }
-  private Uint32 masterWeight;
-  public Uint32 getMasterWeight() {
-    return this.masterWeight;
-  }
-  public void setMasterWeight(Uint32 value) {
-    this.masterWeight = value;
-  }
-  private Uint32 lowThreshold;
-  public Uint32 getLowThreshold() {
-    return this.lowThreshold;
-  }
-  public void setLowThreshold(Uint32 value) {
-    this.lowThreshold = value;
-  }
-  private Uint32 medThreshold;
-  public Uint32 getMedThreshold() {
-    return this.medThreshold;
-  }
-  public void setMedThreshold(Uint32 value) {
-    this.medThreshold = value;
-  }
-  private Uint32 highThreshold;
-  public Uint32 getHighThreshold() {
-    return this.highThreshold;
-  }
-  public void setHighThreshold(Uint32 value) {
-    this.highThreshold = value;
-  }
-  private String32 homeDomain;
-  public String32 getHomeDomain() {
-    return this.homeDomain;
-  }
-  public void setHomeDomain(String32 value) {
-    this.homeDomain = value;
-  }
-  private Signer signer;
-  public Signer getSigner() {
-    return this.signer;
-  }
-  public void setSigner(Signer value) {
-    this.signer = value;
-  }
-  public static void encode(XdrDataOutputStream stream, SetOptionsOp encodedSetOptionsOp) throws IOException{
-    if (encodedSetOptionsOp.inflationDest != null) {
-    stream.writeInt(1);
-    AccountID.encode(stream, encodedSetOptionsOp.inflationDest);
-    } else {
-    stream.writeInt(0);
+public class SetOptionsOp {
+    public SetOptionsOp() {
     }
-    if (encodedSetOptionsOp.clearFlags != null) {
-    stream.writeInt(1);
-    Uint32.encode(stream, encodedSetOptionsOp.clearFlags);
-    } else {
-    stream.writeInt(0);
+
+    private AccountID inflationDest;
+
+    public AccountID getInflationDest() {
+        return this.inflationDest;
     }
-    if (encodedSetOptionsOp.setFlags != null) {
-    stream.writeInt(1);
-    Uint32.encode(stream, encodedSetOptionsOp.setFlags);
-    } else {
-    stream.writeInt(0);
+
+    public void setInflationDest(AccountID value) {
+        this.inflationDest = value;
     }
-    if (encodedSetOptionsOp.masterWeight != null) {
-    stream.writeInt(1);
-    Uint32.encode(stream, encodedSetOptionsOp.masterWeight);
-    } else {
-    stream.writeInt(0);
+
+    private Uint32 clearFlags;
+
+    public Uint32 getClearFlags() {
+        return this.clearFlags;
     }
-    if (encodedSetOptionsOp.lowThreshold != null) {
-    stream.writeInt(1);
-    Uint32.encode(stream, encodedSetOptionsOp.lowThreshold);
-    } else {
-    stream.writeInt(0);
+
+    public void setClearFlags(Uint32 value) {
+        this.clearFlags = value;
     }
-    if (encodedSetOptionsOp.medThreshold != null) {
-    stream.writeInt(1);
-    Uint32.encode(stream, encodedSetOptionsOp.medThreshold);
-    } else {
-    stream.writeInt(0);
+
+    private Uint32 setFlags;
+
+    public Uint32 getSetFlags() {
+        return this.setFlags;
     }
-    if (encodedSetOptionsOp.highThreshold != null) {
-    stream.writeInt(1);
-    Uint32.encode(stream, encodedSetOptionsOp.highThreshold);
-    } else {
-    stream.writeInt(0);
+
+    public void setSetFlags(Uint32 value) {
+        this.setFlags = value;
     }
-    if (encodedSetOptionsOp.homeDomain != null) {
-    stream.writeInt(1);
-    String32.encode(stream, encodedSetOptionsOp.homeDomain);
-    } else {
-    stream.writeInt(0);
+
+    private Uint32 masterWeight;
+
+    public Uint32 getMasterWeight() {
+        return this.masterWeight;
     }
-    if (encodedSetOptionsOp.signer != null) {
-    stream.writeInt(1);
-    Signer.encode(stream, encodedSetOptionsOp.signer);
-    } else {
-    stream.writeInt(0);
+
+    public void setMasterWeight(Uint32 value) {
+        this.masterWeight = value;
     }
-  }
-  public static SetOptionsOp decode(XdrDataInputStream stream) throws IOException {
-    SetOptionsOp decodedSetOptionsOp = new SetOptionsOp();
-    int inflationDestPresent = stream.readInt();
-    if (inflationDestPresent != 0) {
-    decodedSetOptionsOp.inflationDest = AccountID.decode(stream);
+
+    private Uint32 lowThreshold;
+
+    public Uint32 getLowThreshold() {
+        return this.lowThreshold;
     }
-    int clearFlagsPresent = stream.readInt();
-    if (clearFlagsPresent != 0) {
-    decodedSetOptionsOp.clearFlags = Uint32.decode(stream);
+
+    public void setLowThreshold(Uint32 value) {
+        this.lowThreshold = value;
     }
-    int setFlagsPresent = stream.readInt();
-    if (setFlagsPresent != 0) {
-    decodedSetOptionsOp.setFlags = Uint32.decode(stream);
+
+    private Uint32 medThreshold;
+
+    public Uint32 getMedThreshold() {
+        return this.medThreshold;
     }
-    int masterWeightPresent = stream.readInt();
-    if (masterWeightPresent != 0) {
-    decodedSetOptionsOp.masterWeight = Uint32.decode(stream);
+
+    public void setMedThreshold(Uint32 value) {
+        this.medThreshold = value;
     }
-    int lowThresholdPresent = stream.readInt();
-    if (lowThresholdPresent != 0) {
-    decodedSetOptionsOp.lowThreshold = Uint32.decode(stream);
+
+    private Uint32 highThreshold;
+
+    public Uint32 getHighThreshold() {
+        return this.highThreshold;
     }
-    int medThresholdPresent = stream.readInt();
-    if (medThresholdPresent != 0) {
-    decodedSetOptionsOp.medThreshold = Uint32.decode(stream);
+
+    public void setHighThreshold(Uint32 value) {
+        this.highThreshold = value;
     }
-    int highThresholdPresent = stream.readInt();
-    if (highThresholdPresent != 0) {
-    decodedSetOptionsOp.highThreshold = Uint32.decode(stream);
+
+    private String32 homeDomain;
+
+    public String32 getHomeDomain() {
+        return this.homeDomain;
     }
-    int homeDomainPresent = stream.readInt();
-    if (homeDomainPresent != 0) {
-    decodedSetOptionsOp.homeDomain = String32.decode(stream);
+
+    public void setHomeDomain(String32 value) {
+        this.homeDomain = value;
     }
-    int signerPresent = stream.readInt();
-    if (signerPresent != 0) {
-    decodedSetOptionsOp.signer = Signer.decode(stream);
+
+    private Signer signer;
+
+    public Signer getSigner() {
+        return this.signer;
     }
-    return decodedSetOptionsOp;
-  }
+
+    public void setSigner(Signer value) {
+        this.signer = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, SetOptionsOp encodedSetOptionsOp) throws IOException {
+        if (encodedSetOptionsOp.inflationDest != null) {
+            stream.writeInt(1);
+            AccountID.encode(stream, encodedSetOptionsOp.inflationDest);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.clearFlags != null) {
+            stream.writeInt(1);
+            Uint32.encode(stream, encodedSetOptionsOp.clearFlags);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.setFlags != null) {
+            stream.writeInt(1);
+            Uint32.encode(stream, encodedSetOptionsOp.setFlags);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.masterWeight != null) {
+            stream.writeInt(1);
+            Uint32.encode(stream, encodedSetOptionsOp.masterWeight);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.lowThreshold != null) {
+            stream.writeInt(1);
+            Uint32.encode(stream, encodedSetOptionsOp.lowThreshold);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.medThreshold != null) {
+            stream.writeInt(1);
+            Uint32.encode(stream, encodedSetOptionsOp.medThreshold);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.highThreshold != null) {
+            stream.writeInt(1);
+            Uint32.encode(stream, encodedSetOptionsOp.highThreshold);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.homeDomain != null) {
+            stream.writeInt(1);
+            String32.encode(stream, encodedSetOptionsOp.homeDomain);
+        } else {
+            stream.writeInt(0);
+        }
+        if (encodedSetOptionsOp.signer != null) {
+            stream.writeInt(1);
+            Signer.encode(stream, encodedSetOptionsOp.signer);
+        } else {
+            stream.writeInt(0);
+        }
+    }
+
+    public static SetOptionsOp decode(XdrDataInputStream stream) throws IOException {
+        SetOptionsOp decodedSetOptionsOp = new SetOptionsOp();
+        int inflationDestPresent = stream.readInt();
+        if (inflationDestPresent != 0) {
+            decodedSetOptionsOp.inflationDest = AccountID.decode(stream);
+        }
+        int clearFlagsPresent = stream.readInt();
+        if (clearFlagsPresent != 0) {
+            decodedSetOptionsOp.clearFlags = Uint32.decode(stream);
+        }
+        int setFlagsPresent = stream.readInt();
+        if (setFlagsPresent != 0) {
+            decodedSetOptionsOp.setFlags = Uint32.decode(stream);
+        }
+        int masterWeightPresent = stream.readInt();
+        if (masterWeightPresent != 0) {
+            decodedSetOptionsOp.masterWeight = Uint32.decode(stream);
+        }
+        int lowThresholdPresent = stream.readInt();
+        if (lowThresholdPresent != 0) {
+            decodedSetOptionsOp.lowThreshold = Uint32.decode(stream);
+        }
+        int medThresholdPresent = stream.readInt();
+        if (medThresholdPresent != 0) {
+            decodedSetOptionsOp.medThreshold = Uint32.decode(stream);
+        }
+        int highThresholdPresent = stream.readInt();
+        if (highThresholdPresent != 0) {
+            decodedSetOptionsOp.highThreshold = Uint32.decode(stream);
+        }
+        int homeDomainPresent = stream.readInt();
+        if (homeDomainPresent != 0) {
+            decodedSetOptionsOp.homeDomain = String32.decode(stream);
+        }
+        int signerPresent = stream.readInt();
+        if (signerPresent != 0) {
+            decodedSetOptionsOp.signer = Signer.decode(stream);
+        }
+        return decodedSetOptionsOp;
+    }
 }

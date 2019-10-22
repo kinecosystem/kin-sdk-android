@@ -20,37 +20,42 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ManageDataResultCode  {
-  MANAGE_DATA_SUCCESS(0),
-  MANAGE_DATA_NOT_SUPPORTED_YET(-1),
-  MANAGE_DATA_NAME_NOT_FOUND(-2),
-  MANAGE_DATA_LOW_RESERVE(-3),
-  MANAGE_DATA_INVALID_NAME(-4),
-  ;
-  private int mValue;
+public enum ManageDataResultCode {
+    MANAGE_DATA_SUCCESS(0),
+    MANAGE_DATA_NOT_SUPPORTED_YET(-1),
+    MANAGE_DATA_NAME_NOT_FOUND(-2),
+    MANAGE_DATA_LOW_RESERVE(-3),
+    MANAGE_DATA_INVALID_NAME(-4),
+    ;
+    private int mValue;
 
-  ManageDataResultCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static ManageDataResultCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return MANAGE_DATA_SUCCESS;
-      case -1: return MANAGE_DATA_NOT_SUPPORTED_YET;
-      case -2: return MANAGE_DATA_NAME_NOT_FOUND;
-      case -3: return MANAGE_DATA_LOW_RESERVE;
-      case -4: return MANAGE_DATA_INVALID_NAME;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    ManageDataResultCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, ManageDataResultCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static ManageDataResultCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return MANAGE_DATA_SUCCESS;
+            case -1:
+                return MANAGE_DATA_NOT_SUPPORTED_YET;
+            case -2:
+                return MANAGE_DATA_NAME_NOT_FOUND;
+            case -3:
+                return MANAGE_DATA_LOW_RESERVE;
+            case -4:
+                return MANAGE_DATA_INVALID_NAME;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, ManageDataResultCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

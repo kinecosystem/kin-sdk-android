@@ -16,39 +16,51 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class PaymentOp  {
-  public PaymentOp () {}
-  private AccountID destination;
-  public AccountID getDestination() {
-    return this.destination;
-  }
-  public void setDestination(AccountID value) {
-    this.destination = value;
-  }
-  private Asset asset;
-  public Asset getAsset() {
-    return this.asset;
-  }
-  public void setAsset(Asset value) {
-    this.asset = value;
-  }
-  private Int64 amount;
-  public Int64 getAmount() {
-    return this.amount;
-  }
-  public void setAmount(Int64 value) {
-    this.amount = value;
-  }
-  public static void encode(XdrDataOutputStream stream, PaymentOp encodedPaymentOp) throws IOException{
-    AccountID.encode(stream, encodedPaymentOp.destination);
-    Asset.encode(stream, encodedPaymentOp.asset);
-    Int64.encode(stream, encodedPaymentOp.amount);
-  }
-  public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
-    PaymentOp decodedPaymentOp = new PaymentOp();
-    decodedPaymentOp.destination = AccountID.decode(stream);
-    decodedPaymentOp.asset = Asset.decode(stream);
-    decodedPaymentOp.amount = Int64.decode(stream);
-    return decodedPaymentOp;
-  }
+public class PaymentOp {
+    public PaymentOp() {
+    }
+
+    private AccountID destination;
+
+    public AccountID getDestination() {
+        return this.destination;
+    }
+
+    public void setDestination(AccountID value) {
+        this.destination = value;
+    }
+
+    private Asset asset;
+
+    public Asset getAsset() {
+        return this.asset;
+    }
+
+    public void setAsset(Asset value) {
+        this.asset = value;
+    }
+
+    private Int64 amount;
+
+    public Int64 getAmount() {
+        return this.amount;
+    }
+
+    public void setAmount(Int64 value) {
+        this.amount = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, PaymentOp encodedPaymentOp) throws IOException {
+        AccountID.encode(stream, encodedPaymentOp.destination);
+        Asset.encode(stream, encodedPaymentOp.asset);
+        Int64.encode(stream, encodedPaymentOp.amount);
+    }
+
+    public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
+        PaymentOp decodedPaymentOp = new PaymentOp();
+        decodedPaymentOp.destination = AccountID.decode(stream);
+        decodedPaymentOp.asset = Asset.decode(stream);
+        decodedPaymentOp.amount = Int64.decode(stream);
+        return decodedPaymentOp;
+    }
 }

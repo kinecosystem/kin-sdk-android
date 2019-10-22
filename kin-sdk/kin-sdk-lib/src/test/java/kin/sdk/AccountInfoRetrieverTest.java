@@ -1,18 +1,5 @@
 package kin.sdk;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import kin.base.Server;
-import kin.base.responses.HttpResponseException;
-import kin.sdk.exception.AccountNotFoundException;
-import kin.sdk.exception.OperationFailedException;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.SocketPolicy;
 import org.hamcrest.Matchers;
 import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Assert;
@@ -23,6 +10,21 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.io.IOException;
+
+import kin.base.Server;
+import kin.base.responses.HttpResponseException;
+import kin.sdk.exception.AccountNotFoundException;
+import kin.sdk.exception.OperationFailedException;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.SocketPolicy;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isA;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23, manifest = Config.NONE)
@@ -115,7 +117,7 @@ public class AccountInfoRetrieverTest {
     @Test
     public void getBalance_AccountNotExists_AccountNotFoundException() throws Exception {
         mockWebServer.enqueue(new MockResponse()
-            .setResponseCode(404)
+                .setResponseCode(404)
         );
         expectedEx.expect(AccountNotFoundException.class);
         expectedEx.expect(new HasPropertyWithValue<>("accountId", equalTo(ACCOUNT_ID)));
@@ -126,7 +128,7 @@ public class AccountInfoRetrieverTest {
     @Test
     public void getStatus_AccountNotExists_StatusNotCreated() throws Exception {
         mockWebServer.enqueue(new MockResponse()
-            .setResponseCode(404)
+                .setResponseCode(404)
         );
 
         int status = getStatus(ACCOUNT_ID);
@@ -136,7 +138,7 @@ public class AccountInfoRetrieverTest {
     @Test
     public void getBalance_HttpResponseError_OperationFailedException() throws Exception {
         mockWebServer.enqueue(new MockResponse()
-            .setResponseCode(500)
+                .setResponseCode(500)
         );
 
         expectedEx.expect(OperationFailedException.class);
@@ -147,7 +149,7 @@ public class AccountInfoRetrieverTest {
     @Test
     public void getStatus_HttpResponseError_OperationFailedException() throws Exception {
         mockWebServer.enqueue(new MockResponse()
-            .setResponseCode(500)
+                .setResponseCode(500)
         );
 
         expectedEx.expect(OperationFailedException.class);
@@ -159,7 +161,7 @@ public class AccountInfoRetrieverTest {
     @Test
     public void getBalance_NullInput_IllegalArgumentException() throws Exception {
         mockWebServer.enqueue(new MockResponse()
-            .setResponseCode(500)
+                .setResponseCode(500)
         );
         expectedEx.expect(IllegalArgumentException.class);
         AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
@@ -170,7 +172,7 @@ public class AccountInfoRetrieverTest {
     @Test
     public void getStatus_NullInput_IllegalArgumentException() throws Exception {
         mockWebServer.enqueue(new MockResponse()
-            .setResponseCode(500)
+                .setResponseCode(500)
         );
         expectedEx.expect(IllegalArgumentException.class);
         AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);

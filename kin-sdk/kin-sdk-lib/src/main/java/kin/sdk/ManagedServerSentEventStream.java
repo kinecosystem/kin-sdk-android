@@ -1,8 +1,10 @@
 package kin.sdk;
 
 import com.here.oksse.ServerSentEvent;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import kin.base.requests.EventListener;
 import kin.base.requests.RequestBuilder;
 

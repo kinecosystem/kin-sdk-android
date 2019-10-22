@@ -1,9 +1,5 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertNull;
-
-import java.math.BigDecimal;
-import kin.sdk.exception.AccountDeletedException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,6 +8,12 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.math.BigDecimal;
+
+import kin.sdk.exception.AccountDeletedException;
+
+import static junit.framework.Assert.assertNull;
 
 @SuppressWarnings({"deprecation", "ConstantConditions"})
 @RunWith(RobolectricTestRunner.class)

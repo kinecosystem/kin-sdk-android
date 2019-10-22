@@ -1,29 +1,7 @@
 package kin.sdk;
 
-import static kin.sdk.TestUtils.loadResource;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
-
 import com.here.oksse.ServerSentEvent;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import kin.base.KeyPair;
-import kin.base.Network;
-import kin.base.Server;
-import kin.base.requests.TransactionsRequestBuilder;
-import kin.base.responses.GsonSingleton;
-import kin.base.responses.TransactionResponse;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +11,31 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import kin.base.KeyPair;
+import kin.base.Network;
+import kin.base.Server;
+import kin.base.requests.TransactionsRequestBuilder;
+import kin.base.responses.GsonSingleton;
+import kin.base.responses.TransactionResponse;
+
+import static kin.sdk.TestUtils.loadResource;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
 public class BlockchainEventsTest {
 
@@ -77,36 +80,36 @@ public class BlockchainEventsTest {
             }
         }).when(mockServerSentEvent).close();
         when(mockTransactionsRequestBuilder
-            .stream(ArgumentMatchers.<kin.base.requests.EventListener<TransactionResponse>>any()))
-            .then(new Answer<Object>() {
-                @Override
-                public Object answer(InvocationOnMock invocation) throws Throwable {
-                    final kin.base.requests.EventListener<TransactionResponse> listener = invocation
-                        .getArgument(0);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            while (!isCancelled) {
-                                TransactionResponse response = responsesQueue.poll();
-                                if (response == null) {
-                                    sleep();
-                                } else {
-                                    listener.onEvent(response);
+                .stream(ArgumentMatchers.<kin.base.requests.EventListener<TransactionResponse>>any()))
+                .then(new Answer<Object>() {
+                    @Override
+                    public Object answer(InvocationOnMock invocation) throws Throwable {
+                        final kin.base.requests.EventListener<TransactionResponse> listener = invocation
+                                .getArgument(0);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (!isCancelled) {
+                                    TransactionResponse response = responsesQueue.poll();
+                                    if (response == null) {
+                                        sleep();
+                                    } else {
+                                        listener.onEvent(response);
+                                    }
                                 }
                             }
-                        }
 
-                        private void sleep() {
-                            try {
-                                Thread.sleep(250);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                            private void sleep() {
+                                try {
+                                    Thread.sleep(250);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    }).start();
-                    return mockServerSentEvent;
-                }
-            });
+                        }).start();
+                        return mockServerSentEvent;
+                    }
+                });
     }
 
     private void enqueueTransactionsResponses() throws InterruptedException {
@@ -120,8 +123,8 @@ public class BlockchainEventsTest {
 
     private TransactionResponse createTransactionResponse(String res) {
         return GsonSingleton.getInstance()
-            .fromJson(loadResource(BlockchainEventsTest.this.getClass(), res),
-                TransactionResponse.class);
+                .fromJson(loadResource(BlockchainEventsTest.this.getClass(), res),
+                        TransactionResponse.class);
     }
 
     @Test
@@ -145,20 +148,20 @@ public class BlockchainEventsTest {
         PaymentInfo payment1 = actualResults.get(0);
         PaymentInfo payment2 = actualResults.get(1);
         assertThat(payment1.hash().id(),
-            equalTo("3eb3024a9c03451e7c8b8d3ba525a3a241e286cb694a262444d46d92e7605f22"));
+                equalTo("3eb3024a9c03451e7c8b8d3ba525a3a241e286cb694a262444d46d92e7605f22"));
         assertThat(payment1.sourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
         assertThat(payment1.destinationPublicKey(),
-            equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
+                equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
         assertThat(payment1.amount(), equalTo(new BigDecimal("250")));
         assertThat(payment1.createdAt(), equalTo("2018-11-19T15:59:07Z"));
         assertThat(payment1.fee(), equalTo(100L));
         assertThat(payment1.memo(), equalTo("1-test-test1"));
 
         assertThat(payment2.hash().id(),
-            equalTo("c4ad29472150a741c0924086a76fea1aac326261afacee05c0b36be7e8fb5727"));
+                equalTo("c4ad29472150a741c0924086a76fea1aac326261afacee05c0b36be7e8fb5727"));
         assertThat(payment2.sourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
         assertThat(payment2.destinationPublicKey(),
-            equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
+                equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
         assertThat(payment2.amount(), equalTo(new BigDecimal("250")));
         assertThat(payment2.createdAt(), equalTo("2018-11-19T16:36:42Z"));
         assertThat(payment2.fee(), equalTo(100L));
@@ -188,15 +191,15 @@ public class BlockchainEventsTest {
         final CountDownLatch latch = new CountDownLatch(1);
         final int[] eventsCount = {0};
         ListenerRegistration listenerRegistration = blockchainEvents
-            .addPaymentListener(new EventListener<PaymentInfo>() {
-                @Override
-                public void onEvent(PaymentInfo data) {
-                    eventsCount[0]++;
-                    if (eventsCount[0] == 2) {
-                        latch.countDown();
+                .addPaymentListener(new EventListener<PaymentInfo>() {
+                    @Override
+                    public void onEvent(PaymentInfo data) {
+                        eventsCount[0]++;
+                        if (eventsCount[0] == 2) {
+                            latch.countDown();
+                        }
                     }
-                }
-            });
+                });
         assertTrue(latch.await(1, TimeUnit.SECONDS));
         listenerRegistration.remove();
         enqueueTransactionsResponses();
@@ -209,12 +212,12 @@ public class BlockchainEventsTest {
     public void addAccountCreationListener_StopListener_NoEvents() throws Exception {
         final int[] eventsCount = {0};
         ListenerRegistration listenerRegistration = blockchainEvents
-            .addAccountCreationListener(new EventListener<Void>() {
-                @Override
-                public void onEvent(Void data) {
-                    eventsCount[0]++;
-                }
-            });
+                .addAccountCreationListener(new EventListener<Void>() {
+                    @Override
+                    public void onEvent(Void data) {
+                        eventsCount[0]++;
+                    }
+                });
         listenerRegistration.remove();
         enqueueCreateAccountResponses();
         Thread.sleep(500);
@@ -269,12 +272,12 @@ public class BlockchainEventsTest {
     public void addBalanceListener_StopListener_NoEvents() throws Exception {
         final int[] eventsCount = {0};
         ListenerRegistration listenerRegistration = blockchainEvents
-            .addBalanceListener(new EventListener<Balance>() {
-                @Override
-                public void onEvent(Balance data) {
-                    eventsCount[0]++;
-                }
-            });
+                .addBalanceListener(new EventListener<Balance>() {
+                    @Override
+                    public void onEvent(Balance data) {
+                        eventsCount[0]++;
+                    }
+                });
         listenerRegistration.remove();
         enqueueCreateAccountResponses();
         Thread.sleep(500);

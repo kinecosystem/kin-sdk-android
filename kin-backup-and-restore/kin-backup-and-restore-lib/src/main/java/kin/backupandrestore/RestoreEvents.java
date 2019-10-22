@@ -2,20 +2,20 @@ package kin.backupandrestore;
 
 public interface RestoreEvents {
 
-	void onRestoreUploadQrCodePageViewed();
+    void onRestoreUploadQrCodePageViewed();
 
-	void onRestoreUploadQrCodeBackButtonTapped();
+    void onRestoreUploadQrCodeBackButtonTapped();
 
-	void onRestoreUploadQrCodeButtonTapped();
+    void onRestoreUploadQrCodeButtonTapped();
 
-	void onRestoreAreYouSureOkButtonTapped();
+    void onRestoreAreYouSureOkButtonTapped();
 
-	void onRestoreAreYouSureCancelButtonTapped();
+    void onRestoreAreYouSureCancelButtonTapped();
 
-	void onRestorePasswordEntryPageViewed();
+    void onRestorePasswordEntryPageViewed();
 
-	void onRestorePasswordEntryBackButtonTapped();
+    void onRestorePasswordEntryBackButtonTapped();
 
-	void onRestorePasswordDoneButtonTapped();
+    void onRestorePasswordDoneButtonTapped();
 
 }

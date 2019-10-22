@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import kin.backupandrestore.R;
 import kin.backupandrestore.backup.view.TextWatcherAdapter;
 import kin.backupandrestore.backup.view.TextWatcherAdapter.TextChangeListener;
@@ -40,7 +41,7 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
     private TextWatcherAdapter textWatcherAdapter;
 
     public static RestoreEnterPasswordFragment newInstance(String keystoreData,
-        @NonNull KeyboardHandler keyboardHandler) {
+                                                           @NonNull KeyboardHandler keyboardHandler) {
         RestoreEnterPasswordFragment fragment = new RestoreEnterPasswordFragment();
         fragment.setKeyboardHandler(keyboardHandler);
         if (keystoreData != null) {
@@ -58,7 +59,7 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-        @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.backup_and_restore_fragment_password_restore, container, false);
         initToolbar();
         initViews(root);
@@ -90,14 +91,14 @@ public class RestoreEnterPasswordFragment extends Fragment implements RestoreEnt
 
     private void injectPresenter(String keystoreData) {
         presenter = new RestoreEnterPasswordPresenterImpl(
-            new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), keystoreData);
+                new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), keystoreData);
         presenter.onAttach(this, ((RestoreActivity) getActivity()).getPresenter());
     }
 
     private void initToolbar() {
         BaseToolbarActivity toolbarActivity = (BaseToolbarActivity) getActivity();
         toolbarActivity
-            .setNavigationIcon(R.drawable.back);
+                .setNavigationIcon(R.drawable.back);
         toolbarActivity.setToolbarColor(android.R.color.white);
         toolbarActivity.setToolbarTitle(R.string.backup_and_restore_upload_qr_toolbar_title);
         toolbarActivity.setNavigationClickListener(new OnClickListener() {

@@ -5,17 +5,17 @@ import kin.backupandrestore.base.KeyboardHandler;
 
 public interface BackupView extends BaseView, KeyboardHandler {
 
-	void startBackupFlow();
+    void startBackupFlow();
 
-	void moveToCreatePasswordPage();
+    void moveToCreatePasswordPage();
 
-	void moveToSaveAndSharePage(String key);
+    void moveToSaveAndSharePage(String key);
 
-	void onBackButtonClicked();
+    void onBackButtonClicked();
 
-	void moveToWellDonePage();
+    void moveToWellDonePage();
 
-	void close();
+    void close();
 
-	void showError();
+    void showError();
 }
