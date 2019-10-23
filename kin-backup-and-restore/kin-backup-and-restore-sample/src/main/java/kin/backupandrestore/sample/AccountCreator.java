@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import kin.sdk.KinAccount;
-import kin.sdk.ListenerRegistration;
+import kin.sdk.internal.services.helpers.ListenerRegistration;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

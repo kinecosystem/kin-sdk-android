@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import kin.base.KeyPair;
 import kin.sdk.exception.CryptoException;
+import kin.sdk.internal.utils.BackupRestore;
 
 public class FakeBackupRestore implements BackupRestore {
 

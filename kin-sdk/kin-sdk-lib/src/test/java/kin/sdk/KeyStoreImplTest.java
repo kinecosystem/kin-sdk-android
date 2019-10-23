@@ -11,6 +11,8 @@ import kin.base.KeyPair;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.exception.LoadAccountException;
+import kin.sdk.internal.storage.KeyStoreImpl;
+import kin.sdk.internal.storage.Store;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -25,6 +27,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class KeyStoreImplTest {
+
+    private static final String ENCRYPTION_VERSION_NAME = "none";
+    private static final String STORE_KEY_ACCOUNTS = "accounts";
+    private static final String VERSION_KEY = "encryptor_ver";
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -43,7 +49,7 @@ public class KeyStoreImplTest {
         Store mockStore = mock(Store.class);
         when(mockStore.getString(anyString()))
                 .thenReturn("")
-                .thenReturn(KeyStoreImpl.ENCRYPTION_VERSION_NAME)
+                .thenReturn(ENCRYPTION_VERSION_NAME)
                 .thenReturn("not a real json");
         KeyStoreImpl keyStore = new KeyStoreImpl(mockStore, new FakeBackupRestore());
 
@@ -55,14 +61,14 @@ public class KeyStoreImplTest {
     @Test
     public void loadAccounts_OldVersionData_DropOldData() throws Exception {
         FakeStore fakeStore = new FakeStore();
-        fakeStore.saveString(KeyStoreImpl.VERSION_KEY, "some_version");
-        fakeStore.saveString(KeyStoreImpl.STORE_KEY_ACCOUNTS,
+        fakeStore.saveString(VERSION_KEY, "some_version");
+        fakeStore.saveString(STORE_KEY_ACCOUNTS,
                 "{&quot;accounts&quot;:[{&quot;seed&quot;:&quot;{\\&quot;iv\\&quot;:\\&quot;nVGsoEHgjW4xw2gx\\\\n\\&quot;,\\&quot;cipher\\&quot;:\\&quot;kEC64vaQu\\\\\\/erpFvvnrY+sWm\\\\\\/o4GjmjPfgG31zQTwvp0taxo\\\\\\/04PoaisjfEQxrydRwBGFvG\\\\\\/nG345\\\\ntXMn+x2H0jnaPWWCznPA\\\\n\\&quot;}&quot;,&quot;public_key&quot;:&quot;GBYPGYWPWHWSVTQGTUCH2IICIP2PRLN3QYSUX5NOHHMNDQW26A4WK2IK&quot;}]}");
         KeyStoreImpl keyStore = new KeyStoreImpl(fakeStore, new FakeBackupRestore());
 
         keyStore.loadAccounts();
-        assertThat(fakeStore.getString(KeyStoreImpl.VERSION_KEY), equalTo(KeyStoreImpl.ENCRYPTION_VERSION_NAME));
-        assertThat(fakeStore.getString(KeyStoreImpl.STORE_KEY_ACCOUNTS), nullValue());
+        assertThat(fakeStore.getString(VERSION_KEY), equalTo(ENCRYPTION_VERSION_NAME));
+        assertThat(fakeStore.getString(STORE_KEY_ACCOUNTS), nullValue());
     }
 
     @Test
@@ -81,7 +87,7 @@ public class KeyStoreImplTest {
     public void loadAccounts_JsonException_LoadAccountException() throws Exception {
         Store mockStore = mock(Store.class);
         when(mockStore.getString(anyString()))
-                .thenReturn(KeyStoreImpl.ENCRYPTION_VERSION_NAME)
+                .thenReturn(ENCRYPTION_VERSION_NAME)
                 .thenReturn("not a real json");
         KeyStoreImpl keyStore = new KeyStoreImpl(mockStore, new FakeBackupRestore());
 

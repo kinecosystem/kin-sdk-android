@@ -1,5 +1,6 @@
 package kin.sdk;
 
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -8,6 +9,10 @@ import java.util.List;
 
 import kin.base.KeyPair;
 import kin.sdk.exception.CreateAccountException;
+import kin.sdk.internal.storage.KeyStoreImpl;
+import kin.sdk.internal.storage.Store;
+import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.internal.utils.BackupRestoreImpl;
 
 public class FakeKeyStore extends KeyStoreImpl {
 

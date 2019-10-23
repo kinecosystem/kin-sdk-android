@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class KinOkHttpClientFactory {
+public final class KinOkHttpClientFactory {
 
     private static final String KIN_SDK_ANDROID_VERSION_HEADER = "kin-sdk-android-version";
     private static final int TRANSACTIONS_TIMEOUT = 30;

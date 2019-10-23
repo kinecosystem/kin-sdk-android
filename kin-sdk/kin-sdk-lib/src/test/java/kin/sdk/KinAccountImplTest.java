@@ -9,6 +9,13 @@ import java.math.BigDecimal;
 
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
+import kin.sdk.internal.services.AccountInfoRetriever;
+import kin.sdk.internal.services.TransactionSender;
+import kin.sdk.internal.utils.BlockchainEventsCreator;
+import kin.sdk.models.AccountStatus;
+import kin.sdk.models.Balance;
+import kin.sdk.models.Transaction;
+import kin.sdk.models.TransactionId;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -52,7 +59,7 @@ public class KinAccountImplTest {
 
         String expectedAccountId = "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX";
         BigDecimal expectedAmount = new BigDecimal("12.2");
-        TransactionId expectedTransactionId = new TransactionIdImpl("myId");
+        TransactionId expectedTransactionId = new TransactionId("myId");
 
         when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
 
@@ -69,7 +76,7 @@ public class KinAccountImplTest {
 
         String expectedAccountId = "GDKJAMCTGZGD6KM7RBEII6QUYAHQQUGERXKM3ESHBX2UUNTNAVNB3OGX";
         BigDecimal expectedAmount = new BigDecimal("12.2");
-        TransactionId expectedTransactionId = new TransactionIdImpl("myId");
+        TransactionId expectedTransactionId = new TransactionId("myId");
         String memo = "Dummy Memo";
 
         when(mockTransactionSender.sendTransaction((Transaction) any())).thenReturn(expectedTransactionId);
@@ -85,7 +92,7 @@ public class KinAccountImplTest {
     public void getBalanceSync() throws Exception {
         initWithRandomAccount();
 
-        Balance expectedBalance = new BalanceImpl(new BigDecimal("11.0"));
+        Balance expectedBalance = new Balance(new BigDecimal("11.0"));
         when(mockAccountInfoRetriever.getBalance(anyString())).thenReturn(expectedBalance);
 
         Balance balance = kinAccount.getBalanceSync();

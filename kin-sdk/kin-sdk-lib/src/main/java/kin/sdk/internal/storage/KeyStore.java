@@ -1,4 +1,5 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
+
 
 import android.support.annotation.NonNull;
 
@@ -11,7 +12,7 @@ import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.exception.LoadAccountException;
 
-interface KeyStore {
+public interface KeyStore {
 
     @NonNull
     List<KeyPair> loadAccounts() throws LoadAccountException;

@@ -26,6 +26,12 @@ import kin.base.Server;
 import kin.base.requests.TransactionsRequestBuilder;
 import kin.base.responses.GsonSingleton;
 import kin.base.responses.TransactionResponse;
+import kin.sdk.internal.services.BlockchainEvents;
+import kin.sdk.internal.services.BlockchainEventsImpl;
+import kin.sdk.internal.services.helpers.EventListener;
+import kin.sdk.internal.services.helpers.ListenerRegistration;
+import kin.sdk.models.Balance;
+import kin.sdk.models.PaymentInfo;
 
 import static kin.sdk.TestUtils.loadResource;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -59,7 +65,7 @@ public class BlockchainEventsTest {
         mockServer();
         Network.useTestNetwork();
 
-        blockchainEvents = new BlockchainEvents(server, ACCOUNT_ID);
+        blockchainEvents = new BlockchainEventsImpl(server, ACCOUNT_ID);
         createResponsesQueue();
     }
 

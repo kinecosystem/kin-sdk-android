@@ -1,5 +1,4 @@
-package kin.sdk;
-
+package kin.sdk.internal.services;
 
 import android.support.annotation.NonNull;
 
@@ -17,13 +16,19 @@ import kin.base.Operation;
 import kin.base.PaymentOperation;
 import kin.base.Server;
 import kin.base.responses.TransactionResponse;
+import kin.sdk.internal.services.helpers.EventListener;
+import kin.sdk.internal.services.helpers.ListenerRegistration;
+import kin.sdk.internal.services.helpers.ManagedServerSentEventStream;
+import kin.sdk.models.Balance;
+import kin.sdk.models.PaymentInfo;
+import kin.sdk.models.TransactionId;
 
-import static kin.sdk.Utils.checkNotNull;
+import static kin.sdk.internal.utils.Utils.checkNotNull;
 
 /**
  * Provides listeners, for various events happens on the blockchain.
  */
-class BlockchainEvents {
+public final class BlockchainEventsImpl implements BlockchainEvents {
 
     private static final String ASSET_TYPE_NATIVE = "native";
     private static final String CURSOR_FUTURE_ONLY = "now";
@@ -31,7 +36,7 @@ class BlockchainEvents {
     private final KeyPair accountKeyPair;
     private final ManagedServerSentEventStream<TransactionResponse> transactionsStream;
 
-    BlockchainEvents(Server server, String accountId) {
+    public BlockchainEventsImpl(Server server, String accountId) {
         this.accountKeyPair = KeyPair.fromAccountId(accountId);
 
         this.transactionsStream = new ManagedServerSentEventStream<>(
@@ -41,13 +46,8 @@ class BlockchainEvents {
         );
     }
 
-    /**
-     * Creates and adds listener for balance changes of this account, use returned {@link ListenerRegistration} to
-     * stop listening. <p><b>Note:</b> Events will be fired on background thread.</p>
-     *
-     * @param listener listener object for payment events
-     */
-    ListenerRegistration addBalanceListener(@NonNull final EventListener<Balance> listener) {
+    @Override
+    public ListenerRegistration addBalanceListener(@NonNull final EventListener<Balance> listener) {
         checkNotNull(listener, "listener");
 
         final kin.base.requests.EventListener<TransactionResponse> responseListener = new kin.base.requests.EventListener<TransactionResponse>() {
@@ -89,7 +89,7 @@ class BlockchainEvents {
             KeyPair account = accountLedgerEntryChange.getAccount();
             if (account != null) {
                 if (accountKeyPair.getAccountId().equals(account.getAccountId())) {
-                    BalanceImpl balance = new BalanceImpl(
+                    Balance balance = new Balance(
                             new BigDecimal(accountLedgerEntryChange.getBalance()));
                     listener.onEvent(balance);
                 }
@@ -97,13 +97,8 @@ class BlockchainEvents {
         }
     }
 
-    /**
-     * Creates and adds listener for payments concerning this account, use returned {@link ListenerRegistration} to
-     * stop listening. <p><b>Note:</b> Events will be fired on background thread.</p>
-     *
-     * @param listener listener object for payment events
-     */
-    ListenerRegistration addPaymentListener(@NonNull final EventListener<PaymentInfo> listener) {
+    @Override
+    public ListenerRegistration addPaymentListener(@NonNull final EventListener<PaymentInfo> listener) {
         checkNotNull(listener, "listener");
 
         final kin.base.requests.EventListener<TransactionResponse> responseListener = new kin.base.requests.EventListener<TransactionResponse>() {
@@ -123,13 +118,8 @@ class BlockchainEvents {
         });
     }
 
-    /**
-     * Creates and adds listener for account creation event, use returned {@link ListenerRegistration} to stop
-     * listening. <p><b>Note:</b> Events will be fired on background thread.</p>
-     *
-     * @param listener listener object for payment events
-     */
-    ListenerRegistration addAccountCreationListener(final EventListener<Void> listener) {
+    @Override
+    public ListenerRegistration addAccountCreationListener(final EventListener<Void> listener) {
         checkNotNull(listener, "listener");
 
         final kin.base.requests.EventListener<TransactionResponse> responseListener = new kin.base.requests.EventListener<TransactionResponse>() {
@@ -163,12 +153,12 @@ class BlockchainEvents {
                 if (operation instanceof PaymentOperation) {
                     PaymentOperation paymentOperation = (PaymentOperation) operation;
                     if (isPaymentNative(paymentOperation.getAsset())) {
-                        PaymentInfo paymentInfo = new PaymentInfoImpl(
+                        PaymentInfo paymentInfo = new PaymentInfo(
                                 transactionResponse.getCreatedAt(),
                                 paymentOperation.getDestination().getAccountId(),
                                 extractSourceAccountId(transactionResponse, paymentOperation),
                                 new BigDecimal(paymentOperation.getAmount()),
-                                new TransactionIdImpl(transactionResponse.getHash()),
+                                new TransactionId(transactionResponse.getHash()),
                                 transactionResponse.getFeePaid(),
                                 extractHashTextIfAny(transactionResponse)
                         );

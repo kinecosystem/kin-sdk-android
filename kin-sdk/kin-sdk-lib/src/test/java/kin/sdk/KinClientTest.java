@@ -1,5 +1,6 @@
 package kin.sdk;
 
+
 import android.support.annotation.NonNull;
 
 import org.junit.Before;
@@ -13,6 +14,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import kin.base.KeyPair;
+import kin.sdk.internal.services.AccountInfoRetriever;
+import kin.sdk.internal.services.GeneralBlockchainInfoRetriever;
+import kin.sdk.internal.services.TransactionSender;
+import kin.sdk.internal.storage.KeyStore;
+import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.internal.utils.BackupRestoreImpl;
+import kin.sdk.internal.utils.BlockchainEventsCreator;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -35,7 +43,7 @@ public class KinClientTest {
     @Mock
     private TransactionSender mockTransactionSender;
     @Mock
-    private GeneralBlockchainInfoRetrieverImpl mockGeneralBlockchainInfoRetriever;
+    private GeneralBlockchainInfoRetriever mockGeneralBlockchainInfoRetriever;
     @Mock
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock

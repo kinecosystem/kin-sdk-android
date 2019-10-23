@@ -8,10 +8,10 @@ import kin.backupandrestore.BackupCallback;
 import kin.backupandrestore.RestoreCallback;
 import kin.backupandrestore.exception.BackupAndRestoreException;
 import kin.backupandrestore.sample.AccountCreator.Callbacks;
-import kin.sdk.Balance;
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 import kin.sdk.exception.CreateAccountException;
+import kin.sdk.models.Balance;
 import kin.utils.Request;
 import kin.utils.ResultCallback;
 

@@ -16,10 +16,10 @@ import org.json.JSONException;
 import java.math.BigDecimal;
 
 import kin.sdk.KinAccount;
-import kin.sdk.Transaction;
-import kin.sdk.TransactionId;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.OperationFailedException;
+import kin.sdk.models.Transaction;
+import kin.sdk.models.TransactionId;
 import kin.sdk.sample.R;
 import kin.utils.Request;
 import kin.utils.ResultCallback;

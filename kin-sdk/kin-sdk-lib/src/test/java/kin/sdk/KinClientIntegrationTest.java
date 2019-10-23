@@ -9,6 +9,13 @@ import org.junit.rules.ExpectedException;
 
 import kin.base.Server;
 import kin.sdk.exception.CreateAccountException;
+import kin.sdk.internal.services.AccountInfoRetrieverImpl;
+import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
+import kin.sdk.internal.services.TransactionSenderImpl;
+import kin.sdk.internal.storage.KeyStore;
+import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.internal.utils.BackupRestoreImpl;
+import kin.sdk.internal.utils.BlockchainEventsCreator;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -52,8 +59,8 @@ public class KinClientIntegrationTest {
         return new KinClientInternal(
                 keyStore,
                 environment,
-                new TransactionSender(server, APP_ID),
-                new AccountInfoRetriever(server),
+                new TransactionSenderImpl(server, APP_ID),
+                new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
                 new BlockchainEventsCreator(server),
                 backupRestore,
@@ -274,8 +281,8 @@ public class KinClientIntegrationTest {
         kinClient1 = new KinClientInternal(
                 new FakeKeyStore(backupRestore),
                 environment,
-                new TransactionSender(server, APP_ID),
-                new AccountInfoRetriever(server),
+                new TransactionSenderImpl(server, APP_ID),
+                new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
                 new BlockchainEventsCreator(server),
                 backupRestore,

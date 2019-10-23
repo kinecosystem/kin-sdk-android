@@ -5,6 +5,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import kin.base.Server;
+import kin.sdk.internal.services.AccountInfoRetrieverImpl;
+import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
+import kin.sdk.internal.services.TransactionSenderImpl;
+import kin.sdk.internal.utils.BackupRestoreImpl;
+import kin.sdk.internal.utils.BlockchainEventsCreator;
 
 public class AppIdTest {
 
@@ -16,8 +21,8 @@ public class AppIdTest {
         return new KinClientInternal(
                 new FakeKeyStore(),
                 new Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID),
-                new TransactionSender(server, appId),
-                new AccountInfoRetriever(server),
+                new TransactionSenderImpl(server, appId),
+                new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
                 new BlockchainEventsCreator(server),
                 new BackupRestoreImpl(),

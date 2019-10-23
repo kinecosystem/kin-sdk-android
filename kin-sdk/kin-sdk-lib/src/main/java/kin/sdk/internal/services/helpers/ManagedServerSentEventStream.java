@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.services.helpers;
 
 import com.here.oksse.ServerSentEvent;
 
@@ -9,7 +9,7 @@ import kin.base.requests.EventListener;
 import kin.base.requests.RequestBuilder;
 
 
-class ManagedServerSentEventStream<ResponseType> {
+public final class ManagedServerSentEventStream<ResponseType> {
 
     private final Object lock = new Object();
 
@@ -21,11 +21,11 @@ class ManagedServerSentEventStream<ResponseType> {
 
     private ResponseType lastReceivedResponse;
 
-    ManagedServerSentEventStream(RequestBuilder requestBuilder) {
+    public ManagedServerSentEventStream(RequestBuilder requestBuilder) {
         this.requestBuilder = requestBuilder;
     }
 
-    void addListener(EventListener<ResponseType> listener) {
+    public void addListener(EventListener<ResponseType> listener) {
         synchronized (lock) {
             listeners.add(listener);
 
@@ -37,7 +37,7 @@ class ManagedServerSentEventStream<ResponseType> {
         }
     }
 
-    void removeListener(EventListener<ResponseType> listener) {
+    public void removeListener(EventListener<ResponseType> listener) {
         synchronized (lock) {
             listeners.remove(listener);
 

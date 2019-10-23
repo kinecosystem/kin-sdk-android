@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
-import kin.sdk.Utils;
+import kin.sdk.internal.utils.Utils;
 
 public class AccountExtractor {
 

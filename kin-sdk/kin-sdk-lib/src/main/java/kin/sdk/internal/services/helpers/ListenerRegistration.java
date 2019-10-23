@@ -1,13 +1,15 @@
-package kin.sdk;
+package kin.sdk.internal.services.helpers;
+
+import kin.sdk.internal.services.BlockchainEventsImpl;
 
 /**
- * Represents a listener to {@link BlockchainEvents}, that can be removed using {@link #remove()}.
+ * Represents a listener to {@link BlockchainEventsImpl}, that can be removed using {@link #remove()}.
  */
 public class ListenerRegistration {
 
     private final Runnable removeRunnable;
 
-    ListenerRegistration(Runnable removeRunnable) {
+    public ListenerRegistration(Runnable removeRunnable) {
         this.removeRunnable = removeRunnable;
     }
 

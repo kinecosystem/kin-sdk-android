@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.services;
 
 
 import android.support.annotation.NonNull;
@@ -12,24 +12,20 @@ import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.OperationFailedException;
+import kin.sdk.internal.utils.Utils;
+import kin.sdk.models.AccountStatus;
+import kin.sdk.models.Balance;
 
-class AccountInfoRetriever {
+public final class AccountInfoRetrieverImpl implements AccountInfoRetriever {
 
     private final Server server;
 
-    AccountInfoRetriever(Server server) {
+    public AccountInfoRetrieverImpl(Server server) {
         this.server = server;
     }
 
-    /**
-     * Get balance for the specified account.
-     *
-     * @param accountId the account ID to check balance
-     * @return the account {@link Balance}
-     * @throws AccountNotFoundException if account not created yet
-     * @throws OperationFailedException any other error
-     */
-    Balance getBalance(@NonNull String accountId) throws OperationFailedException {
+    @Override
+    public Balance getBalance(@NonNull String accountId) throws OperationFailedException {
         Utils.checkNotNull(accountId, "account");
         Balance balance = null;
 
@@ -40,7 +36,7 @@ class AccountInfoRetriever {
             }
             for (AccountResponse.Balance assetBalance : accountResponse.getBalances()) {
                 if (assetBalance.getAsset().getType().equalsIgnoreCase("native")) {
-                    balance = new BalanceImpl(new BigDecimal(assetBalance.getBalance()));
+                    balance = new Balance(new BigDecimal(assetBalance.getBalance()));
 
                 }
             }
@@ -60,8 +56,9 @@ class AccountInfoRetriever {
         return balance;
     }
 
+    @Override
     @AccountStatus
-    int getStatus(@NonNull String accountId) throws OperationFailedException {
+    public int getStatus(@NonNull String accountId) throws OperationFailedException {
         try {
             getBalance(accountId);
             return AccountStatus.CREATED;

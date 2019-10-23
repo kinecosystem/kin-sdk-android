@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
-import kin.sdk.ListenerRegistration;
-import kin.sdk.PaymentInfo;
+import kin.sdk.internal.services.helpers.ListenerRegistration;
+import kin.sdk.models.PaymentInfo;
 import kin.sdk.sample.R;
 
 public class PaymentListenerActivity extends BaseActivity {

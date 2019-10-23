@@ -1,4 +1,5 @@
-package kin.sdk;
+package kin.sdk.internal.utils;
+
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +14,7 @@ import kin.base.KeyPair;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
 
-class BackupRestoreImpl implements BackupRestore {
+public class BackupRestoreImpl implements BackupRestore {
 
     private static final String JSON_KEY_PUBLIC_KEY = "pkey";
     private static final String JSON_KEY_SEED = "seed";

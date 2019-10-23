@@ -1,7 +1,7 @@
 package kin.backupandrestore.sample;
 
 import kin.backupandrestore.BackupAndRestoreManager;
-import kin.sdk.Balance;
+import kin.sdk.models.Balance;
 
 public interface IBackupAndRestoreView {
 

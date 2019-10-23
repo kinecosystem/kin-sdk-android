@@ -14,6 +14,10 @@ import kin.base.Server;
 import kin.base.responses.HttpResponseException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.OperationFailedException;
+import kin.sdk.internal.services.AccountInfoRetriever;
+import kin.sdk.internal.services.AccountInfoRetrieverImpl;
+import kin.sdk.models.AccountStatus;
+import kin.sdk.models.Balance;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
@@ -159,7 +163,7 @@ public class AccountInfoRetrieverTest {
                 .setResponseCode(500)
         );
         expectedEx.expect(IllegalArgumentException.class);
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetrieverImpl(server);
         accountInfoRetriever.getBalance(null);
     }
 
@@ -170,17 +174,17 @@ public class AccountInfoRetrieverTest {
                 .setResponseCode(500)
         );
         expectedEx.expect(IllegalArgumentException.class);
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetrieverImpl(server);
         accountInfoRetriever.getStatus(null);
     }
 
     private Balance getBalance(String accountId) throws OperationFailedException {
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetrieverImpl(server);
         return accountInfoRetriever.getBalance(accountId);
     }
 
     private int getStatus(String accountId) throws OperationFailedException {
-        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetriever(server);
+        AccountInfoRetriever accountInfoRetriever = new AccountInfoRetrieverImpl(server);
         return accountInfoRetriever.getStatus(accountId);
     }
 

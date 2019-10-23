@@ -7,6 +7,15 @@ import kin.sdk.IntegConsts.TEST_NETWORK_URL
 import kin.sdk.exception.AccountNotFoundException
 import kin.sdk.exception.InsufficientFeeException
 import kin.sdk.exception.InsufficientKinException
+import kin.sdk.internal.services.AccountInfoRetrieverImpl
+import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl
+import kin.sdk.internal.services.TransactionSenderImpl
+import kin.sdk.internal.utils.BackupRestoreImpl
+import kin.sdk.internal.utils.BlockchainEventsCreator
+import kin.sdk.models.AccountStatus
+import kin.sdk.models.Balance
+import kin.sdk.models.PaymentInfo
+import kin.sdk.models.Transaction
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.instanceOf
@@ -56,8 +65,8 @@ class KinAccountIntegrationTest {
         kinClient = KinClientInternal(
             FakeKeyStore(),
             environment,
-            TransactionSender(server, appId),
-            AccountInfoRetriever(server),
+            TransactionSenderImpl(server, appId),
+            AccountInfoRetrieverImpl(server),
             GeneralBlockchainInfoRetrieverImpl(server),
             BlockchainEventsCreator(server),
             BackupRestoreImpl(),
@@ -147,8 +156,8 @@ class KinAccountIntegrationTest {
             kinClient = KinClientInternal(
                 FakeKeyStore(),
                 environment,
-                TransactionSender(server, appId),
-                AccountInfoRetriever(server),
+                TransactionSenderImpl(server, appId),
+                AccountInfoRetrieverImpl(server),
                 GeneralBlockchainInfoRetrieverImpl(server),
                 BlockchainEventsCreator(server),
                 BackupRestoreImpl(),

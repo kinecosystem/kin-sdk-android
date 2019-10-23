@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.services;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,11 +10,11 @@ import kin.base.responses.LedgerResponse;
 import kin.base.responses.Page;
 import kin.sdk.exception.OperationFailedException;
 
-class GeneralBlockchainInfoRetrieverImpl implements GeneralBlockchainInfoRetriever {
+public final class GeneralBlockchainInfoRetrieverImpl implements GeneralBlockchainInfoRetriever {
 
     private final Server server;
 
-    GeneralBlockchainInfoRetrieverImpl(Server server) {
+    public GeneralBlockchainInfoRetrieverImpl(Server server) {
         this.server = server;
     }
 

@@ -10,6 +10,13 @@ import java.math.BigDecimal;
 
 import kin.base.Server;
 import kin.sdk.exception.AccountDeletedException;
+import kin.sdk.internal.services.AccountInfoRetrieverImpl;
+import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
+import kin.sdk.internal.services.TransactionSenderImpl;
+import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.internal.utils.BackupRestoreImpl;
+import kin.sdk.internal.utils.BlockchainEventsCreator;
+import kin.sdk.models.Transaction;
 
 import static junit.framework.Assert.assertNull;
 
@@ -31,8 +38,8 @@ public class KinAccountTest {
         kinClient = new KinClientInternal(
                 new FakeKeyStore(backupRestore),
                 Environment.TEST,
-                new TransactionSender(server, APP_ID),
-                new AccountInfoRetriever(server),
+                new TransactionSenderImpl(server, APP_ID),
+                new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
                 new BlockchainEventsCreator(server),
                 backupRestore,

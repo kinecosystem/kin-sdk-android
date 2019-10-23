@@ -18,9 +18,15 @@ import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.exception.LoadAccountException;
 import kin.sdk.exception.OperationFailedException;
+import kin.sdk.internal.services.AccountInfoRetriever;
+import kin.sdk.internal.services.GeneralBlockchainInfoRetriever;
+import kin.sdk.internal.services.TransactionSender;
+import kin.sdk.internal.storage.KeyStore;
+import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.internal.utils.BlockchainEventsCreator;
 import kin.utils.Request;
 
-import static kin.sdk.Utils.checkNotNull;
+import static kin.sdk.internal.utils.Utils.checkNotNull;
 
 /**
  * An account manager for a {@link KinAccount}.

@@ -1,8 +1,8 @@
-package kin.sdk;
+package kin.sdk.internal.services;
 
 import kin.sdk.exception.OperationFailedException;
 
-interface GeneralBlockchainInfoRetriever {
+public interface GeneralBlockchainInfoRetriever {
 
     /**
      * Get the current minimum fee that the network charges per operation.

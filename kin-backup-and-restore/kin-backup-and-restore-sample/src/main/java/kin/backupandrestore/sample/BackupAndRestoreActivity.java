@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import kin.backupandrestore.BackupAndRestoreManager;
 import kin.backupandrestore.sample.BackupAndRestorePresenterImpl.NetWorkType;
-import kin.sdk.Balance;
 import kin.sdk.Environment;
 import kin.sdk.KinClient;
+import kin.sdk.models.Balance;
 
 public class BackupAndRestoreActivity extends AppCompatActivity implements IBackupAndRestoreView, View.OnClickListener {
 

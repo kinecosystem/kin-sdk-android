@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
+import kin.sdk.models.WhitelistableTransaction;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

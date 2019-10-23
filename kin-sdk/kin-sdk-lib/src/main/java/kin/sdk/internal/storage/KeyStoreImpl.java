@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 
 import android.support.annotation.NonNull;
@@ -16,12 +16,14 @@ import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.exception.DeleteAccountException;
 import kin.sdk.exception.LoadAccountException;
+import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.internal.utils.Utils;
 
-class KeyStoreImpl implements KeyStore {
+public class KeyStoreImpl implements KeyStore {
 
-    static final String ENCRYPTION_VERSION_NAME = "none";
-    static final String STORE_KEY_ACCOUNTS = "accounts";
-    static final String VERSION_KEY = "encryptor_ver";
+    private static final String ENCRYPTION_VERSION_NAME = "none";
+    private static final String STORE_KEY_ACCOUNTS = "accounts";
+    private static final String VERSION_KEY = "encryptor_ver";
     private static final String JSON_KEY_ACCOUNTS_ARRAY = "accounts";
     private static final String JSON_KEY_PUBLIC_KEY = "public_key";
     private static final String JSON_KEY_ENCRYPTED_SEED = "seed";
@@ -29,7 +31,7 @@ class KeyStoreImpl implements KeyStore {
     private final Store store;
     private final BackupRestore backupRestore;
 
-    KeyStoreImpl(@NonNull Store store, @NonNull BackupRestore backupRestore) {
+    public KeyStoreImpl(@NonNull Store store, @NonNull BackupRestore backupRestore) {
         this.store = store;
         this.backupRestore = backupRestore;
     }

@@ -25,6 +25,11 @@ import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.internal.services.TransactionSender;
+import kin.sdk.internal.services.TransactionSenderImpl;
+import kin.sdk.internal.storage.KeyStore;
+import kin.sdk.models.Transaction;
+import kin.sdk.models.TransactionId;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -69,7 +74,7 @@ public class TransactionSenderTest {
         mockServer();
         Network.useTestNetwork();
 
-        transactionSender = new TransactionSender(server, APP_ID);
+        transactionSender = new TransactionSenderImpl(server, APP_ID);
         account = KeyPair.fromSecretSeed(SECRET_SEED_FROM);
     }
 
@@ -293,7 +298,7 @@ public class TransactionSenderTest {
                 .writeTimeout(100, TimeUnit.MILLISECONDS)
                 .readTimeout(100, TimeUnit.MILLISECONDS)
                 .build());
-        transactionSender = new TransactionSender(server, APP_ID);
+        transactionSender = new TransactionSenderImpl(server, APP_ID);
 
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_from.json"));
         mockWebServer.enqueue(TestUtils.generateSuccessMockResponse(this.getClass(), "tx_account_to.json"));

@@ -14,6 +14,13 @@ import kin.base.KeyPair;
 import kin.base.Server;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
+import kin.sdk.internal.services.AccountInfoRetrieverImpl;
+import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
+import kin.sdk.internal.services.TransactionSenderImpl;
+import kin.sdk.internal.storage.KeyStore;
+import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.internal.utils.BackupRestoreImpl;
+import kin.sdk.internal.utils.BlockchainEventsCreator;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.isA;
@@ -50,8 +57,8 @@ public class BackupRestoreTest {
         return new KinClientInternal(
                 keyStore,
                 environment,
-                new TransactionSender(server, APP_ID),
-                new AccountInfoRetriever(server),
+                new TransactionSenderImpl(server, APP_ID),
+                new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
                 new BlockchainEventsCreator(server),
                 backupRestore,

@@ -1,11 +1,11 @@
-package kin.sdk;
+package kin.sdk.models;
 
 /**
  * This class wraps a transaction envelope xdr in base 64(transaction payload)
  * and a network passphrase(the network id as string). *
  * Those fields are necessary for the whitelist server in order to sign this transaction to be a whitelist transaction.
  */
-public class WhitelistableTransaction {
+public final class WhitelistableTransaction {
 
     private final String transactionPayload;
     private final String networkPassphrase;

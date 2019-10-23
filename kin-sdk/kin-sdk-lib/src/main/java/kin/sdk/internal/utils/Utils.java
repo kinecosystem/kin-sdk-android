@@ -1,4 +1,4 @@
-package kin.sdk;
+package kin.sdk.internal.utils;
 
 
 import android.support.annotation.NonNull;
@@ -16,7 +16,7 @@ final public class Utils {
         //no instances
     }
 
-    static TransactionFailedException createTransactionException(@NonNull SubmitTransactionResponse response) {
+    public static TransactionFailedException createTransactionException(@NonNull SubmitTransactionResponse response) {
         ArrayList<String> operationsResultCodes = null;
         String transactionResultCode = null;
         if (response.getExtras() != null && response.getExtras().getResultCodes() != null) {
@@ -27,20 +27,20 @@ final public class Utils {
         return new TransactionFailedException(transactionResultCode, operationsResultCodes);
     }
 
-    static String byteArrayToHex(byte[] a) {
+    public static String byteArrayToHex(byte[] a) {
         StringBuilder sb = new StringBuilder(a.length * 2);
         for (byte b : a)
             sb.append(String.format("%02x", b));
         return sb.toString();
     }
 
-    static void checkNotNull(Object obj, String paramName) {
+    public static void checkNotNull(Object obj, String paramName) {
         if (obj == null) {
             throw new IllegalArgumentException(paramName + " == null");
         }
     }
 
-    static void checkNotEmpty(String string, String paramName) {
+    public static void checkNotEmpty(String string, String paramName) {
         if (string == null || string.isEmpty()) {
             throw new IllegalArgumentException(paramName + " cannot be null or empty.");
         }

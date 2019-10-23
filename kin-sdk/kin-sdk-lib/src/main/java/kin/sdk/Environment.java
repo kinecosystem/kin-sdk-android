@@ -2,7 +2,7 @@ package kin.sdk;
 
 import kin.base.Network;
 
-import static kin.sdk.Utils.checkNotEmpty;
+import static kin.sdk.internal.utils.Utils.checkNotEmpty;
 
 /**
  * Provides blockchain network details
@@ -37,7 +37,7 @@ public class Environment {
      * Returns the URL of the blockchain node.
      */
     @SuppressWarnings("WeakerAccess")
-    final public String getNetworkUrl() {
+    public final String getNetworkUrl() {
         return networkUrl;
     }
 
@@ -45,16 +45,15 @@ public class Environment {
      * Returns the network id.
      */
     @SuppressWarnings("WeakerAccess")
-    final public String getNetworkPassphrase() {
+    public final String getNetworkPassphrase() {
         return network.getNetworkPassphrase();
     }
 
-
-    final public boolean isMainNet() {
+    public final boolean isMainNet() {
         return PRODUCTION.getNetworkPassphrase().equals(network.getNetworkPassphrase());
     }
 
-    final Network getNetwork() {
+    public final Network getNetwork() {
         return network;
     }
 

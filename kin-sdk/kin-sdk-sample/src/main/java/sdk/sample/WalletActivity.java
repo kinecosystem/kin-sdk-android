@@ -7,11 +7,11 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.TextView;
 
-import kin.sdk.AccountStatus;
-import kin.sdk.Balance;
 import kin.sdk.KinAccount;
-import kin.sdk.ListenerRegistration;
 import kin.sdk.exception.DeleteAccountException;
+import kin.sdk.internal.services.helpers.ListenerRegistration;
+import kin.sdk.models.AccountStatus;
+import kin.sdk.models.Balance;
 import kin.sdk.sample.R;
 import kin.utils.Request;
 import kin.utils.ResultCallback;

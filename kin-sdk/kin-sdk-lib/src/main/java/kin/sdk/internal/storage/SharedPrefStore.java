@@ -1,15 +1,16 @@
-package kin.sdk;
+package kin.sdk.internal.storage;
 
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-class SharedPrefStore implements Store {
+
+public class SharedPrefStore implements Store {
 
     private final SharedPreferences sharedPref;
 
-    SharedPrefStore(SharedPreferences sharedPref) {
+    public SharedPrefStore(SharedPreferences sharedPref) {
         this.sharedPref = sharedPref;
     }
 
