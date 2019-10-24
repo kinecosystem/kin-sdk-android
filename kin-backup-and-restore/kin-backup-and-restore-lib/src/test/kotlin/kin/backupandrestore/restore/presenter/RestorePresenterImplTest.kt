@@ -17,6 +17,7 @@ import kin.backupandrestore.restore.presenter.RestorePresenterImpl.STEP_FINISH
 import kin.backupandrestore.restore.presenter.RestorePresenterImpl.STEP_RESTORE_COMPLETED
 import kin.backupandrestore.restore.presenter.RestorePresenterImpl.STEP_UPLOAD
 import kin.backupandrestore.restore.view.RestoreView
+import kin.sdk.IKinClient
 import kin.sdk.KinAccount
 import kin.sdk.KinClient
 import org.junit.Assert.assertEquals
@@ -31,7 +32,7 @@ class RestorePresenterImplTest {
 
     private val callbackManager: CallbackManager = mock()
     private val kinAccount: KinAccount = mock()
-    private val kinClient: KinClient = mock()
+    private val kinClient: IKinClient = mock()
     private val savedInstanceState: Bundle = mock()
     private val view: RestoreView = mock()
 

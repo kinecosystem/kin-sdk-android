@@ -71,7 +71,7 @@ public class BlockchainEventsTest {
 
     private void mockServer() throws IOException {
         when(server.transactions()).thenReturn(mockTransactionsRequestBuilder);
-        when(mockTransactionsRequestBuilder.forAccount((KeyPair) any())).thenReturn(mockTransactionsRequestBuilder);
+        when(mockTransactionsRequestBuilder.forAccount(any())).thenReturn(mockTransactionsRequestBuilder);
         when(mockTransactionsRequestBuilder.cursor(anyString())).thenReturn(mockTransactionsRequestBuilder);
     }
 
@@ -153,25 +153,25 @@ public class BlockchainEventsTest {
         assertThat(actualResults.size(), equalTo(2));
         PaymentInfo payment1 = actualResults.get(0);
         PaymentInfo payment2 = actualResults.get(1);
-        assertThat(payment1.hash().id(),
+        assertThat(payment1.getHash().getId(),
                 equalTo("3eb3024a9c03451e7c8b8d3ba525a3a241e286cb694a262444d46d92e7605f22"));
-        assertThat(payment1.sourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
-        assertThat(payment1.destinationPublicKey(),
+        assertThat(payment1.getSourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
+        assertThat(payment1.getDestinationPublicKey(),
                 equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
-        assertThat(payment1.amount(), equalTo(new BigDecimal("250")));
-        assertThat(payment1.createdAt(), equalTo("2018-11-19T15:59:07Z"));
-        assertThat(payment1.fee(), equalTo(100L));
-        assertThat(payment1.memo(), equalTo("1-test-test1"));
+        assertThat(payment1.getAmount(), equalTo(new BigDecimal("250")));
+        assertThat(payment1.getCreatedAt(), equalTo("2018-11-19T15:59:07Z"));
+        assertThat(payment1.getFee(), equalTo(100L));
+        assertThat(payment1.getMemo(), equalTo("1-test-test1"));
 
-        assertThat(payment2.hash().id(),
+        assertThat(payment2.getHash().getId(),
                 equalTo("c4ad29472150a741c0924086a76fea1aac326261afacee05c0b36be7e8fb5727"));
-        assertThat(payment2.sourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
-        assertThat(payment2.destinationPublicKey(),
+        assertThat(payment2.getSourcePublicKey(), equalTo("GBLUDU6Y6KVM5MCJWOLPVVSJEVICGEGXHOOHEAPWRSXJ7XVMBFKISOLR"));
+        assertThat(payment2.getDestinationPublicKey(),
                 equalTo("GANPYEGVH3ZVQFMQVVYFRP7U3HKE5LIJ3345ORI26G2OAX7HV66VIE7F"));
-        assertThat(payment2.amount(), equalTo(new BigDecimal("250")));
-        assertThat(payment2.createdAt(), equalTo("2018-11-19T16:36:42Z"));
-        assertThat(payment2.fee(), equalTo(100L));
-        assertThat(payment2.memo(), equalTo("1-test-test1"));
+        assertThat(payment2.getAmount(), equalTo(new BigDecimal("250")));
+        assertThat(payment2.getCreatedAt(), equalTo("2018-11-19T16:36:42Z"));
+        assertThat(payment2.getFee(), equalTo(100L));
+        assertThat(payment2.getMemo(), equalTo("1-test-test1"));
     }
 
     @Test
@@ -180,12 +180,9 @@ public class BlockchainEventsTest {
 
         final CountDownLatch latch = new CountDownLatch(1);
         final boolean[] eventFired = {false};
-        blockchainEvents.addAccountCreationListener(new EventListener<Void>() {
-            @Override
-            public void onEvent(Void data) {
-                eventFired[0] = true;
-                latch.countDown();
-            }
+        blockchainEvents.addAccountCreationListener(data -> {
+            eventFired[0] = true;
+            latch.countDown();
         });
         assertTrue(latch.await(1, TimeUnit.SECONDS));
         assertThat(eventFired[0], equalTo(true));
@@ -197,13 +194,10 @@ public class BlockchainEventsTest {
         final CountDownLatch latch = new CountDownLatch(1);
         final int[] eventsCount = {0};
         ListenerRegistration listenerRegistration = blockchainEvents
-                .addPaymentListener(new EventListener<PaymentInfo>() {
-                    @Override
-                    public void onEvent(PaymentInfo data) {
-                        eventsCount[0]++;
-                        if (eventsCount[0] == 2) {
-                            latch.countDown();
-                        }
+                .addPaymentListener(data -> {
+                    eventsCount[0]++;
+                    if (eventsCount[0] == 2) {
+                        latch.countDown();
                     }
                 });
         assertTrue(latch.await(1, TimeUnit.SECONDS));
@@ -218,12 +212,7 @@ public class BlockchainEventsTest {
     public void addAccountCreationListener_StopListener_NoEvents() throws Exception {
         final int[] eventsCount = {0};
         ListenerRegistration listenerRegistration = blockchainEvents
-                .addAccountCreationListener(new EventListener<Void>() {
-                    @Override
-                    public void onEvent(Void data) {
-                        eventsCount[0]++;
-                    }
-                });
+                .addAccountCreationListener(data -> eventsCount[0]++);
         listenerRegistration.remove();
         enqueueCreateAccountResponses();
         Thread.sleep(500);
@@ -236,12 +225,7 @@ public class BlockchainEventsTest {
         enqueueTransactionsResponses();
 
         final int[] eventsCount = {0};
-        blockchainEvents.addAccountCreationListener(new EventListener<Void>() {
-            @Override
-            public void onEvent(Void data) {
-                eventsCount[0]++;
-            }
-        });
+        blockchainEvents.addAccountCreationListener(data -> eventsCount[0]++);
         Thread.sleep(500);
         assertThat(eventsCount[0], equalTo(1));
     }
@@ -252,13 +236,10 @@ public class BlockchainEventsTest {
 
         final CountDownLatch latch = new CountDownLatch(1);
         final List<Balance> actualResults = new ArrayList<>();
-        blockchainEvents.addBalanceListener(new EventListener<Balance>() {
-            @Override
-            public void onEvent(Balance data) {
-                actualResults.add(data);
-                if (actualResults.size() == 2) {
-                    latch.countDown();
-                }
+        blockchainEvents.addBalanceListener(data -> {
+            actualResults.add(data);
+            if (actualResults.size() == 2) {
+                latch.countDown();
             }
         });
         assertTrue(latch.await(1, TimeUnit.SECONDS));
@@ -270,20 +251,15 @@ public class BlockchainEventsTest {
         assertThat(balance1, notNullValue());
         assertThat(balance2, notNullValue());
         //expected balances values are the ones encoded at transactions responses jsons (see enqueueTransactionsResponses)
-        assertThat(balance1.value(), equalTo(new BigDecimal("11549.998")));
-        assertThat(balance2.value(), equalTo(new BigDecimal("11299.997")));
+        assertThat(balance1.getValue(), equalTo(new BigDecimal("11549.998")));
+        assertThat(balance2.getValue(), equalTo(new BigDecimal("11299.997")));
     }
 
     @Test
     public void addBalanceListener_StopListener_NoEvents() throws Exception {
         final int[] eventsCount = {0};
         ListenerRegistration listenerRegistration = blockchainEvents
-                .addBalanceListener(new EventListener<Balance>() {
-                    @Override
-                    public void onEvent(Balance data) {
-                        eventsCount[0]++;
-                    }
-                });
+                .addBalanceListener(data -> eventsCount[0]++);
         listenerRegistration.remove();
         enqueueCreateAccountResponses();
         Thread.sleep(500);

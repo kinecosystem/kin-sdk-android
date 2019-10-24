@@ -8,6 +8,7 @@ import kin.backupandrestore.AccountExtractor;
 import kin.backupandrestore.base.BasePresenterImpl;
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.restore.view.RestoreView;
+import kin.sdk.IKinClient;
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
@@ -24,12 +25,12 @@ public class RestorePresenterImpl extends BasePresenterImpl<RestoreView> impleme
 
     private int currentStep;
     private String accountKey;
-    private KinClient kinClient;
+    private IKinClient kinClient;
     private KinAccount kinAccount;
 
     private final CallbackManager callbackManager;
 
-    public RestorePresenterImpl(CallbackManager callbackManager, KinClient kinClient, Bundle saveInstanceState) {
+    public RestorePresenterImpl(CallbackManager callbackManager, IKinClient kinClient, Bundle saveInstanceState) {
         this.callbackManager = callbackManager;
         this.kinClient = kinClient;
         this.kinAccount = getKinAccount(saveInstanceState);
@@ -161,7 +162,7 @@ public class RestorePresenterImpl extends BasePresenterImpl<RestoreView> impleme
     }
 
     @Override
-    public KinClient getKinClient() {
+    public IKinClient getKinClient() {
         return kinClient;
     }
 

@@ -12,8 +12,8 @@ import kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_
 import kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_VIEWED
 import kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY
 import kin.backupandrestore.restore.view.RestoreEnterPasswordView
+import kin.sdk.IKinClient
 import kin.sdk.KinAccount
-import kin.sdk.KinClient
 import kin.sdk.exception.CorruptedDataException
 import kin.sdk.exception.CryptoException
 import org.junit.Assert.assertEquals
@@ -33,7 +33,7 @@ class RestoreEnterPasswordPresenterImplTest {
 
     private val callbackManager: CallbackManager = mock()
     private val kinAccount: KinAccount = mock()
-    private val kinClient: KinClient = mock()
+    private val kinClient: IKinClient = mock()
     private val view: RestoreEnterPasswordView = mock()
     private val parentPresenter: RestorePresenter = mock()
 

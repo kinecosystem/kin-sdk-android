@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import kin.base.KeyPair;
+import kin.sdk.internal.KinClientInternal;
 import kin.sdk.internal.services.AccountInfoRetriever;
 import kin.sdk.internal.services.GeneralBlockchainInfoRetriever;
 import kin.sdk.internal.services.TransactionSender;
@@ -48,6 +49,7 @@ public class KinClientTest {
     private AccountInfoRetriever mockAccountInfoRetriever;
     @Mock
     private BlockchainEventsCreator mockBlockchainEventsCreator;
+
     private KinClientInternal kinClient;
     private KeyStore fakeKeyStore;
     private Environment fakeEnvironment;
@@ -55,7 +57,7 @@ public class KinClientTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        fakeEnvironment = new Environment("empty", Environment.TEST.getNetworkPassphrase());
+        fakeEnvironment = new Environment("empty", Environment.Companion.getTEST().getNetworkPassphrase());
         fakeKeyStore = new FakeKeyStore();
         kinClient = createNewKinClient();
     }
@@ -376,7 +378,7 @@ public class KinClientTest {
     @Test
     public void getEnvironment() throws Exception {
         String url = "My awesome Horizon server";
-        Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
+        Environment environment = new Environment(url, Environment.Companion.getTEST().getNetworkPassphrase());
         kinClient = new KinClientInternal(
                 fakeKeyStore,
                 environment,
@@ -393,7 +395,7 @@ public class KinClientTest {
         assertNotNull(actualEnvironment);
         assertFalse(actualEnvironment.isMainNet());
         assertEquals(url, actualEnvironment.getNetworkUrl());
-        assertEquals(Environment.TEST.getNetworkPassphrase(), actualEnvironment.getNetworkPassphrase());
+        assertEquals(Environment.Companion.getTEST().getNetworkPassphrase(), actualEnvironment.getNetworkPassphrase());
     }
 
     @Test
@@ -401,7 +403,7 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkUrl");
 
-        new Environment(null, Environment.TEST.getNetworkPassphrase());
+        new Environment(null, Environment.Companion.getTEST().getNetworkPassphrase());
     }
 
     @Test
@@ -409,7 +411,7 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkPassphrase");
 
-        new Environment(Environment.TEST.getNetworkUrl(), null);
+        new Environment(Environment.Companion.getTEST().getNetworkUrl(), null);
     }
 
     @Test
@@ -417,7 +419,7 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkUrl");
 
-        new Environment("", Environment.TEST.getNetworkPassphrase());
+        new Environment("", Environment.Companion.getTEST().getNetworkPassphrase());
     }
 
     @Test
@@ -425,7 +427,7 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("networkPassphrase");
 
-        new Environment(Environment.TEST.getNetworkUrl(), "");
+        new Environment(Environment.Companion.getTEST().getNetworkUrl(), "");
     }
 
     @Test

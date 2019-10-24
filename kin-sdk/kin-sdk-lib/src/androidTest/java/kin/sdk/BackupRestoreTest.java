@@ -14,16 +14,18 @@ import kin.base.KeyPair;
 import kin.base.Server;
 import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
+import kin.sdk.internal.KinClientInternal;
+import kin.sdk.internal.KinOkHttpClientFactory;
 import kin.sdk.internal.services.AccountInfoRetrieverImpl;
 import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
 import kin.sdk.internal.services.TransactionSenderImpl;
 import kin.sdk.internal.storage.KeyStore;
 import kin.sdk.internal.utils.BackupRestore;
 import kin.sdk.internal.utils.BackupRestoreImpl;
-import kin.sdk.internal.utils.BlockchainEventsCreator;
+import kin.sdk.internal.utils.BlockchainEventsCreatorImpl;
+import kin.sdk.models.AccountBackup;
 
 import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -53,14 +55,14 @@ public class BackupRestoreTest {
     }
 
     private KinClientInternal createNewKinClient(KeyStore keyStore) {
-        Server server = new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).testClient);
+        Server server = new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).getTestClient());
         return new KinClientInternal(
                 keyStore,
                 environment,
                 new TransactionSenderImpl(server, APP_ID),
                 new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
-                new BlockchainEventsCreator(server),
+                new BlockchainEventsCreatorImpl(server),
                 backupRestore,
                 APP_ID
         );
@@ -71,8 +73,8 @@ public class BackupRestoreTest {
         for (int i = 0; i < 50; i++) {
             KeyPair keyPair = KeyPair.random();
             String passpharse = UUID.randomUUID().toString();
-            String exportedJson = backupRestore.exportWallet(keyPair, passpharse);
-            KeyPair importKeyPair = backupRestore.importWallet(exportedJson, passpharse);
+            String exportedJson = backupRestore.exportAccount(keyPair, passpharse).getJsonString();
+            KeyPair importKeyPair = backupRestore.importAccount(new AccountBackup(exportedJson), passpharse);
             assertThat(importKeyPair.getAccountId(), equalTo(keyPair.getAccountId()));
             assertThat(importKeyPair.getSecretSeed(), equalTo(keyPair.getSecretSeed()));
         }
@@ -83,16 +85,15 @@ public class BackupRestoreTest {
         expectedEx.expect(CryptoException.class);
 
         KeyPair keyPair = KeyPair.random();
-        String exportedJson = backupRestore.exportWallet(keyPair, "1234567890abcefghijkl");
-        backupRestore.importWallet(exportedJson, "1234567890abcefghijklX");
+        String exportedJson = backupRestore.exportAccount(keyPair, "1234567890abcefghijkl").getJsonString();
+        backupRestore.importAccount(new AccountBackup(exportedJson), "1234567890abcefghijklX");
     }
 
     @Test
-    public void import_BadJson_CryptoException() throws CryptoException, CorruptedDataException {
-        expectedEx.expect(CorruptedDataException.class);
-        expectedEx.expectCause(isA(JSONException.class));
+    public void import_BadJson_CryptoException() throws JSONException, CorruptedDataException, CryptoException {
+        expectedEx.expect(JSONException.class);
 
-        backupRestore.importWallet("not a real json!!", "123456");
+        backupRestore.importAccount(new AccountBackup("not a real json!!"), "123456");
     }
 
     @Test
@@ -143,7 +144,7 @@ public class BackupRestoreTest {
 
     private void testImportBackup(String exportedJson, String passphrase, String publicKey)
             throws CryptoException, CorruptedDataException {
-        KeyPair importKeyPair = backupRestore.importWallet(exportedJson, passphrase);
+        KeyPair importKeyPair = backupRestore.importAccount(new AccountBackup(exportedJson), passphrase);
         assertThat(importKeyPair.getAccountId(), equalTo(publicKey));
     }
 

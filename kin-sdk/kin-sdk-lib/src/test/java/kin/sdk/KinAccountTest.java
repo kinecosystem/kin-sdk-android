@@ -10,12 +10,14 @@ import java.math.BigDecimal;
 
 import kin.base.Server;
 import kin.sdk.exception.AccountDeletedException;
+import kin.sdk.internal.KinClientInternal;
+import kin.sdk.internal.KinOkHttpClientFactory;
 import kin.sdk.internal.services.AccountInfoRetrieverImpl;
 import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
 import kin.sdk.internal.services.TransactionSenderImpl;
 import kin.sdk.internal.utils.BackupRestore;
 import kin.sdk.internal.utils.BackupRestoreImpl;
-import kin.sdk.internal.utils.BlockchainEventsCreator;
+import kin.sdk.internal.utils.BlockchainEventsCreatorImpl;
 import kin.sdk.models.Transaction;
 
 import static junit.framework.Assert.assertNull;
@@ -34,14 +36,14 @@ public class KinAccountTest {
     @Before
     public void setup() {
         BackupRestore backupRestore = new BackupRestoreImpl();
-        Server server = new Server(Environment.TEST.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).testClient);
+        Server server = new Server(Environment.Companion.getTEST().getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).getTestClient());
         kinClient = new KinClientInternal(
                 new FakeKeyStore(backupRestore),
-                Environment.TEST,
+                Environment.Companion.getTEST(),
                 new TransactionSenderImpl(server, APP_ID),
                 new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
-                new BlockchainEventsCreator(server),
+                new BlockchainEventsCreatorImpl(server),
                 backupRestore,
                 APP_ID
         );

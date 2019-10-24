@@ -53,7 +53,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
     }
 
     private KinClient getKinClient(NetWorkType type) {
-        return new KinClient(this, type == NetWorkType.MAIN ? Environment.PRODUCTION : Environment.TEST, "test",
+        return new KinClient(this, type == NetWorkType.MAIN ? Environment.Companion.getPRODUCTION() : Environment.Companion.getTEST(), "test",
                 "backup_and_restore_sample_app");
     }
 
@@ -128,7 +128,7 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
     @Override
     public void updateBalance(Balance balance) {
         setBalanceProgressBar(false);
-        String balanceText = balance.value().stripTrailingZeros().toPlainString() + " " + getString(R.string.kin);
+        String balanceText = balance.getValue().stripTrailingZeros().toPlainString() + " " + getString(R.string.kin);
         restoredAccountBalance.setText(balanceText);
     }
 

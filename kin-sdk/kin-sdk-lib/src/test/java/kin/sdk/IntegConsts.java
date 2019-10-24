@@ -2,8 +2,8 @@ package kin.sdk;
 
 
 final class IntegConsts {
-    static final String TEST_NETWORK_URL = Environment.TEST.getNetworkUrl();
-    static final String TEST_NETWORK_ID = Environment.TEST.getNetworkPassphrase();
+    static final String TEST_NETWORK_URL = Environment.Companion.getTEST().getNetworkUrl();
+    static final String TEST_NETWORK_ID = Environment.Companion.getTEST().getNetworkPassphrase();
     static final String FRIENDBOT_URL = "https://friendbot-testnet.kininfrastructure.com";
     static final String URL_CREATE_ACCOUNT = FRIENDBOT_URL + "?addr=%s&amount=%d";
     static final String URL_FUND = FRIENDBOT_URL + "/fund?addr=%s&amount="; // faucet

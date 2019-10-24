@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import kin.sdk.KinOkHttpClientFactory;
+import kin.sdk.internal.KinOkHttpClientFactory;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -69,7 +69,7 @@ public class ServerTest extends TestCase {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
-        server = new Server(mockWebServer.url("/").url().toString(), new KinOkHttpClientFactory("androidVersion").testClient);
+        server = new Server(mockWebServer.url("/").url().toString(), new KinOkHttpClientFactory("androidVersion").getTestClient());
     }
 
     @After

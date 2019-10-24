@@ -17,7 +17,7 @@ public class KinClientSampleApplication extends Application {
     private KinClient kinClient = null;
 
     public KinClient createKinClient(NetWorkType type, String appId) {
-        kinClient = new KinClient(this, type == NetWorkType.MAIN ? Environment.PRODUCTION : Environment.TEST, appId,
+        kinClient = new KinClient(this, type == NetWorkType.MAIN ? Environment.Companion.getPRODUCTION() : Environment.Companion.getTEST(), appId,
                 "sdk_sample_app");
         return kinClient;
     }

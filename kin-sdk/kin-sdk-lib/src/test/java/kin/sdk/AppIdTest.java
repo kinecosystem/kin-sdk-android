@@ -5,11 +5,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import kin.base.Server;
+import kin.sdk.internal.KinClientInternal;
+import kin.sdk.internal.KinOkHttpClientFactory;
 import kin.sdk.internal.services.AccountInfoRetrieverImpl;
 import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
 import kin.sdk.internal.services.TransactionSenderImpl;
 import kin.sdk.internal.utils.BackupRestoreImpl;
-import kin.sdk.internal.utils.BlockchainEventsCreator;
+import kin.sdk.internal.utils.BlockchainEventsCreatorImpl;
 
 public class AppIdTest {
 
@@ -17,14 +19,14 @@ public class AppIdTest {
     private static final String STORE_KEY_TEST = "test";
 
     private KinClientInternal createNewKinClient(String appId) {
-        Server server = new Server(IntegConsts.TEST_NETWORK_URL, new KinOkHttpClientFactory("test").testClient);
+        Server server = new Server(IntegConsts.TEST_NETWORK_URL, new KinOkHttpClientFactory("test").getTestClient());
         return new KinClientInternal(
                 new FakeKeyStore(),
                 new Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID),
                 new TransactionSenderImpl(server, appId),
                 new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
-                new BlockchainEventsCreator(server),
+                new BlockchainEventsCreatorImpl(server),
                 new BackupRestoreImpl(),
                 appId
         );
@@ -36,14 +38,14 @@ public class AppIdTest {
     }
 
     @Test
-    public void create_with_null_appId_is_valid() {
+    public void create_with_null_appId_is_invalid() {
         boolean failed = false;
         try {
             createNewKinClient(null);
         } catch (IllegalArgumentException e) {
             failed = true;
         }
-        Assert.assertFalse(failed);
+        Assert.assertTrue(failed);
     }
 
     @Test

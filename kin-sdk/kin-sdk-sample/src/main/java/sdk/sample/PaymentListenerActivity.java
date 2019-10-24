@@ -64,12 +64,12 @@ public class PaymentListenerActivity extends BaseActivity {
         TextView hashText = paymentView.findViewById(R.id.tx_hash);
         TextView createdAtText = paymentView.findViewById(R.id.created_at);
 
-        destinationText.setText(paymentInfo.destinationPublicKey());
-        sourceText.setText(paymentInfo.sourcePublicKey());
-        amountText.setText(paymentInfo.amount().toPlainString());
-        hashText.setText(paymentInfo.hash().id());
-        memoText.setText(paymentInfo.memo());
-        createdAtText.setText(paymentInfo.createdAt());
+        destinationText.setText(paymentInfo.getDestinationPublicKey());
+        sourceText.setText(paymentInfo.getSourcePublicKey());
+        amountText.setText(paymentInfo.getAmount().toPlainString());
+        hashText.setText(paymentInfo.getHash().getId());
+        memoText.setText(paymentInfo.getMemo());
+        createdAtText.setText(paymentInfo.getCreatedAt());
 
         rootView.addView(paymentView, 0);
     }

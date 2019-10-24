@@ -14,6 +14,7 @@ import kin.base.Server;
 import kin.base.responses.HttpResponseException;
 import kin.sdk.exception.AccountNotFoundException;
 import kin.sdk.exception.OperationFailedException;
+import kin.sdk.internal.KinOkHttpClientFactory;
 import kin.sdk.internal.services.AccountInfoRetriever;
 import kin.sdk.internal.services.AccountInfoRetrieverImpl;
 import kin.sdk.models.AccountStatus;
@@ -43,7 +44,7 @@ public class AccountInfoRetrieverTest {
         mockWebServer.start();
         String url = mockWebServer.url("").toString();
 
-        server = new Server(url, new KinOkHttpClientFactory("androidVersion").testClient);
+        server = new Server(url, new KinOkHttpClientFactory("androidVersion").getTestClient());
     }
 
     @Test
@@ -52,7 +53,7 @@ public class AccountInfoRetrieverTest {
 
         Balance balance = getBalance(ACCOUNT_ID);
 
-        Assert.assertEquals("9999.9999800", balance.value().toPlainString());
+        Assert.assertEquals("9999.9999800", balance.getValue().toPlainString());
     }
 
     @Test
@@ -141,7 +142,7 @@ public class AccountInfoRetrieverTest {
         );
 
         expectedEx.expect(OperationFailedException.class);
-        expectedEx.expectCause(Matchers.<Throwable>instanceOf(HttpResponseException.class));
+        expectedEx.expectCause(Matchers.instanceOf(HttpResponseException.class));
         getBalance(ACCOUNT_ID);
     }
 
@@ -152,7 +153,7 @@ public class AccountInfoRetrieverTest {
         );
 
         expectedEx.expect(OperationFailedException.class);
-        expectedEx.expectCause(Matchers.<Throwable>instanceOf(HttpResponseException.class));
+        expectedEx.expectCause(Matchers.instanceOf(HttpResponseException.class));
         getStatus(ACCOUNT_ID);
     }
 

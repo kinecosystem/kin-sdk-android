@@ -103,7 +103,7 @@ public class WalletActivity extends BaseActivity {
         refresh.setEnabled(!isChecked);
         if (isChecked) {
             balanceListenerRegistration = account.addBalanceListener(
-                    updatedBalance -> runOnUiThread(() -> balance.setText(updatedBalance.value().toPlainString())));
+                    updatedBalance -> runOnUiThread(() -> balance.setText(updatedBalance.getValue().toPlainString())));
         } else {
             balanceListenerRegistration.remove();
         }
@@ -211,14 +211,14 @@ public class WalletActivity extends BaseActivity {
                 balanceRequest.run(new DisplayCallback<Balance>(balanceProgress, balance) {
                     @Override
                     public void displayResult(Context context, View view, Balance result) {
-                        ((TextView) view).setText(result.value().toPlainString());
+                        ((TextView) view).setText(result.getValue().toPlainString());
                     }
                 });
             } else {
                 balanceRequest.run(new ResultCallback<Balance>() {
                     @Override
                     public void onResult(Balance result) {
-                        balance.setText(result.value().toPlainString());
+                        balance.setText(result.getValue().toPlainString());
                         balanceProgress.setVisibility(View.GONE);
                     }
 

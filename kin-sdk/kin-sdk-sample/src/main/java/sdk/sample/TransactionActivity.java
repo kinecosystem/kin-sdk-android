@@ -275,7 +275,7 @@ public class TransactionActivity extends BaseActivity {
 
         @Override
         public void displayResult(Context context, View view, TransactionId transactionId) {
-            KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
+            KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.getId()).show();
         }
     }
 
@@ -283,7 +283,7 @@ public class TransactionActivity extends BaseActivity {
 
         @Override
         public void onResult(Transaction transaction) {
-            Log.d(TAG, "buildTransaction: build transaction " + transaction.getId().id() + " succeeded");
+            Log.d(TAG, "buildTransaction: build transaction " + transaction.getId() + " succeeded");
 
             // This is just to differentiate between whitelist transaction and regular transaction
             if (switchButton.isChecked()) {

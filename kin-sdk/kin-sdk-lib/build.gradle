@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation project(':kin-sdk:kin-base')
     implementation "com.android.support:support-annotations:$androidsupport_version"
     implementation "com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:$sodium_version"

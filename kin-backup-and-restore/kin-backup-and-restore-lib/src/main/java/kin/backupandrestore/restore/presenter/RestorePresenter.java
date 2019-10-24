@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import kin.backupandrestore.base.BasePresenter;
 import kin.backupandrestore.restore.view.RestoreView;
+import kin.sdk.IKinClient;
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 
@@ -23,5 +24,5 @@ public interface RestorePresenter extends BasePresenter<RestoreView> {
 
     void onSaveInstanceState(Bundle outState);
 
-    KinClient getKinClient();
+    IKinClient getKinClient();
 }

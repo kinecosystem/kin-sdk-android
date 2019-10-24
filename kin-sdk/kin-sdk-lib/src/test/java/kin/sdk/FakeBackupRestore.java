@@ -3,18 +3,21 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import kin.base.KeyPair;
+import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CryptoException;
 import kin.sdk.internal.utils.BackupRestore;
+import kin.sdk.models.AccountBackup;
 
 public class FakeBackupRestore implements BackupRestore {
 
     @NonNull
     @Override
-    public String exportWallet(@NonNull KeyPair keyPair, @NonNull String passphrase) throws CryptoException {
+    public AccountBackup exportAccount(@NonNull KeyPair keyPair, @NonNull String passphrase) throws CryptoException {
         JSONObject json = new JSONObject();
         try {
             json.put("seed", new String(keyPair.getSecretSeed()));
@@ -22,12 +25,12 @@ public class FakeBackupRestore implements BackupRestore {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return json.toString();
+        return new AccountBackup(json.toString());
     }
 
     @NonNull
     @Override
-    public KeyPair importWallet(@NonNull String exportedJson, @NonNull String passphrase) throws CryptoException {
+    public KeyPair importAccount(@NotNull AccountBackup accountBackup, @NotNull String passphrase) throws CryptoException, CorruptedDataException {
         JSONObject json = new JSONObject();
         try {
             String seed = json.getString("seed");
@@ -35,7 +38,7 @@ public class FakeBackupRestore implements BackupRestore {
             if (storedPassphrase.equals(passphrase)) {
                 return KeyPair.fromSecretSeed(seed);
             } else {
-                throw new CryptoException("incorrect passohrase");
+                throw new CryptoException("incorrect passphrase");
             }
         } catch (JSONException e) {
             e.printStackTrace();

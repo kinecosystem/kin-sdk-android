@@ -25,6 +25,7 @@ import kin.sdk.exception.InsufficientFeeException;
 import kin.sdk.exception.InsufficientKinException;
 import kin.sdk.exception.OperationFailedException;
 import kin.sdk.exception.TransactionFailedException;
+import kin.sdk.internal.KinOkHttpClientFactory;
 import kin.sdk.internal.services.TransactionSender;
 import kin.sdk.internal.services.TransactionSenderImpl;
 import kin.sdk.internal.storage.KeyStore;
@@ -82,7 +83,7 @@ public class TransactionSenderTest {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
         String url = mockWebServer.url("").toString();
-        server = new Server(url, new KinOkHttpClientFactory("androidVersion").testClient);
+        server = new Server(url, new KinOkHttpClientFactory("androidVersion").getTestClient());
     }
 
     @Test
@@ -96,7 +97,7 @@ public class TransactionSenderTest {
         Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         TransactionId transactionId = transactionSender.sendTransaction(transaction);
 
-        assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.id());
+        assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.getId());
 
         //verify sent requests data
         assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID_FROM));
@@ -116,7 +117,7 @@ public class TransactionSenderTest {
         Transaction transaction = transactionSender.buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("200"), FEE, fakeMemo);
         TransactionId transactionId = transactionSender.sendTransaction(transaction);
 
-        assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.id());
+        assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.getId());
 
         //verify sent requests data
         assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID_FROM));
@@ -155,7 +156,7 @@ public class TransactionSenderTest {
                 .buildTransaction(account, ACCOUNT_ID_TO, new BigDecimal("1.5"), FEE);
         TransactionId transactionId = transactionSender.sendTransaction(transaction);
 
-        assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.id());
+        assertEquals("8f1e0cd1d922f4c57cc1898ececcf47375e52ec4abf77a7e32d0d9bb4edecb69", transactionId.getId());
 
         //verify sent requests data
         assertThat(mockWebServer.takeRequest().getRequestUrl().toString(), containsString(ACCOUNT_ID_FROM));
@@ -361,7 +362,6 @@ public class TransactionSenderTest {
     @SuppressWarnings("ConstantConditions")
     public void sendTransaction_NullAccount() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("account");
         Transaction transaction = transactionSender.buildTransaction(null, ACCOUNT_ID_TO, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }
@@ -370,7 +370,6 @@ public class TransactionSenderTest {
     @SuppressWarnings("ConstantConditions")
     public void sendTransaction_NullPublicAddress() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("public address");
         Transaction transaction = transactionSender.buildTransaction(account, null, new BigDecimal("200"), FEE);
         transactionSender.sendTransaction(transaction);
     }

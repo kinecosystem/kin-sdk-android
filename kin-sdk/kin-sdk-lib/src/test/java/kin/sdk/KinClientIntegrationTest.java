@@ -9,13 +9,15 @@ import org.junit.rules.ExpectedException;
 
 import kin.base.Server;
 import kin.sdk.exception.CreateAccountException;
+import kin.sdk.internal.KinClientInternal;
+import kin.sdk.internal.KinOkHttpClientFactory;
 import kin.sdk.internal.services.AccountInfoRetrieverImpl;
 import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl;
 import kin.sdk.internal.services.TransactionSenderImpl;
 import kin.sdk.internal.storage.KeyStore;
 import kin.sdk.internal.utils.BackupRestore;
 import kin.sdk.internal.utils.BackupRestoreImpl;
-import kin.sdk.internal.utils.BlockchainEventsCreator;
+import kin.sdk.internal.utils.BlockchainEventsCreatorImpl;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -45,7 +47,7 @@ public class KinClientIntegrationTest {
     @Before
     public void setup() {
         environment = new Environment(IntegConsts.TEST_NETWORK_URL, IntegConsts.TEST_NETWORK_ID);
-        server = new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).testClient);
+        server = new Server(environment.getNetworkUrl(), new KinOkHttpClientFactory(BuildConfig.VERSION_NAME).getTestClient());
         backupRestore = new BackupRestoreImpl();
         keystore1 = new FakeKeyStore(backupRestore);
         keystore2 = new FakeKeyStore(backupRestore);
@@ -62,7 +64,7 @@ public class KinClientIntegrationTest {
                 new TransactionSenderImpl(server, APP_ID),
                 new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
-                new BlockchainEventsCreator(server),
+                new BlockchainEventsCreatorImpl(server),
                 backupRestore,
                 APP_ID
         );
@@ -276,7 +278,7 @@ public class KinClientIntegrationTest {
     @Test
     public void getEnvironment() throws Exception {
         String url = "https://www.myawesomeserver.com";
-        Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
+        Environment environment = new Environment(url, Environment.Companion.getTEST().getNetworkPassphrase());
         BackupRestore backupRestore = new BackupRestoreImpl();
         kinClient1 = new KinClientInternal(
                 new FakeKeyStore(backupRestore),
@@ -284,7 +286,7 @@ public class KinClientIntegrationTest {
                 new TransactionSenderImpl(server, APP_ID),
                 new AccountInfoRetrieverImpl(server),
                 new GeneralBlockchainInfoRetrieverImpl(server),
-                new BlockchainEventsCreator(server),
+                new BlockchainEventsCreatorImpl(server),
                 backupRestore,
                 APP_ID
         );
@@ -293,7 +295,7 @@ public class KinClientIntegrationTest {
         assertNotNull(actualEnvironment);
         assertFalse(actualEnvironment.isMainNet());
         assertEquals(url, actualEnvironment.getNetworkUrl());
-        assertEquals(Environment.TEST.getNetworkPassphrase(), actualEnvironment.getNetworkPassphrase());
+        assertEquals(Environment.Companion.getTEST().getNetworkPassphrase(), actualEnvironment.getNetworkPassphrase());
     }
 
     @Test

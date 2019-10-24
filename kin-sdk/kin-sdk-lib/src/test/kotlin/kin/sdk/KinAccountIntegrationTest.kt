@@ -7,11 +7,14 @@ import kin.sdk.IntegConsts.TEST_NETWORK_URL
 import kin.sdk.exception.AccountNotFoundException
 import kin.sdk.exception.InsufficientFeeException
 import kin.sdk.exception.InsufficientKinException
+import kin.sdk.internal.KinClientInternal
+import kin.sdk.internal.KinOkHttpClientFactory
 import kin.sdk.internal.services.AccountInfoRetrieverImpl
 import kin.sdk.internal.services.GeneralBlockchainInfoRetrieverImpl
 import kin.sdk.internal.services.TransactionSenderImpl
+import kin.sdk.internal.services.helpers.EventListener
 import kin.sdk.internal.utils.BackupRestoreImpl
-import kin.sdk.internal.utils.BlockchainEventsCreator
+import kin.sdk.internal.utils.BlockchainEventsCreatorImpl
 import kin.sdk.models.AccountStatus
 import kin.sdk.models.Balance
 import kin.sdk.models.PaymentInfo
@@ -39,6 +42,17 @@ import kotlin.test.fail
 
 @Suppress("FunctionName")
 class KinAccountIntegrationTest {
+
+    companion object {
+        private lateinit var fakeKinOnBoard: FakeKinOnBoard
+
+        @BeforeClass
+        @JvmStatic
+        @Throws(IOException::class)
+        fun setupKinOnBoard() {
+            fakeKinOnBoard = FakeKinOnBoard()
+        }
+    }
 
     private val whitelistingService = WhitelistServiceForTest()
     private val appId = "1a2c"
@@ -68,7 +82,7 @@ class KinAccountIntegrationTest {
             TransactionSenderImpl(server, appId),
             AccountInfoRetrieverImpl(server),
             GeneralBlockchainInfoRetrieverImpl(server),
-            BlockchainEventsCreator(server),
+            BlockchainEventsCreatorImpl(server),
             BackupRestoreImpl(),
             appId
         )
@@ -107,9 +121,9 @@ class KinAccountIntegrationTest {
 
         fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty())
 
-        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.00000")))
+        assertThat(kinAccount.balanceSync.value, equalTo(BigDecimal("0.00000")))
         fakeKinOnBoard.fundWithKin(kinAccount.publicAddress.orEmpty(), "3.14159")
-        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("3.14159")))
+        assertThat(kinAccount.balanceSync.value, equalTo(BigDecimal("3.14159")))
     }
 
     @Test
@@ -119,7 +133,7 @@ class KinAccountIntegrationTest {
 
         fakeKinOnBoard.createAccount(kinAccount.publicAddress.orEmpty())
 
-        assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.00000")))
+        assertThat(kinAccount.balanceSync.value, equalTo(BigDecimal("0.00000")))
         val status = kinAccount.statusSync
         assertThat(status, equalTo(AccountStatus.CREATED))
     }
@@ -159,7 +173,7 @@ class KinAccountIntegrationTest {
                 TransactionSenderImpl(server, appId),
                 AccountInfoRetrieverImpl(server),
                 GeneralBlockchainInfoRetrieverImpl(server),
-                BlockchainEventsCreator(server),
+                BlockchainEventsCreatorImpl(server),
                 BackupRestoreImpl(),
                 ""
             )
@@ -255,7 +269,7 @@ class KinAccountIntegrationTest {
             BigDecimal("20"), minFee + 100000)
         val whitelist = whitelistingService.whitelistTransaction(transaction.whitelistableTransaction)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
+        assertThat(kinAccountSender.balanceSync.value, equalTo(BigDecimal("80.00000")))
     }
 
     @Test
@@ -268,8 +282,8 @@ class KinAccountIntegrationTest {
             BigDecimal("20"), minFee)
         val whitelist = whitelistingService.whitelistTransaction(transaction.whitelistableTransaction)
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20.00000")))
+        assertThat(kinAccountSender.balanceSync.value, equalTo(BigDecimal("80.00000")))
+        assertThat(kinAccountReceiver.balanceSync.value, equalTo(BigDecimal("20.00000")))
     }
 
     @Test
@@ -280,11 +294,11 @@ class KinAccountIntegrationTest {
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
             BigDecimal("21.123"), fee, "fake memo")
         val transactionId = kinAccountSender.sendTransactionSync(transaction)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
+        assertThat(kinAccountSender.balanceSync.value, equalTo(BigDecimal("78.87700").subtract(feeInKin)))
+        assertThat(kinAccountReceiver.balanceSync.value, equalTo(BigDecimal("21.12300")))
 
         assertNotNull(transactionId)
-        assertThat(transactionId.id(), not(isEmptyString()))
+        assertThat(transactionId.id, not(isEmptyString()))
     }
 
     @Test
@@ -316,14 +330,18 @@ class KinAccountIntegrationTest {
         val eventsCount = if (sender) 4 else 2 ///in case of observing the sender we'll get 2 events (1 for funding 1 for the
         //transaction) in case of receiver - only 1 event. multiply by 2, as we 2 listeners (balance and payment)
         val latch = CountDownLatch(eventsCount)
-        val paymentListener = accountToListen.addPaymentListener { data ->
-            actualPaymentsResults.add(data)
-            latch.countDown()
-        }
-        val balanceListener = accountToListen.addBalanceListener { data ->
-            actualBalanceResults.add(data)
-            latch.countDown()
-        }
+        val paymentListener = accountToListen.addPaymentListener(object : EventListener<PaymentInfo> {
+            override fun onEvent(data: PaymentInfo) {
+                actualPaymentsResults.add(data)
+                latch.countDown()
+            }
+        })
+        val balanceListener = accountToListen.addBalanceListener(object : EventListener<Balance> {
+            override fun onEvent(data: Balance) {
+                actualBalanceResults.add(data)
+                latch.countDown()
+            }
+        })
 
         //send the transaction we want to observe
         fakeKinOnBoard.fundWithKin(kinAccountSender.publicAddress.orEmpty(), "100")
@@ -339,15 +357,15 @@ class KinAccountIntegrationTest {
         paymentListener.remove()
         balanceListener.remove()
         val paymentInfo = actualPaymentsResults[transactionIndex]
-        assertThat(paymentInfo.amount(), equalTo(transactionAmount))
-        assertThat(paymentInfo.destinationPublicKey(), equalTo(kinAccountReceiver.publicAddress))
-        assertThat(paymentInfo.sourcePublicKey(), equalTo(kinAccountSender.publicAddress))
-        assertThat(paymentInfo.fee(), equalTo(100L))
-        assertThat(paymentInfo.memo(), equalTo(expectedMemo))
-        assertThat(paymentInfo.hash().id(), equalTo(expectedTransactionId.id()))
+        assertThat(paymentInfo.amount, equalTo(transactionAmount))
+        assertThat(paymentInfo.destinationPublicKey, equalTo(kinAccountReceiver.publicAddress))
+        assertThat(paymentInfo.sourcePublicKey, equalTo(kinAccountSender.publicAddress))
+        assertThat(paymentInfo.fee, equalTo(100L))
+        assertThat(paymentInfo.memo, equalTo(expectedMemo))
+        assertThat(paymentInfo.hash.id, equalTo(expectedTransactionId.id))
 
         val balance = actualBalanceResults[transactionIndex]
-        assertThat(balance.value(),
+        assertThat(balance.value,
             equalTo(if (sender) fundingAmount.subtract(feeInKin).subtract(transactionAmount) else transactionAmount))
     }
 
@@ -357,9 +375,11 @@ class KinAccountIntegrationTest {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
         val latch = CountDownLatch(1)
-        val listenerRegistration = kinAccountReceiver.addPaymentListener {
-            fail("should not get eny event!")
-        }
+        val listenerRegistration = kinAccountReceiver.addPaymentListener(object : EventListener<PaymentInfo> {
+            override fun onEvent(data: PaymentInfo) {
+                fail("should not get eny event!")
+            }
+        })
         listenerRegistration.remove()
 
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee, null)
@@ -395,19 +415,8 @@ class KinAccountIntegrationTest {
         val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
             BigDecimal("21.123"), fee, memo)
         kinAccountSender.sendTransactionSync(transaction)
-        assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
-        assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))
+        assertThat(kinAccountSender.balanceSync.value, equalTo(BigDecimal("78.87700").subtract(feeInKin)))
+        assertThat(kinAccountReceiver.balanceSync.value, equalTo(BigDecimal("21.12300")))
         return transaction
-    }
-
-    companion object {
-        private lateinit var fakeKinOnBoard: FakeKinOnBoard
-
-        @BeforeClass
-        @JvmStatic
-        @Throws(IOException::class)
-        fun setupKinOnBoard() {
-            fakeKinOnBoard = FakeKinOnBoard()
-        }
     }
 }
