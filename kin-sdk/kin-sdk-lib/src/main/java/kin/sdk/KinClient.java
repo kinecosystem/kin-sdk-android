@@ -18,7 +18,7 @@ import static kin.sdk.internal.utils.Utils.checkNotNull;
 /**
  * An account manager for a {@link KinAccount}.
  */
-public final class KinClient extends KinClientInternal {
+public class KinClient extends KinClientInternal {
 
     private static final String STORE_NAME_PREFIX = "KinKeyStore_";
 
