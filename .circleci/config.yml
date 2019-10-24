@@ -1,0 +1,104 @@
+version: 2.1
+executors:
+  kin-executor:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28
+    resource_class: xlarge
+    environment:
+      JVM_OPTS: -Xmx3200m
+
+references:
+  gradle_key: &gradle_key
+                jars-{{ checksum "build.gradle" }}-{{ checksum  "kin-backup-and-restore/kin-backup-and-restore-lib/build.gradle" }}-{{ checksum  "kin-backup-and-restore/kin-backup-and-restore-sample/build.gradle" }}-{{ checksum  "kin-backup-and-restore/kin-backup-and-restore-ui-tests/build.gradle" }}-{{ checksum  "kin-sdk/kin-base/build.gradle" }}-{{ checksum  "kin-sdk/kin-sdk-lib/build.gradle" }}-{{ checksum  "kin-sdk/kin-sdk-sample/build.gradle" }}
+
+  restore_gradle_cache: &restore_gradle_cache
+    restore_cache:
+      key: *gradle_key
+
+  save_gradle_cache: &save_gradle_cache
+    save_cache:
+      key: *gradle_key
+      paths:
+        - ~/.gradle
+        - ~/.m2
+
+  android_dependencies: &android_dependencies
+    run:
+      name: Download Android Dependencies
+      command: ./gradlew androidDependencies
+
+  gcloud_init: &gcloud_init
+    run:
+      name: gcloud Init
+      command: |
+        ./scripts/ci_gcloud_init.sh
+
+jobs:
+  build:
+    executor: kin-executor
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - run:
+          name: Assemble
+          command: ./gradlew assemble
+
+  unit_and_integration_test:
+    executor: kin-executor
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - run:
+          name: Run Unit & Integration Tests
+          command: ./gradlew testDebugUnitTest jacocoTestReport
+
+  android_tests_sdk_lib:
+    executor: kin-executor
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - *gcloud_init
+      - run:
+          name: Run kin-sdk-lib Android Tests
+          command: ./scripts/ci_android_test_with_firebase.sh kin-sdk kin-sdk-sample kin-sdk-lib 2
+
+  android_tests_backup_and_restore:
+    executor: kin-executor
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - *gcloud_init
+      - run:
+          name: Run kin-backup-and-restore-lib Android Tests
+          command: ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-sample kin-backup-and-restore-lib 0
+
+  ui_autormator_tests:
+    executor: kin-executor
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - *gcloud_init
+      - run:
+          name: Run kin-backup-and-restore-ui-tests Ui Automator Tests
+          command: ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-ui-tests kin-backup-and-restore-ui-tests 0
+
+workflows:
+  version: 2
+  build-sdk:
+    jobs:
+      - build
+      - unit_and_integration_test
+      - android_tests_backup_and_restore
+      - android_tests_sdk_lib
+      - ui_autormator_tests
