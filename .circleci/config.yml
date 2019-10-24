@@ -4,6 +4,7 @@ executors:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28
+    resource_class: xlarge
     environment:
       JVM_OPTS: -Xmx3200m
 
@@ -56,7 +57,7 @@ jobs:
           name: Run Unit & Integration Tests
           command: ./gradlew testDebugUnitTest jacocoTestReport
 
-  android_tests:
+  android_tests_sdk_lib:
     executor: kin-executor
     steps:
       - checkout
@@ -67,6 +68,15 @@ jobs:
       - run:
           name: Run kin-sdk-lib Android Tests
           command: ./scripts/ci_android_test_with_firebase.sh kin-sdk kin-sdk-sample kin-sdk-lib 2
+
+  android_tests_backup_and_restore:
+    executor: kin-executor
+    steps:
+      - checkout
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - *gcloud_init
       - run:
           name: Run kin-backup-and-restore-lib Android Tests
           command: ./scripts/ci_android_test_with_firebase.sh kin-backup-and-restore kin-backup-and-restore-sample kin-backup-and-restore-lib 0
@@ -89,5 +99,6 @@ workflows:
     jobs:
       - build
       - unit_and_integration_test
-      - android_tests
+      - android_tests_backup_and_restore
+      - android_tests_sdk_lib
       - ui_autormator_tests
