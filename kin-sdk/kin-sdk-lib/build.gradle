@@ -4,8 +4,9 @@ apply plugin: 'jacoco'
 
 // maven plugin and group definition
 // needed for jitpack support
-apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.kinecosystem'
+
 
 android {
     compileSdkVersion android_compilesdk_version
