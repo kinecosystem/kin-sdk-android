@@ -20,8 +20,7 @@ import okhttp3.Response;
 public class AccountCreator {
 
     private static final double FUND_KIN_AMOUNT = 100;
-    private static final String URL_CREATE_ACCOUNT =
-            "https://friendbot.developers.kinecosystem.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+    private static final String URL_CREATE_ACCOUNT = "https://friendbot-testnet.kininfrastructure.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
@@ -74,6 +73,8 @@ public class AccountCreator {
                         response.close();
                         if (code != 200) {
                             fireOnFailure(callbacks, new Exception("Create account - response code is " + response.code()));
+                        } else {
+                            fireOnSuccess(callbacks);
                         }
                     }
                 });
