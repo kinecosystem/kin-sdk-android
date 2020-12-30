@@ -1,18 +1,19 @@
 package kin.backupandrestore.backup.presenter;
 
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_CODE_PAGE_VIEWED;
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_QR_SAVED_TAPPED;
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_SEND_QR_TAPPED;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
 import kin.backupandrestore.backup.view.BackupNavigator;
 import kin.backupandrestore.backup.view.SaveAndShareView;
 import kin.backupandrestore.base.BasePresenterImpl;
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.qr.QRBarcodeGenerator;
 import kin.backupandrestore.qr.QRBarcodeGenerator.QRBarcodeGeneratorException;
+
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_CODE_PAGE_VIEWED;
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_QR_SAVED_TAPPED;
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_SEND_QR_TAPPED;
 
 public class SaveAndSharePresenterImpl extends BasePresenterImpl<SaveAndShareView> implements SaveAndSharePresenter {
 
@@ -27,8 +28,13 @@ public class SaveAndSharePresenterImpl extends BasePresenterImpl<SaveAndShareVie
 
 
     public SaveAndSharePresenterImpl(@NonNull final CallbackManager callbackManager,
+<<<<<<< HEAD
         BackupNavigator backupNavigator,
         QRBarcodeGenerator qrBarcodeGenerator, String key, Bundle savedInstanceState) {
+=======
+                                     BackupNavigator backupNavigator,
+                                     QRBarcodeGenerator qrBarcodeGenerator, String key, Bundle savedInstanceState) {
+>>>>>>> master
         this.backupNavigator = backupNavigator;
         this.qrBarcodeGenerator = qrBarcodeGenerator;
         this.callbackManager = callbackManager;

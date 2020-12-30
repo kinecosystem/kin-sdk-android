@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
 import kin.backupandrestore.R;
 import kin.backupandrestore.backup.presenter.BackupInfoPresenter;
 import kin.backupandrestore.backup.presenter.BackupInfoPresenterImpl;
@@ -31,11 +32,19 @@ public class BackupInfoFragment extends Fragment implements BaseView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+<<<<<<< HEAD
         @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_info, container, false);
         initViews(root);
         backupInfoPresenter = new BackupInfoPresenterImpl(
             new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener);
+=======
+                             @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_info, container, false);
+        initViews(root);
+        backupInfoPresenter = new BackupInfoPresenterImpl(
+                new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener);
+>>>>>>> master
         backupInfoPresenter.onAttach(this);
         return root;
     }

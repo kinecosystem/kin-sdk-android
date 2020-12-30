@@ -1,5 +1,10 @@
 package kin.backupandrestore.events;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_COMPLETED_PAGE_VIEWED;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_BACK_TAPPED;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED;
@@ -12,11 +17,8 @@ import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_BA
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_START_TAPPED;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_VIEWED;
 
-import android.support.annotation.IntDef;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 @IntDef({BACKUP_WELCOME_PAGE_VIEWED,
+<<<<<<< HEAD
     BACKUP_WELCOME_PAGE_BACK_TAPPED,
     BACKUP_WELCOME_PAGE_START_TAPPED,
     BACKUP_CREATE_PASSWORD_PAGE_VIEWED,
@@ -27,6 +29,18 @@ import java.lang.annotation.RetentionPolicy;
     BACKUP_QR_PAGE_SEND_QR_TAPPED,
     BACKUP_QR_PAGE_QR_SAVED_TAPPED,
     BACKUP_COMPLETED_PAGE_VIEWED})
+=======
+        BACKUP_WELCOME_PAGE_BACK_TAPPED,
+        BACKUP_WELCOME_PAGE_START_TAPPED,
+        BACKUP_CREATE_PASSWORD_PAGE_VIEWED,
+        BACKUP_CREATE_PASSWORD_PAGE_BACK_TAPPED,
+        BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED,
+        BACKUP_QR_CODE_PAGE_VIEWED,
+        BACKUP_QR_PAGE_BACK_TAPPED,
+        BACKUP_QR_PAGE_SEND_QR_TAPPED,
+        BACKUP_QR_PAGE_QR_SAVED_TAPPED,
+        BACKUP_COMPLETED_PAGE_VIEWED})
+>>>>>>> master
 @Retention(RetentionPolicy.SOURCE)
 public @interface BackupEventCode {
 

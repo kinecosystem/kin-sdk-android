@@ -1,7 +1,5 @@
 package kin.backupandrestore.restore.view;
 
-import static kin.backupandrestore.base.BaseToolbarActivity.EMPTY_TITLE;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import kin.backupandrestore.R;
 import kin.backupandrestore.base.BaseToolbarActivity;
 import kin.backupandrestore.events.BroadcastManagerImpl;
@@ -27,6 +26,8 @@ import kin.backupandrestore.restore.presenter.FileSharingHelper;
 import kin.backupandrestore.restore.presenter.UploadQRPresenter;
 import kin.backupandrestore.restore.presenter.UploadQRPresenterImpl;
 import kin.backupandrestore.utils.ViewUtils;
+
+import static kin.backupandrestore.base.BaseToolbarActivity.EMPTY_TITLE;
 
 
 public class UploadQRFragment extends Fragment implements UploadQRView {
@@ -40,7 +41,11 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+<<<<<<< HEAD
         @Nullable Bundle savedInstanceState) {
+=======
+                             @Nullable Bundle savedInstanceState) {
+>>>>>>> master
         View root = inflater.inflate(R.layout.backup_and_restore_fragment_upload_qr, container, false);
 
         injectPresenter();
@@ -53,9 +58,15 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
 
     private void injectPresenter() {
         presenter = new UploadQRPresenterImpl(
+<<<<<<< HEAD
             new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))),
             new FileSharingHelper(this),
             new QRBarcodeGeneratorImpl(new QRFileUriHandlerImpl(getContext())));
+=======
+                new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))),
+                new FileSharingHelper(this),
+                new QRBarcodeGeneratorImpl(new QRFileUriHandlerImpl(getContext())));
+>>>>>>> master
     }
 
     private void initViews(View root) {
@@ -85,6 +96,7 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
     public void showConsentDialog() {
         int leftRightPadding = (int) getResources().getDimension(R.dimen.backup_and_restore_dialog_left_right_padding);
         AlertDialog alertDialog = new Builder(getActivity(), R.style.BackupAndRestoreAlertDialogTheme)
+<<<<<<< HEAD
             .setCustomTitle(getDialogTitle(leftRightPadding))
             .setMessage(R.string.backup_and_restore_consent_message)
             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -101,6 +113,24 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
                 }
             })
             .create();
+=======
+                .setCustomTitle(getDialogTitle(leftRightPadding))
+                .setMessage(R.string.backup_and_restore_consent_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String chooserTitle = getString(R.string.backup_and_restore_choose_qr_image);
+                        presenter.onOkPressed(chooserTitle);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.onCancelPressed();
+                    }
+                })
+                .create();
+>>>>>>> master
         alertDialog.show();
         setDialogMessage(leftRightPadding, alertDialog);
     }
@@ -120,7 +150,11 @@ public class UploadQRFragment extends Fragment implements UploadQRView {
             messageTextView.setTextAppearance(getActivity(), R.style.BackupAndRestoreAlertDialogMessageText);
             messageTextView.setText(R.string.backup_and_restore_consent_message);
             int messageTopPadding = (int) getResources()
+<<<<<<< HEAD
                 .getDimension(R.dimen.backup_and_restore_dialog_message_top_padding);
+=======
+                    .getDimension(R.dimen.backup_and_restore_dialog_message_top_padding);
+>>>>>>> master
             messageTextView.setPadding(leftRightPadding, messageTopPadding, leftRightPadding, 0);
         }
     }

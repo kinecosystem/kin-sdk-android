@@ -17,34 +17,40 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class ChangeTrustResult  {
-  public ChangeTrustResult () {}
-  ChangeTrustResultCode code;
-  public ChangeTrustResultCode getDiscriminant() {
-    return this.code;
-  }
-  public void setDiscriminant(ChangeTrustResultCode value) {
-    this.code = value;
-  }
-  public static void encode(XdrDataOutputStream stream, ChangeTrustResult encodedChangeTrustResult) throws IOException {
-  stream.writeInt(encodedChangeTrustResult.getDiscriminant().getValue());
-  switch (encodedChangeTrustResult.getDiscriminant()) {
-  case CHANGE_TRUST_SUCCESS:
-  break;
-  default:
-  break;
-  }
-  }
-  public static ChangeTrustResult decode(XdrDataInputStream stream) throws IOException {
-  ChangeTrustResult decodedChangeTrustResult = new ChangeTrustResult();
-  ChangeTrustResultCode discriminant = ChangeTrustResultCode.decode(stream);
-  decodedChangeTrustResult.setDiscriminant(discriminant);
-  switch (decodedChangeTrustResult.getDiscriminant()) {
-  case CHANGE_TRUST_SUCCESS:
-  break;
-  default:
-  break;
-  }
-    return decodedChangeTrustResult;
-  }
+public class ChangeTrustResult {
+    public ChangeTrustResult() {
+    }
+
+    ChangeTrustResultCode code;
+
+    public ChangeTrustResultCode getDiscriminant() {
+        return this.code;
+    }
+
+    public void setDiscriminant(ChangeTrustResultCode value) {
+        this.code = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, ChangeTrustResult encodedChangeTrustResult) throws IOException {
+        stream.writeInt(encodedChangeTrustResult.getDiscriminant().getValue());
+        switch (encodedChangeTrustResult.getDiscriminant()) {
+            case CHANGE_TRUST_SUCCESS:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static ChangeTrustResult decode(XdrDataInputStream stream) throws IOException {
+        ChangeTrustResult decodedChangeTrustResult = new ChangeTrustResult();
+        ChangeTrustResultCode discriminant = ChangeTrustResultCode.decode(stream);
+        decodedChangeTrustResult.setDiscriminant(discriminant);
+        switch (decodedChangeTrustResult.getDiscriminant()) {
+            case CHANGE_TRUST_SUCCESS:
+                break;
+            default:
+                break;
+        }
+        return decodedChangeTrustResult;
+    }
 }

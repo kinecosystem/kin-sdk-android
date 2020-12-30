@@ -2,10 +2,18 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+<<<<<<< HEAD
 import kin.utils.Request;
 
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
+=======
+
+import java.math.BigDecimal;
+import java.util.concurrent.Callable;
+
+import kin.utils.Request;
+>>>>>>> master
 
 abstract class AbstractKinAccount implements KinAccount {
 
@@ -38,8 +46,13 @@ abstract class AbstractKinAccount implements KinAccount {
     public Request<TransactionBuilder> getTransactionBuilder() {
         return new Request<>(new Callable<TransactionBuilder>() {
             @Override
+<<<<<<< HEAD
             public TransactionBuilder call() throws Exception {
                 return getTransactionBuilderSync();
+=======
+            public Transaction call() throws Exception {
+                return buildTransactionSync(publicAddress, amount, fee, memo);
+>>>>>>> master
             }
         });
     }

@@ -3,6 +3,7 @@ package kin.backupandrestore;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+
 import kin.backupandrestore.events.BroadcastManagerImpl;
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.events.EventDispatcherImpl;
@@ -29,7 +30,11 @@ public final class BackupAndRestoreManager {
         Validator.checkNotNull(activity, "activity");
         this.activity = activity;
         this.callbackManager = new CallbackManager(
+<<<<<<< HEAD
             new EventDispatcherImpl(new BroadcastManagerImpl(activity)), reqCodeBackup, reqCodeRestore);
+=======
+                new EventDispatcherImpl(new BroadcastManagerImpl(activity)), reqCodeBackup, reqCodeRestore);
+>>>>>>> master
         this.reqCodeBackup = reqCodeBackup;
         this.reqCodeRestore = reqCodeRestore;
     }
@@ -57,7 +62,11 @@ public final class BackupAndRestoreManager {
             public void onSuccess(String publicAddress) {
                 // Because we recovered a new account then we need to refresh the kinClient so we create a new one.
                 kinClient = new KinClient(activity, kinClient.getEnvironment(), kinClient.getAppId(),
+<<<<<<< HEAD
                     kinClient.getStoreKey());
+=======
+                        kinClient.getStoreKey());
+>>>>>>> master
                 restoreCallback.onSuccess(kinClient, AccountExtractor.getKinAccount(kinClient, publicAddress));
             }
 

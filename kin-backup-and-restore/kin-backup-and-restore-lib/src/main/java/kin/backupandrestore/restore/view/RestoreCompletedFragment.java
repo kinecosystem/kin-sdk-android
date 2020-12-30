@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
 import kin.backupandrestore.R;
 import kin.backupandrestore.base.BaseToolbarActivity;
 import kin.backupandrestore.restore.presenter.RestoreCompletedPresenter;
@@ -24,7 +25,11 @@ public class RestoreCompletedFragment extends Fragment implements RestoreComplet
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+<<<<<<< HEAD
         @Nullable Bundle savedInstanceState) {
+=======
+                             @Nullable Bundle savedInstanceState) {
+>>>>>>> master
         View root = inflater.inflate(R.layout.backup_and_restore_fragment_restore_completed, container, false);
 
         injectPresenter();

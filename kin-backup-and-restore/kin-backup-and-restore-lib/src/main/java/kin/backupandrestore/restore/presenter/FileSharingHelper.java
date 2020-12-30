@@ -25,11 +25,19 @@ public class FileSharingHelper {
         Intent intent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT)
+<<<<<<< HEAD
                 .addCategory(Intent.CATEGORY_OPENABLE)
                 .setType(INTENT_TYPE_ALL_IMAGE);
         } else {
             intent = new Intent(Intent.ACTION_PICK)
                 .setType(INTENT_TYPE_ALL_IMAGE);
+=======
+                    .addCategory(Intent.CATEGORY_OPENABLE)
+                    .setType(INTENT_TYPE_ALL_IMAGE);
+        } else {
+            intent = new Intent(Intent.ACTION_PICK)
+                    .setType(INTENT_TYPE_ALL_IMAGE);
+>>>>>>> master
         }
         fragment.startActivityForResult(Intent.createChooser(intent, chooserTitle), REQUEST_CODE_IMAGE);
     }

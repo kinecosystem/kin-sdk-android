@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.support.v4.content.LocalBroadcastManager;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;

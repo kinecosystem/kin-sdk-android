@@ -1,14 +1,15 @@
 package kin.backupandrestore.events;
 
-import static kin.backupandrestore.exception.BackupAndRestoreException.CODE_UNEXPECTED;
-
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import kin.backupandrestore.BackupCallback;
 import kin.backupandrestore.BackupEvents;
 import kin.backupandrestore.RestoreEvents;
 import kin.backupandrestore.exception.BackupAndRestoreException;
+
+import static kin.backupandrestore.exception.BackupAndRestoreException.CODE_UNEXPECTED;
 
 public class CallbackManager {
 
@@ -92,7 +93,11 @@ public class CallbackManager {
                     final String publicAddress = data.getStringExtra(EXTRA_KEY_PUBLIC_ADDRESS);
                     if (publicAddress == null) {
                         internalRestoreCallback.onFailure(new BackupAndRestoreException(CODE_UNEXPECTED,
+<<<<<<< HEAD
                             "Unexpected error - imported account public address not found"));
+=======
+                                "Unexpected error - imported account public address not found"));
+>>>>>>> master
                     }
                     internalRestoreCallback.onSuccess(publicAddress);
                     break;
@@ -106,8 +111,13 @@ public class CallbackManager {
                     break;
                 default:
                     internalRestoreCallback.onFailure(
+<<<<<<< HEAD
                         new BackupAndRestoreException(CODE_UNEXPECTED,
                             "Unexpected error - unknown result code " + resultCode));
+=======
+                            new BackupAndRestoreException(CODE_UNEXPECTED,
+                                    "Unexpected error - unknown result code " + resultCode));
+>>>>>>> master
                     break;
             }
         }
@@ -129,8 +139,13 @@ public class CallbackManager {
                     break;
                 default:
                     backupCallback.onFailure(
+<<<<<<< HEAD
                         new BackupAndRestoreException(CODE_UNEXPECTED,
                             "Unexpected error - unknown result code " + resultCode));
+=======
+                            new BackupAndRestoreException(CODE_UNEXPECTED,
+                                    "Unexpected error - unknown result code " + resultCode));
+>>>>>>> master
                     break;
             }
         }

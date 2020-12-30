@@ -1,12 +1,10 @@
 package kin.backupandrestore.qr;
 
 
-import static android.graphics.Color.BLACK;
-import static android.graphics.Color.WHITE;
-
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -20,11 +18,16 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
+
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
+
 import kin.backupandrestore.utils.Logger;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 
 public class QRBarcodeGeneratorImpl implements QRBarcodeGenerator {
 
@@ -82,10 +85,17 @@ public class QRBarcodeGeneratorImpl implements QRBarcodeGenerator {
 
             QRCodeReader reader = new QRCodeReader();
             Map<DecodeHintType, Object>
+<<<<<<< HEAD
                 hintsMap = new EnumMap<>(DecodeHintType.class);
             hintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
             hintsMap.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet
                 .allOf(BarcodeFormat.class));
+=======
+                    hintsMap = new EnumMap<>(DecodeHintType.class);
+            hintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+            hintsMap.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet
+                    .allOf(BarcodeFormat.class));
+>>>>>>> master
             hintsMap.put(DecodeHintType.PURE_BARCODE, Boolean.FALSE);
             Result result = reader.decode(binaryBitmap, hintsMap);
             return result.getText();

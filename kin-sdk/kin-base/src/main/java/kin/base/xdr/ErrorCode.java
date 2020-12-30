@@ -18,37 +18,42 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ErrorCode  {
-  ERR_MISC(0),
-  ERR_DATA(1),
-  ERR_CONF(2),
-  ERR_AUTH(3),
-  ERR_LOAD(4),
-  ;
-  private int mValue;
+public enum ErrorCode {
+    ERR_MISC(0),
+    ERR_DATA(1),
+    ERR_CONF(2),
+    ERR_AUTH(3),
+    ERR_LOAD(4),
+    ;
+    private int mValue;
 
-  ErrorCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static ErrorCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return ERR_MISC;
-      case 1: return ERR_DATA;
-      case 2: return ERR_CONF;
-      case 3: return ERR_AUTH;
-      case 4: return ERR_LOAD;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    ErrorCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, ErrorCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static ErrorCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return ERR_MISC;
+            case 1:
+                return ERR_DATA;
+            case 2:
+                return ERR_CONF;
+            case 3:
+                return ERR_AUTH;
+            case 4:
+                return ERR_LOAD;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, ErrorCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

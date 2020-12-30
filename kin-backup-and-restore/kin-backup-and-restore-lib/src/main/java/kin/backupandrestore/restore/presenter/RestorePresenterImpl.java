@@ -3,6 +3,7 @@ package kin.backupandrestore.restore.presenter;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import kin.backupandrestore.AccountExtractor;
 import kin.backupandrestore.base.BasePresenterImpl;
 import kin.backupandrestore.events.CallbackManager;
@@ -53,7 +54,11 @@ public class RestorePresenterImpl extends BasePresenterImpl<RestoreView> impleme
 
     private KinAccount getKinAccount(Bundle saveInstanceState) {
         return saveInstanceState != null ? AccountExtractor
+<<<<<<< HEAD
             .getKinAccount(kinClient, saveInstanceState.getString(KEY_PUBLIC_ADDRESS)) : null;
+=======
+                .getKinAccount(kinClient, saveInstanceState.getString(KEY_PUBLIC_ADDRESS)) : null;
+>>>>>>> master
     }
 
     @Override

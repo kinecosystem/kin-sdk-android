@@ -12,6 +12,7 @@ import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
 import kin.backupandrestore.AccountExtractor;
 import kin.backupandrestore.BackupAndRestoreManager;
 import kin.backupandrestore.R;
@@ -44,8 +45,13 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
         super.onCreate(savedInstanceState);
         KinAccount kinAccount = getKinAccountFromClient();
         backupPresenter = new BackupPresenterImpl(
+<<<<<<< HEAD
             new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), kinAccount,
             savedInstanceState);
+=======
+                new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), kinAccount,
+                savedInstanceState);
+>>>>>>> master
         backupPresenter.onAttach(this);
         setNavigationClickListener(new OnClickListener() {
             @Override
@@ -74,7 +80,11 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
         String appId = intent.getStringExtra(BackupAndRestoreManager.APP_ID_EXTRA);
         String storeKey = intent.getStringExtra(BackupAndRestoreManager.STORE_KEY_EXTRA);
         return new KinClient(getApplicationContext(), new Environment(networkUrl,
+<<<<<<< HEAD
             networkPassphrase), appId, storeKey);
+=======
+                networkPassphrase), appId, storeKey);
+>>>>>>> master
     }
 
     @Override
@@ -90,7 +100,11 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
         setNavigationIcon(vectorDrawable);
         setToolbarTitle(EMPTY_TITLE);
         BackupInfoFragment backupInfoFragment = (BackupInfoFragment) getSupportFragmentManager()
+<<<<<<< HEAD
             .findFragmentByTag(BackupInfoFragment.class.getSimpleName());
+=======
+                .findFragmentByTag(BackupInfoFragment.class.getSimpleName());
+>>>>>>> master
 
         if (backupInfoFragment == null) {
             backupInfoFragment = BackupInfoFragment.newInstance(backupPresenter);
@@ -99,8 +113,13 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
         }
 
         getSupportFragmentManager().beginTransaction()
+<<<<<<< HEAD
             .replace(R.id.fragment_frame, backupInfoFragment)
             .commit();
+=======
+                .replace(R.id.fragment_frame, backupInfoFragment)
+                .commit();
+>>>>>>> master
     }
 
     @Override
@@ -113,7 +132,11 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
         if (createPasswordFragment == null) {
             createPasswordFragment = CreatePasswordFragment
+<<<<<<< HEAD
                 .newInstance(backupPresenter, this, backupPresenter.getKinAccount());
+=======
+                    .newInstance(backupPresenter, this, backupPresenter.getKinAccount());
+>>>>>>> master
         } else {
             setCreatePasswordFragmentAttributes(createPasswordFragment);
         }
@@ -128,7 +151,11 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
         setStep(2, 2);
         backupPresenter.setAccountKey(key);
         SaveAndShareFragment saveAndShareFragment = (SaveAndShareFragment) getSupportFragmentManager()
+<<<<<<< HEAD
             .findFragmentByTag(TAG_SAVE_AND_SHARE_PAGE);
+=======
+                .findFragmentByTag(TAG_SAVE_AND_SHARE_PAGE);
+>>>>>>> master
 
         if (saveAndShareFragment == null) {
             saveAndShareFragment = SaveAndShareFragment.newInstance(backupPresenter, key);
@@ -147,7 +174,11 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
         setToolbarTitle(EMPTY_TITLE);
         clearSteps();
         WellDoneBackupFragment wellDoneFragment = (WellDoneBackupFragment) getSupportFragmentManager()
+<<<<<<< HEAD
             .findFragmentByTag(TAG_WELL_DONE_PAGE);
+=======
+                .findFragmentByTag(TAG_WELL_DONE_PAGE);
+>>>>>>> master
 
         if (wellDoneFragment == null) {
             wellDoneFragment = WellDoneBackupFragment.newInstance();
@@ -158,12 +189,21 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
     private void replaceFragment(Fragment backupFragment, @Nullable String backStackName, @NonNull String tag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+<<<<<<< HEAD
             .setCustomAnimations(
                 R.anim.backup_and_restore_slide_in_right,
                 R.anim.backup_and_restore_slide_out_left,
                 R.anim.backup_and_restore_slide_in_left,
                 R.anim.backup_and_restore_slide_out_right)
             .replace(R.id.fragment_frame, backupFragment, tag);
+=======
+                .setCustomAnimations(
+                        R.anim.backup_and_restore_slide_in_right,
+                        R.anim.backup_and_restore_slide_out_left,
+                        R.anim.backup_and_restore_slide_in_left,
+                        R.anim.backup_and_restore_slide_out_right)
+                .replace(R.id.fragment_frame, backupFragment, tag);
+>>>>>>> master
 
         if (backStackName != null) {
             transaction.addToBackStack(backStackName);
@@ -223,6 +263,10 @@ public class BackupActivity extends BaseToolbarActivity implements BackupView {
 
     private CreatePasswordFragment getSavedCreatePasswordFragment() {
         return (CreatePasswordFragment) getSupportFragmentManager()
+<<<<<<< HEAD
             .findFragmentByTag(TAG_CREATE_PASSWORD_PAGE);
+=======
+                .findFragmentByTag(TAG_CREATE_PASSWORD_PAGE);
+>>>>>>> master
     }
 }

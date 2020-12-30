@@ -53,10 +53,9 @@ package kin.base.codec;
  * This class is not thread-safe. Each thread should use its own instance.
  * </p>
  *
- * @see <a href="http://www.ietf.org/rfc/rfc4648.txt">RFC 4648</a>
- *
- * @since 1.5
  * @version $Revision$
+ * @see <a href="http://www.ietf.org/rfc/rfc4648.txt">RFC 4648</a>
+ * @since 1.5
  */
 public class Base32 extends BaseNCodec {
 
@@ -80,7 +79,6 @@ public class Base32 extends BaseNCodec {
      * This array is a lookup table that translates Unicode characters drawn from the "Base32 Alphabet" (as specified in
      * Table 3 of RFC 2045) into their 5-bit positive integer equivalents. Characters that are not in the Base32
      * alphabet but fall within the bounds of the array are translated to -1.
-     *
      */
     private static final byte[] DECODE_TABLE = {
             //  0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
@@ -88,7 +86,7 @@ public class Base32 extends BaseNCodec {
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10-1f
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 63, // 20-2f
             -1, -1, 26, 27, 28, 29, 30, 31, -1, -1, -1, -1, -1, -1, -1, -1, // 30-3f 2-7
-            -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, // 40-4f A-N
+            -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, // 40-4f A-N
             15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,                     // 50-5a O-Z
     };
 
@@ -106,14 +104,13 @@ public class Base32 extends BaseNCodec {
      * This array is a lookup table that translates Unicode characters drawn from the "Base32 |Hex Alphabet" (as specified in
      * Table 3 of RFC 2045) into their 5-bit positive integer equivalents. Characters that are not in the Base32 Hex
      * alphabet but fall within the bounds of the array are translated to -1.
-     *
      */
     private static final byte[] HEX_DECODE_TABLE = {
             //  0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 00-0f
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10-1f
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 63, // 20-2f
-            0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1, // 30-3f 2-7
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, // 30-3f 2-7
             -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, // 40-4f A-N
             25, 26, 27, 28, 29, 30, 31, 32,                                 // 50-57 O-V
     };
@@ -128,7 +125,9 @@ public class Base32 extends BaseNCodec {
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
     };
 
-    /** Mask used to extract 5 bits, used when encoding Base32 bytes */
+    /**
+     * Mask used to extract 5 bits, used when encoding Base32 bytes
+     */
     private static final int MASK_5BITS = 0x1f;
 
     // The static final fields above are used for the original static byte[] methods on Base32.
@@ -171,7 +170,6 @@ public class Base32 extends BaseNCodec {
      * <p>
      * When encoding the line length is 0 (no chunking).
      * </p>
-     *
      */
     public Base32() {
         this(false);
@@ -182,6 +180,7 @@ public class Base32 extends BaseNCodec {
      * <p>
      * When encoding the line length is 0 (no chunking).
      * </p>
+     *
      * @param useHex if <code>true</code> then use Base32 Hex alphabet
      */
     public Base32(boolean useHex) {
@@ -194,9 +193,8 @@ public class Base32 extends BaseNCodec {
      * When encoding the line length is given in the constructor, the line separator is CRLF.
      * </p>
      *
-     * @param lineLength
-     *            Each line of encoded data will be at most of the given length (rounded down to nearest multiple of 8).
-     *            If lineLength <= 0, then the output will not be divided into lines (chunks). Ignored when decoding.
+     * @param lineLength Each line of encoded data will be at most of the given length (rounded down to nearest multiple of 8).
+     *                   If lineLength <= 0, then the output will not be divided into lines (chunks). Ignored when decoding.
      */
     public Base32(int lineLength) {
         this(lineLength, CHUNK_SEPARATOR);
@@ -211,13 +209,10 @@ public class Base32 extends BaseNCodec {
      * Line lengths that aren't multiples of 8 will still essentially end up being multiples of 8 in the encoded data.
      * </p>
      *
-     * @param lineLength
-     *            Each line of encoded data will be at most of the given length (rounded down to nearest multiple of 8).
-     *            If lineLength <= 0, then the output will not be divided into lines (chunks). Ignored when decoding.
-     * @param lineSeparator
-     *            Each line of encoded data will end with this sequence of bytes.
-     * @throws IllegalArgumentException
-     *             The provided lineSeparator included some Base32 characters. That's not going to work!
+     * @param lineLength    Each line of encoded data will be at most of the given length (rounded down to nearest multiple of 8).
+     *                      If lineLength <= 0, then the output will not be divided into lines (chunks). Ignored when decoding.
+     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
+     * @throws IllegalArgumentException The provided lineSeparator included some Base32 characters. That's not going to work!
      */
     public Base32(int lineLength, byte[] lineSeparator) {
         this(lineLength, lineSeparator, false);
@@ -232,21 +227,18 @@ public class Base32 extends BaseNCodec {
      * Line lengths that aren't multiples of 8 will still essentially end up being multiples of 8 in the encoded data.
      * </p>
      *
-     * @param lineLength
-     *            Each line of encoded data will be at most of the given length (rounded down to nearest multiple of 8).
-     *            If lineLength <= 0, then the output will not be divided into lines (chunks). Ignored when decoding.
-     * @param lineSeparator
-     *            Each line of encoded data will end with this sequence of bytes.
-     * @param useHex if <code>true</code>, then use Base32 Hex alphabet, otherwise use Base32 alphabet
-     * @throws IllegalArgumentException
-     *             The provided lineSeparator included some Base32 characters. That's not going to work!
-     *             Or the lineLength > 0 and lineSeparator is null.
+     * @param lineLength    Each line of encoded data will be at most of the given length (rounded down to nearest multiple of 8).
+     *                      If lineLength <= 0, then the output will not be divided into lines (chunks). Ignored when decoding.
+     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
+     * @param useHex        if <code>true</code>, then use Base32 Hex alphabet, otherwise use Base32 alphabet
+     * @throws IllegalArgumentException The provided lineSeparator included some Base32 characters. That's not going to work!
+     *                                  Or the lineLength > 0 and lineSeparator is null.
      */
     public Base32(int lineLength, byte[] lineSeparator, boolean useHex) {
         super(BYTES_PER_UNENCODED_BLOCK, BYTES_PER_ENCODED_BLOCK,
                 lineLength,
                 lineSeparator == null ? 0 : lineSeparator.length);
-        if (useHex){
+        if (useHex) {
             this.encodeTable = HEX_ENCODE_TABLE;
             this.decodeTable = HEX_DECODE_TABLE;
         } else {
@@ -255,7 +247,7 @@ public class Base32 extends BaseNCodec {
         }
         if (lineLength > 0) {
             if (lineSeparator == null) {
-                throw new IllegalArgumentException("lineLength "+lineLength+" > 0, but lineSeparator is null");
+                throw new IllegalArgumentException("lineLength " + lineLength + " > 0, but lineSeparator is null");
             }
             // Must be done after initializing the tables
             if (containsAlphabetOrPad(lineSeparator)) {
@@ -284,13 +276,9 @@ public class Base32 extends BaseNCodec {
      * garbage-out philosophy: it will not check the provided data for validity.
      * </p>
      *
-     * @param in
-     *            byte[] array of ascii data to Base32 decode.
-     * @param inPos
-     *            Position to start reading data from.
-     * @param inAvail
-     *            Amount of bytes available from input for encoding.
-     *
+     * @param in      byte[] array of ascii data to Base32 decode.
+     * @param inPos   Position to start reading data from.
+     * @param inAvail Amount of bytes available from input for encoding.
      */
     void decode(byte[] in, int inPos, int inAvail) { // package protected for access from I/O streams
         if (eof) {
@@ -310,7 +298,7 @@ public class Base32 extends BaseNCodec {
                 if (b >= 0 && b < this.decodeTable.length) {
                     int result = this.decodeTable[b];
                     if (result >= 0) {
-                        modulus = (modulus+1) % BYTES_PER_ENCODED_BLOCK;
+                        modulus = (modulus + 1) % BYTES_PER_ENCODED_BLOCK;
                         bitWorkArea = (bitWorkArea << BITS_PER_ENCODED_BYTE) + result; // collect decoded bytes
                         if (modulus == 0) { // we can output the 5 bytes
                             buffer[pos++] = (byte) ((bitWorkArea >> 32) & MASK_8BITS);
@@ -332,30 +320,30 @@ public class Base32 extends BaseNCodec {
 
             //  we ignore partial bytes, i.e. only multiples of 8 count
             switch (modulus) {
-                case 2 : // 10 bits, drop 2 and output one byte
+                case 2: // 10 bits, drop 2 and output one byte
                     buffer[pos++] = (byte) ((bitWorkArea >> 2) & MASK_8BITS);
                     break;
-                case 3 : // 15 bits, drop 7 and output 1 byte
+                case 3: // 15 bits, drop 7 and output 1 byte
                     buffer[pos++] = (byte) ((bitWorkArea >> 7) & MASK_8BITS);
                     break;
-                case 4 : // 20 bits = 2*8 + 4
+                case 4: // 20 bits = 2*8 + 4
                     bitWorkArea = bitWorkArea >> 4; // drop 4 bits
                     buffer[pos++] = (byte) ((bitWorkArea >> 8) & MASK_8BITS);
                     buffer[pos++] = (byte) ((bitWorkArea) & MASK_8BITS);
                     break;
-                case 5 : // 25bits = 3*8 + 1
+                case 5: // 25bits = 3*8 + 1
                     bitWorkArea = bitWorkArea >> 1;
                     buffer[pos++] = (byte) ((bitWorkArea >> 16) & MASK_8BITS);
                     buffer[pos++] = (byte) ((bitWorkArea >> 8) & MASK_8BITS);
                     buffer[pos++] = (byte) ((bitWorkArea) & MASK_8BITS);
                     break;
-                case 6 : // 30bits = 3*8 + 6
+                case 6: // 30bits = 3*8 + 6
                     bitWorkArea = bitWorkArea >> 6;
                     buffer[pos++] = (byte) ((bitWorkArea >> 16) & MASK_8BITS);
                     buffer[pos++] = (byte) ((bitWorkArea >> 8) & MASK_8BITS);
                     buffer[pos++] = (byte) ((bitWorkArea) & MASK_8BITS);
                     break;
-                case 7 : // 35 = 4*8 +3
+                case 7: // 35 = 4*8 +3
                     bitWorkArea = bitWorkArea >> 3;
                     buffer[pos++] = (byte) ((bitWorkArea >> 24) & MASK_8BITS);
                     buffer[pos++] = (byte) ((bitWorkArea >> 16) & MASK_8BITS);
@@ -373,12 +361,9 @@ public class Base32 extends BaseNCodec {
      * remaining bytes (if not multiple of 5).
      * </p>
      *
-     * @param in
-     *            byte[] array of binary data to Base32 encode.
-     * @param inPos
-     *            Position to start reading data from.
-     * @param inAvail
-     *            Amount of bytes available from input for encoding.
+     * @param in      byte[] array of binary data to Base32 encode.
+     * @param inPos   Position to start reading data from.
+     * @param inAvail Amount of bytes available from input for encoding.
      */
     void encode(byte[] in, int inPos, int inAvail) { // package protected for access from I/O streams
         if (eof) {
@@ -394,9 +379,9 @@ public class Base32 extends BaseNCodec {
             ensureBufferSize(encodeSize);
             int savedPos = pos;
             switch (modulus) { // % 5
-                case 1 : // Only 1 octet; take top 5 bits then remainder
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 3) & MASK_5BITS]; // 8-1*5 = 3
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea << 2) & MASK_5BITS]; // 5-3=2
+                case 1: // Only 1 octet; take top 5 bits then remainder
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 3) & MASK_5BITS]; // 8-1*5 = 3
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea << 2) & MASK_5BITS]; // 5-3=2
                     buffer[pos++] = PAD;
                     buffer[pos++] = PAD;
                     buffer[pos++] = PAD;
@@ -405,61 +390,61 @@ public class Base32 extends BaseNCodec {
                     buffer[pos++] = PAD;
                     break;
 
-                case 2 : // 2 octets = 16 bits to use
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 11) & MASK_5BITS]; // 16-1*5 = 11
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >>  6) & MASK_5BITS]; // 16-2*5 = 6
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >>  1) & MASK_5BITS]; // 16-3*5 = 1
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea <<  4) & MASK_5BITS]; // 5-1 = 4
+                case 2: // 2 octets = 16 bits to use
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 11) & MASK_5BITS]; // 16-1*5 = 11
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 6) & MASK_5BITS]; // 16-2*5 = 6
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 1) & MASK_5BITS]; // 16-3*5 = 1
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea << 4) & MASK_5BITS]; // 5-1 = 4
                     buffer[pos++] = PAD;
                     buffer[pos++] = PAD;
                     buffer[pos++] = PAD;
                     buffer[pos++] = PAD;
                     break;
-                case 3 : // 3 octets = 24 bits to use
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 19) & MASK_5BITS]; // 24-1*5 = 19
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 14) & MASK_5BITS]; // 24-2*5 = 14
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >>  9) & MASK_5BITS]; // 24-3*5 = 9
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >>  4) & MASK_5BITS]; // 24-4*5 = 4
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea <<  1) & MASK_5BITS]; // 5-4 = 1
+                case 3: // 3 octets = 24 bits to use
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 19) & MASK_5BITS]; // 24-1*5 = 19
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 14) & MASK_5BITS]; // 24-2*5 = 14
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 9) & MASK_5BITS]; // 24-3*5 = 9
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 4) & MASK_5BITS]; // 24-4*5 = 4
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea << 1) & MASK_5BITS]; // 5-4 = 1
                     buffer[pos++] = PAD;
                     buffer[pos++] = PAD;
                     buffer[pos++] = PAD;
                     break;
-                case 4 : // 4 octets = 32 bits to use
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 27) & MASK_5BITS]; // 32-1*5 = 27
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 22) & MASK_5BITS]; // 32-2*5 = 22
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 17) & MASK_5BITS]; // 32-3*5 = 17
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 12) & MASK_5BITS]; // 32-4*5 = 12
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >>  7) & MASK_5BITS]; // 32-5*5 =  7
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >>  2) & MASK_5BITS]; // 32-6*5 =  2
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea <<  3) & MASK_5BITS]; // 5-2 = 3
+                case 4: // 4 octets = 32 bits to use
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 27) & MASK_5BITS]; // 32-1*5 = 27
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 22) & MASK_5BITS]; // 32-2*5 = 22
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 17) & MASK_5BITS]; // 32-3*5 = 17
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 12) & MASK_5BITS]; // 32-4*5 = 12
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 7) & MASK_5BITS]; // 32-5*5 =  7
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 2) & MASK_5BITS]; // 32-6*5 =  2
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea << 3) & MASK_5BITS]; // 5-2 = 3
                     buffer[pos++] = PAD;
                     break;
             }
             currentLinePos += pos - savedPos; // keep track of current line position
             // if currentPos == 0 we are at the start of a line, so don't add CRLF
-            if (lineLength > 0 && currentLinePos > 0){ // add chunk separator if required
+            if (lineLength > 0 && currentLinePos > 0) { // add chunk separator if required
                 System.arraycopy(lineSeparator, 0, buffer, pos, lineSeparator.length);
                 pos += lineSeparator.length;
             }
         } else {
             for (int i = 0; i < inAvail; i++) {
                 ensureBufferSize(encodeSize);
-                modulus = (modulus+1) % BYTES_PER_UNENCODED_BLOCK;
+                modulus = (modulus + 1) % BYTES_PER_UNENCODED_BLOCK;
                 int b = in[inPos++];
                 if (b < 0) {
                     b += 256;
                 }
                 bitWorkArea = (bitWorkArea << 8) + b; // BITS_PER_BYTE
                 if (0 == modulus) { // we have enough bytes to create our output
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 35) & MASK_5BITS];
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 30) & MASK_5BITS];
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 25) & MASK_5BITS];
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 20) & MASK_5BITS];
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 15) & MASK_5BITS];
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 10) & MASK_5BITS];
-                    buffer[pos++] = encodeTable[(int)(bitWorkArea >> 5) & MASK_5BITS];
-                    buffer[pos++] = encodeTable[(int)bitWorkArea & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 35) & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 30) & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 25) & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 20) & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 15) & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 10) & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) (bitWorkArea >> 5) & MASK_5BITS];
+                    buffer[pos++] = encodeTable[(int) bitWorkArea & MASK_5BITS];
                     currentLinePos += BYTES_PER_ENCODED_BLOCK;
                     if (lineLength > 0 && lineLength <= currentLinePos) {
                         System.arraycopy(lineSeparator, 0, buffer, pos, lineSeparator.length);
@@ -474,8 +459,7 @@ public class Base32 extends BaseNCodec {
     /**
      * Returns whether or not the <code>octet</code> is in the Base32 alphabet.
      *
-     * @param octet
-     *            The value to test
+     * @param octet The value to test
      * @return <code>true</code> if the value is defined in the the Base32 alphabet <code>false</code> otherwise.
      */
     public boolean isInAlphabet(byte octet) {

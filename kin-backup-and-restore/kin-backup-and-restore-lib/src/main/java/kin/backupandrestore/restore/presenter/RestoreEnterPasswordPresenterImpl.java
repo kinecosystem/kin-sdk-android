@@ -1,15 +1,9 @@
 package kin.backupandrestore.restore.presenter;
 
 
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_DONE_TAPPED;
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_BACK_TAPPED;
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_VIEWED;
-import static kin.backupandrestore.exception.BackupAndRestoreException.CODE_RESTORE_FAILED;
-import static kin.backupandrestore.exception.BackupAndRestoreException.CODE_RESTORE_INVALID_KEYSTORE_FORMAT;
-import static kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
 import kin.backupandrestore.Validator;
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.exception.BackupAndRestoreException;
@@ -20,8 +14,19 @@ import kin.sdk.exception.CorruptedDataException;
 import kin.sdk.exception.CreateAccountException;
 import kin.sdk.exception.CryptoException;
 
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_DONE_TAPPED;
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_BACK_TAPPED;
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTRY_PAGE_VIEWED;
+import static kin.backupandrestore.exception.BackupAndRestoreException.CODE_RESTORE_FAILED;
+import static kin.backupandrestore.exception.BackupAndRestoreException.CODE_RESTORE_INVALID_KEYSTORE_FORMAT;
+import static kin.backupandrestore.restore.presenter.RestorePresenterImpl.KEY_ACCOUNT_KEY;
+
 public class RestoreEnterPasswordPresenterImpl extends BaseChildPresenterImpl<RestoreEnterPasswordView> implements
+<<<<<<< HEAD
     RestoreEnterPasswordPresenter {
+=======
+        RestoreEnterPasswordPresenter {
+>>>>>>> master
 
     private final String keystoreData;
     private final CallbackManager callbackManager;
@@ -64,7 +69,11 @@ public class RestoreEnterPasswordPresenterImpl extends BaseChildPresenterImpl<Re
     }
 
     private KinAccount importAccount(@NonNull final String keystore, @NonNull final String password)
+<<<<<<< HEAD
         throws BackupAndRestoreException {
+=======
+            throws BackupAndRestoreException {
+>>>>>>> master
         Validator.checkNotNull(keystore, "keystore");
         Validator.checkNotNull(keystore, "password");
         KinAccount importedAccount;
@@ -76,7 +85,11 @@ public class RestoreEnterPasswordPresenterImpl extends BaseChildPresenterImpl<Re
             throw new BackupAndRestoreException(CODE_RESTORE_FAILED, "Could not create the account");
         } catch (CorruptedDataException e) {
             throw new BackupAndRestoreException(CODE_RESTORE_INVALID_KEYSTORE_FORMAT,
+<<<<<<< HEAD
                 "The keystore is invalid - wrong format");
+=======
+                    "The keystore is invalid - wrong format");
+>>>>>>> master
         }
         return importedAccount;
     }

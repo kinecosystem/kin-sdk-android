@@ -3,7 +3,11 @@ package kin.backupandrestore.restore.presenter;
 import kin.backupandrestore.restore.view.RestoreCompletedView;
 
 public class RestoreCompletedPresenterImpl extends BaseChildPresenterImpl<RestoreCompletedView> implements
+<<<<<<< HEAD
     RestoreCompletedPresenter {
+=======
+        RestoreCompletedPresenter {
+>>>>>>> master
 
     public RestoreCompletedPresenterImpl() {
     }

@@ -25,47 +25,57 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum SetOptionsResultCode  {
-  SET_OPTIONS_SUCCESS(0),
-  SET_OPTIONS_LOW_RESERVE(-1),
-  SET_OPTIONS_TOO_MANY_SIGNERS(-2),
-  SET_OPTIONS_BAD_FLAGS(-3),
-  SET_OPTIONS_INVALID_INFLATION(-4),
-  SET_OPTIONS_CANT_CHANGE(-5),
-  SET_OPTIONS_UNKNOWN_FLAG(-6),
-  SET_OPTIONS_THRESHOLD_OUT_OF_RANGE(-7),
-  SET_OPTIONS_BAD_SIGNER(-8),
-  SET_OPTIONS_INVALID_HOME_DOMAIN(-9),
-  ;
-  private int mValue;
+public enum SetOptionsResultCode {
+    SET_OPTIONS_SUCCESS(0),
+    SET_OPTIONS_LOW_RESERVE(-1),
+    SET_OPTIONS_TOO_MANY_SIGNERS(-2),
+    SET_OPTIONS_BAD_FLAGS(-3),
+    SET_OPTIONS_INVALID_INFLATION(-4),
+    SET_OPTIONS_CANT_CHANGE(-5),
+    SET_OPTIONS_UNKNOWN_FLAG(-6),
+    SET_OPTIONS_THRESHOLD_OUT_OF_RANGE(-7),
+    SET_OPTIONS_BAD_SIGNER(-8),
+    SET_OPTIONS_INVALID_HOME_DOMAIN(-9),
+    ;
+    private int mValue;
 
-  SetOptionsResultCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static SetOptionsResultCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return SET_OPTIONS_SUCCESS;
-      case -1: return SET_OPTIONS_LOW_RESERVE;
-      case -2: return SET_OPTIONS_TOO_MANY_SIGNERS;
-      case -3: return SET_OPTIONS_BAD_FLAGS;
-      case -4: return SET_OPTIONS_INVALID_INFLATION;
-      case -5: return SET_OPTIONS_CANT_CHANGE;
-      case -6: return SET_OPTIONS_UNKNOWN_FLAG;
-      case -7: return SET_OPTIONS_THRESHOLD_OUT_OF_RANGE;
-      case -8: return SET_OPTIONS_BAD_SIGNER;
-      case -9: return SET_OPTIONS_INVALID_HOME_DOMAIN;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    SetOptionsResultCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, SetOptionsResultCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static SetOptionsResultCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return SET_OPTIONS_SUCCESS;
+            case -1:
+                return SET_OPTIONS_LOW_RESERVE;
+            case -2:
+                return SET_OPTIONS_TOO_MANY_SIGNERS;
+            case -3:
+                return SET_OPTIONS_BAD_FLAGS;
+            case -4:
+                return SET_OPTIONS_INVALID_INFLATION;
+            case -5:
+                return SET_OPTIONS_CANT_CHANGE;
+            case -6:
+                return SET_OPTIONS_UNKNOWN_FLAG;
+            case -7:
+                return SET_OPTIONS_THRESHOLD_OUT_OF_RANGE;
+            case -8:
+                return SET_OPTIONS_BAD_SIGNER;
+            case -9:
+                return SET_OPTIONS_INVALID_HOME_DOMAIN;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, SetOptionsResultCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

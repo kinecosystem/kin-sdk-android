@@ -1,18 +1,19 @@
 package kin.backupandrestore;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+
+import kin.backupandrestore.backup.view.BackupActivity;
+import kin.backupandrestore.restore.view.RestoreActivity;
+import kin.sdk.KinAccount;
+import kin.sdk.KinClient;
+
 import static kin.backupandrestore.BackupAndRestoreManager.APP_ID_EXTRA;
 import static kin.backupandrestore.BackupAndRestoreManager.NETWORK_PASSPHRASE_EXTRA;
 import static kin.backupandrestore.BackupAndRestoreManager.NETWORK_URL_EXTRA;
 import static kin.backupandrestore.BackupAndRestoreManager.PUBLIC_ADDRESS_EXTRA;
 import static kin.backupandrestore.BackupAndRestoreManager.STORE_KEY_EXTRA;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import kin.backupandrestore.backup.view.BackupActivity;
-import kin.backupandrestore.restore.view.RestoreActivity;
-import kin.sdk.KinAccount;
-import kin.sdk.KinClient;
 
 class Launcher {
 
@@ -47,6 +48,10 @@ class Launcher {
     private void startForResult(@NonNull final Intent intent, final int reqCode) {
         activity.startActivityForResult(intent, reqCode);
         activity.overridePendingTransition(R.anim.backup_and_restore_slide_in_right,
+<<<<<<< HEAD
             R.anim.backup_and_restore_slide_out_left);
+=======
+                R.anim.backup_and_restore_slide_out_left);
+>>>>>>> master
     }
 }

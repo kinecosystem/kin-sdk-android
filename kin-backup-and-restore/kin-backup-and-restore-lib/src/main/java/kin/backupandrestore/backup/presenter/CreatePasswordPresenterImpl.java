@@ -1,11 +1,10 @@
 package kin.backupandrestore.backup.presenter;
 
 
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED;
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED;
-
 import android.support.annotation.NonNull;
+
 import java.util.regex.Pattern;
+
 import kin.backupandrestore.Validator;
 import kin.backupandrestore.backup.view.BackupNavigator;
 import kin.backupandrestore.backup.view.CreatePasswordView;
@@ -14,8 +13,15 @@ import kin.backupandrestore.events.CallbackManager;
 import kin.sdk.KinAccount;
 import kin.sdk.exception.CryptoException;
 
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED;
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED;
+
 public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswordView> implements
+<<<<<<< HEAD
     CreatePasswordPresenter {
+=======
+        CreatePasswordPresenter {
+>>>>>>> master
 
     private final BackupNavigator backupNavigator;
     private final CallbackManager callbackManager;
@@ -26,7 +32,11 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
     private final Pattern pattern;
 
     public CreatePasswordPresenterImpl(@NonNull final CallbackManager callbackManager,
+<<<<<<< HEAD
         @NonNull final BackupNavigator backupNavigator, @NonNull KinAccount kinAccount) {
+=======
+                                       @NonNull final BackupNavigator backupNavigator, @NonNull KinAccount kinAccount) {
+>>>>>>> master
         this.backupNavigator = backupNavigator;
         this.callbackManager = callbackManager;
         this.callbackManager.sendBackupEvent(BACKUP_CREATE_PASSWORD_PAGE_VIEWED);
@@ -139,6 +149,7 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
         int min = 9;
         int max = 20;
         StringBuilder sb = new StringBuilder()
+<<<<<<< HEAD
             .append("^")
             .append(digit)
             .append(upper)
@@ -147,6 +158,16 @@ public class CreatePasswordPresenterImpl extends BasePresenterImpl<CreatePasswor
             .append("(.{")
             .append(min).append(",")
             .append(max).append("})$");
+=======
+                .append("^")
+                .append(digit)
+                .append(upper)
+                .append(lower)
+                .append(special)
+                .append("(.{")
+                .append(min).append(",")
+                .append(max).append("})$");
+>>>>>>> master
         return Pattern.compile(sb.toString());
     }
 

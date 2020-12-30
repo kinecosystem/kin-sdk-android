@@ -2,6 +2,12 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+<<<<<<< HEAD
+=======
+
+import java.math.BigDecimal;
+
+>>>>>>> master
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
 import kin.sdk.exception.CryptoException;
@@ -20,7 +26,7 @@ final class KinAccountImpl extends AbstractKinAccount {
     private boolean isDeleted = false;
 
     KinAccountImpl(KeyPair account, BackupRestore backupRestore, TransactionSender transactionSender,
-        AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
+                   AccountInfoRetriever accountInfoRetriever, BlockchainEventsCreator blockchainEventsCreator) {
         this.account = account;
         this.backupRestore = backupRestore;
         this.transactionSender = transactionSender;

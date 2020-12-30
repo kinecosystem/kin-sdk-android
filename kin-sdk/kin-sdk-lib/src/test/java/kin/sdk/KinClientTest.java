@@ -1,27 +1,36 @@
 package kin.sdk;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import kin.base.KeyPair;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static junit.framework.Assert.*;
+import kin.base.KeyPair;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("deprecation")
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 23, manifest = Config.NONE)
 public class KinClientTest {
 
     private static final String APP_ID = "1a2c";
@@ -53,28 +62,17 @@ public class KinClientTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("environment");
 
-        Context ctx = mock(Context.class);
-
-        new KinClient(ctx, null, APP_ID, "test");
-
+        BackupRestore backupRestore = new BackupRestoreImpl();
+        new KinClientInternal(new FakeKeyStore(backupRestore), null, APP_ID, backupRestore);
     }
 
     @Test
     public void kinClientBuilder_missingStoreKey_IllegalArgumentException() {
         expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("storeKey");
+        expectedEx.expectMessage("keyStore");
 
-        Context ctx = mock(Context.class);
-
-        new KinClient(ctx, fakeEnvironment, APP_ID, null);
-    }
-
-    @Test
-    public void kinClientBuilder_missingContext_IllegalArgumentException() {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("context");
-
-        new KinClient(null, fakeEnvironment, APP_ID, "test");
+        BackupRestore backupRestore = new BackupRestoreImpl();
+        new KinClientInternal(null, fakeEnvironment, APP_ID, backupRestore);
     }
 
     @Test
@@ -360,8 +358,13 @@ public class KinClientTest {
         String url = "My awesome Horizon server";
         Environment environment = new Environment(url, Environment.TEST.getNetworkPassphrase());
         kinClient = new KinClient(environment, fakeKeyStore, mockTransactionSender,
+<<<<<<< HEAD
             mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
             new FakeBackupRestore(), APP_ID, "");
+=======
+                mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
+                new FakeBackupRestore(), APP_ID, "");
+>>>>>>> master
         Environment actualEnvironment = kinClient.getEnvironment();
 
         assertNotNull(actualEnvironment);
@@ -406,7 +409,7 @@ public class KinClientTest {
     public void getMinimumFee() throws Exception {
         long expectedMinFee = 100;
         when(mockGeneralBlockchainInfoRetriever.getMinimumFeeSync()).thenReturn(expectedMinFee);
-        
+
         long minFee = kinClient.getMinimumFeeSync();
         assertEquals(expectedMinFee, minFee);
     }
@@ -414,7 +417,12 @@ public class KinClientTest {
     @NonNull
     private KinClient createNewKinClient() {
         return new KinClient(fakeEnvironment, fakeKeyStore, mockTransactionSender,
+<<<<<<< HEAD
             mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
             new FakeBackupRestore(), APP_ID, "");
+=======
+                mockAccountInfoRetriever, mockGeneralBlockchainInfoRetriever, mockBlockchainEventsCreator,
+                new FakeBackupRestore(), APP_ID, "");
+>>>>>>> master
     }
 }

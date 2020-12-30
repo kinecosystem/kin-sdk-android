@@ -1,14 +1,15 @@
 package kin.backupandrestore.backup.presenter;
 
 
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_START_TAPPED;
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_VIEWED;
-
 import android.support.annotation.NonNull;
+
 import kin.backupandrestore.backup.view.BackupNavigator;
 import kin.backupandrestore.base.BasePresenterImpl;
 import kin.backupandrestore.base.BaseView;
 import kin.backupandrestore.events.CallbackManager;
+
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_START_TAPPED;
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_VIEWED;
 
 public class BackupInfoPresenterImpl extends BasePresenterImpl<BaseView> implements BackupInfoPresenter {
 
@@ -16,7 +17,11 @@ public class BackupInfoPresenterImpl extends BasePresenterImpl<BaseView> impleme
     private final CallbackManager callbackManager;
 
     public BackupInfoPresenterImpl(@NonNull CallbackManager callbackManager,
+<<<<<<< HEAD
         BackupNavigator backupNavigator) {
+=======
+                                   BackupNavigator backupNavigator) {
+>>>>>>> master
         this.backupNavigator = backupNavigator;
         this.callbackManager = callbackManager;
         this.callbackManager.sendBackupEvent(BACKUP_WELCOME_PAGE_VIEWED);

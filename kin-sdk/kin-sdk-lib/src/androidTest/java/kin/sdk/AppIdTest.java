@@ -1,6 +1,10 @@
 package kin.sdk;
 
 import android.support.test.InstrumentationRegistry;
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

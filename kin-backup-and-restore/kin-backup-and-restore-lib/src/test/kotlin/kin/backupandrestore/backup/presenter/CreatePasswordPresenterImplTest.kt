@@ -1,6 +1,11 @@
 package kin.backupandrestore.backup.presenter
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kin.backupandrestore.backup.view.BackupNavigator
 import kin.backupandrestore.backup.view.CreatePasswordView
 import kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_VIEWED
@@ -129,5 +134,4 @@ class CreatePasswordPresenterImplTest {
         presenter.onRetryClicked(pass)
         verify(view).showBackupFailed()
     }
-
 }

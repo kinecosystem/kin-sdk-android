@@ -17,30 +17,39 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class ChangeTrustOp  {
-  public ChangeTrustOp () {}
-  private Asset line;
-  public Asset getLine() {
-    return this.line;
-  }
-  public void setLine(Asset value) {
-    this.line = value;
-  }
-  private Int64 limit;
-  public Int64 getLimit() {
-    return this.limit;
-  }
-  public void setLimit(Int64 value) {
-    this.limit = value;
-  }
-  public static void encode(XdrDataOutputStream stream, ChangeTrustOp encodedChangeTrustOp) throws IOException{
-    Asset.encode(stream, encodedChangeTrustOp.line);
-    Int64.encode(stream, encodedChangeTrustOp.limit);
-  }
-  public static ChangeTrustOp decode(XdrDataInputStream stream) throws IOException {
-    ChangeTrustOp decodedChangeTrustOp = new ChangeTrustOp();
-    decodedChangeTrustOp.line = Asset.decode(stream);
-    decodedChangeTrustOp.limit = Int64.decode(stream);
-    return decodedChangeTrustOp;
-  }
+public class ChangeTrustOp {
+    public ChangeTrustOp() {
+    }
+
+    private Asset line;
+
+    public Asset getLine() {
+        return this.line;
+    }
+
+    public void setLine(Asset value) {
+        this.line = value;
+    }
+
+    private Int64 limit;
+
+    public Int64 getLimit() {
+        return this.limit;
+    }
+
+    public void setLimit(Int64 value) {
+        this.limit = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, ChangeTrustOp encodedChangeTrustOp) throws IOException {
+        Asset.encode(stream, encodedChangeTrustOp.line);
+        Int64.encode(stream, encodedChangeTrustOp.limit);
+    }
+
+    public static ChangeTrustOp decode(XdrDataInputStream stream) throws IOException {
+        ChangeTrustOp decodedChangeTrustOp = new ChangeTrustOp();
+        decodedChangeTrustOp.line = Asset.decode(stream);
+        decodedChangeTrustOp.limit = Int64.decode(stream);
+        return decodedChangeTrustOp;
+    }
 }

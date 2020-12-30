@@ -2,6 +2,7 @@ package kin.backupandrestore.utils;
 
 
 import android.util.Log;
+
 import kin.backupandrestore.BuildConfig;
 
 public class Logger {
@@ -23,4 +24,8 @@ public class Logger {
             Log.e(TAG, msg, throwable);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

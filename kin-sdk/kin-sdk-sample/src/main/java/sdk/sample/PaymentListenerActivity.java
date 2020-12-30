@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
 import kin.sdk.ListenerRegistration;
@@ -50,12 +51,12 @@ public class PaymentListenerActivity extends BaseActivity {
         startBtn.setEnabled(false);
         stopBtn.setEnabled(true);
         listenerRegistration = account
-            .addPaymentListener(paymentInfo -> runOnUiThread(() -> addPaymentToUi(paymentInfo)));
+                .addPaymentListener(paymentInfo -> runOnUiThread(() -> addPaymentToUi(paymentInfo)));
     }
 
     private void addPaymentToUi(PaymentInfo paymentInfo) {
         @SuppressLint("InflateParams") View paymentView = LayoutInflater.from(this)
-            .inflate(R.layout.payment_info, null);
+                .inflate(R.layout.payment_info, null);
         TextView destinationText = paymentView.findViewById(R.id.to_public_id);
         TextView sourceText = paymentView.findViewById(R.id.from_public_id);
         TextView amountText = paymentView.findViewById(R.id.amount);

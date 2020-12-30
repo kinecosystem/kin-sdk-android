@@ -4,16 +4,16 @@ apply plugin: 'jacoco'
 
 // maven plugin and group definition
 // needed for jitpack support
-apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.kinecosystem'
 
+
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion android_compilesdk_version
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion android_minsdk_version
+        targetSdkVersion android_targetsdk_version
         versionCode 1
         versionName "1.0"
         consumerProguardFiles 'proguard-rules.pro'
@@ -24,9 +24,6 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
-            buildConfigField "String", "INTEG_TESTS_NETWORK_FRIENDBOT", "\"${System.getenv('INTEG_TESTS_NETWORK_FRIENDBOT') ?: ""}\""
-            buildConfigField "String", "INTEG_TESTS_NETWORK_PASSPHRASE", "\"${System.getenv('INTEG_TESTS_NETWORK_PASSPHRASE') ?: ""}\""
-            buildConfigField "String", "INTEG_TESTS_NETWORK_URL", "\"${System.getenv('INTEG_TESTS_NETWORK_URL') ?: ""}\""
         }
     }
 
@@ -44,6 +41,7 @@ android {
 
 dependencies {
     implementation project(':kin-sdk:kin-base')
+<<<<<<< HEAD
 
     implementation supportDependencies.supportAnnotations
 
@@ -64,6 +62,32 @@ dependencies {
     androidTestImplementation testingDependencies.multidex
     androidTestImplementation testingDependencies.kotlin
     androidTestImplementation testingDependencies.kotlinJUnitTest
+=======
+    implementation "com.android.support:support-annotations:$androidsupport_version"
+    implementation "com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:$sodium_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    api "com.github.kinecosystem:kin-utils-android:$kinutilsandroid_version"
+
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.hamcrest:hamcrest-library:$hamcrest_version"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
+    testImplementation "org.robolectric:robolectric:$robolectric_version"
+    testImplementation "com.google.code.gson:gson:$gson_version"
+    testImplementation 'org.json:json:20180813'
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    androidTestImplementation "junit:junit:$junit_version"
+    androidTestImplementation "org.mockito:mockito-core:$mockito_version"
+    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
+    androidTestImplementation "org.hamcrest:hamcrest-library:$hamcrest_version"
+    androidTestImplementation "com.android.support.test:runner:$supporttest_version"
+    androidTestImplementation "com.android.support.test:rules:$supporttest_version"
+    androidTestImplementation "com.android.support:multidex:$multidex_version"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+>>>>>>> master
 }
 
 //bundle javadocs with published aar
@@ -84,7 +108,7 @@ artifacts {
 
 //jacoco unified code coverage
 jacoco {
-    toolVersion = '0.8.1'
+    toolVersion = jaccoco_version
 }
 
 tasks.withType(Test) {

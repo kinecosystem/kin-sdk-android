@@ -15,31 +15,33 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum BucketEntryType  {
-  LIVEENTRY(0),
-  DEADENTRY(1),
-  ;
-  private int mValue;
+public enum BucketEntryType {
+    LIVEENTRY(0),
+    DEADENTRY(1),
+    ;
+    private int mValue;
 
-  BucketEntryType(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static BucketEntryType decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return LIVEENTRY;
-      case 1: return DEADENTRY;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    BucketEntryType(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, BucketEntryType value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static BucketEntryType decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return LIVEENTRY;
+            case 1:
+                return DEADENTRY;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, BucketEntryType value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

@@ -1,11 +1,17 @@
 package kin.sdk;
 
 import android.util.Log;
-import okhttp3.*;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class WhitelistServiceForTest {
@@ -16,8 +22,8 @@ public class WhitelistServiceForTest {
 
     WhitelistServiceForTest() {
         okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .build();
     }
 

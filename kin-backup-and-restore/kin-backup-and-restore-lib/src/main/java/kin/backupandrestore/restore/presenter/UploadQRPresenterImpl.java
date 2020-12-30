@@ -1,14 +1,9 @@
 package kin.backupandrestore.restore.presenter;
 
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_CANCEL_TAPPED;
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_OK_TAPPED;
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BACK_TAPPED;
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED;
-import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_PAGE_VIEWED;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
 import kin.backupandrestore.events.CallbackManager;
 import kin.backupandrestore.qr.QRBarcodeGenerator;
 import kin.backupandrestore.qr.QRBarcodeGenerator.QRBarcodeGeneratorException;
@@ -17,6 +12,12 @@ import kin.backupandrestore.restore.presenter.FileSharingHelper.RequestFileResul
 import kin.backupandrestore.restore.view.UploadQRView;
 import kin.backupandrestore.utils.Logger;
 
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_CANCEL_TAPPED;
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_OK_TAPPED;
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BACK_TAPPED;
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED;
+import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_PAGE_VIEWED;
+
 public class UploadQRPresenterImpl extends BaseChildPresenterImpl<UploadQRView> implements UploadQRPresenter {
 
     private final FileSharingHelper fileRequester;
@@ -24,7 +25,11 @@ public class UploadQRPresenterImpl extends BaseChildPresenterImpl<UploadQRView> 
     private final CallbackManager callbackManager;
 
     public UploadQRPresenterImpl(@NonNull final CallbackManager callbackManager, FileSharingHelper fileRequester,
+<<<<<<< HEAD
         QRBarcodeGenerator qrBarcodeGenerator) {
+=======
+                                 QRBarcodeGenerator qrBarcodeGenerator) {
+>>>>>>> master
         this.callbackManager = callbackManager;
         this.fileRequester = fileRequester;
         this.qrBarcodeGenerator = qrBarcodeGenerator;

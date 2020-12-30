@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import kin.backupandrestore.BackupAndRestoreManager;
 import kin.backupandrestore.sample.BackupAndRestorePresenterImpl.NetWorkType;
 import kin.sdk.Balance;
@@ -53,7 +54,11 @@ public class BackupAndRestoreActivity extends AppCompatActivity implements IBack
 
     private KinClient getKinClient(NetWorkType type) {
         return new KinClient(this, type == NetWorkType.MAIN ? Environment.PRODUCTION : Environment.TEST, "test",
+<<<<<<< HEAD
             "backup_and_restore_sample_app");
+=======
+                "backup_and_restore_sample_app");
+>>>>>>> master
     }
 
     @Override

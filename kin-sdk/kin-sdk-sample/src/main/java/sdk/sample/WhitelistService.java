@@ -3,10 +3,28 @@ package sdk.sample;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+<<<<<<< HEAD
 import kin.sdk.WhitelistPayload;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+=======
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import kin.sdk.WhitelistableTransaction;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+>>>>>>> master
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -27,9 +45,15 @@ class WhitelistService {
                 .build();
     }
 
+<<<<<<< HEAD
     void whitelistTransaction(WhitelistPayload whitelistPayload,
                               TransactionActivity.WhitelistServiceListener whitelistServiceListener) throws JSONException {
         RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistPayload));
+=======
+    void whitelistTransaction(WhitelistableTransaction whitelistableTransaction,
+                              TransactionActivity.WhitelistServiceListener whitelistServiceListener) throws JSONException {
+        RequestBody requestBody = RequestBody.create(JSON, toJson(whitelistableTransaction));
+>>>>>>> master
         Request request = new Request.Builder()
                 .url(URL_WHITELISTING_SERVICE)
                 .post(requestBody)

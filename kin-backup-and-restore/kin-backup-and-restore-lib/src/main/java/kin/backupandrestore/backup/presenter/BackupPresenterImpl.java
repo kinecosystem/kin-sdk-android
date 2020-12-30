@@ -1,17 +1,18 @@
 package kin.backupandrestore.backup.presenter;
 
 
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_BACK_TAPPED;
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_BACK_TAPPED;
-import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_BACK_TAPPED;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import kin.backupandrestore.backup.view.BackupView;
 import kin.backupandrestore.base.BasePresenterImpl;
 import kin.backupandrestore.events.CallbackManager;
 import kin.sdk.KinAccount;
+
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_BACK_TAPPED;
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_QR_PAGE_BACK_TAPPED;
+import static kin.backupandrestore.events.BackupEventCode.BACKUP_WELCOME_PAGE_BACK_TAPPED;
 
 public class BackupPresenterImpl extends BasePresenterImpl<BackupView> implements BackupPresenter {
 
@@ -27,7 +28,11 @@ public class BackupPresenterImpl extends BasePresenterImpl<BackupView> implement
 
 
     public BackupPresenterImpl(@NonNull CallbackManager callbackManager, @NonNull KinAccount kinAccount,
+<<<<<<< HEAD
         @Nullable final Bundle savedInstanceState) {
+=======
+                               @Nullable final Bundle savedInstanceState) {
+>>>>>>> master
         this.callbackManager = callbackManager;
         this.step = getStep(savedInstanceState);
         this.kinAccount = kinAccount;

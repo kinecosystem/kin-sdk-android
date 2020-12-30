@@ -5,9 +5,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import kin.sdk.KinAccount;
 import kin.sdk.ListenerRegistration;
 import okhttp3.Call;
@@ -19,8 +21,14 @@ import okhttp3.Response;
 class OnBoarding {
 
     private static final int FUND_KIN_AMOUNT = 6000;
+<<<<<<< HEAD
     private static final String URL_CREATE_ACCOUNT =
         "https://friendbot.developers.kinecosystem.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+=======
+    private static final String URL_CREATE_ACCOUNT = "https://friendbot-testnet.kininfrastructure.com?addr=%s&amount=" + String.valueOf(FUND_KIN_AMOUNT);
+
+
+>>>>>>> master
     private final OkHttpClient okHttpClient;
     private final Handler handler;
     private ListenerRegistration listenerRegistration;
@@ -28,6 +36,7 @@ class OnBoarding {
     public interface Callbacks {
 
         void onSuccess();
+
         void onFailure(Exception e);
 
     }
@@ -35,9 +44,15 @@ class OnBoarding {
     OnBoarding() {
         handler = new Handler(Looper.getMainLooper());
         okHttpClient = new OkHttpClient.Builder()
+<<<<<<< HEAD
             .connectTimeout(40, TimeUnit.SECONDS)
             .readTimeout(40, TimeUnit.SECONDS)
             .build();
+=======
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+>>>>>>> master
     }
 
     void onBoard(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
@@ -56,25 +71,27 @@ class OnBoarding {
 
     private void createAccount(@NonNull KinAccount account, @NonNull Callbacks callbacks) {
         Request request = new Request.Builder()
-            .url(String.format(URL_CREATE_ACCOUNT, account.getPublicAddress()))
-            .get()
-            .build();
+                .url(String.format(URL_CREATE_ACCOUNT, account.getPublicAddress()))
+                .get()
+                .build();
         okHttpClient.newCall(request)
-            .enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    fireOnFailure(callbacks, e);
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) {
-                    int code = response.code();
-                    response.close();
-                    if (code != 200) {
-                        fireOnFailure(callbacks, new Exception("Create account - response code is " + response.code()));
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        fireOnFailure(callbacks, e);
                     }
-                }
-            });
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) {
+                        int code = response.code();
+                        response.close();
+                        if (code != 200) {
+                            fireOnFailure(callbacks, new Exception("Create account - response code is " + response.code()));
+                        } else {
+                            fireOnSuccess(callbacks);
+                        }
+                    }
+                });
     }
 
     private void fireOnFailure(@NonNull Callbacks callbacks, Exception ex) {

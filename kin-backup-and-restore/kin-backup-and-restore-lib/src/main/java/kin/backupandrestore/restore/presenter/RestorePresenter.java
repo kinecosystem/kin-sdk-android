@@ -3,6 +3,7 @@ package kin.backupandrestore.restore.presenter;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import kin.backupandrestore.base.BasePresenter;
 import kin.backupandrestore.restore.view.RestoreView;
 import kin.sdk.KinAccount;

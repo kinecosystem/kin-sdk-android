@@ -2,8 +2,23 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+<<<<<<< HEAD
 import android.text.TextUtils;
 import kin.base.*;
+=======
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.List;
+
+import kin.base.AssetTypeNative;
+import kin.base.KeyPair;
+import kin.base.Memo;
+import kin.base.Network;
+import kin.base.PaymentOperation;
+import kin.base.Server;
+>>>>>>> master
 import kin.base.Transaction.Builder;
 import kin.base.responses.AccountResponse;
 import kin.base.responses.HttpResponseException;
@@ -16,7 +31,14 @@ import java.util.List;
 
 class TransactionSender {
 
+<<<<<<< HEAD
     private static final int MAX_NUM_OF_DECIMAL_PLACES = 4;
+=======
+    private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
+    private static final int MAX_NUM_OF_DECIMAL_PLACES = 4;
+    private static String MEMO_APP_ID_VERSION_PREFIX = "1";
+    private static String MEMO_DELIMITER = "-";
+>>>>>>> master
     private static final String INSUFFICIENT_KIN_RESULT_CODE = "op_underfunded";
     private static final String INSUFFICIENT_FEE_RESULT_CODE = "tx_insufficient_fee";
     private static final String INSUFFICIENT_BALANCE_RESULT_CODE = "tx_insufficient_balance";
@@ -191,15 +213,20 @@ class TransactionSender {
     private boolean isInsufficientKinException(TransactionFailedException transactionException) {
         List<String> resultCodes = transactionException.getOperationsResultCodes();
         String transactionResultCode = transactionException.getTransactionResultCode();
+<<<<<<< HEAD
         return (
             (resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0)))
                 || !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE
                 .equals(transactionResultCode));
+=======
+        return ((resultCodes != null && resultCodes.size() > 0 && INSUFFICIENT_KIN_RESULT_CODE.equals(resultCodes.get(0))) ||
+                !Utils.isEmpty(transactionResultCode) && INSUFFICIENT_BALANCE_RESULT_CODE.equals(transactionResultCode));
+>>>>>>> master
     }
 
     private boolean isInsufficientFeeException(TransactionFailedException transactionException) {
         String transactionResultCode = transactionException.getTransactionResultCode();
-        return !TextUtils.isEmpty(transactionResultCode) && INSUFFICIENT_FEE_RESULT_CODE.equals(transactionResultCode);
+        return !Utils.isEmpty(transactionResultCode) && INSUFFICIENT_FEE_RESULT_CODE.equals(transactionResultCode);
     }
 
 }

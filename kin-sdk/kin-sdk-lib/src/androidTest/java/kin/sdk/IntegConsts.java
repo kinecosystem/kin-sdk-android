@@ -2,6 +2,7 @@ package kin.sdk;
 
 
 final class IntegConsts {
+<<<<<<< HEAD
 
     static final String TEST_NETWORK_URL = BuildConfig.INTEG_TESTS_NETWORK_URL.isEmpty() ?
             Environment.TEST.getNetworkUrl() : BuildConfig.INTEG_TESTS_NETWORK_URL;
@@ -13,4 +14,12 @@ final class IntegConsts {
     static final String URL_FUND = FRIENDBOT_URL + "/fund?addr=%s&amount="; // faucet
     static final String URL_WHITELISTING_SERVICE = (BuildConfig.INTEG_TESTS_NETWORK_FRIENDBOT.isEmpty() ?
             "http://34.239.111.38:3000" : BuildConfig.INTEG_TESTS_NETWORK_FRIENDBOT) + "/whitelist";
+=======
+    static final String TEST_NETWORK_URL = Environment.TEST.getNetworkUrl();
+    static final String TEST_NETWORK_ID = Environment.TEST.getNetworkPassphrase();
+    static final String FRIENDBOT_URL = "https://friendbot-testnet.kininfrastructure.com";
+    static final String URL_CREATE_ACCOUNT = FRIENDBOT_URL + "?addr=%s&amount=%d";
+    static final String URL_FUND = FRIENDBOT_URL + "/fund?addr=%s&amount="; // faucet
+    static final String URL_WHITELISTING_SERVICE = "http://34.239.111.38:3000/whitelist";
+>>>>>>> master
 }

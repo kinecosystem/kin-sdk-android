@@ -3,13 +3,18 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+<<<<<<< HEAD
 import java.io.UnsupportedEncodingException;
+=======
+
+>>>>>>> master
 import java.util.ArrayList;
+
 import kin.base.responses.SubmitTransactionResponse;
 import kin.base.responses.SubmitTransactionResponse.Extras.ResultCodes;
 import kin.sdk.exception.TransactionFailedException;
 
-final class Utils {
+final public class Utils {
 
     private static final int MEMO_BYTES_LENGTH_LIMIT = 21; //Memo length limitation(in bytes) is 28 but we add 7 more bytes which includes the appId and some characters.
     private static String MEMO_APP_ID_VERSION_PREFIX = "1";
@@ -33,7 +38,7 @@ final class Utils {
 
     static String byteArrayToHex(byte[] a) {
         StringBuilder sb = new StringBuilder(a.length * 2);
-        for(byte b : a)
+        for (byte b : a)
             sb.append(String.format("%02x", b));
         return sb.toString();
     }
@@ -50,6 +55,7 @@ final class Utils {
         }
     }
 
+<<<<<<< HEAD
     @NonNull
     static String addAppIdToMemo(String appId, @Nullable String memo) {
         if (memo == null) {
@@ -75,5 +81,9 @@ final class Utils {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException("Memo text have unsupported characters encoding");
         }
+=======
+    public static boolean isEmpty(@Nullable CharSequence str) {
+        return str == null || str.length() == 0;
+>>>>>>> master
     }
 }

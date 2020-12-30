@@ -1,30 +1,37 @@
 package kin.sdk;
 
-import static junit.framework.Assert.assertNull;
-
-import android.support.test.InstrumentationRegistry;
-import java.math.BigDecimal;
-import kin.sdk.exception.AccountDeletedException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+import java.math.BigDecimal;
+
+import kin.sdk.exception.AccountDeletedException;
+
+import static junit.framework.Assert.assertNull;
 
 @SuppressWarnings({"deprecation", "ConstantConditions"})
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 23, manifest = Config.NONE)
 public class KinAccountTest {
 
     private static final String APP_ID = "1a2c";
     private static final int FEE = 100;
 
-    private KinClient kinClient;
+    private KinClientInternal kinClient;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Before
     public void setup() {
-        kinClient = new KinClient(InstrumentationRegistry.getTargetContext(), Environment.TEST, APP_ID);
+        BackupRestore backupRestore = new BackupRestoreImpl();
+        kinClient = new KinClientInternal(new FakeKeyStore(backupRestore), Environment.TEST, APP_ID, backupRestore);
         kinClient.clearAllAccounts();
     }
 

@@ -20,37 +20,42 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum AccountMergeResultCode  {
-  ACCOUNT_MERGE_SUCCESS(0),
-  ACCOUNT_MERGE_MALFORMED(-1),
-  ACCOUNT_MERGE_NO_ACCOUNT(-2),
-  ACCOUNT_MERGE_IMMUTABLE_SET(-3),
-  ACCOUNT_MERGE_HAS_SUB_ENTRIES(-4),
-  ;
-  private int mValue;
+public enum AccountMergeResultCode {
+    ACCOUNT_MERGE_SUCCESS(0),
+    ACCOUNT_MERGE_MALFORMED(-1),
+    ACCOUNT_MERGE_NO_ACCOUNT(-2),
+    ACCOUNT_MERGE_IMMUTABLE_SET(-3),
+    ACCOUNT_MERGE_HAS_SUB_ENTRIES(-4),
+    ;
+    private int mValue;
 
-  AccountMergeResultCode(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static AccountMergeResultCode decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return ACCOUNT_MERGE_SUCCESS;
-      case -1: return ACCOUNT_MERGE_MALFORMED;
-      case -2: return ACCOUNT_MERGE_NO_ACCOUNT;
-      case -3: return ACCOUNT_MERGE_IMMUTABLE_SET;
-      case -4: return ACCOUNT_MERGE_HAS_SUB_ENTRIES;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    AccountMergeResultCode(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, AccountMergeResultCode value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static AccountMergeResultCode decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return ACCOUNT_MERGE_SUCCESS;
+            case -1:
+                return ACCOUNT_MERGE_MALFORMED;
+            case -2:
+                return ACCOUNT_MERGE_NO_ACCOUNT;
+            case -3:
+                return ACCOUNT_MERGE_IMMUTABLE_SET;
+            case -4:
+                return ACCOUNT_MERGE_HAS_SUB_ENTRIES;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, AccountMergeResultCode value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

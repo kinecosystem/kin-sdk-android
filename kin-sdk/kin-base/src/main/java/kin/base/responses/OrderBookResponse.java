@@ -1,15 +1,17 @@
 package kin.base.responses;
 
-import static kin.base.Util.checkNotNull;
-
 import com.google.gson.annotations.SerializedName;
+
 import kin.base.Asset;
 import kin.base.Price;
 import kin.base.Server;
 
+import static kin.base.Util.checkNotNull;
+
 
 /**
  * Represents order book response.
+ *
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/orderbook.html" target="_blank">Order book documentation</a>
  * @see kin.base.requests.OrderBookRequestBuilder
  * @see Server#orderBook()

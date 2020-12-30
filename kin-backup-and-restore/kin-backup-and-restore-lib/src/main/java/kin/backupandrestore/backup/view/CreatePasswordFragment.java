@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+
 import kin.backupandrestore.R;
 import kin.backupandrestore.backup.presenter.CreatePasswordPresenter;
 import kin.backupandrestore.backup.presenter.CreatePasswordPresenterImpl;
@@ -30,7 +31,11 @@ import kin.sdk.KinAccount;
 public class CreatePasswordFragment extends Fragment implements CreatePasswordView {
 
     public static CreatePasswordFragment newInstance(@NonNull final BackupNavigator nextStepListener,
+<<<<<<< HEAD
         @NonNull final KeyboardHandler keyboardHandler, @NonNull KinAccount kinAccount) {
+=======
+                                                     @NonNull final KeyboardHandler keyboardHandler, @NonNull KinAccount kinAccount) {
+>>>>>>> master
         CreatePasswordFragment fragment = new CreatePasswordFragment();
         fragment.setNextStepListener(nextStepListener);
         fragment.setKeyboardHandler(keyboardHandler);
@@ -53,12 +58,21 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+<<<<<<< HEAD
         @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_create_password, container, false);
         initViews(root);
         createPasswordPresenter = new CreatePasswordPresenterImpl(
             new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener,
             kinAccount);
+=======
+                             @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.backup_and_restore_fragment_backup_create_password, container, false);
+        initViews(root);
+        createPasswordPresenter = new CreatePasswordPresenterImpl(
+                new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(getActivity()))), nextStepListener,
+                kinAccount);
+>>>>>>> master
         createPasswordPresenter.onAttach(this);
         return root;
     }
@@ -90,7 +104,11 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 createPasswordPresenter
+<<<<<<< HEAD
                     .iUnderstandChecked(isChecked, enterPassEditText.getText(), confirmPassEditText.getText());
+=======
+                        .iUnderstandChecked(isChecked, enterPassEditText.getText(), confirmPassEditText.getText());
+>>>>>>> master
                 enterPassEditText.clearFocus();
                 confirmPassEditText.clearFocus();
                 closeKeyboard();
@@ -128,7 +146,11 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
     }
 
     private TextWatcherAdapter createTextWatcheListener(PasswordEditText watchedPassEditText,
+<<<<<<< HEAD
         final PasswordEditText otherPassEditText) {
+=======
+                                                        final PasswordEditText otherPassEditText) {
+>>>>>>> master
         TextWatcherAdapter textWatcherAdapter = new TextWatcherAdapter(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable editable) {
@@ -140,15 +162,24 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
     }
 
     private void setOnFocusChangeListener(final PasswordEditText checkedPassEditText,
+<<<<<<< HEAD
         final PasswordEditText otherPassEditText, final boolean isConfirmPassword) {
+=======
+                                          final PasswordEditText otherPassEditText, final boolean isConfirmPassword) {
+>>>>>>> master
         OnFocusChangeListener onFocusChangeListener = new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (createPasswordPresenter != null) {
                         createPasswordPresenter
+<<<<<<< HEAD
                             .passwordCheck(checkedPassEditText.getText(), otherPassEditText.getText(),
                                 isConfirmPassword);
+=======
+                                .passwordCheck(checkedPassEditText.getText(), otherPassEditText.getText(),
+                                        isConfirmPassword);
+>>>>>>> master
                     }
                 }
             }
@@ -233,6 +264,7 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
     @Override
     public void showBackupFailed() {
         new Builder(getActivity(), R.style.BackupAndRestoreAlertDialogTheme)
+<<<<<<< HEAD
             .setTitle(R.string.backup_and_restore_something_went_wrong_title)
             .setMessage(R.string.backup_and_restore_we_had_some_issues_to_create_backup)
             .setPositiveButton(R.string.backup_and_restore_try_again, new DialogInterface.OnClickListener() {
@@ -244,6 +276,19 @@ public class CreatePasswordFragment extends Fragment implements CreatePasswordVi
             .setNegativeButton(R.string.backup_and_restore_cancel, null)
             .create()
             .show();
+=======
+                .setTitle(R.string.backup_and_restore_something_went_wrong_title)
+                .setMessage(R.string.backup_and_restore_we_had_some_issues_to_create_backup)
+                .setPositiveButton(R.string.backup_and_restore_try_again, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        createPasswordPresenter.onRetryClicked(enterPassEditText.getText());
+                    }
+                })
+                .setNegativeButton(R.string.backup_and_restore_cancel, null)
+                .create()
+                .show();
+>>>>>>> master
     }
 
     @Override

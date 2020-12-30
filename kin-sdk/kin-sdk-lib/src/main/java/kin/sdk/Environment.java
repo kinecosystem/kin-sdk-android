@@ -10,19 +10,20 @@ import static kin.sdk.Utils.checkNotEmpty;
 public class Environment {
 
     public static final Environment PRODUCTION =
-		new Environment("https://horizon.kinfederation.com",
-			"Kin Mainnet ; December 2018");
+            new Environment("https://horizon.kinfederation.com",
+                    "Kin Mainnet ; December 2018");
 
     public static final Environment TEST =
-		new Environment("https://horizon-testnet.kininfrastructure.com/",
-            "Kin Testnet ; December 2018");
+            new Environment("https://horizon-testnet.kininfrastructure.com/",
+                    "Kin Testnet ; December 2018");
 
     private final String networkUrl;
     private final Network network;
 
     /**
      * Build an Environment object.
-     * @param networkUrl the URL of the blockchain node.
+     *
+     * @param networkUrl        the URL of the blockchain node.
      * @param networkPassphrase the network id to be used.
      */
     public Environment(String networkUrl, String networkPassphrase) {

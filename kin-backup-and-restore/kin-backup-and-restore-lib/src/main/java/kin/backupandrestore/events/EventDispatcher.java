@@ -3,8 +3,10 @@ package kin.backupandrestore.events;
 import android.content.Intent;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
 import kin.backupandrestore.BackupEvents;
 import kin.backupandrestore.RestoreEvents;
 

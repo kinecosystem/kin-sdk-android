@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
+
 import kin.backupandrestore.BackupAndRestoreManager;
 import kin.backupandrestore.R;
 import kin.backupandrestore.base.BaseToolbarActivity;
@@ -28,8 +29,13 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
         super.onCreate(savedInstanceState);
         KinClient kinClient = getKinClientFromIntent();
         presenter = new RestorePresenterImpl(
+<<<<<<< HEAD
             new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), kinClient,
             savedInstanceState);
+=======
+                new CallbackManager(new EventDispatcherImpl(new BroadcastManagerImpl(this))), kinClient,
+                savedInstanceState);
+>>>>>>> master
         presenter.onAttach(this);
     }
 
@@ -41,7 +47,11 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
         String appId = intent.getStringExtra(BackupAndRestoreManager.APP_ID_EXTRA);
         String storeKey = intent.getStringExtra(BackupAndRestoreManager.STORE_KEY_EXTRA);
         return new KinClient(getApplicationContext(), new Environment(networkUrl,
+<<<<<<< HEAD
             networkPassphrase), appId, storeKey);
+=======
+                networkPassphrase), appId, storeKey);
+>>>>>>> master
     }
 
     @Override
@@ -65,7 +75,11 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
     public void navigateToUpload() {
         final String fragmentName = UploadQRFragment.class.getSimpleName();
         UploadQRFragment fragment = (UploadQRFragment) getSupportFragmentManager()
+<<<<<<< HEAD
             .findFragmentByTag(fragmentName);
+=======
+                .findFragmentByTag(fragmentName);
+>>>>>>> master
 
         if (fragment == null) {
             fragment = UploadQRFragment.newInstance();
@@ -95,7 +109,11 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
     public void navigateToRestoreCompleted() {
         final String fragmentName = RestoreCompletedFragment.class.getSimpleName();
         RestoreCompletedFragment fragment = (RestoreCompletedFragment) getSupportFragmentManager()
+<<<<<<< HEAD
             .findFragmentByTag(fragmentName);
+=======
+                .findFragmentByTag(fragmentName);
+>>>>>>> master
 
         if (fragment == null) {
             fragment = RestoreCompletedFragment.newInstance();
@@ -108,7 +126,11 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 
     private void replaceFragment(Fragment fragment, String backStackName, String tag, boolean addAnimation) {
         FragmentTransaction transaction = getSupportFragmentManager()
+<<<<<<< HEAD
             .beginTransaction();
+=======
+                .beginTransaction();
+>>>>>>> master
 
         if (backStackName != null) {
             transaction.addToBackStack(backStackName);
@@ -116,10 +138,17 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 
         if (addAnimation) {
             transaction.setCustomAnimations(
+<<<<<<< HEAD
                 0,
                 0,
                 R.anim.backup_and_restore_slide_in_left,
                 R.anim.backup_and_restore_slide_out_right);
+=======
+                    0,
+                    0,
+                    R.anim.backup_and_restore_slide_in_left,
+                    R.anim.backup_and_restore_slide_out_right);
+>>>>>>> master
         }
 
         transaction.replace(R.id.fragment_frame, fragment, tag).commit();
@@ -147,7 +176,11 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
 
     private RestoreEnterPasswordFragment getSavedRestoreEnterPasswordFragment() {
         return (RestoreEnterPasswordFragment) getSupportFragmentManager()
+<<<<<<< HEAD
             .findFragmentByTag(RestoreEnterPasswordFragment.class.getSimpleName());
+=======
+                .findFragmentByTag(RestoreEnterPasswordFragment.class.getSimpleName());
+>>>>>>> master
     }
 
     @Override
@@ -176,4 +209,8 @@ public class RestoreActivity extends BaseToolbarActivity implements RestoreView 
         super.onActivityResult(requestCode, resultCode, data);
         presenter.onActivityResult(requestCode, resultCode, data);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

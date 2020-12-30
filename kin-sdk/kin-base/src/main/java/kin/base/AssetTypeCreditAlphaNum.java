@@ -1,11 +1,12 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import java.util.Arrays;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Base class for AssetTypeCreditAlphaNum4 and AssetTypeCreditAlphaNum12 subclasses.
+ *
  * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
  */
 public abstract class AssetTypeCreditAlphaNum extends Asset {

@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import kin.backupandrestore.Validator;
 
 public class TextWatcherAdapter implements TextWatcher {

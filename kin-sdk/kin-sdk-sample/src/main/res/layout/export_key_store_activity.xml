@@ -16,8 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_passphrase"
-        android:inputType="textNoSuggestions|textVisiblePassword"
-        />
+        android:inputType="textNoSuggestions|textVisiblePassword" />
 
 
     <Button
@@ -28,7 +27,7 @@
         android:layout_marginTop="@dimen/button_margin"
         android:clickable="false"
         android:enabled="false"
-        android:text="@string/export_key_store"/>
+        android:text="@string/export_key_store" />
 
 
     <TextView
@@ -42,8 +41,7 @@
         android:focusable="true"
         android:scrollbarFadeDuration="0"
         android:scrollbars="vertical"
-        android:textSize="15dp"
-        />
+        android:textSize="15dp" />
 
     <Button
         android:id="@+id/copy_btn"
@@ -52,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/button_margin"
         android:enabled="false"
-        android:text="@string/copy_to_clipboard"/>
+        android:text="@string/copy_to_clipboard" />
 
 
 </LinearLayout>

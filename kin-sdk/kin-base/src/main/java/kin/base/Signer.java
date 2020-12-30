@@ -1,10 +1,10 @@
 package kin.base;
 
-import static kin.base.Util.checkNotNull;
-
 import kin.base.xdr.SignerKey;
 import kin.base.xdr.SignerKeyType;
 import kin.base.xdr.Uint256;
+
+import static kin.base.Util.checkNotNull;
 
 /**
  * Signer is a helper class that creates {@link kin.base.xdr.SignerKey} objects.
@@ -13,6 +13,7 @@ public class Signer {
     /**
      * Create <code>ed25519PublicKey</code> {@link kin.base.xdr.SignerKey} from
      * a {@link KeyPair}
+     *
      * @param keyPair
      * @return kin.base.xdr.SignerKey
      */
@@ -24,6 +25,7 @@ public class Signer {
     /**
      * Create <code>sha256Hash</code> {@link kin.base.xdr.SignerKey} from
      * a sha256 hash of a preimage.
+     *
      * @param hash
      * @return kin.base.xdr.SignerKey
      */
@@ -41,6 +43,7 @@ public class Signer {
     /**
      * Create <code>preAuthTx</code> {@link kin.base.xdr.SignerKey} from
      * a {@link kin.base.xdr.Transaction} hash.
+     *
      * @param tx
      * @return kin.base.xdr.SignerKey
      */
@@ -58,6 +61,7 @@ public class Signer {
     /**
      * Create <code>preAuthTx</code> {@link kin.base.xdr.SignerKey} from
      * a transaction hash.
+     *
      * @param hash
      * @return kin.base.xdr.SignerKey
      */

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -47,9 +48,15 @@ public class QRFileUriHandlerImpl implements QRFileUriHandler {
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
         stream.close();
         return FileProvider.getUriForFile(
+<<<<<<< HEAD
             context,
             AUTHORITY,
             file);
+=======
+                context,
+                AUTHORITY,
+                file);
+>>>>>>> master
     }
 
     @NonNull

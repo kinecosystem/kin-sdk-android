@@ -14,15 +14,22 @@ import java.util.concurrent.TimeUnit
 internal class FakeKinOnBoard @Throws(IOException::class) constructor() {
 
     private val client: OkHttpClient = OkHttpClient.Builder()
+<<<<<<< HEAD:kin-sdk/kin-sdk-lib/src/androidTest/kotlin/kin/sdk/FakeKinOnBoard.kt
             .connectTimeout(40, TimeUnit.SECONDS)
             .readTimeout(40, TimeUnit.SECONDS)
             .writeTimeout(40, TimeUnit.SECONDS)
             .build()
+=======
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .build()
+>>>>>>> master:kin-sdk/kin-sdk-lib/src/test/kotlin/kin/sdk/FakeKinOnBoard.kt
 
     @Throws(Exception::class)
     fun createAccount(destinationAccount: String, amount: String = "0") {
         val request = Request.Builder()
-                .url(String.format(URL_CREATE_ACCOUNT, destinationAccount, amount)).build()
+            .url(String.format(URL_CREATE_ACCOUNT, destinationAccount, amount)).build()
         client.newCall(request).execute()?.let {
             if (it.body() == null || it.code() != 200) {
                 Log.d("test", "createAccount error, error code = ${it.code()}, message = ${it.body()}")
@@ -33,15 +40,14 @@ internal class FakeKinOnBoard @Throws(IOException::class) constructor() {
 
     fun fundWithKin(destinationAccount: String, amount: String) {
         val request = Request.Builder()
-                .url(String.format(URL_FUND + amount, destinationAccount))
-                .get()
-                .build()
+            .url(String.format(URL_FUND + amount, destinationAccount))
+            .get()
+            .build()
         client.newCall(request).execute()?.let {
             if (it.body() == null || it.code() != 200) {
                 Log.d("test", "fundWithKin error, error code = ${it.code()}, message = ${it.message()}")
             }
         }
-
     }
 }
 

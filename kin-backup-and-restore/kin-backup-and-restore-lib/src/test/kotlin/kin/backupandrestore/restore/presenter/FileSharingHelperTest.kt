@@ -7,8 +7,16 @@ import android.content.Intent.EXTRA_INTENT
 import android.net.Uri
 import android.os.Build
 import android.support.v4.app.Fragment
-import com.nhaarman.mockitokotlin2.*
-import kin.backupandrestore.restore.presenter.FileSharingHelper.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kin.backupandrestore.restore.presenter.FileSharingHelper.INTENT_TYPE_ALL_IMAGE
+import kin.backupandrestore.restore.presenter.FileSharingHelper.REQUEST_CODE_IMAGE
+import kin.backupandrestore.restore.presenter.FileSharingHelper.REQUEST_RESULT_CANCELED
+import kin.backupandrestore.restore.presenter.FileSharingHelper.REQUEST_RESULT_FAILED
+import kin.backupandrestore.restore.presenter.FileSharingHelper.REQUEST_RESULT_OK
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -18,7 +26,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
-
 
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)

@@ -11,20 +11,24 @@ import java.io.IOException;
 //  typedef PublicKey NodeID;
 
 //  ===========================================================================
-public class NodeID  {
-  private PublicKey NodeID;
-  public PublicKey getNodeID() {
-    return this.NodeID;
-  }
-  public void setNodeID(PublicKey value) {
-    this.NodeID = value;
-  }
-  public static void encode(XdrDataOutputStream stream, NodeID  encodedNodeID) throws IOException {
-  PublicKey.encode(stream, encodedNodeID.NodeID);
-  }
-  public static NodeID decode(XdrDataInputStream stream) throws IOException {
-    NodeID decodedNodeID = new NodeID();
-  decodedNodeID.NodeID = PublicKey.decode(stream);
-    return decodedNodeID;
-  }
+public class NodeID {
+    private PublicKey NodeID;
+
+    public PublicKey getNodeID() {
+        return this.NodeID;
+    }
+
+    public void setNodeID(PublicKey value) {
+        this.NodeID = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, NodeID encodedNodeID) throws IOException {
+        PublicKey.encode(stream, encodedNodeID.NodeID);
+    }
+
+    public static NodeID decode(XdrDataInputStream stream) throws IOException {
+        NodeID decodedNodeID = new NodeID();
+        decodedNodeID.NodeID = PublicKey.decode(stream);
+        return decodedNodeID;
+    }
 }

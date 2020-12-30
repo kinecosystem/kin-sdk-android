@@ -1,9 +1,5 @@
 package kin.sdk;
 
-import kin.base.KeyPair;
-import kin.sdk.exception.CreateAccountException;
-import kin.sdk.exception.DeleteAccountException;
-import kin.sdk.exception.LoadAccountException;
 import org.json.JSONException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,13 +10,22 @@ import org.robolectric.annotation.Config;
 
 import java.util.List;
 
-import static junit.framework.Assert.*;
+import kin.base.KeyPair;
+import kin.sdk.exception.CreateAccountException;
+import kin.sdk.exception.DeleteAccountException;
+import kin.sdk.exception.LoadAccountException;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.isA;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -43,9 +48,9 @@ public class KeyStoreImplTest {
     public void newAccount_JsonException_CreateAccountException() throws Exception {
         Store mockStore = mock(Store.class);
         when(mockStore.getString(anyString()))
-            .thenReturn("")
-            .thenReturn(KeyStoreImpl.ENCRYPTION_VERSION_NAME)
-            .thenReturn("not a real json");
+                .thenReturn("")
+                .thenReturn(KeyStoreImpl.ENCRYPTION_VERSION_NAME)
+                .thenReturn("not a real json");
         KeyStoreImpl keyStore = new KeyStoreImpl(mockStore, new FakeBackupRestore());
 
         expectedEx.expect(CreateAccountException.class);
@@ -58,7 +63,7 @@ public class KeyStoreImplTest {
         FakeStore fakeStore = new FakeStore();
         fakeStore.saveString(KeyStoreImpl.VERSION_KEY, "some_version");
         fakeStore.saveString(KeyStoreImpl.STORE_KEY_ACCOUNTS,
-            "{&quot;accounts&quot;:[{&quot;seed&quot;:&quot;{\\&quot;iv\\&quot;:\\&quot;nVGsoEHgjW4xw2gx\\\\n\\&quot;,\\&quot;cipher\\&quot;:\\&quot;kEC64vaQu\\\\\\/erpFvvnrY+sWm\\\\\\/o4GjmjPfgG31zQTwvp0taxo\\\\\\/04PoaisjfEQxrydRwBGFvG\\\\\\/nG345\\\\ntXMn+x2H0jnaPWWCznPA\\\\n\\&quot;}&quot;,&quot;public_key&quot;:&quot;GBYPGYWPWHWSVTQGTUCH2IICIP2PRLN3QYSUX5NOHHMNDQW26A4WK2IK&quot;}]}");
+                "{&quot;accounts&quot;:[{&quot;seed&quot;:&quot;{\\&quot;iv\\&quot;:\\&quot;nVGsoEHgjW4xw2gx\\\\n\\&quot;,\\&quot;cipher\\&quot;:\\&quot;kEC64vaQu\\\\\\/erpFvvnrY+sWm\\\\\\/o4GjmjPfgG31zQTwvp0taxo\\\\\\/04PoaisjfEQxrydRwBGFvG\\\\\\/nG345\\\\ntXMn+x2H0jnaPWWCznPA\\\\n\\&quot;}&quot;,&quot;public_key&quot;:&quot;GBYPGYWPWHWSVTQGTUCH2IICIP2PRLN3QYSUX5NOHHMNDQW26A4WK2IK&quot;}]}");
         KeyStoreImpl keyStore = new KeyStoreImpl(fakeStore, new FakeBackupRestore());
 
         keyStore.loadAccounts();
@@ -82,8 +87,8 @@ public class KeyStoreImplTest {
     public void loadAccounts_JsonException_LoadAccountException() throws Exception {
         Store mockStore = mock(Store.class);
         when(mockStore.getString(anyString()))
-            .thenReturn(KeyStoreImpl.ENCRYPTION_VERSION_NAME)
-            .thenReturn("not a real json");
+                .thenReturn(KeyStoreImpl.ENCRYPTION_VERSION_NAME)
+                .thenReturn("not a real json");
         KeyStoreImpl keyStore = new KeyStoreImpl(mockStore, new FakeBackupRestore());
 
         expectedEx.expect(LoadAccountException.class);
@@ -107,10 +112,10 @@ public class KeyStoreImplTest {
     public void deleteAccount_JsonException_DeleteAccountException() throws Exception {
         Store stubStore = spy(FakeStore.class);
         when(stubStore.getString(anyString()))
-            .thenCallRealMethod()
-            .thenCallRealMethod()
-            .thenCallRealMethod()
-            .thenReturn("not a real json");
+                .thenCallRealMethod()
+                .thenCallRealMethod()
+                .thenCallRealMethod()
+                .thenReturn("not a real json");
         KeyStoreImpl keyStore = new KeyStoreImpl(stubStore, new FakeBackupRestore());
 
         KeyPair keyPair = keyStore.newAccount();

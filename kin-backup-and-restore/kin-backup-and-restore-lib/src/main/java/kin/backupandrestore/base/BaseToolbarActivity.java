@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
 import kin.backupandrestore.R;
 
 
@@ -66,7 +67,11 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements K
     private int getColorFromBundle(Bundle savedInstanceState) {
         final int defaultColor = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         return savedInstanceState != null ? savedInstanceState
+<<<<<<< HEAD
             .getInt(BACKGROUND_COLOR, defaultColor) : defaultColor;
+=======
+                .getInt(BACKGROUND_COLOR, defaultColor) : defaultColor;
+>>>>>>> master
     }
 
     public void setToolbarTitle(@StringRes int titleRes) {

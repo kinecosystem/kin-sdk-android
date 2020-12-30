@@ -5,7 +5,11 @@ import kin.backupandrestore.base.BasePresenterImpl;
 import kin.backupandrestore.base.BaseView;
 
 abstract class BaseChildPresenterImpl<T extends BaseView> extends BasePresenterImpl<T> implements
+<<<<<<< HEAD
     BaseChildPresenter<T> {
+=======
+        BaseChildPresenter<T> {
+>>>>>>> master
 
     private RestorePresenter parentPresenter;
 

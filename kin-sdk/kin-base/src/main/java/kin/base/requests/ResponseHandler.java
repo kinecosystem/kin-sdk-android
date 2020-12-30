@@ -1,8 +1,10 @@
 package kin.base.requests;
 
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.net.URI;
+
 import kin.base.responses.ClientProtocolException;
 import kin.base.responses.GsonSingleton;
 import kin.base.responses.HttpResponseException;
@@ -29,11 +31,11 @@ public class ResponseHandler<T> {
 
     public T handleGetRequest(final URI uri) throws IOException {
         return handleResponse(httpClient.newCall(
-            new Request.Builder()
-                .url(uri.toString())
-                .build()
+                new Request.Builder()
+                        .url(uri.toString())
+                        .build()
         )
-            .execute());
+                .execute());
     }
 
     public T handleResponse(final okhttp3.Response response) throws IOException, TooManyRequestsException {
@@ -68,9 +70,9 @@ public class ResponseHandler<T> {
             T object = GsonSingleton.getInstance().fromJson(responseBody.string(), type.getType());
             if (object instanceof Response) {
                 ((Response) object).setHeaders(
-                    response.header("X-Ratelimit-Limit"),
-                    response.header("X-Ratelimit-Remaining"),
-                    response.header("X-Ratelimit-Reset")
+                        response.header("X-Ratelimit-Limit"),
+                        response.header("X-Ratelimit-Remaining"),
+                        response.header("X-Ratelimit-Reset")
                 );
             }
             return object;

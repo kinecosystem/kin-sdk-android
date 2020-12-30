@@ -35,7 +35,7 @@ package kin.base.codec;
 
 /**
  * Character encoding names required of every implementation of the Java platform.
- *
+ * <p>
  * From the Java documentation <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard
  * charsets</a>:
  * <p>
@@ -59,14 +59,14 @@ package kin.base.codec;
  * Sixteen-bit Unicode Transformation Format, byte order specified by a mandatory initial byte-order mark (either order
  * accepted on input, big-endian used on output.)</li>
  * </ul>
- *
+ * <p>
  * This perhaps would best belong in the [lang] project. Even if a similar interface is defined in [lang], it is not
  * forseen that [codec] would be made to depend on [lang].
  *
- * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
  * @author Apache Software Foundation
- * @since 1.4
  * @version $Id$
+ * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
+ * @since 1.4
  */
 public class CharEncoding {
     /**

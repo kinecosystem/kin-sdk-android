@@ -1,11 +1,22 @@
 package kin.backupandrestore.restore.presenter
 
 import android.net.Uri
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import kin.backupandrestore.events.CallbackManager
-import kin.backupandrestore.events.RestoreEventCode.*
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_CANCEL_TAPPED
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_OK_TAPPED
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BACK_TAPPED
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED
+import kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_PAGE_VIEWED
 import kin.backupandrestore.qr.QRBarcodeGenerator
-import kin.backupandrestore.restore.presenter.FileSharingHelper.*
+import kin.backupandrestore.restore.presenter.FileSharingHelper.REQUEST_RESULT_CANCELED
+import kin.backupandrestore.restore.presenter.FileSharingHelper.REQUEST_RESULT_FAILED
+import kin.backupandrestore.restore.presenter.FileSharingHelper.REQUEST_RESULT_OK
 import kin.backupandrestore.restore.view.UploadQRView
 import org.junit.Before
 import org.junit.Test
@@ -69,7 +80,6 @@ class UploadQRPresenterImplTest {
         verify(fileSharingHelper).extractUriFromActivityResult(req, res, data)
         verifyNoMoreInteractions(view, callbackManager, fileSharingHelper, qrBarcodeGenerator)
     }
-
 
     @Test
     fun `onActivityResult result failed, show error dialog`() {

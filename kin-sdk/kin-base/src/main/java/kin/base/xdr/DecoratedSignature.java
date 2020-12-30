@@ -15,30 +15,39 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public class DecoratedSignature  {
-  public DecoratedSignature () {}
-  private SignatureHint hint;
-  public SignatureHint getHint() {
-    return this.hint;
-  }
-  public void setHint(SignatureHint value) {
-    this.hint = value;
-  }
-  private Signature signature;
-  public Signature getSignature() {
-    return this.signature;
-  }
-  public void setSignature(Signature value) {
-    this.signature = value;
-  }
-  public static void encode(XdrDataOutputStream stream, DecoratedSignature encodedDecoratedSignature) throws IOException{
-    SignatureHint.encode(stream, encodedDecoratedSignature.hint);
-    Signature.encode(stream, encodedDecoratedSignature.signature);
-  }
-  public static DecoratedSignature decode(XdrDataInputStream stream) throws IOException {
-    DecoratedSignature decodedDecoratedSignature = new DecoratedSignature();
-    decodedDecoratedSignature.hint = SignatureHint.decode(stream);
-    decodedDecoratedSignature.signature = Signature.decode(stream);
-    return decodedDecoratedSignature;
-  }
+public class DecoratedSignature {
+    public DecoratedSignature() {
+    }
+
+    private SignatureHint hint;
+
+    public SignatureHint getHint() {
+        return this.hint;
+    }
+
+    public void setHint(SignatureHint value) {
+        this.hint = value;
+    }
+
+    private Signature signature;
+
+    public Signature getSignature() {
+        return this.signature;
+    }
+
+    public void setSignature(Signature value) {
+        this.signature = value;
+    }
+
+    public static void encode(XdrDataOutputStream stream, DecoratedSignature encodedDecoratedSignature) throws IOException {
+        SignatureHint.encode(stream, encodedDecoratedSignature.hint);
+        Signature.encode(stream, encodedDecoratedSignature.signature);
+    }
+
+    public static DecoratedSignature decode(XdrDataInputStream stream) throws IOException {
+        DecoratedSignature decodedDecoratedSignature = new DecoratedSignature();
+        decodedDecoratedSignature.hint = SignatureHint.decode(stream);
+        decodedDecoratedSignature.signature = Signature.decode(stream);
+        return decodedDecoratedSignature;
+    }
 }

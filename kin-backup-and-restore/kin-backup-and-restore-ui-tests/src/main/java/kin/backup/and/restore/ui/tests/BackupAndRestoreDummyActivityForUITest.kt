@@ -111,5 +111,4 @@ class BackupAndRestoreDummyActivityForUITest : AppCompatActivity(), View.OnClick
         super.onDestroy()
         backupAndRestoreManager?.release()
     }
-
 }

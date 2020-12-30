@@ -26,7 +26,6 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 
-
 object UiTestUtils {
 
     var componentName: ComponentName? = null
@@ -60,8 +59,8 @@ object UiTestUtils {
 
     fun intendingStubQRIntent(): Matcher<Intent>? {
         val intent: Intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                .addCategory(Intent.CATEGORY_OPENABLE)
-                .setType("image/*")
+            .addCategory(Intent.CATEGORY_OPENABLE)
+            .setType("image/*")
         val title = "Choose QR image…"
 
         val bitmap = loadBitmapFromResource(this.javaClass, "qr_test.png")
@@ -70,29 +69,28 @@ object UiTestUtils {
         val resultData = Intent.createChooser(intent, title)
         resultData.data = uri
         val result = Instrumentation.ActivityResult(
-                Activity.RESULT_OK, resultData)
+            Activity.RESULT_OK, resultData)
 
         val intentChooser = Intent.createChooser(intent, title, null)
         val originalIntent = intentChooser?.extras?.get(Intent.EXTRA_INTENT) as Intent
 
         val expectedIntent = allOf(hasAction(intentChooser.action), hasExtras(BundleMatchers.hasValue(
-                object : BaseMatcher<Intent>() {
+            object : BaseMatcher<Intent>() {
 
-                    override fun describeTo(description: Description) {
+                override fun describeTo(description: Description) {
+                }
 
-                    }
-
-                    override fun matches(item: Any): Boolean {
-                        return (item as? Intent)?.filterEquals(originalIntent) ?: false
-                    }
-                })))
+                override fun matches(item: Any): Boolean {
+                    return (item as? Intent)?.filterEquals(originalIntent) ?: false
+                }
+            })))
 
         intending(expectedIntent).respondWith(result)
         return expectedIntent
     }
 
     fun childAtPosition(
-            parentMatcher: Matcher<View>, position: Int): Matcher<View> {
+        parentMatcher: Matcher<View>, position: Int): Matcher<View> {
 
         return object : TypeSafeMatcher<View>() {
             override fun describeTo(description: Description) {
@@ -103,7 +101,7 @@ object UiTestUtils {
             public override fun matchesSafely(view: View): Boolean {
                 val parent = view.parent
                 return parent is ViewGroup && parentMatcher.matches(parent)
-                        && view == parent.getChildAt(position)
+                    && view == parent.getChildAt(position)
             }
         }
     }
@@ -184,13 +182,12 @@ object UiTestUtils {
                     description.appendText("]")
                 }
             }
-
         }
     }
 
     private fun getBitmap(drawable: Drawable): Bitmap {
         val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
-                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
@@ -201,5 +198,4 @@ object UiTestUtils {
         val inputStream = clazz.classLoader.getResourceAsStream(res)
         return BitmapFactory.decodeStream(inputStream)
     }
-
 }

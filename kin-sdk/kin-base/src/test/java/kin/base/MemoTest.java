@@ -1,13 +1,15 @@
 package kin.base;
 
+import org.junit.Test;
+
+import java.util.Arrays;
+
+import kin.base.codec.DecoderException;
+import kin.base.xdr.MemoType;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.util.Arrays;
-import kin.base.codec.DecoderException;
-import kin.base.xdr.MemoType;
-import org.junit.Test;
 
 public class MemoTest {
     @Test

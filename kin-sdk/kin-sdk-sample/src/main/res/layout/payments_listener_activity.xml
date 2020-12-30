@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <Button
         android:id="@+id/start_btn"
         style="@style/KinButtonStyle.TestNet"
@@ -14,7 +14,8 @@
         android:layout_marginLeft="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="@string/btn_start"/>
+        android:text="@string/btn_start" />
+
     <Button
         android:id="@+id/stop_btn"
         style="@style/KinButtonStyle.TestNet"
@@ -25,7 +26,7 @@
         android:layout_marginRight="10dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="@string/btn_stop"/>
+        android:text="@string/btn_stop" />
 
     <ScrollView
 
@@ -36,6 +37,7 @@
         android:background="@color/white"
         android:fillViewport="true"
         tools:context="kin.sdk.sample.sdk.sample.PaymentListenerActivity">
+
         <LinearLayout
             android:id="@+id/payments_container"
             android:layout_width="match_parent"

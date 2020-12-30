@@ -1,20 +1,41 @@
 package kin.sdk
 
+<<<<<<< HEAD:kin-sdk/kin-sdk-lib/src/androidTest/kotlin/kin/sdk/KinAccountIntegrationTest.kt
 import android.support.test.InstrumentationRegistry
 import android.support.test.filters.LargeTest
 import kin.base.*
+=======
+import kin.base.Memo
+import kin.base.MemoNone
+import kin.base.MemoText
+import kin.base.Server
+>>>>>>> master:kin-sdk/kin-sdk-lib/src/test/kotlin/kin/sdk/KinAccountIntegrationTest.kt
 import kin.sdk.IntegConsts.TEST_NETWORK_URL
 import kin.sdk.exception.AccountNotFoundException
 import kin.sdk.exception.InsufficientFeeException
 import kin.sdk.exception.InsufficientKinException
+<<<<<<< HEAD:kin-sdk/kin-sdk-lib/src/androidTest/kotlin/kin/sdk/KinAccountIntegrationTest.kt
 import kin.sdk.exception.TransactionFailedException
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.*
+=======
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.instanceOf
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.isEmptyString
+import org.junit.After
+import org.junit.Before
+import org.junit.BeforeClass
+import org.junit.Rule
+import org.junit.Test
+>>>>>>> master:kin-sdk/kin-sdk-lib/src/test/kotlin/kin/sdk/KinAccountIntegrationTest.kt
 import org.junit.rules.ExpectedException
 import java.io.IOException
 import java.math.BigDecimal
-import java.util.*
+import java.util.ArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertFailsWith
@@ -25,6 +46,7 @@ import kotlin.test.fail
 @Suppress("FunctionName")
 class KinAccountIntegrationTest {
 
+    private val whitelistingService = WhitelistServiceForTest()
     private val appId = "1a2c"
     private val fee: Int = 100
     private val feeInKin: BigDecimal = BigDecimal.valueOf(0.001)
@@ -32,7 +54,7 @@ class KinAccountIntegrationTest {
     private val timeoutDurationSeconds: Long = 15
     private val timeoutDurationSecondsLong: Long = 20
 
-    private lateinit var kinClient: KinClient
+    private lateinit var kinClient: KinClientInternal
 
     @Rule
     @JvmField
@@ -43,7 +65,7 @@ class KinAccountIntegrationTest {
     @Before
     @Throws(IOException::class)
     fun setup() {
-        kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, appId)
+        kinClient = KinClientInternal(FakeKeyStore(), environment, appId, BackupRestoreImpl())
         kinClient.clearAllAccounts()
     }
 
@@ -55,7 +77,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     fun getBalanceSync_AccountNotCreated_AccountNotFoundException() {
         val kinAccount = kinClient.addAccount()
 
@@ -65,7 +86,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     fun getStatusSync_AccountNotCreated_StatusNotCreated() {
         val kinAccount = kinClient.addAccount()
 
@@ -74,7 +94,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun getBalanceSync_FundedAccount_GotBalance() {
         val kinAccount = kinClient.addAccount()
@@ -84,10 +103,10 @@ class KinAccountIntegrationTest {
         assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("0.00000")))
         fakeKinOnBoard.fundWithKin(kinAccount.publicAddress.orEmpty(), "3.14159")
         assertThat(kinAccount.balanceSync.value(), equalTo(BigDecimal("3.14159")))
-
     }
 
     @Test
+<<<<<<< HEAD:kin-sdk/kin-sdk-lib/src/androidTest/kotlin/kin/sdk/KinAccountIntegrationTest.kt
     @LargeTest
     fun linkAccount_MasterAccountNotCreated_OpNoSourceAccount() {
         val exception = assertFailsWith<TransactionFailedException> {
@@ -141,6 +160,8 @@ class KinAccountIntegrationTest {
 
     @Test
     @LargeTest
+=======
+>>>>>>> master:kin-sdk/kin-sdk-lib/src/test/kotlin/kin/sdk/KinAccountIntegrationTest.kt
     @Throws(Exception::class)
     fun getStatusSync_CreateAccount_StatusCreated() {
         val kinAccount = kinClient.addAccount()
@@ -153,7 +174,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithMemo() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
@@ -170,7 +190,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithoutMemoJustPrefix() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
@@ -183,12 +202,11 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithoutMemo() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(
-                senderFundAmount = 100,
-                kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, null))
+            senderFundAmount = 100,
+            kinClient = KinClientInternal(FakeKeyStore(), environment, "", BackupRestoreImpl()))
 
         val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, null)
         val server = Server(TEST_NETWORK_URL)
@@ -198,12 +216,11 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_WithoutMemoPrefix() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(
-                senderFundAmount = 100,
-                kinClient = KinClient(InstrumentationRegistry.getTargetContext(), environment, null))
+            senderFundAmount = 100,
+            kinClient = KinClientInternal(FakeKeyStore(), environment, "", BackupRestoreImpl()))
 
         val memo = "fake memo"
         val transactionId = sendTransactionAndAssert(kinAccountSender, kinAccountReceiver, memo)
@@ -215,7 +232,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_ReceiverAccountNotCreated_AccountNotFoundException() {
         val kinAccountSender = kinClient.addAccount()
@@ -227,11 +243,9 @@ class KinAccountIntegrationTest {
         expectedEx.expectMessage(kinAccountReceiver.publicAddress)
         val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
         kinAccountSender.sendTransactionSync(transaction)
-
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_SenderAccountNotCreated_AccountNotFoundException() {
         val kinAccountSender = kinClient.addAccount()
@@ -246,7 +260,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendWhitelistTransaction_SenderAccountNotCreated_AccountNotFoundException() {
         val kinAccountSender = kinClient.addAccount()
@@ -263,7 +276,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendWhitelistTransaction_ReceiverAccountNotCreated_AccountNotFoundException() {
         val kinAccountSender = kinClient.addAccount()
@@ -277,11 +289,9 @@ class KinAccountIntegrationTest {
         val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(), BigDecimal("21.123"), fee)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction())
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
-
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_NotEnoughFee_InsufficientFeeException() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
@@ -293,36 +303,45 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendWhitelistTransaction_FeeNotReduce() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
+<<<<<<< HEAD:kin-sdk/kin-sdk-lib/src/androidTest/kotlin/kin/sdk/KinAccountIntegrationTest.kt
         val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee + 100000)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction())
+=======
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
+            BigDecimal("20"), minFee + 100000)
+        val whitelist = whitelistingService.whitelistTransaction(transaction.whitelistableTransaction)
+>>>>>>> master:kin-sdk/kin-sdk-lib/src/test/kotlin/kin/sdk/KinAccountIntegrationTest.kt
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendWhitelistTransaction_Success() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
 
         val minFee: Int = Math.toIntExact(kinClient.minimumFeeSync)
+<<<<<<< HEAD:kin-sdk/kin-sdk-lib/src/androidTest/kotlin/kin/sdk/KinAccountIntegrationTest.kt
         val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("20"), minFee)
         val whitelist = WhitelistServiceForTest().whitelistTransaction(transaction.whitelistableTransaction())
+=======
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
+            BigDecimal("20"), minFee)
+        val whitelist = whitelistingService.whitelistTransaction(transaction.whitelistableTransaction)
+>>>>>>> master:kin-sdk/kin-sdk-lib/src/test/kotlin/kin/sdk/KinAccountIntegrationTest.kt
         kinAccountSender.sendWhitelistTransactionSync(whitelist)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("80.00000")))
         assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("20.00000")))
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_Success() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
@@ -332,14 +351,12 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun createPaymentListener_ListenToReceiver_PaymentEvent() {
         listenToPayments(false)
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun createPaymentListener_ListenToSender_PaymentEvent() {
         listenToPayments(true)
@@ -394,11 +411,10 @@ class KinAccountIntegrationTest {
 
         val balance = actualBalanceResults[transactionIndex]
         assertThat(balance.value(),
-                equalTo(if (sender) fundingAmount.subtract(feeInKin).subtract(transactionAmount) else transactionAmount))
+            equalTo(if (sender) fundingAmount.subtract(feeInKin).subtract(transactionAmount) else transactionAmount))
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun createPaymentListener_RemoveListener_NoEvents() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts(senderFundAmount = 100)
@@ -415,7 +431,6 @@ class KinAccountIntegrationTest {
     }
 
     @Test
-    @LargeTest
     @Throws(Exception::class)
     fun sendTransaction_NotEnoughKin_InsufficientKinException() {
         val (kinAccountSender, kinAccountReceiver) = onboardAccounts()
@@ -479,7 +494,7 @@ class KinAccountIntegrationTest {
 
     private fun onboardAccounts(senderFundAmount: Int = 0,
                                 receiverFundAmount: Int = 0,
-                                kinClient: KinClient = this.kinClient): Pair<KinAccount, KinAccount> {
+                                kinClient: KinClientInternal = this.kinClient): Pair<KinAccount, KinAccount> {
         val kinAccountSender = kinClient.addAccount()
         val kinAccountReceiver = kinClient.addAccount()
         fakeKinOnBoard.createAccount(kinAccountSender.publicAddress.orEmpty(), senderFundAmount.toString())
@@ -497,8 +512,13 @@ class KinAccountIntegrationTest {
     }
 
     private fun sendTransactionAndAssert(kinAccountSender: KinAccount, kinAccountReceiver: KinAccount, memo: String?): TransactionId {
+<<<<<<< HEAD:kin-sdk/kin-sdk-lib/src/androidTest/kotlin/kin/sdk/KinAccountIntegrationTest.kt
         val transaction = kinAccountSender.buildPaymentTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
                 BigDecimal("21.123"), fee, memo)
+=======
+        val transaction = kinAccountSender.buildTransactionSync(kinAccountReceiver.publicAddress.orEmpty(),
+            BigDecimal("21.123"), fee, memo)
+>>>>>>> master:kin-sdk/kin-sdk-lib/src/test/kotlin/kin/sdk/KinAccountIntegrationTest.kt
         val transactionId = kinAccountSender.sendTransactionSync(transaction)
         assertThat(kinAccountSender.balanceSync.value(), equalTo(BigDecimal("78.87700").subtract(feeInKin)))
         assertThat(kinAccountReceiver.balanceSync.value(), equalTo(BigDecimal("21.12300")))

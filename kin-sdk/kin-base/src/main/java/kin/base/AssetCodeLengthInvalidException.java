@@ -2,6 +2,7 @@ package kin.base;
 
 /**
  * Indicates that asset code is not valid for a specified asset class
+ *
  * @see AssetTypeCreditAlphaNum4
  * @see AssetTypeCreditAlphaNum12
  */

@@ -14,29 +14,30 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum PublicKeyType  {
-  PUBLIC_KEY_TYPE_ED25519(0),
-  ;
-  private int mValue;
+public enum PublicKeyType {
+    PUBLIC_KEY_TYPE_ED25519(0),
+    ;
+    private int mValue;
 
-  PublicKeyType(int value) {
-      mValue = value;
-  }
-
-  public int getValue() {
-      return mValue;
-  }
-
-  static PublicKeyType decode(XdrDataInputStream stream) throws IOException {
-    int value = stream.readInt();
-    switch (value) {
-      case 0: return PUBLIC_KEY_TYPE_ED25519;
-      default:
-        throw new RuntimeException("Unknown enum value: " + value);
+    PublicKeyType(int value) {
+        mValue = value;
     }
-  }
 
-  static void encode(XdrDataOutputStream stream, PublicKeyType value) throws IOException {
-    stream.writeInt(value.getValue());
-  }
+    public int getValue() {
+        return mValue;
+    }
+
+    static PublicKeyType decode(XdrDataInputStream stream) throws IOException {
+        int value = stream.readInt();
+        switch (value) {
+            case 0:
+                return PUBLIC_KEY_TYPE_ED25519;
+            default:
+                throw new RuntimeException("Unknown enum value: " + value);
+        }
+    }
+
+    static void encode(XdrDataOutputStream stream, PublicKeyType value) throws IOException {
+        stream.writeInt(value.getValue());
+    }
 }

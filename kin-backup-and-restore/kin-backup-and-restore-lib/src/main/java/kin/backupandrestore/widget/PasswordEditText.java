@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import kin.backupandrestore.R;
 
 
@@ -43,9 +44,15 @@ public class PasswordEditText extends LinearLayout {
     private TextView errorText;
 
     private final int sidesPadding = getResources()
+<<<<<<< HEAD
         .getDimensionPixelSize(R.dimen.backup_and_restore_password_edittext_text_sidesPadding);
     private final int strokeWidth = getResources()
         .getDimensionPixelSize(R.dimen.backup_and_restore_edittext_stroke_width);
+=======
+            .getDimensionPixelSize(R.dimen.backup_and_restore_password_edittext_text_sidesPadding);
+    private final int strokeWidth = getResources()
+            .getDimensionPixelSize(R.dimen.backup_and_restore_edittext_stroke_width);
+>>>>>>> master
 
     private boolean isRevealIconVisible;
     private boolean isRevealPressed;
@@ -60,17 +67,29 @@ public class PasswordEditText extends LinearLayout {
     public PasswordEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+<<<<<<< HEAD
             ViewGroup.LayoutParams.WRAP_CONTENT));
+=======
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+>>>>>>> master
         setLayoutTransition(new LayoutTransition());
         setOrientation(VERTICAL);
         boolean addRevealIcon;
         String hint;
         TypedArray styledAttributes = context.getTheme()
+<<<<<<< HEAD
             .obtainStyledAttributes(attrs, R.styleable.BackupAndRestorePasswordEditText, 0, 0);
 
         try {
             addRevealIcon = styledAttributes
                 .getBoolean(R.styleable.BackupAndRestorePasswordEditText_backup_and_restore_show_reveal_icon, false);
+=======
+                .obtainStyledAttributes(attrs, R.styleable.BackupAndRestorePasswordEditText, 0, 0);
+
+        try {
+            addRevealIcon = styledAttributes
+                    .getBoolean(R.styleable.BackupAndRestorePasswordEditText_backup_and_restore_show_reveal_icon, false);
+>>>>>>> master
             hint = styledAttributes.getString(R.styleable.BackupAndRestorePasswordEditText_backup_and_restore_hint);
 
         } finally {
@@ -179,7 +198,11 @@ public class PasswordEditText extends LinearLayout {
 
     private void openKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getContext()
+<<<<<<< HEAD
             .getSystemService(Activity.INPUT_METHOD_SERVICE);
+=======
+                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+>>>>>>> master
         if (inputMethodManager != null) {
             inputMethodManager.showSoftInput(passwordField, InputMethodManager.SHOW_IMPLICIT);
         }
@@ -193,7 +216,11 @@ public class PasswordEditText extends LinearLayout {
 
     private void setupErrorText() {
         final int textSize = getResources()
+<<<<<<< HEAD
             .getDimensionPixelSize(R.dimen.backup_and_restore_password_edittext_error_size);
+=======
+                .getDimensionPixelSize(R.dimen.backup_and_restore_password_edittext_error_size);
+>>>>>>> master
         final int color = ContextCompat.getColor(getContext(), R.color.backup_and_restore_red);
         errorText.setVisibility(GONE);
         errorText.setTextColor(color);
@@ -205,7 +232,11 @@ public class PasswordEditText extends LinearLayout {
     private boolean isInRevealIconBounds(MotionEvent event) {
         final int drawableWidth = passwordField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
         return (event.getRawX() >= (getRight() - drawableWidth - sidesPadding))
+<<<<<<< HEAD
             && (event.getRawX() <= (getRight() - sidesPadding));
+=======
+                && (event.getRawX() <= (getRight() - sidesPadding));
+>>>>>>> master
     }
 
     private void setInputAsPasswordDots() {

@@ -1,16 +1,21 @@
 package kin.backupandrestore;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+
 import kin.sdk.KinAccount;
 import kin.sdk.KinClient;
+import kin.sdk.Utils;
 
 public class AccountExtractor {
 
     @Nullable
     public static KinAccount getKinAccount(KinClient kinClient, String publicAddress) {
         KinAccount kinAccount = null;
+<<<<<<< HEAD
         if (kinClient != null && !TextUtils.isEmpty(publicAddress)) {
+=======
+        if (kinClient != null && !Utils.isEmpty(publicAddress)) {
+>>>>>>> master
             int numOfAccounts = kinClient.getAccountCount();
             for (int i = 0; i < numOfAccounts; i++) {
                 KinAccount account = kinClient.getAccount(i);

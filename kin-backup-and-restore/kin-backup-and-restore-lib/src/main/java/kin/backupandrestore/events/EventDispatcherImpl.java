@@ -1,5 +1,14 @@
 package kin.backupandrestore.events;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import kin.backupandrestore.BackupEvents;
+import kin.backupandrestore.RestoreEvents;
+import kin.backupandrestore.events.BroadcastManager.Listener;
+import kin.backupandrestore.events.BroadcastManagerImpl.ActionName;
+
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_COMPLETED_PAGE_VIEWED;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_BACK_TAPPED;
 import static kin.backupandrestore.events.BackupEventCode.BACKUP_CREATE_PASSWORD_PAGE_NEXT_TAPPED;
@@ -21,14 +30,6 @@ import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_ENTR
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BACK_TAPPED;
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED;
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_PAGE_VIEWED;
-
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import kin.backupandrestore.BackupEvents;
-import kin.backupandrestore.RestoreEvents;
-import kin.backupandrestore.events.BroadcastManager.Listener;
-import kin.backupandrestore.events.BroadcastManagerImpl.ActionName;
 
 public class EventDispatcherImpl implements EventDispatcher {
 

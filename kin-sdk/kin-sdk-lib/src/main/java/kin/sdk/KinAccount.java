@@ -2,7 +2,18 @@ package kin.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+<<<<<<< HEAD
 import kin.sdk.exception.*;
+=======
+
+import java.math.BigDecimal;
+
+import kin.sdk.exception.AccountNotFoundException;
+import kin.sdk.exception.CryptoException;
+import kin.sdk.exception.InsufficientKinException;
+import kin.sdk.exception.OperationFailedException;
+import kin.sdk.exception.TransactionFailedException;
+>>>>>>> master
 import kin.utils.Request;
 
 import java.math.BigDecimal;
@@ -20,21 +31,31 @@ public interface KinAccount {
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address.
+<<<<<<< HEAD
      * <p> See {@link KinAccount#buildPaymentTransactionSync(String, BigDecimal, int)} for possibles errors</p>
+=======
+     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int)} for possibles errors</p>
+     *
+>>>>>>> master
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in stroops) for this transfer.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
     Request<PaymentTransaction> buildPaymentTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee);
 
     /**
      * Build a Transaction object of the given amount in kin, to the specified public address and with a memo(that can be empty or null).
+<<<<<<< HEAD
      * <p> See {@link KinAccount#buildPaymentTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
+=======
+     * <p> See {@link KinAccount#buildTransactionSync(String, BigDecimal, int, String)} for possibles errors</p>
+     *
+>>>>>>> master
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
-     * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in stroops) for this transfer.
+     * @param memo          An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
     Request<PaymentTransaction> buildPaymentTransaction(@NonNull String publicAddress, @NonNull BigDecimal amount, int fee, @Nullable String memo);
@@ -49,7 +70,12 @@ public interface KinAccount {
 
     /**
      * Create {@link Request} for signing and sending a transaction
+<<<<<<< HEAD
      * <p> See {@link KinAccount#sendTransactionSync(TransactionBase)} for possibles errors</p>
+=======
+     * <p> See {@link KinAccount#sendTransactionSync(Transaction)} for possibles errors</p>
+     *
+>>>>>>> master
      * @param transaction is the transaction object to send.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
@@ -60,6 +86,7 @@ public interface KinAccount {
      * Create {@link Request} for signing and sending a transaction from a whitelist.
      * whitelist a transaction means that the user will not pay any fee(if your App is in the Kin whitelist)
      * <p> See {@link KinAccount#sendWhitelistTransactionSync(String)} for possibles errors</p>
+     *
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
      * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier.
      */
@@ -71,8 +98,8 @@ public interface KinAccount {
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in stroops) for this transfer.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
@@ -84,9 +111,9 @@ public interface KinAccount {
      * <p><b>Note:</b> This method accesses the network, and should not be called on the android main thread.</p>
      *
      * @param publicAddress the account address to send the specified kin amount.
-     * @param amount the amount of kin to transfer.
-     * @param fee the amount of fee(in stroops) for this transfer.
-     * @param memo An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
+     * @param amount        the amount of kin to transfer.
+     * @param fee           the amount of fee(in stroops) for this transfer.
+     * @param memo          An optional string, can contain a utf-8 string up to 21 bytes in length, included on the transaction record.
      * @return a Transaction object which also includes the transaction id.
      * @throws AccountNotFoundException if the sender or destination account was not created.
      * @throws OperationFailedException other error occurred.
@@ -109,10 +136,10 @@ public interface KinAccount {
      *
      * @param transaction is the transaction object to send.
      * @return TransactionId the transaction identifier.
-     * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws InsufficientKinException if account balance has not enough kin.
+     * @throws AccountNotFoundException   if the sender or destination account was not created.
+     * @throws InsufficientKinException   if account balance has not enough kin.
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
-     * @throws OperationFailedException other error occurred.
+     * @throws OperationFailedException   other error occurred.
      */
     @NonNull
     TransactionId sendTransactionSync(TransactionBase transaction) throws OperationFailedException;
@@ -124,10 +151,10 @@ public interface KinAccount {
      *
      * @param whitelist is the whitelist data (got from the server) which will be used to send the transaction.
      * @return TransactionId the transaction identifier.
-     * @throws AccountNotFoundException if the sender or destination account was not created.
-     * @throws InsufficientKinException if account balance has not enough kin.
+     * @throws AccountNotFoundException   if the sender or destination account was not created.
+     * @throws InsufficientKinException   if account balance has not enough kin.
      * @throws TransactionFailedException if transaction failed, contains blockchain failure details.
-     * @throws OperationFailedException other error occurred.
+     * @throws OperationFailedException   other error occurred.
      */
     @NonNull
     TransactionId sendWhitelistTransactionSync(String whitelist) throws OperationFailedException;

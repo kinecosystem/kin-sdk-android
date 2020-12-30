@@ -1,13 +1,17 @@
 package kin.sdk;
 
+<<<<<<< HEAD
 import kin.base.KeyPair;
 import kin.sdk.exception.AccountDeletedException;
+=======
+>>>>>>> master
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +19,14 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+=======
+
+import kin.base.KeyPair;
+import kin.sdk.exception.AccountDeletedException;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+>>>>>>> master
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -39,7 +51,7 @@ public class KinAccountImplTest {
     private void initWithRandomAccount() {
         expectedRandomAccount = KeyPair.random();
         kinAccount = new KinAccountImpl(expectedRandomAccount, new FakeBackupRestore(), mockTransactionSender,
-            mockAccountInfoRetriever, mockBlockchainEventsCreator);
+                mockAccountInfoRetriever, mockBlockchainEventsCreator);
     }
 
     @Test

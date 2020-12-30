@@ -1,18 +1,25 @@
 package kin.base;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+<<<<<<< HEAD
 import junit.framework.TestCase;
+=======
+import java.util.concurrent.TimeUnit;
+
+>>>>>>> master
 import kin.base.responses.SubmitTransactionResponse;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+<<<<<<< HEAD
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.After;
 import org.junit.Before;
@@ -24,11 +31,11 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23)
+=======
+
+>>>>>>> master
 public class ServerTest extends TestCase {
 
-    private static final String KIN_SDK_ANDROID_VERSION_HEADER = "kin-sdk-android-version";
-
-    private OkHttpClient mockClient;
     private MockWebServer mockWebServer;
 
     private final String successResponse =
@@ -75,11 +82,19 @@ public class ServerTest extends TestCase {
         MockitoAnnotations.initMocks(this);
         mockWebServer = new MockWebServer();
         mockWebServer.start();
+<<<<<<< HEAD
         mockClient = new OkHttpClient.Builder()
             .addInterceptor(new HeaderInterceptor())
             .build();
+=======
+
+>>>>>>> master
         server = new Server(mockWebServer.url("/").url().toString());
-        server.setHttpClient(mockClient);
+        server.setHttpClient(new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build());
     }
 
     @After
@@ -145,6 +160,7 @@ public class ServerTest extends TestCase {
     }
 
     @Test
+<<<<<<< HEAD
     public void testWhenRequestIsDone_ThenHeaderIsAdded() throws IOException {
         mockWebServer.enqueue(
             new MockResponse()
@@ -162,6 +178,8 @@ public class ServerTest extends TestCase {
     }
 
     @Test
+=======
+>>>>>>> master
     public void testSubmitTransactionFail() throws IOException {
         mockWebServer.enqueue(
             new MockResponse()
@@ -180,6 +198,7 @@ public class ServerTest extends TestCase {
         assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
         assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
     }
+<<<<<<< HEAD
 
     private class HeaderInterceptor implements Interceptor {
 
@@ -192,4 +211,6 @@ public class ServerTest extends TestCase {
             return chain.proceed(request);
         }
     }
+=======
+>>>>>>> master
 }

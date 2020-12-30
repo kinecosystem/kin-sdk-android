@@ -1,5 +1,10 @@
 package kin.backupandrestore.events;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_CANCEL_TAPPED;
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_ARE_YOUR_SURE_OK_TAPPED;
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_PASSWORD_DONE_TAPPED;
@@ -9,11 +14,8 @@ import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_COD
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED;
 import static kin.backupandrestore.events.RestoreEventCode.RESTORE_UPLOAD_QR_CODE_PAGE_VIEWED;
 
-import android.support.annotation.IntDef;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 @IntDef({RESTORE_UPLOAD_QR_CODE_PAGE_VIEWED,
+<<<<<<< HEAD
     RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED,
     RESTORE_UPLOAD_QR_CODE_BACK_TAPPED,
     RESTORE_ARE_YOUR_SURE_OK_TAPPED,
@@ -21,6 +23,15 @@ import java.lang.annotation.RetentionPolicy;
     RESTORE_PASSWORD_ENTRY_PAGE_VIEWED,
     RESTORE_PASSWORD_ENTRY_PAGE_BACK_TAPPED,
     RESTORE_PASSWORD_DONE_TAPPED})
+=======
+        RESTORE_UPLOAD_QR_CODE_BUTTON_TAPPED,
+        RESTORE_UPLOAD_QR_CODE_BACK_TAPPED,
+        RESTORE_ARE_YOUR_SURE_OK_TAPPED,
+        RESTORE_ARE_YOUR_SURE_CANCEL_TAPPED,
+        RESTORE_PASSWORD_ENTRY_PAGE_VIEWED,
+        RESTORE_PASSWORD_ENTRY_PAGE_BACK_TAPPED,
+        RESTORE_PASSWORD_DONE_TAPPED})
+>>>>>>> master
 @Retention(RetentionPolicy.SOURCE)
 public @interface RestoreEventCode {
 

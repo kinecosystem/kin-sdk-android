@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
 import android.widget.TextView;
+
 import kin.sdk.KinClient;
 import kin.sdk.sample.R;
 
@@ -40,15 +41,15 @@ public class ChooseNetworkActivity extends BaseActivity {
         urlTextView.setOnClickListener(view -> startWebWrapperActivity());
         findViewById(R.id.kin_icon).setOnClickListener(view -> startWebWrapperActivity());
         findViewById(R.id.btn_main_net).setOnClickListener(
-            view -> createKinClient(KinClientSampleApplication.NetWorkType.MAIN));
+                view -> createKinClient(KinClientSampleApplication.NetWorkType.MAIN));
 
         findViewById(R.id.btn_test_net).setOnClickListener(
-            view -> createKinClient(KinClientSampleApplication.NetWorkType.TEST));
+                view -> createKinClient(KinClientSampleApplication.NetWorkType.TEST));
     }
 
     private void createKinClient(KinClientSampleApplication.NetWorkType netWorkType) {
         KinClientSampleApplication application = (KinClientSampleApplication) getApplication();
-        KinClient kinClient = application.createKinClient(netWorkType,"test");
+        KinClient kinClient = application.createKinClient(netWorkType, "test");
         if (kinClient.hasAccount()) {
             startActivity(WalletActivity.getIntent(this));
         } else {
@@ -56,7 +57,7 @@ public class ChooseNetworkActivity extends BaseActivity {
         }
     }
 
-    private void startWebWrapperActivity(){
+    private void startWebWrapperActivity() {
         startActivity(WebWrapperActivity.getIntent(this, KIN_FOUNDATION_URL));
     }
 

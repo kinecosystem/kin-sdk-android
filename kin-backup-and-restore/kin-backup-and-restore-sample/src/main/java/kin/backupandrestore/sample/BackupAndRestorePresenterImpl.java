@@ -2,6 +2,10 @@ package kin.backupandrestore.sample;
 
 import android.content.Intent;
 import android.util.Log;
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import kin.backupandrestore.BackupAndRestoreManager;
 import kin.backupandrestore.BackupCallback;
 import kin.backupandrestore.RestoreCallback;
@@ -204,4 +208,8 @@ public class BackupAndRestorePresenterImpl implements IBackupAndRestorePresenter
             }
         });
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master
